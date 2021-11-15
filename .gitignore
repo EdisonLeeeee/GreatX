@@ -106,3 +106,5 @@ dataset/
 *.pkl
 *.pth
 
+# Experimental
+experimental/

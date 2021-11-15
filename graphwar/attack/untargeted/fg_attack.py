@@ -23,11 +23,10 @@ class FGAttack(UntargetedAttacker, SurrogateAttacker):
                         victim_nodes: Tensor,
                         victim_labels: Optional[Tensor] = None, *,
                         loss: Callable = torch.nn.CrossEntropyLoss(),
-                        eps: float = 1.0,
-                        freeze: bool = True):
+                        eps: float = 1.0):
 
         SurrogateAttacker.setup_surrogate(self, surrogate=surrogate,
-                                          loss=loss, eps=eps, freeze=freeze)
+                                          loss=loss, eps=eps, freeze=True)
 
         self.victim_nodes = victim_nodes.to(self.device)
         if victim_labels is None:

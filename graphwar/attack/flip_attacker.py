@@ -20,13 +20,13 @@ class FlipAttacker(Attacker):
     _allow_singleton: bool = False
 
     def reset(self) -> "FlipAttacker":
+        super().reset()
         self.g.cache_clear()
         self._removed_edges = {}
         self._added_edges = {}
         self._removed_feats = {}
         self._added_feats = {}
         self.degree = self._degree.clone().to(self.device)
-        self.is_reseted = True
         return self
 
     def remove_edge(self, u: int, v: int, it: Optional[int] = None):

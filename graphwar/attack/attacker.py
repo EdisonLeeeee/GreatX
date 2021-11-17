@@ -99,6 +99,13 @@ class Attacker(torch.nn.Module):
         set_seed(seed)
 
         self.is_reseted = False
+        
+    def reset(self):
+        self.is_reseted = True
+        return self
+    
+    def g(self):
+        raise NotImplementedError
 
     @property
     def feat(self):
@@ -111,7 +118,7 @@ class Attacker(torch.nn.Module):
     @property
     def graph(self):
         return self._graph
-
+    
     @abc.abstractmethod
     def attack(self) -> "Attacker":
         """defined for attacker model."""
@@ -130,7 +137,7 @@ class Attacker(torch.nn.Module):
         if num_budgets > max_perturbations:
             raise ValueError(
                 f"'num_budgets' should be less than or equal the maximum allowed perturbations: {max_perturbations}."
-                "if you want to use larget budgets, you could set 'attacker.set_max_perturbations(a_larger_budget)'."
+                "if you want to use larger budgets, you could set 'attacker.set_max_perturbations(a_larger_budget)'."
             )
 
         if num_budgets < 1.:

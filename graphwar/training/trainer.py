@@ -169,7 +169,6 @@ class Trainer:
         loss_fn = self.loss
         model = self.model
 
-        optimizer.zero_grad()
         self.reset_metrics()
         model.train()
 
@@ -178,6 +177,8 @@ class Trainer:
             x, y, out_index = self.unravel_batch(batch)
             x = self.to_device(x)
             y = self.to_device(y)
+            optimizer.zero_grad()
+            
             if not isinstance(x, tuple):
                 x = x,
             out = model(*x)
@@ -294,7 +295,7 @@ class Trainer:
     def config_metrics(self) -> Callable:
         return Accuracy()
 
-    def config_callbacks(self, verbose, epochs, callbacks=None) -> Callback:
+    def config_callbacks(self, verbose, epochs, callbacks=None) -> CallbackList:
         callbacks = CallbackList(callbacks=callbacks, add_history=True, add_progbar=True if verbose else False)
         callbacks.set_model(self.model)
         callbacks.set_params(dict(verbose=verbose, epochs=epochs))

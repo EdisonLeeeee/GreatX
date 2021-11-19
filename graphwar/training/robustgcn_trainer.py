@@ -5,7 +5,6 @@ from graphwar.training import Trainer
 class RobustGCNTrainer(Trainer):
 
     def train_step(self, dataloader):
-        optimizer = self.optimizer
         loss_fn = self.loss
         model = self.model
 
@@ -19,7 +18,6 @@ class RobustGCNTrainer(Trainer):
             x, y, out_index = self.unravel_batch(batch)
             x = self.to_device(x)
             y = self.to_device(y)
-            optimizer.zero_grad()
             
             if not isinstance(x, tuple):
                 x = x,
@@ -31,7 +29,6 @@ class RobustGCNTrainer(Trainer):
             loss = loss_fn(out, y) + kl * kl_loss
             # ===============================================================
             loss.backward()
-            optimizer.step()
             for metric in self.metrics:
                 metric.update_state(y.cpu(), out.detach().cpu())
             self.callbacks.on_train_batch_end(epoch)

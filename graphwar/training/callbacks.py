@@ -1141,6 +1141,36 @@ class ProgbarLogger(Callback):
         return f"{self.__class__.__name__}(epochs={self.epochs}, verbose={self.verbose})"
     __repr__ = __str__
 
+    
+
+class Scheduler(Callback):
+    def __init__(self, scheduler):
+        super().__init__()
+        self.scheduler = scheduler
+
+    def on_train_batch_end(self, batch, logs=None):
+        self.scheduler.step()
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}(scheduler={self.scheduler})"
+    __repr__ = __str__
+
+
+class Optimizer(Callback):
+    def __init__(self, optimizer):
+        super().__init__()
+        self.optimizer = optimizer
+
+    def on_train_batch_begin(self, batch, logs=None):
+        self.optimizer.zero_grad()
+
+    def on_train_batch_end(self, batch, logs=None):
+        self.optimizer.step()
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}(optimizer={self.optimizer})"
+    __repr__ = __str__
+
 
 class LambdaCallback(Callback):
     r"""Callback for creating simple, custom callbacks on-the-fly.

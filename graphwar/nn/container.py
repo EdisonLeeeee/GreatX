@@ -44,16 +44,19 @@ class Sequential(nn.Sequential):
     def __init__(self, *args, loc=0):
         super().__init__(*args)
         self.loc = loc
+        para_required = []
+        for module in self:
+            assert hasattr(module, "forward"), module
+            para_required.append(len(inspect.signature(module.forward).parameters))
+        self._para_required = para_required
 
     def forward(self, *inputs):
         loc = self.loc
         assert loc <= len(inputs)
         output = inputs[loc]
 
-        for module in self:
-            assert hasattr(module, 'forward')
-            para_required = len(inspect.signature(module.forward).parameters)
-            if para_required == 1:
+        for module, para_required in zip(self, self._para_required):
+            if para_required == 1 and not isinstance(module, (MultiSequential, Tree)):
                 input = inputs[loc]
                 if isinstance(input, tuple):
                     output = tuple(module(_input) for _input in input)
@@ -63,3 +66,4 @@ class Sequential(nn.Sequential):
                 output = module(*inputs)
             inputs = inputs[:loc] + (output,) + inputs[loc + 1:]
         return output
+

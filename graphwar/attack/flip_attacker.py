@@ -72,6 +72,9 @@ class FlipAttacker(Attacker):
         edges = self._removed_edges
         if edges is None or len(edges) == 0:
             return None
+        
+        if torch.is_tensor(edges):
+            return edges.to(self.device)                
 
         if isinstance(edges, dict):
             edges = list(edges.keys())
@@ -82,6 +85,9 @@ class FlipAttacker(Attacker):
         edges = self._added_edges
         if edges is None or len(edges) == 0:
             return None
+        
+        if torch.is_tensor(edges):
+            return edges.to(self.device)          
 
         if isinstance(edges, dict):
             edges = list(edges.keys())
@@ -107,6 +113,9 @@ class FlipAttacker(Attacker):
 
         if isinstance(feats, dict):
             feats = list(feats.keys())
+            
+        if torch.is_tensor(feats):
+            return feats.to(self.device)              
 
         return torch.tensor(np.asarray(feats, dtype="int64").T, device=self.device)
 
@@ -117,6 +126,9 @@ class FlipAttacker(Attacker):
 
         if isinstance(feats, dict):
             feats = list(feats.keys())
+            
+        if torch.is_tensor(feats):
+            return feats.to(self.device)            
 
         return torch.tensor(np.asarray(feats, dtype="int64").T, device=self.device)
 

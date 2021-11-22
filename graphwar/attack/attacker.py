@@ -89,12 +89,12 @@ class Attacker(torch.nn.Module):
         self.name = name or self.__class__.__name__
         self.seed = seed
         self.register_buffer('_degree', torch.as_tensor(self.adjacency_matrix.sum(1).A1))
-        self.num_feats = feat.size(-1) if feat is not None else None
 
         self.edges = self._graph.edges()
         self.nodes = self._graph.nodes()
         self.num_nodes = graph.num_nodes()
         self.num_edges = self.adjacency_matrix.nnz // 2
+        self.num_feats = feat.size(-1) if feat is not None else None
 
         set_seed(seed)
 

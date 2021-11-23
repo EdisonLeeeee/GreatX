@@ -4,7 +4,7 @@ NOTE: GraphWar is still in the early stages and the API will likely continue to 
 
 
 # 🚀 Installation
-Please make sure you have installed [PyTorch](https://pytorch.org/) and [Deep Graph Library(DGL)](https://www.dgl.ai/pages/start.html).
+Please make sure you have installed [PyTorch](https://pytorch.org) and [Deep Graph Library(DGL)](https://www.dgl.ai/pages/start.html).
 ```bash
 # Comming soon
 pip install -U graphwar
@@ -18,7 +18,8 @@ pip install -e . --verbose
 where `-e` means "editable" mode so you don't have to reinstall every time you make changes.
 
 # Get Started
-Assume that you have a `dgl.DGLgraph` instance `g` that describes you dataset.
+Assume that you have a `dgl.DGLgraph` instance `g` that describes your dataset.
+NOTE: Please make sure that `g` is a self-looped graph, i.e., run `g = g.remove_self_loop().add_self_loop()`.
 
 ## A simple targeted attack
 
@@ -69,6 +70,9 @@ In detail, the following methods are currently implemented:
 |**FGAttack** | *Jinyin Chen et al.* [📝Fast Gradient Attack on Network Embedding](https://arxiv.org/abs/1809.02797), *arXiv'18*<br>*Jinyin Chen et al.* [📝Link Prediction Adversarial Attack Via Iterative Gradient Attack](https://ieeexplore.ieee.org/abstract/document/9141291), *IEEE Trans'20* <br> *Hanjun Dai et al.* [📝Adversarial Attack on Graph Structured Data](https://arxiv.org/abs/1806.02371), *ICML'18* </br> |
 |**Metattack** | *Daniel Zügner et al.* [📝Adversarial Attacks on Graph Neural Networks via Meta Learning](https://arxiv.org/abs/1902.08412), *ICLR'19* |
 |**PGD**, **MinmaxAttack** | *Kaidi Xu et al.* [📝Topology Attack and Defense for Graph Neural Networks: An Optimization Perspective](https://arxiv.org/abs/1906.04214), *IJCAI'19* |
+
+## Backdoor Attack
+
 
 ## Defense
 

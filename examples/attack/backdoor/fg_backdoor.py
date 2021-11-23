@@ -2,10 +2,9 @@ import torch
 from tqdm import tqdm
 
 from graphwar.data import GraphWarDataset
-from graphwar.training import Trainer, RobustGCNTrainer
+from graphwar.training import Trainer
 from graphwar.training.callbacks import ModelCheckpoint
 from graphwar.models import GCN
-from graphwar.defense.model_level import MedianGCN
 from graphwar.utils import split_nodes
 from graphwar import set_seed
 
@@ -35,15 +34,14 @@ trainer.fit(g, y_train, splits.train_nodes, val_y=y_val, val_index=splits.val_no
 target_class = 0
 predict = trainer.predict(g).argmax(-1)
 count = (predict == target_class).int().sum().item()
-print(f"{count/g.num_nodes():.2%} of nodes are classified as class {target_class} before attack")
+print(f"{count/g.num_nodes():.2%} of nodes are classified as class {target_class} without trigger")
 
 # ============ Attacking ==================================
-from graphwar.attack.backdoor import LGCBackdoor
-attacker = LGCBackdoor(g, device)
+from graphwar.attack.backdoor import FGBackdoor
+attacker = FGBackdoor(g, device)
 attacker.setup_surrogate(model)
 attacker.reset()
 attacker.attack(num_budgets=50, target_class=0)
-
 
 count = 0
 for t in tqdm(range(g.num_nodes())):
@@ -51,5 +49,5 @@ for t in tqdm(range(g.num_nodes())):
     t_class = trainer.predict(attacked_g, t).argmax(-1)
     if t_class == target_class:
         count += 1
-        
+
 print(f"{count/g.num_nodes():.2%} of nodes are classified as class {target_class} with trigger")

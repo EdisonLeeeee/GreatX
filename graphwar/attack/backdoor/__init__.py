@@ -1,2 +1,3 @@
 from .backdoor_attacker import BackdoorAttacker
-from .lgcbackdoor import LGCBackdoor
+from .lgc_backdoor import LGCBackdoor
+from .fg_backdoor import FGBackdoor

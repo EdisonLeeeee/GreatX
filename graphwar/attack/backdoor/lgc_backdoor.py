@@ -2,8 +2,7 @@ import dgl
 import torch
 import warnings
 from typing import Optional, Union
-from .backdoor_attacker import BackdoorAttacker
-
+from graphwar.attack.backdoor.backdoor_attacker import BackdoorAttacker
 
 class LGCBackdoor(BackdoorAttacker):
 
@@ -28,7 +27,7 @@ class LGCBackdoor(BackdoorAttacker):
         self.num_classes = self.W.shape[-1]
         return self
 
-    def attack(self, num_budgets: Union[int, float], target_class: int):
+    def attack(self, num_budgets: Union[int, float], target_class: int, disable: bool=False):
         super().attack(num_budgets, target_class)
         assert target_class < self.num_classes
 

@@ -11,7 +11,7 @@ from graphwar import set_seed
 
 # ============ Loading datasets ================================
 data = GraphWarDataset('cora', verbose=True, standardize=True)
-g = data[0].add_self_loop()
+g = data[0]
 splits = split_nodes(g.ndata['label'], random_state=15)
 
 num_feats = g.ndata['feat'].size(1)
@@ -28,7 +28,7 @@ g = g.to(device)
 # ============ Before Attack ==================================
 model = GCN(num_feats, num_classes, hids=[32], bias=False)
 trainer = Trainer(model, device=device)
-ckp = ModelCheckpoint('gcn.pth', monitor='val_accuracy')
+ckp = ModelCheckpoint('model.pth', monitor='val_accuracy')
 trainer.fit(g, y_train, splits.train_nodes, val_y=y_val, val_index=splits.val_nodes, callbacks=[ckp])
 
 target_class = 0
@@ -50,5 +50,5 @@ for t in tqdm(range(g.num_nodes())):
     t_class = trainer.predict(attacked_g, t).argmax(-1)
     if t_class == target_class:
         count += 1
-        
+
 print(f"{count/g.num_nodes():.2%} of nodes are classified as class {target_class} with trigger")

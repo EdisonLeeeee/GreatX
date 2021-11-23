@@ -6,8 +6,8 @@ from tqdm import tqdm
 from typing import Optional, Callable
 
 from graphwar.utils import normalize, singleton_mask
-from .untargeted_attacker import UntargetedAttacker
-from ..surrogate_attacker import SurrogateAttacker
+from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
+from graphwar.attack.surrogate_attacker import SurrogateAttacker
 
 
 class FGAttack(UntargetedAttacker, SurrogateAttacker):
@@ -37,8 +37,8 @@ class FGAttack(UntargetedAttacker, SurrogateAttacker):
 
     def reset(self):
         super().reset()
-        self.modified_adj = self.graph.adjacency_matrix().to_dense().to(self.device)
-        self.modified_feat = self.feat.clone().to(self.device)
+        self.modified_adj = self.graph.add_self_loop().adjacency_matrix().to_dense()
+        self.modified_feat = self.feat.clone()
         return self
 
     def attack(self,

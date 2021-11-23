@@ -3,7 +3,7 @@ import torch
 from torch import Tensor
 from functools import lru_cache
 from typing import Optional, Union
-from ..attacker import Attacker
+from graphwar.attack.attacker import Attacker
 
 
 class InjectionAttacker(Attacker):
@@ -23,8 +23,8 @@ class InjectionAttacker(Attacker):
 
         return self
 
-    def attack(self, num_budgets: Union[int, float], *, targets: Optional[Tensor]=None, num_edges_global: Optional[int]=None, 
-               num_edges_local: Optional[int]=None, feat_limits: Optional[tuple, dict]=None) -> "InjectionAttacker":
+    def attack(self, num_budgets: Union[int, float], *, targets: Optional[Tensor] = None, num_edges_global: Optional[int] = None,
+               num_edges_local: Optional[int] = None, feat_limits: Optional[tuple, dict] = None) -> "InjectionAttacker":
         """Base method that describes the adversarial injection attack
         """
 
@@ -39,10 +39,10 @@ class InjectionAttacker(Attacker):
         self.num_budgets = num_budgets
         self.num_edges_global = num_edges_global
         self.num_edges_local = num_edges_local
-        
+
         # ============== get feature limitation of injected node ==============
-        min_limits = max_limits = None 
-        
+        min_limits = max_limits = None
+
         if feat_limits is not None:
             if isinstance(feat_limits, tuple):
                 min_limits, max_limits = feat_limits
@@ -53,16 +53,16 @@ class InjectionAttacker(Attacker):
                     raise ValueError(f"Unrecognized key {next(iter(feat_limits.keys()))}.")
             else:
                 raise TypeError(f"`feat_limits` should be an instance of tuple and dict, but got {feat_limits}.")
-        
+
         feat = self.feat
-        
+
         if min_limits is None and feat is not None:
             min_limits = feat.min()
-            
+
         if max_limits is None and feat is not None:
-            max_limits = feat.max()            
+            max_limits = feat.max()
         # ======================================================================
-                
+
         self.feat_limits = min_limits, max_limits
         if targets is None:
             self.targets = torch.arange(self.num_nodes, device=self.device)

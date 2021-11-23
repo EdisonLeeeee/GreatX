@@ -1,7 +1,6 @@
-import numpy as np
 from numbers import Number
 
-from ..flip_attacker import FlipAttacker
+from graphwar.attack.flip_attacker import FlipAttacker
 
 
 class TargetedAttacker(FlipAttacker):

@@ -2,16 +2,17 @@ import torch
 import dgl
 import numpy as np
 import torch.nn.functional as F
-from functools import lru_cache
+
 from tqdm import tqdm
+from functools import lru_cache
 from torch.autograd import grad
 from typing import Optional, Callable
 
 from graphwar.functional.scatter import scatter_add
 from graphwar.utils import ego_graph
 from graphwar.models import SGC
-from .targeted_attacker import TargetedAttacker
-from ..surrogate_attacker import SurrogateAttacker
+from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
+from graphwar.attack.surrogate_attacker import SurrogateAttacker
 
 from collections import namedtuple
 SubGraph = namedtuple('SubGraph', ['edge_index', 'sub_edges', 'non_edges',

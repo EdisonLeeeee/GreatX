@@ -1,7 +1,7 @@
 import dgl
 import random
 from typing import Optional
-from .random_attack import RandomAttack
+from graphwar.attack.untargeted.random_attack import RandomAttack
 
 
 class DICEAttack(RandomAttack):

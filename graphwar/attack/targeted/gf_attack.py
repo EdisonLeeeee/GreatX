@@ -8,7 +8,7 @@ from torch import Tensor
 from typing import Optional
 
 from graphwar.utils import singleton_filter
-from .targeted_attacker import TargetedAttacker
+from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 
 
 class GFAttack(TargetedAttacker):

@@ -1,11 +1,11 @@
 import dgl
 import random
 from typing import Optional
-from .random_attack import RandomAttack
+from graphwar.attack.targeted.random_attack import RandomAttack
 
 
 class DICEAttack(RandomAttack):
-    """DICE attacker that randomly chooses edges to flip 
+    r"""DICE attacker that randomly chooses edges to flip 
     based on “Disconnect Internally, Connect Externally” (DICE), 
     which conducts attacks by removing edges between nodes
     with high correlations and connecting edges with low correlations.

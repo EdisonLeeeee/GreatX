@@ -9,7 +9,7 @@ from typing import Optional
 from functools import lru_cache
 
 from graphwar.utils import normalize, add_self_loop, singleton_filter
-from .targeted_attacker import TargetedAttacker
+from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 
 
 class Nettack(TargetedAttacker):

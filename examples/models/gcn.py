@@ -9,7 +9,7 @@ from graphwar import set_seed
 
 # ============ Loading datasets ================================
 data = GraphWarDataset('cora', verbose=True, standardize=True)
-g = data[0].add_self_loop()
+g = data[0]
 splits = split_nodes(g.ndata['label'], random_state=15)
 
 num_feats = g.ndata['feat'].size(1)
@@ -25,6 +25,6 @@ g = g.to(device)
 # ============ Training models ==================================
 model = GCN(num_feats, num_classes)
 trainer = Trainer(model, device=device)
-ckp = ModelCheckpoint('gcn.pth', monitor='val_accuracy')
+ckp = ModelCheckpoint('model.pth', monitor='val_accuracy')
 trainer.fit(g, y_train, splits.train_nodes, val_y=y_val, val_index=splits.val_nodes, callbacks=[ckp])
 trainer.evaluate(g, y_test, splits.test_nodes)

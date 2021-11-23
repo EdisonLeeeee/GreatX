@@ -7,8 +7,8 @@ from tqdm import tqdm
 from typing import Optional, Callable
 
 from graphwar.utils import normalize, singleton_mask
-from .untargeted_attacker import UntargetedAttacker
-from ..surrogate_attacker import SurrogateAttacker
+from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
+from graphwar.attack.surrogate_attacker import SurrogateAttacker
 
 
 class Metattack(UntargetedAttacker, SurrogateAttacker):
@@ -47,11 +47,11 @@ class Metattack(UntargetedAttacker, SurrogateAttacker):
 
         self.y_train = self.label[labeled_nodes]
         self.y_self_train = self.estimate_self_training_labels(unlabeled_nodes)
-        self.adj = self.graph.adjacency_matrix().to_dense().to(self.device)
+        self.adj = self.graph.add_self_loop().adjacency_matrix().to_dense()
 
         weights = []
         w_velocities = []
-        
+
         for para in self.surrogate.parameters():
             if para.ndim == 2:
                 weights.append(torch.zeros_like(para, requires_grad=True))
@@ -175,7 +175,7 @@ class Metattack(UntargetedAttacker, SurrogateAttacker):
 
                 adj_max, adj_argmax = torch.max(adj_grad_score, dim=0)
                 feat_max, feat_argmax = torch.max(feat_grad_score, dim=0)
-                
+
                 if adj_max >= feat_max:
                     u, v = divmod(adj_argmax.item(), num_nodes)
                     edge_weight = modified_adj[u, v].data.item()

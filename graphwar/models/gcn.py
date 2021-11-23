@@ -88,7 +88,7 @@ class GCN(nn.Module):
 
         if torch.is_tensor(g):
             return self.forward_by_adjacency_matrix(g, feat)
-
+        g = g.add_self_loop()
         for conv in self.conv:
             if isinstance(conv, GraphConv):
                 feat = conv(g, feat, edge_weight=edge_weight)

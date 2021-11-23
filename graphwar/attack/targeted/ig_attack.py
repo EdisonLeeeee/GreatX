@@ -7,8 +7,8 @@ from tqdm import tqdm
 from typing import Optional
 
 from graphwar.utils import normalize, singleton_filter
-from .targeted_attacker import TargetedAttacker
-from ..surrogate_attacker import SurrogateAttacker
+from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
+from graphwar.attack.surrogate_attacker import SurrogateAttacker
 
 
 class IGAttack(TargetedAttacker, SurrogateAttacker):
@@ -22,7 +22,7 @@ class IGAttack(TargetedAttacker, SurrogateAttacker):
         num_nodes, num_feats = self.num_nodes, self.num_feats
         self.nodes_set = set(range(num_nodes))
         self.feats_list = list(range(num_feats))
-        self.adj = self.graph.adjacency_matrix().to_dense().to(self.device)
+        self.adj = self.graph.add_self_loop().adjacency_matrix().to_dense()
         self.adj_norm = normalize(self.adj)
 
     def attack(self,

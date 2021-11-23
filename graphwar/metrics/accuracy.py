@@ -1,6 +1,5 @@
 import torch
-from torch import nn
-from .metric import Metric
+from graphwar.metrics.metric import Metric
 
 
 class Accuracy(Metric):

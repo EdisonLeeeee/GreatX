@@ -1,4 +1,4 @@
-from ..flip_attacker import FlipAttacker
+from graphwar.attack.flip_attacker import FlipAttacker
 
 
 class UntargetedAttacker(FlipAttacker):

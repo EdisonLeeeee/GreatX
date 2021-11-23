@@ -3,7 +3,7 @@ import numpy as np
 import dgl
 from tqdm import tqdm
 from typing import Optional
-from .untargeted_attacker import UntargetedAttacker
+from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
 
 
 class RandomAttack(UntargetedAttacker):

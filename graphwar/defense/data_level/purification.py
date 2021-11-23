@@ -5,7 +5,7 @@ from collections import namedtuple
 
 _FEATURE = Info.feat
 
-out_tuple = namedtuple('NamedTuple', ['g', 'edges'])
+namedtuple_g_edges = namedtuple('NamedTuple', ['g', 'edges'])
 
 
 def jaccard_similarity(A, B):
@@ -39,7 +39,7 @@ class JaccardPurification(torch.nn.Module):
         A = feat[row]
         B = feat[col]
         score = jaccard_similarity(A, B)
-        deg = g.remove_self_loop().in_degrees()
+        deg = g.in_degrees()
 
         if self.allow_singleton:
             condition = score <= self.threshold
@@ -49,7 +49,7 @@ class JaccardPurification(torch.nn.Module):
         e_id = torch.where(condition)[0]
         g.remove_edges(e_id)
 
-        return out_tuple(g=g, edges=torch.stack([row[e_id], col[e_id]], dim=0))
+        return namedtuple_g_edges(g=g, edges=torch.stack([row[e_id], col[e_id]], dim=0))
 
     def extra_repr(self) -> str:
         return f"threshold={self.threshold}, allow_singleton={self.allow_singleton}"
@@ -75,7 +75,7 @@ class CosinePurification(torch.nn.Module):
         B = feat[col]
         score = cosine_similarity(A, B)
 
-        deg = g.remove_self_loop().in_degrees()
+        deg = g.in_degrees()
 
         if self.allow_singleton:
             condition = score <= self.threshold
@@ -84,7 +84,7 @@ class CosinePurification(torch.nn.Module):
 
         e_id = torch.where(condition)[0]
         g.remove_edges(e_id)
-        return out_tuple(g=g, edges=torch.stack([row[e_id], col[e_id]], dim=0))
+        return namedtuple_g_edges(g=g, edges=torch.stack([row[e_id], col[e_id]], dim=0))
 
     def extra_repr(self) -> str:
         return f"threshold={self.threshold}, allow_singleton={self.allow_singleton}"

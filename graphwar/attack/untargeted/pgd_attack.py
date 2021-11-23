@@ -10,8 +10,8 @@ from typing import Optional, Callable
 from torch.distributions.bernoulli import Bernoulli
 
 from graphwar.utils import normalize
-from .untargeted_attacker import UntargetedAttacker
-from ..surrogate_attacker import SurrogateAttacker
+from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
+from graphwar.attack.surrogate_attacker import SurrogateAttacker
 
 
 class PGDAttack(UntargetedAttacker, SurrogateAttacker):
@@ -47,9 +47,10 @@ class PGDAttack(UntargetedAttacker, SurrogateAttacker):
             victim_labels = torch.cat([self.label[labeled_nodes],
                                        self_training_labels], dim=0)
 
-        adj = self.graph.adjacency_matrix().to_dense().to(self.device)
-        self.complementary = torch.ones_like(adj) - torch.eye(self.num_nodes, device=self.device) - 2. * adj
-        self.adj = adj
+        adj = self.graph.adjacency_matrix().to_dense()
+        I = torch.eye(self.num_nodes, device=self.device)
+        self.complementary = torch.ones_like(adj) - I - 2. * adj
+        self.adj = adj + I
         self.victim_nodes = victim_nodes
         self.victim_labels = victim_labels
 

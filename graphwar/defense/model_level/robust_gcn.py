@@ -79,6 +79,7 @@ class RobustGCN(nn.Module):
             conv.reset_parameters()
 
     def forward(self, g, feat):
+        g = g.add_self_loop()
         feat = self.dropout(feat)
         mean, var = self.conv1(g, feat)
         self.mean, self.var = mean, var

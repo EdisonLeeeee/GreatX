@@ -4,11 +4,10 @@ import torch
 import numpy as np
 import scipy.sparse as sp
 from numbers import Number
-
-from graphwar import set_seed
 from typing import Optional, Union
 
-from graphwar import Info
+from graphwar import set_seed, Info
+
 
 _FEATURE = Info.feat
 _LABEL = Info.label
@@ -29,15 +28,15 @@ class Attacker(torch.nn.Module):
 
     def __init__(self, graph: dgl.DGLGraph, device: str = "cpu",
                  seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
-        """Initialization of an attacker model.
+        f"""Initialization of an attacker model.
 
         Parameters
         ----------
         graph : dgl.DGLGraph
             the DGL graph. By default, we assume that the graph 
             contains selfloop. If the attack requires node features,
-            `graph.ndata['feat']` should be specified. If the attacker requires
-            node labels, `graph.ndata['label']` should be specified
+            `graph.ndata[{_FEATURE}]` should be specified. If the attacker requires
+            node labels, `graph.ndata[{_LABEL}]` should be specified
         device : str, optional
             the device of the attack running on, by default "cpu"
         seed : Optional[int], optional
@@ -47,16 +46,17 @@ class Attacker(torch.nn.Module):
             by default None
         kwargs : optional
             additional arguments of :class:`graphwar.attack.Attacker`,
-            including (`feat`, `label`) to specify the node features and the
-            node labels, if they are not in `graph.ndata`
+            including (`{_FEATURE}`, `{_LABEL}`) to specify the node features 
+            and the node labels, if they are not in `graph.ndata`
 
 
         Note
         ----
-        By default, we assume that the graph 
-        contains selfloop. If the attack requires node features,
-        `graph.ndata['feat']` should be specified. If the attacker requires
-        node labels, `graph.ndata['label']` should be specified.
+        * If the attack requires node features,
+        `graph.ndata[{_FEATURE}]` should be specified. 
+
+        * If the attack requires node labels, 
+        `graph.ndata[{_LABEL}]` should be specified.
         """
         super().__init__()
         feat = kwargs.pop(_FEATURE, None)
@@ -69,7 +69,7 @@ class Attacker(torch.nn.Module):
             )
 
         self.device = torch.device(device)
-        self._graph = graph.to(self.device)
+        self._graph = graph.remove_self_loop().to(self.device)
 
         if feat is not None:
             feat = torch.as_tensor(feat, dtype=torch.float32, device=self.device)
@@ -85,25 +85,26 @@ class Attacker(torch.nn.Module):
         setattr(self, '_' + _FEATURE, feat)
         setattr(self, '_' + _LABEL, label)
 
-        self.adjacency_matrix: sp.csr_matrix = graph.remove_self_loop().adjacency_matrix(scipy_fmt='csr')
+        self.adjacency_matrix: sp.csr_matrix = self._graph.adjacency_matrix(scipy_fmt='csr')
         self.name = name or self.__class__.__name__
         self.seed = seed
-        self.register_buffer('_degree', torch.as_tensor(self.adjacency_matrix.sum(1).A1))
+
+        self._degree = self._graph.in_degrees()
 
         self.edges = self._graph.edges()
         self.nodes = self._graph.nodes()
-        self.num_nodes = graph.num_nodes()
-        self.num_edges = self.adjacency_matrix.nnz // 2
+        self.num_nodes = self._graph.num_nodes()
+        self.num_edges = self._graph.num_edges() // 2
         self.num_feats = feat.size(-1) if feat is not None else None
 
         set_seed(seed)
 
         self.is_reseted = False
-        
+
     def reset(self):
         self.is_reseted = True
         return self
-    
+
     def g(self):
         raise NotImplementedError
 
@@ -118,7 +119,7 @@ class Attacker(torch.nn.Module):
     @property
     def graph(self):
         return self._graph
-    
+
     @abc.abstractmethod
     def attack(self) -> "Attacker":
         """defined for attacker model."""

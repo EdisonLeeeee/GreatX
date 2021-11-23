@@ -33,6 +33,7 @@ class SGC(nn.Module):
         self.conv.reset_parameters()
 
     def forward(self, g, feat):
+        g = g.add_self_loop()
         return self.conv(g, feat)
 
     def cache_clear(self):

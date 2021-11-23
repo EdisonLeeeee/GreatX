@@ -6,8 +6,8 @@ from tqdm import tqdm
 from typing import Optional, Callable
 
 from graphwar.utils import normalize, singleton_mask
-from .untargeted_attacker import UntargetedAttacker
-from ..surrogate_attacker import SurrogateAttacker
+from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
+from graphwar.attack.surrogate_attacker import SurrogateAttacker
 
 
 class IGAttack(UntargetedAttacker, SurrogateAttacker):
@@ -21,9 +21,9 @@ class IGAttack(UntargetedAttacker, SurrogateAttacker):
         num_nodes, num_feats = self.num_nodes, self.num_feats
         self.nodes_set = set(range(num_nodes))
         self.feats_list = list(range(num_feats))
-        self.adj = self.graph.adjacency_matrix().to_dense().to(self.device)
+        self.adj = self.graph.add_self_loop().adjacency_matrix().to_dense()
         self.adj_norm = normalize(self.adj)
-        
+
     def setup_surrogate(self, surrogate: torch.nn.Module,
                         victim_nodes: Tensor,
                         victim_labels: Optional[Tensor] = None, *,
@@ -38,7 +38,7 @@ class IGAttack(UntargetedAttacker, SurrogateAttacker):
             self._check_node_label_exists()
             victim_labels = self.label[victim_nodes]
         self.victim_labels = victim_labels.to(self.device)
-        return self        
+        return self
 
     def attack(self,
                num_budgets=0.05, *,
@@ -53,13 +53,13 @@ class IGAttack(UntargetedAttacker, SurrogateAttacker):
 
         if structure_attack:
             link_importance = self.get_link_importance(steps, self.victim_nodes,
-                                                                       self.victim_labels, disable=disable)
+                                                       self.victim_labels, disable=disable)
             adj_score = self.structure_score(self.adj, link_importance)
 
         if feature_attack:
             self._check_feature_matrix_binary()
-            feature_importance = self.get_feature_importance(steps, self.victim_nodes, 
-                                                                             self.victim_labels, disable=disable)
+            feature_importance = self.get_feature_importance(steps, self.victim_nodes,
+                                                             self.victim_labels, disable=disable)
             feat_score = self.feature_score(self.feat, feature_importance)
 
         if structure_attack and not feature_attack:
@@ -68,29 +68,29 @@ class IGAttack(UntargetedAttacker, SurrogateAttacker):
             for it, index in enumerate(indices.tolist()):
                 u, v = divmod(index, self.num_nodes)
                 edge_weight = self.adj[u, v].data.item()
-                
+
                 if edge_weight > 0:
                     self.remove_edge(u, v, it)
                 else:
-                    self.add_edge(u, v, it)                
-                
+                    self.add_edge(u, v, it)
+
         elif feature_attack and not structure_attack:
             indices = torch.topk(feat_score, k=self.num_budgets).indices
-            
+
             for it, index in enumerate(indices.tolist()):
                 u, v = divmod(index, self.num_feats)
                 feat_weight = self.feat[u, v].data.item()
-                
+
                 if feat_weight > 0:
                     self.remove_feat(u, v, it)
                 else:
-                    self.add_feat(u, v, it)    
+                    self.add_feat(u, v, it)
         else:
             # both attacks are conducted
             score = torch.cat([adj_score, feat_score])
             indices = torch.topk(score, k=self.num_budgets).indices
             boundary = adj_score.size(0)
-            
+
             for it, index in enumerate(indices.tolist()):
                 if index < boundary:
                     u, v = divmod(index, self.num_nodes)
@@ -99,7 +99,7 @@ class IGAttack(UntargetedAttacker, SurrogateAttacker):
                     if edge_weight > 0:
                         self.remove_edge(u, v, it)
                     else:
-                        self.add_edge(u, v, it)    
+                        self.add_edge(u, v, it)
                 else:
                     u, v = divmod(index - boundary, self.num_feats)
                     feat_weight = self.feat[u, v].data.item()
@@ -107,7 +107,7 @@ class IGAttack(UntargetedAttacker, SurrogateAttacker):
                     if feat_weight > 0:
                         self.remove_feat(u, v, it)
                     else:
-                        self.add_feat(u, v, it)                        
+                        self.add_feat(u, v, it)
 
         return self
 
@@ -168,7 +168,7 @@ class IGAttack(UntargetedAttacker, SurrogateAttacker):
             gradients += self._compute_feature_gradients(adj, feat_step, victim_nodes, victim_labels)
 
         return gradients
-    
+
     def structure_score(self, adj, adj_grad):
         adj_grad = adj_grad + adj_grad.t()
         score = adj_grad * (1 - 2 * adj)
@@ -182,7 +182,7 @@ class IGAttack(UntargetedAttacker, SurrogateAttacker):
     def feature_score(self, feat, feat_grad):
         score = feat_grad * (1 - 2 * feat)
         score -= score.min()
-        return score.view(-1)    
+        return score.view(-1)
 
     def _compute_structure_gradients(self, adj_step, feat, victim_nodes, victim_labels):
 

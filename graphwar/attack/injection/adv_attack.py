@@ -1,4 +1,4 @@
-from .injection_attacker import InjectionAttacker
+from graphwar.attack.injection.injection_attacker import InjectionAttacker
 
 
 class AdvAttack(InjectionAttacker):

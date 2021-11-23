@@ -2,7 +2,7 @@ import random
 import dgl
 from tqdm import tqdm
 from typing import Optional
-from .targeted_attacker import TargetedAttacker
+from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 
 
 class RandomAttack(TargetedAttacker):
@@ -45,14 +45,14 @@ class RandomAttack(TargetedAttacker):
                 else:
                     delta = -1
                     edge = self.get_removed_edge(influence_nodes)
-                    
+
                 if edge is not None:
                     u, v = edge
                     if delta > 0:
                         self.add_edge(u, v, num_chosen)
                     else:
                         self.remove_edge(u, v, num_chosen)
-                        
+
                     num_chosen += 1
                     pbar.update(1)
 

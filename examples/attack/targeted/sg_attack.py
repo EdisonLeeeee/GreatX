@@ -9,7 +9,7 @@ from graphwar import set_seed
 
 # ============ Loading datasets ================================
 data = GraphWarDataset('cora', verbose=True, standardize=True)
-g = data[0].add_self_loop()
+g = data[0]
 splits = split_nodes(g.ndata['label'], random_state=15)
 
 num_feats = g.ndata['feat'].size(1)
@@ -22,7 +22,7 @@ set_seed(123)
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 g = g.to(device)
 
-target = 1 # target node to attack
+target = 1  # target node to attack
 
 print(f"Target node {target} has label {g.ndata['label'][target]}")
 
@@ -42,7 +42,7 @@ attacker.reset()
 attacker.attack(target)
 
 # ============ After evasion Attack ==================================
-model.cache_clear() # Important! Since SGC has cached results
+model.cache_clear()  # Important! Since SGC has cached results
 output = trainer.predict(attacker.g(), target)
 print(f"After evasion attack\n {output.tolist()}")
 

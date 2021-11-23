@@ -8,7 +8,7 @@ from graphwar import set_seed
 
 # ============ Loading datasets ================================
 data = GraphWarDataset('cora', verbose=True, standardize=True)
-g = data[0].add_self_loop()
+g = data[0]
 splits = split_nodes(g.ndata['label'], random_state=15)
 
 num_feats = g.ndata['feat'].size(1)

@@ -85,5 +85,6 @@ class GAT(nn.Module):
         self.out_conv.reset_parameters()
 
     def forward(self, g, feat):
+        g = g.add_self_loop()
         feat = self.conv(g, feat).flatten(1)
         return self.out_conv(g, feat).mean(1)

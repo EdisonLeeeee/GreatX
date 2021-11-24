@@ -4,7 +4,7 @@ import sys
 import scipy.sparse as sp
 import numpy as np
 import os
-
+from sklearn.preprocessing import LabelEncoder
 from dgl.data.dgl_dataset import DGLBuiltinDataset
 from dgl.data.utils import save_graphs, load_graphs, download
 from dgl.convert import graph as dgl_graph
@@ -122,6 +122,9 @@ class GraphWarDataset(DGLBuiltinDataset):
                 adj_matrix = adj_matrix[nodes_to_keep][:, nodes_to_keep]
                 attr_matrix = attr_matrix[nodes_to_keep]
                 labels = labels[nodes_to_keep]
+
+                if np.unique(labels).shape[0] != labels.max() + 1:
+                    labels = LabelEncoder().fit_transform(labels)
 
             adj_matrix = adj_matrix.tocoo()
 

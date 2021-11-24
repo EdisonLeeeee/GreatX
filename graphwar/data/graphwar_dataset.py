@@ -12,7 +12,7 @@ from dgl import transform
 
 _DATASETS = {
     'citeseer', 'citeseer_full', 'cora', 'cora_ml', 'cora_full', 'amazon_cs',
-    'amazon_photo', 'coauthor_cs', 'coauthor_phy', 'polblogs',
+    'amazon_photo', 'coauthor_cs', 'coauthor_phy',
     'pubmed', 'flickr', 'blogcatalog', 'dblp', 'acm', 'uai',
 }
 
@@ -39,7 +39,7 @@ def _get_adversarial_graph_url(file_url):
 
 
 class GraphWarDataset(DGLBuiltinDataset):
-    fr"""Base Class for adversarial graph dataset
+    r"""Base Class for adversarial graph dataset
 
     Reference: 
     [1] GitHub: hhttps://github.com/EdisonLeeeee/GraphWarData
@@ -48,7 +48,9 @@ class GraphWarDataset(DGLBuiltinDataset):
 
     Allowed Datasets
     ----------------
-    {tuple(_DATASETS)}
+    'citeseer', 'citeseer_full', 'cora', 'cora_ml', 'cora_full', 'amazon_cs',
+    'amazon_photo', 'coauthor_cs', 'coauthor_phy',
+    'pubmed', 'flickr', 'blogcatalog', 'dblp', 'acm', 'uai'
     """
 
     def __init__(self, name, raw_dir=None,
@@ -122,7 +124,7 @@ class GraphWarDataset(DGLBuiltinDataset):
                 adj_matrix = adj_matrix[nodes_to_keep][:, nodes_to_keep]
                 attr_matrix = attr_matrix[nodes_to_keep]
                 labels = labels[nodes_to_keep]
-
+                
                 if np.unique(labels).shape[0] != labels.max() + 1:
                     labels = LabelEncoder().fit_transform(labels)
 

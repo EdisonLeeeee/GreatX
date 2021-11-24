@@ -18,7 +18,6 @@ _FEATURE = Info.feat
 class Trainer:
     """A simple trainer to train graph neural network models conveniently.
 
-
     Example
     -------
     >>> from graphwar.trainig import Trainer

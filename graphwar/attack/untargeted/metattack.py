@@ -47,7 +47,7 @@ class Metattack(UntargetedAttacker, SurrogateAttacker):
 
         self.y_train = self.label[labeled_nodes]
         self.y_self_train = self.estimate_self_training_labels(unlabeled_nodes)
-        self.adj = self.graph.add_self_loop().adjacency_matrix().to_dense()
+        self.adj = self.graph.add_self_loop().adjacency_matrix().to_dense().to(self.device)
 
         weights = []
         w_velocities = []

@@ -21,7 +21,7 @@ class IGAttack(UntargetedAttacker, SurrogateAttacker):
         num_nodes, num_feats = self.num_nodes, self.num_feats
         self.nodes_set = set(range(num_nodes))
         self.feats_list = list(range(num_feats))
-        self.adj = self.graph.add_self_loop().adjacency_matrix().to_dense()
+        self.adj = self.graph.add_self_loop().adjacency_matrix().to_dense().to(self.device)
         self.adj_norm = normalize(self.adj)
 
     def setup_surrogate(self, surrogate: torch.nn.Module,

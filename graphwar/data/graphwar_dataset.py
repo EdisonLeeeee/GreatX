@@ -44,21 +44,21 @@ class GraphWarDataset(DGLBuiltinDataset):
     Reference: 
     [1] GitHub: hhttps://github.com/EdisonLeeeee/GraphWarData
     [2] Gitee: hhttps://gitee.com/EdisonLeeeee/GraphWarData
-    
-    
+
+
     Allowed Datasets
     ----------------
     {tuple(_DATASETS)}
     """
 
-    def __init__(self, name, raw_dir=None, 
+    def __init__(self, name, raw_dir=None,
                  force_reload=False, verbose=False, standardize=True):
         if name not in _DATASETS:
             raise ValueError(f"Unknow dataset {name}, allowed datasets are {tuple(_DATASETS)}.")
-            
+
         name = 'graphwar-' + name
         _url = _get_adversarial_graph_url(name + '.npz')
-            
+
         self.standardize = standardize
         super().__init__(name=name,
                          url=_url,
@@ -125,7 +125,8 @@ class GraphWarDataset(DGLBuiltinDataset):
 
             adj_matrix = adj_matrix.tocoo()
 
-        g = dgl_graph((adj_matrix.row, adj_matrix.col), num_nodes=adj_matrix.shape[0])
+        g = dgl_graph((adj_matrix.row, adj_matrix.col),
+                      num_nodes=adj_matrix.shape[0])
         # g = transform.to_bidirected(g)
         g.ndata['feat'] = torch.FloatTensor(attr_matrix)
         g.ndata['label'] = torch.LongTensor(labels)
@@ -135,12 +136,12 @@ class GraphWarDataset(DGLBuiltinDataset):
     def num_classes(self):
         """Number of classes."""
         return self._graph.ndata['label'].max().item() + 1
-    
+
     @property
     def save_path(self):
         r"""Path to save the processed dataset.
         """
-        return os.path.join(self._save_dir, 'GraphWarData/datasets', self.name)    
+        return os.path.join(self._save_dir, 'GraphWarData/datasets', self.name)
 
     def __getitem__(self, idx):
         r""" Get graph by index

@@ -20,7 +20,7 @@ class FGAttack(TargetedAttacker, SurrogateAttacker):
 
     def reset(self):
         super().reset()
-        self.modified_adj = self.graph.add_self_loop().adjacency_matrix().to_dense()
+        self.modified_adj = self.graph.add_self_loop().adjacency_matrix().to_dense().to(self.device)
         self.modified_feat = self.feat.clone()
         return self
 

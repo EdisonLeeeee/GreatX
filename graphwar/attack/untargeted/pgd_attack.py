@@ -47,7 +47,7 @@ class PGDAttack(UntargetedAttacker, SurrogateAttacker):
             victim_labels = torch.cat([self.label[labeled_nodes],
                                        self_training_labels], dim=0)
 
-        adj = self.graph.adjacency_matrix().to_dense()
+        adj = self.graph.adjacency_matrix().to_dense().to(self.device)
         I = torch.eye(self.num_nodes, device=self.device)
         self.complementary = torch.ones_like(adj) - I - 2. * adj
         self.adj = adj + I

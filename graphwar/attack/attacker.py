@@ -33,10 +33,10 @@ class Attacker(torch.nn.Module):
         Parameters
         ----------
         graph : dgl.DGLGraph
-            the DGL graph. By default, we assume that the graph 
-            contains selfloop. If the attack requires node features,
-            `graph.ndata[{_FEATURE}]` should be specified. If the attacker requires
-            node labels, `graph.ndata[{_LABEL}]` should be specified
+            the DGL graph. If the attack requires node features,
+            `graph.ndata[{_FEATURE}]` should be specified. 
+            If the attack requires node labels, 
+            `graph.ndata[{_LABEL}]` should be specified
         device : str, optional
             the device of the attack running on, by default "cpu"
         seed : Optional[int], optional

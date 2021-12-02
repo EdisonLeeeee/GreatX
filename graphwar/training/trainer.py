@@ -80,8 +80,10 @@ class Trainer:
         self.metrics = metrics
 
     def fit(self, g: DGLGraph, y: Optional[Tensor] = None, index: Optional[Tensor] = None,
-            val_g: Optional[DGLGraph] = None, val_y: Optional[Tensor] = None, val_index: Optional[Tensor] = None,
-            callbacks: Optional[Callback] = None, verbose: Optional[int] = 1, epochs: int = 100) -> "Trainer":
+            val_g: Optional[DGLGraph] = None, val_y: Optional[Tensor] = None,
+            val_index: Optional[Tensor] = None,
+            callbacks: Optional[Callback] = None,
+            verbose: Optional[int] = 1, epochs: int = 100) -> "Trainer":
         """Simple training method designed for `:attr:model`
 
         Parameters
@@ -296,7 +298,8 @@ class Trainer:
         return Accuracy()
 
     def config_callbacks(self, verbose, epochs, callbacks=None) -> CallbackList:
-        callbacks = CallbackList(callbacks=callbacks, add_history=True, add_progbar=True if verbose else False)
+        callbacks = CallbackList(callbacks=callbacks, add_history=True,
+                                 add_progbar=True if verbose else False)
         if self.optimizer is not None:
             callbacks.append(Optimizer(self.optimizer))
         if self.scheduler is not None:
@@ -305,13 +308,15 @@ class Trainer:
         callbacks.set_params(dict(verbose=verbose, epochs=epochs))
         return callbacks
 
-    def config_train_data(self, g: DGLGraph, y: Optional[Tensor] = None, index: Optional[Tensor] = None) -> DataLoader:
+    def config_train_data(self, g: DGLGraph, y: Optional[Tensor] = None,
+                          index: Optional[Tensor] = None) -> DataLoader:
         g, y, index = self.to_device((g, y, index))
         feat = g.ndata.get(_FEATURE, None)
         dataset = ((g, feat), y, index)
         return DataLoader([dataset], batch_size=None, collate_fn=lambda x: x)
 
-    def config_test_data(self, g: DGLGraph, y: Optional[Tensor] = None, index: Optional[Tensor] = None) -> DataLoader:
+    def config_test_data(self, g: DGLGraph, y: Optional[Tensor] = None,
+                         index: Optional[Tensor] = None) -> DataLoader:
         return self.config_train_data(g, y=y, index=index)
 
     def config_predict_data(self, g: DGLGraph, index: Optional[Tensor] = None) -> DataLoader:
@@ -357,7 +362,7 @@ class Trainer:
 
     @staticmethod
     def to_item(value: Any) -> Any:
-        """Transform value to Python object
+        """Convert value to Python object
 
         Parameters
         ----------
@@ -379,7 +384,7 @@ class Trainer:
             return value
 
         elif hasattr(value, 'numpy'):
-            value = value.numpy()
+            value = value.cpu().detach().numpy()
 
         if hasattr(value, 'item'):
             value = value.item()

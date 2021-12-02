@@ -173,7 +173,8 @@ class Attacker(torch.nn.Module):
     def _check_feature_matrix_binary(self):
         self._check_feature_matrix_exists()
         feat = self.feat
-        # FIXME: (Jintang Li) this is quite time-consuming in large matrix so we only check `10` rows of the matrix randomly.
+        # FIXME: (Jintang Li) this is quite time-consuming in large matrix
+        # so we only check `10` rows of the matrix randomly.
         feat = feat[torch.randint(0, feat.size(0), size=(10,))]
         if not torch.unique(feat).tolist() == [0, 1]:
             raise RuntimeError("Node feature matrix is required to be a 0-1 binary matrix.")

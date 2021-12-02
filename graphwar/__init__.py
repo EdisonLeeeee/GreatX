@@ -1,4 +1,4 @@
-from .info import Info
+from .config import Config
 from .utils.seed import set_seed
 from .version import __version__
 
@@ -12,6 +12,5 @@ from . import defense
 from . import functional
 
 
-
-__all__ = ['__version__', 'Info', 'data', 'attack', 'defense', 
+__all__ = ['__version__', 'Config', 'data', 'attack', 'defense',
            'models', 'training', 'nn', 'functional', 'utils', 'set_seed']

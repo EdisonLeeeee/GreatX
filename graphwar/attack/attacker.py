@@ -6,11 +6,11 @@ import scipy.sparse as sp
 from numbers import Number
 from typing import Optional, Union
 
-from graphwar import set_seed, Info
+from graphwar import set_seed, Config
 
 
-_FEATURE = Info.feat
-_LABEL = Info.label
+_FEATURE = Config.feat
+_LABEL = Config.label
 
 
 class Attacker(torch.nn.Module):

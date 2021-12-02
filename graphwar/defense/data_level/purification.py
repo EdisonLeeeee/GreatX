@@ -1,9 +1,9 @@
 import torch
-from graphwar import Info
+from graphwar import Config
 from collections import namedtuple
 
 
-_FEATURE = Info.feat
+_FEATURE = Config.feat
 
 namedtuple_g_edges = namedtuple('NamedTuple', ['g', 'edges'])
 

@@ -3,9 +3,10 @@ import torch
 from torch import Tensor
 from functools import lru_cache
 from typing import Optional, Union
-from graphwar import Info
+from graphwar import Config
 from ..attacker import Attacker
-_FEATURE = Info.feat
+_FEATURE = Config.feat
+
 
 class BackdoorAttacker(Attacker):
 
@@ -62,14 +63,14 @@ class BackdoorAttacker(Attacker):
         graph = self.graph.local_var()
         num_nodes = self.num_nodes
         data = self.trigger().view(1, -1)
-        
+
         graph.add_nodes(1, data={_FEATURE: data})
         graph.add_edges(num_nodes, target_node)
 
         if symmetric:
             graph.add_edges(target_node, num_nodes)
-            
+
         # add selfloops
         graph.add_edges(num_nodes, num_nodes)
-        
+
         return graph

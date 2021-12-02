@@ -10,9 +10,9 @@ from torch.utils.data import DataLoader
 from graphwar.metrics import Accuracy
 from graphwar.training.callbacks import CallbackList, Callback, Scheduler, Optimizer
 from graphwar.utils import BunchDict, Progbar
-from graphwar import Info
+from graphwar import Config
 
-_FEATURE = Info.feat
+_FEATURE = Config.feat
 
 
 class Trainer:
@@ -40,7 +40,8 @@ class Trainer:
     >>> val_nodes = ... #  validation nodes    
     >>> from graphwar.trainig import ModelCheckpoint
     >>> cb = ModelCheckpoint('my_ckpy', monitor='val_accuracy)
-    >>> trainer.fit(g, y=y_train, index=train_nodes, val_y=y_val, val_index=val_nodes, callbacks=[cb])    
+    >>> trainer.fit(g, y=y_train, index=train_nodes, val_y=y_val, 
+                    val_index=val_nodes, callbacks=[cb])    
 
     >>> # get training logs
     >>> history = trainer.model.history
@@ -175,12 +176,12 @@ class Trainer:
             x, y, out_index = self.unravel_batch(batch)
             x = self.to_device(x)
             y = self.to_device(y)
-            
+
             if not isinstance(x, tuple):
                 x = x,
             out = model(*x)
             if out_index is not None:
-                out = out[out_index]            
+                out = out[out_index]
             loss = loss_fn(out, y)
             loss.backward()
             for metric in self.metrics:
@@ -241,7 +242,7 @@ class Trainer:
                 x = x,
             out = model(*x)
             if out_index is not None:
-                out = out[out_index]    
+                out = out[out_index]
             loss = loss_fn(out, y)
             for metric in self.metrics:
                 metric.update_state(y.cpu(), out.detach().cpu())
@@ -266,7 +267,7 @@ class Trainer:
                 x = x,
             out = model(*x)
             if out_index is not None:
-                out = out[out_index]    
+                out = out[out_index]
             outs.append(out)
             callbacks.on_predict_batch_end(epoch)
 
@@ -284,9 +285,9 @@ class Trainer:
         lr = self.cfg.get('lr', 0.01)
         weight_decay = self.cfg.get('weight_decay', 5e-4)
         return torch.optim.Adam(self.model.parameters(), lr=lr, weight_decay=weight_decay)
-    
+
     def config_scheduler(self, optimizer: torch.optim.Optimizer):
-        return None    
+        return None
 
     def config_loss(self) -> Callable:
         return torch.nn.CrossEntropyLoss()
@@ -302,7 +303,7 @@ class Trainer:
             callbacks.append(Scheduler(self.scheduler))
         callbacks.set_model(self.model)
         callbacks.set_params(dict(verbose=verbose, epochs=epochs))
-        return callbacks    
+        return callbacks
 
     def config_train_data(self, g: DGLGraph, y: Optional[Tensor] = None, index: Optional[Tensor] = None) -> DataLoader:
         g, y, index = self.to_device((g, y, index))
@@ -312,7 +313,7 @@ class Trainer:
 
     def config_test_data(self, g: DGLGraph, y: Optional[Tensor] = None, index: Optional[Tensor] = None) -> DataLoader:
         return self.config_train_data(g, y=y, index=index)
-    
+
     def config_predict_data(self, g: DGLGraph, index: Optional[Tensor] = None) -> DataLoader:
         return self.config_test_data(g, y=None, index=index)
 
@@ -411,9 +412,8 @@ class Trainer:
                 return inputs.to(device) if hasattr(inputs, 'to') else inputs
 
         return wrapper(x)
-    
+
     def cache_clear(self):
         if hasattr(self.model, 'cache_clear'):
             self.model.cache_clear()
         return self
-    

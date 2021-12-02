@@ -9,7 +9,8 @@ class RobustConv(nn.Module):
     def __init__(self,
                  in_feats,
                  out_feats,
-                 bias=False, gamma=1.0,
+                 bias=False,
+                 gamma=1.0,
                  activation=None):
         super().__init__()
         self._in_feats = in_feats
@@ -45,6 +46,7 @@ class RobustConv(nn.Module):
         """
         init.xavier_uniform_(self.weight_mean)
         init.xavier_uniform_(self.weight_var)
+
         if self.bias_mean is not None:
             init.zeros_(self.bias_mean)
             init.zeros_(self.bias_var)

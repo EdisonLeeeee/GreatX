@@ -1,7 +1,8 @@
 import torch
 from graphwar.data import GraphWarDataset
 from graphwar.training import Trainer
-from graphwar.models import SGC
+from graphwar.training.callbacks import ModelCheckpoint
+from graphwar.models import MedianGCN
 from graphwar.utils import split_nodes
 from graphwar import set_seed
 
@@ -22,7 +23,8 @@ device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cp
 g = g.to(device)
 
 # ============ Train you model ==================================
-model = SGC(num_feats, num_classes)
+model = MedianGCN(num_feats, num_classes)
 trainer = Trainer(model, device=device)
-trainer.fit(g, y_train, splits.train_nodes)
+ckp = ModelCheckpoint('model.pth', monitor='val_accuracy')
+trainer.fit(g, y_train, splits.train_nodes, val_y=y_val, val_index=splits.val_nodes, callbacks=[ckp])
 trainer.evaluate(g, y_test, splits.test_nodes)

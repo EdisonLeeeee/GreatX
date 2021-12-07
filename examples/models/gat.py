@@ -22,7 +22,7 @@ set_seed(123)
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 g = g.to(device)
 
-# ============ Training models ==================================
+# ============ Train you model ==================================
 model = GAT(num_feats, num_classes)
 trainer = Trainer(model, device=device)
 ckp = ModelCheckpoint('model.pth', monitor='val_accuracy')

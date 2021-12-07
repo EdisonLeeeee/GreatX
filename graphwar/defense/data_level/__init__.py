@@ -1,1 +1,1 @@
-from .purification import JaccardPurification, CosinePurification
+from .purification import JaccardPurification, CosinePurification, SVDPurification

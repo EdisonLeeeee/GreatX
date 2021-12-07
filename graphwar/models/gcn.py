@@ -1,6 +1,9 @@
 import torch
 import torch.nn as nn
 from graphwar.nn import Sequential, activations, GCNConv
+from graphwar.config import Config
+
+_EDGE_WEIGHT = Config.edge_weight
 
 
 class GCN(nn.Module):
@@ -70,9 +73,9 @@ class GCN(nn.Module):
         assert len(hids) == len(acts)
         for hid, act in zip(hids, acts):
             conv.append(GCNConv(in_features,
-                                  hid,
-                                  bias=bias, norm=norm,
-                                  activation=activations.get(act)))
+                                hid,
+                                bias=bias, norm=norm,
+                                activation=activations.get(act)))
             conv.append(nn.Dropout(dropout))
             in_features = hid
         conv.append(GCNConv(in_features, out_features, bias=bias, norm=norm))
@@ -87,15 +90,21 @@ class GCN(nn.Module):
 
         if torch.is_tensor(g):
             return self.forward_by_adjacency_matrix(g, feat)
-        
+
+        if edge_weight is None:
+            edge_weight = g.edata.get(_EDGE_WEIGHT, edge_weight)
+
         return self.conv(g, feat, edge_weight=edge_weight)
 
     def forward_by_adjacency_matrix(self, adj_matrix, feat):
         assert feat is not None
         for conv in self.conv:
             if isinstance(conv, GCNConv):
-                feat = conv.linear(feat)
+                if conv.weight is not None:
+                    feat = feat @ conv.weight
                 feat = adj_matrix @ feat
+                if conv.bias is not None:
+                    feat = feat + conv.bias
                 if conv._activation is not None:
                     feat = conv._activation(feat)
             else:

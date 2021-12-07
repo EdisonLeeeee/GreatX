@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import dgl.function as fn
 from dgl import DGLError
-from graphwar.nn import Linear
 from graphwar.utils.normalize import dgl_normalize
 
 
@@ -92,25 +91,48 @@ class SGConv(nn.Module):
                  cached=False,
                  weight=True,
                  bias=True):
-        
+
         super().__init__()
         if norm not in ('none', 'both', 'right', 'left'):
             raise DGLError('Invalid norm value. Must be either "none", "both", "right" or "left".'
-                           ' But got "{}".'.format(norm))     
+                           ' But got "{}".'.format(norm))
         self._in_feats = in_feats
-        self._out_feats = out_feats            
+        self._out_feats = out_feats
         self._cached = cached
         self._cached_h = None
         self._k = k
         self._norm = norm
         self._add_self_loop = add_self_loop
 
-        self.linear = Linear(in_feats, out_feats, weight=weight, bias=bias)
+        if weight:
+            self.weight = nn.Parameter(torch.Tensor(in_feats, out_feats))
+        else:
+            self.register_parameter('weight', None)
+
+        if bias:
+            self.bias = nn.Parameter(torch.Tensor(out_feats))
+        else:
+            self.register_parameter('bias', None)
+
+        self.reset_parameters()
 
     def reset_parameters(self):
-        """Reinitialize learnable parameters."""
+        r"""
+        Description
+        -----------
+        Reinitialize learnable parameters.
+        Note
+        ----
+        The model parameters are initialized as in the
+        `original implementation <https://github.com/tkipf/gcn/blob/master/gcn/layers.py>`__
+        where the weight :math:`W^{(l)}` is initialized using Glorot uniform initialization
+        and the bias is initialized to be zero.
+        """
+        if self.weight is not None:
+            nn.init.xavier_uniform_(self.weight)
 
-        self.linear.reset_parameters()
+        if self.bias is not None:
+            nn.init.zeros_(self.bias)
 
     def forward(self, graph, feat, edge_weight=None):
         r"""
@@ -168,8 +190,14 @@ class SGConv(nn.Module):
             if self._cached:
                 self._cached_h = feat
 
-        return self.linear(feat)
-    
+        if self.weight is not None:
+            feat = feat @ self.weight
+
+        if self.bias is not None:
+            feat = feat + self.bias
+
+        return feat
+
     def extra_repr(self):
         """Set the extra representation of the module,
         which will come into effect when printing the model.
@@ -178,4 +206,4 @@ class SGConv(nn.Module):
         summary += ', normalization={_norm}'
         if '_activation' in self.__dict__:
             summary += ', activation={_activation}'
-        return summary.format(**self.__dict__)        
+        return summary.format(**self.__dict__)

@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import dgl.function as fn
 from dgl import DGLError
-from graphwar.nn import Linear
 from graphwar.utils.normalize import dgl_normalize
 
 
@@ -47,7 +46,7 @@ class MedianConv(nn.Module):
 
         * ``left``, to divide the messages sent out from each node by its out-degrees,
         equivalent to random walk normalization.      
-        
+
     activation : callable activation function/layer or None, optional
         If not None, applies an activation function to the updated node features.
         Default: ``None``.        
@@ -86,23 +85,46 @@ class MedianConv(nn.Module):
                  activation=None,
                  weight=True,
                  bias=True):
-        
+
         super().__init__()
         if norm not in ('none', 'both', 'right', 'left'):
             raise DGLError('Invalid norm value. Must be either "none", "both", "right" or "left".'
-                           ' But got "{}".'.format(norm))      
+                           ' But got "{}".'.format(norm))
         self._in_feats = in_feats
-        self._out_feats = out_feats            
+        self._out_feats = out_feats
         self._norm = norm
         self._add_self_loop = add_self_loop
         self._activation = activation
 
-        self.linear = Linear(in_feats, out_feats, weight=weight, bias=bias)
+        if weight:
+            self.weight = nn.Parameter(torch.Tensor(in_feats, out_feats))
+        else:
+            self.register_parameter('weight', None)
+
+        if bias:
+            self.bias = nn.Parameter(torch.Tensor(out_feats))
+        else:
+            self.register_parameter('bias', None)
+
+        self.reset_parameters()
 
     def reset_parameters(self):
-        """Reinitialize learnable parameters."""
+        r"""
+        Description
+        -----------
+        Reinitialize learnable parameters.
+        Note
+        ----
+        The model parameters are initialized as in the
+        `original implementation <https://github.com/tkipf/gcn/blob/master/gcn/layers.py>`__
+        where the weight :math:`W^{(l)}` is initialized using Glorot uniform initialization
+        and the bias is initialized to be zero.
+        """
+        if self.weight is not None:
+            nn.init.xavier_uniform_(self.weight)
 
-        self.linear.reset_parameters()
+        if self.bias is not None:
+            nn.init.zeros_(self.bias)
 
     def forward(self, graph, feat, edge_weight=None):
         r"""
@@ -142,15 +164,20 @@ class MedianConv(nn.Module):
         edge_weight = dgl_normalize(graph, self._norm, edge_weight)
         graph.edata['_edge_weight'] = edge_weight
 
-        graph.ndata['h'] = self.linear(feat)
+        if self.weight is not None:
+            feat = feat @ self.weight
+
+        graph.ndata['h'] = feat
         graph.update_all(fn.u_mul_e('h', '_edge_weight', 'm'),
                          median_reduce)
         feat = graph.ndata.pop('h')
 
+        if self.bias is not None:
+            feat = feat + self.bias
+
         if self._activation is not None:
             feat = self._activation(feat)
         return feat
-
 
     def extra_repr(self):
         """Set the extra representation of the module,

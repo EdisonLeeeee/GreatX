@@ -1,7 +1,8 @@
 import torch.nn as nn
-from dgl import DGLError
-
 from graphwar.nn import SGConv
+from graphwar.config import Config
+
+_EDGE_WEIGHT = Config.edge_weight
 
 
 class SGC(nn.Module):
@@ -35,6 +36,8 @@ class SGC(nn.Module):
         self.conv.reset_parameters()
 
     def forward(self, g, feat, edge_weight=None):
+        if edge_weight is None:
+            edge_weight = g.edata.get(_EDGE_WEIGHT, edge_weight)
         return self.conv(g, feat, edge_weight=edge_weight)
 
     def cache_clear(self):

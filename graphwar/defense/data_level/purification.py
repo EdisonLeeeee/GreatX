@@ -127,10 +127,14 @@ class SVDPurification(torch.nn.Module):
                          threshold=self.threshold,
                          binarize=self.binarize)
 
-        if self.binarize:
-            eweight_name = None
-        else:
-            eweight_name = _EDGE_WEIGHT
+        row, col = adj_matrix.nonzero()
 
-        g = dgl.from_scipy(adj_matrix, eweight_name=eweight_name).to(device)
-        return g
+        defense_g = dgl.graph((row, col), device=device)
+        defense_g.ndata.update(g.ndata)
+        defense_g.edata.update(g.edata)
+
+        if not self.binarize:
+            defense_g.edata[_EDGE_WEIGHT] = torch.as_tensor(adj_matrix.data,
+                                                            device=device, dtype=torch.float32)
+
+        return defense_g

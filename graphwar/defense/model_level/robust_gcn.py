@@ -2,6 +2,9 @@ import torch
 import torch.nn as nn
 from graphwar.nn import activations
 from graphwar.nn import RobustConv
+from graphwar.config import Config
+
+_EDGE_WEIGHT = Config.edge_weight
 
 
 class RobustGCN(nn.Module):
@@ -78,15 +81,17 @@ class RobustGCN(nn.Module):
         for conv in self.conv2:
             conv.reset_parameters()
 
-    def forward(self, g, feat):
-        g = g.add_self_loop()
+    def forward(self, g, feat, edge_weight=None):
+        if edge_weight is None:
+            edge_weight = g.edata.get(_EDGE_WEIGHT, edge_weight)
+
         feat = self.dropout(feat)
-        mean, var = self.conv1(g, feat)
+        mean, var = self.conv1(g, feat, edge_weight=edge_weight)
         self.mean, self.var = mean, var
 
         for conv in self.conv2:
             mean, var = self.dropout(mean), self.dropout(var)
-            mean, var = conv(g, (mean, var))
+            mean, var = conv(g, (mean, var), edge_weight=edge_weight)
 
         std = torch.sqrt(var + 1e-8)
         eps = torch.randn_like(std)

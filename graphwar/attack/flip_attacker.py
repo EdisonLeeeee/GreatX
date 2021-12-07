@@ -79,7 +79,15 @@ class FlipAttacker(Attacker):
         if isinstance(edges, dict):
             edges = list(edges.keys())
 
-        return torch.tensor(np.asarray(edges, dtype="int64").T, device=self.device)
+        removed = torch.tensor(np.asarray(edges, dtype="int64").T, device=self.device)
+        mask = self.graph.has_edges_between(removed[0], removed[1])
+        if not torch.all(mask):
+            warnings.warn("You are trying to remove some edges that does not belong to the graph. "
+                          "We would ignore these edges by default. "
+                         "Please make sure this is an intended behavior or check your data/algorithm.")
+            removed = removed[:, mask]
+        
+        return removed
 
     def added_edges(self) -> Optional[Tensor]:
         edges = self._added_edges
@@ -160,8 +168,7 @@ class FlipAttacker(Attacker):
         if removed is not None:
             if symmetric:
                 removed = torch.cat([removed, removed[[1, 0]]], dim=1)
-            mask = graph.has_edges_between(removed[0], removed[1])
-            e_id = graph.edge_ids(removed[0][mask], removed[1][mask])
+            e_id = graph.edge_ids(removed[0], removed[1])
             graph.remove_edges(e_id)
 
         added = edge_flips['added']

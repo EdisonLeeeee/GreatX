@@ -84,10 +84,4 @@ class MedianGCN(nn.Module):
                 conv.reset_parameters()
 
     def forward(self, g, feat, edge_weight=None):
-        g = g.add_self_loop()
-        for conv in self.conv:
-            if isinstance(conv, MedianConv):
-                feat = conv(g, feat, edge_weight=edge_weight)
-            else:
-                feat = conv(feat)
-        return feat
+        return self.conv(g, feat, edge_weight=edge_weight)

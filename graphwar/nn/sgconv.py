@@ -1,9 +1,9 @@
-import torch as th
+import torch
 import torch.nn as nn
 import dgl.function as fn
-import dgl.ops as ops
-from torch.nn import init
 from dgl import DGLError
+from graphwar.nn import Linear
+from graphwar.utils.normalize import dgl_normalize
 
 
 class SGConv(nn.Module):
@@ -28,6 +28,26 @@ class SGConv(nn.Module):
         Number of output features; i.e, the number of dimensions of :math:`H^{K}`.
     k : int
         Number of hops :math:`K`. Defaults:``1``.
+    add_self_loop : bool
+        whether to add self-loop edges
+    norm : str
+        How to apply the normalizer.  Can be one of the following values:
+
+        * ``both``, where the messages are scaled with :math:`1/c_{ji}`, 
+        where :math:`c_{ji}` is the product of the square root of node degrees
+        (i.e.,  :math:`c_{ji} = \sqrt{|\mathcal{N}(j)|}\sqrt{|\mathcal{N}(i)|}`).
+
+        * ``square``, where the messages are scaled with :math:`1/c_{ji}^2`, where
+        :math:`c_{ji}` is defined as above.
+
+        * ``right``, to divide the aggregated messages by each node's in-degrees,
+        which is equivalent to averaging the received messages.
+
+        * ``none``, where no normalization is applied.
+
+        * ``left``, to divide the messages sent out from each node by its out-degrees,
+        equivalent to random walk normalization.         
+
     cached : bool
         If True, the module would cache
 
@@ -36,6 +56,9 @@ class SGConv(nn.Module):
 
         at the first forward call. This parameter should only be set to
         ``True`` in Transductive Learning setting.
+    weight : bool, optional
+        If True, apply a linear layer. Otherwise, aggregating the messages
+        without a weight matrix.                
     bias : bool
         If True, adds a learnable bias to the output. Default: ``True``.
 
@@ -44,7 +67,7 @@ class SGConv(nn.Module):
     >>> import dgl
     >>> import numpy as np
     >>> import torch as th
-    >>> from graphwar.layers import SGConv
+    >>> from graphwar.nn import SGConv
     >>>
     >>> g = dgl.graph(([0,1,2,3,2,5], [1,2,3,4,0,3]))
     >>> g = dgl.add_self_loop(g)
@@ -64,47 +87,32 @@ class SGConv(nn.Module):
                  in_feats,
                  out_feats,
                  k=1,
+                 add_self_loop=True,
+                 norm='both',
                  cached=False,
                  weight=True,
                  bias=True):
-        super(SGConv, self).__init__()
+        
+        super().__init__()
+        if norm not in ('none', 'both', 'right', 'left'):
+            raise DGLError('Invalid norm value. Must be either "none", "both", "right" or "left".'
+                           ' But got "{}".'.format(norm))     
+        self._in_feats = in_feats
+        self._out_feats = out_feats            
         self._cached = cached
         self._cached_h = None
         self._k = k
+        self._norm = norm
+        self._add_self_loop = add_self_loop
 
-        if weight:
-            self.weight = nn.Parameter(th.Tensor(in_feats, out_feats))
-        else:
-            self.register_parameter('weight', None)
-
-        if bias:
-            self.bias = nn.Parameter(th.Tensor(out_feats))
-        else:
-            self.register_parameter('bias', None)
-
-        self.reset_parameters()
+        self.linear = Linear(in_feats, out_feats, weight=weight, bias=bias)
 
     def reset_parameters(self):
-        r"""
+        """Reinitialize learnable parameters."""
 
-        Description
-        -----------
-        Reinitialize learnable parameters.
+        self.linear.reset_parameters()
 
-        Note
-        ----
-        The model parameters are initialized as in the
-        `original implementation <https://github.com/tkipf/gcn/blob/master/gcn/layers.py>`__
-        where the weight :math:`W^{(l)}` is initialized using Glorot uniform initialization
-        and the bias is initialized to be zero.
-
-        """
-        if self.weight is not None:
-            init.xavier_uniform_(self.weight)
-        if self.bias is not None:
-            init.zeros_(self.bias)
-
-    def forward(self, graph, feat, weight=None):
+    def forward(self, graph, feat, edge_weight=None):
         r"""
 
         Description
@@ -118,8 +126,8 @@ class SGConv(nn.Module):
         feat : torch.Tensor
             The input feature of shape :math:`(N, D_{in})` where :math:`D_{in}`
             is size of input feature, :math:`N` is the number of nodes.
-        weight : torch.Tensor, optional
-            Optional external weight tensor.
+        edge_weight : torch.Tensor, optional
+            Optional edge weight for each edge.
 
         Returns
         -------
@@ -127,50 +135,47 @@ class SGConv(nn.Module):
             The output feature of shape :math:`(N, D_{out})` where :math:`D_{out}`
             is size of output feature.
 
-        Raises
-        ------
-        DGLError
-            External weight is provided while at the same time the module
-            has defined its own weight parameter.
-
         Note
         ----
         If ``cache`` is set to True, ``feat`` and ``graph`` should not change during
         training, or you will get wrong results.
         """
-        with graph.local_scope():
 
-            if self._cached and self._cached_h is not None:
-                feat = self._cached_h
+        if self._cached and self._cached_h is not None:
+            feat = self._cached_h
+        else:
+            assert edge_weight is None or edge_weight.size(0) == graph.num_edges()
+
+            if self._add_self_loop:
+                graph = graph.add_self_loop()
+                if edge_weight is not None:
+                    size = (graph.num_nodes(),) + edge_weight.size()[1:]
+                    self_loop = edge_weight.new_ones(size)
+                    edge_weight = torch.cat([edge_weight, self_loop])
             else:
-                # compute normalization
-                degs = graph.in_degrees().float().clamp(min=1)
-                norm = th.pow(degs, -0.5).to(feat.device).unsqueeze(1)
+                graph = graph.local_var()
 
-                # compute (D^-0.5 * A * D^-0.5)^k X
-                for _ in range(self._k):
-                    feat = feat * norm
-                    graph.ndata['h'] = feat
-                    graph.update_all(fn.copy_src('h', 'm'),
-                                     fn.sum('m', 'h'))
-                    feat = graph.ndata.pop('h')
-                    feat = feat * norm
+            edge_weight = dgl_normalize(graph, self._norm, edge_weight)
+            graph.edata['_edge_weight'] = edge_weight
 
-                # cache feature
-                if self._cached:
-                    self._cached_h = feat
+            for _ in range(self._k):
+                graph.ndata['h'] = feat
+                graph.update_all(fn.u_mul_e('h', '_edge_weight', 'm'),
+                                 fn.sum('m', 'h'))
+                feat = graph.ndata.pop('h')
 
-            if weight is not None:
-                if self.weight is not None:
-                    raise DGLError('External weight is provided while at the same time the'
-                                   ' module has defined its own weight parameter. Please'
-                                   ' create the module with flag weight=False.')
-            else:
-                weight = self.weight
+            # cache feature
+            if self._cached:
+                self._cached_h = feat
 
-            if weight is not None:
-                feat = th.matmul(feat, weight)
-
-            if self.bias is not None:
-                feat = feat + self.bias
-            return feat
+        return self.linear(feat)
+    
+    def extra_repr(self):
+        """Set the extra representation of the module,
+        which will come into effect when printing the model.
+        """
+        summary = 'in={_in_feats}, out={_out_feats}'
+        summary += ', normalization={_norm}'
+        if '_activation' in self.__dict__:
+            summary += ', activation={_activation}'
+        return summary.format(**self.__dict__)        

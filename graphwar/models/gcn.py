@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
-from graphwar.nn import Sequential, activations
-from dgl.nn.pytorch import GraphConv
+from graphwar.nn import Sequential, activations, GCNConv
 
 
 class GCN(nn.Module):
@@ -70,13 +69,13 @@ class GCN(nn.Module):
         conv = []
         assert len(hids) == len(acts)
         for hid, act in zip(hids, acts):
-            conv.append(GraphConv(in_features,
+            conv.append(GCNConv(in_features,
                                   hid,
                                   bias=bias, norm=norm,
                                   activation=activations.get(act)))
             conv.append(nn.Dropout(dropout))
             in_features = hid
-        conv.append(GraphConv(in_features, out_features, bias=bias, norm=norm))
+        conv.append(GCNConv(in_features, out_features, bias=bias, norm=norm))
         self.conv = Sequential(*conv, loc=1)  # `loc=1` specifies the location of features.
 
     def reset_parameters(self):
@@ -88,21 +87,15 @@ class GCN(nn.Module):
 
         if torch.is_tensor(g):
             return self.forward_by_adjacency_matrix(g, feat)
-        g = g.add_self_loop()
-        for conv in self.conv:
-            if isinstance(conv, GraphConv):
-                feat = conv(g, feat, edge_weight=edge_weight)
-            else:
-                feat = conv(feat)
-        return feat
+        
+        return self.conv(g, feat, edge_weight=edge_weight)
 
     def forward_by_adjacency_matrix(self, adj_matrix, feat):
         assert feat is not None
         for conv in self.conv:
-            if isinstance(conv, GraphConv):
-                feat = adj_matrix.mm(feat @ conv.weight)
-                if conv.bias is not None:
-                    feat += conv.bias
+            if isinstance(conv, GCNConv):
+                feat = conv.linear(feat)
+                feat = adj_matrix @ feat
                 if conv._activation is not None:
                     feat = conv._activation(feat)
             else:

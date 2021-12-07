@@ -40,8 +40,8 @@ class SGAttack(TargetedAttacker, SurrogateAttacker):
         self.compute_XW.cache_clear()
         self.logits = self.surrogate(self.graph, self.feat)
         self.k = self.surrogate.conv._k
-        self.weight = self.surrogate.conv.weight.detach()
-        self.bias = self.surrogate.conv.bias.detach()
+        self.weight = self.surrogate.conv.linear.weight.detach()
+        self.bias = self.surrogate.conv.linear.bias.detach()
         return self
 
     def strongest_wrong_class(self, target, target_label):

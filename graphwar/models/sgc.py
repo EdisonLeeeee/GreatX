@@ -15,26 +15,27 @@ class SGC(nn.Module):
     """
 
     def __init__(self,
-                 in_features,
-                 out_features,
+                 in_feats,
+                 out_feats,
                  k=2,
                  bias=True,
+                 norm='both',
                  cached=True):
         super().__init__()
 
-        conv = SGConv(in_features,
-                      out_features,
+        conv = SGConv(in_feats,
+                      out_feats,
                       bias=bias,
                       k=k,
+                      norm=norm,
                       cached=cached)
         self.conv = conv
 
     def reset_parameters(self):
         self.conv.reset_parameters()
 
-    def forward(self, g, feat):
-        g = g.add_self_loop()
-        return self.conv(g, feat)
+    def forward(self, g, feat, edge_weight=None):
+        return self.conv(g, feat, edge_weight=edge_weight)
 
     def cache_clear(self):
         self.conv._cached_h = None

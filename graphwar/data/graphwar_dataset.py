@@ -1,6 +1,5 @@
 """Graph benchmark datasets for adversarial graph learning."""
 import torch
-import sys
 import scipy.sparse as sp
 import numpy as np
 import os
@@ -46,8 +45,8 @@ class GraphWarDataset(DGLBuiltinDataset):
     [2] Gitee: hhttps://gitee.com/EdisonLeeeee/GraphWarData
 
 
-    Allowed Datasets
-    ----------------
+    Available Datasets
+    ------------------
     'citeseer', 'citeseer_full', 'cora', 'cora_ml', 'cora_full', 'amazon_cs',
     'amazon_photo', 'coauthor_cs', 'coauthor_phy',
     'pubmed', 'flickr', 'blogcatalog', 'dblp', 'acm', 'uai'
@@ -124,7 +123,7 @@ class GraphWarDataset(DGLBuiltinDataset):
                 adj_matrix = adj_matrix[nodes_to_keep][:, nodes_to_keep]
                 attr_matrix = attr_matrix[nodes_to_keep]
                 labels = labels[nodes_to_keep]
-                
+
                 if np.unique(labels).shape[0] != labels.max() + 1:
                     labels = LabelEncoder().fit_transform(labels)
 
@@ -149,7 +148,7 @@ class GraphWarDataset(DGLBuiltinDataset):
         return os.path.join(self._save_dir, 'GraphWarData/datasets', self.name)
 
     def __getitem__(self, idx):
-        r""" Get graph by index
+        r"""Get graph by index
 
         Parameters
         ----------

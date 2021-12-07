@@ -69,7 +69,7 @@ class Attacker(torch.nn.Module):
             )
 
         self.device = torch.device(device)
-        self._graph = graph.remove_self_loop().to(self.device)
+        self._graph = graph.to(self.device)
 
         if feat is not None:
             feat = torch.as_tensor(feat, dtype=torch.float32, device=self.device)
@@ -85,7 +85,7 @@ class Attacker(torch.nn.Module):
         setattr(self, '_' + _FEATURE, feat)
         setattr(self, '_' + _LABEL, label)
 
-        self.adjacency_matrix: sp.csr_matrix = self._graph.adjacency_matrix(scipy_fmt='csr')
+        self.adjacency_matrix: sp.csr_matrix = graph.adjacency_matrix(scipy_fmt='csr')
         self.name = name or self.__class__.__name__
         self.seed = seed
 

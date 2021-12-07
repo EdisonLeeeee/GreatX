@@ -87,7 +87,7 @@ class FGAttack(UntargetedAttacker, SurrogateAttacker):
                     edge_weight = modified_adj[u, v].data.item()
                     modified_adj[u, v].data.fill_(1 - edge_weight)
                     modified_adj[v, u].data.fill_(1 - edge_weight)
-
+                    
                     if edge_weight > 0:
                         self.remove_edge(u, v, it)
                     else:
@@ -125,7 +125,7 @@ class FGAttack(UntargetedAttacker, SurrogateAttacker):
 
         if self.structure_attack and self.feature_attack:
             return grad(loss, [modified_adj, modified_feat], create_graph=False)
-
+        
         if self.structure_attack:
             return grad(loss, modified_adj, create_graph=False)[0], None
 

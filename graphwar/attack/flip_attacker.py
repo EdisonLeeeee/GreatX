@@ -46,7 +46,7 @@ class FlipAttacker(Attacker):
             is_singleton_v = self.degree[v] <= 1
 
             if is_singleton_u or is_singleton_v:
-                warnings.warn(f"You are trying to remove an edge ({u}-{v}) that would results in singleton nodes. If the behavior is not intended, please make sure you have set `attacker.set_allow_singleton(False)` or check your algorithm.", UserWarning)
+                warnings.warn(f"You are trying to remove an edge ({u}-{v}) that would result in singleton nodes. If the behavior is not intended, please make sure you have set `attacker.set_allow_singleton(False)` or check your algorithm.", UserWarning)
 
         self._removed_edges[(u, v)] = it
         self.degree[u] -= 1
@@ -160,7 +160,8 @@ class FlipAttacker(Attacker):
         if removed is not None:
             if symmetric:
                 removed = torch.cat([removed, removed[[1, 0]]], dim=1)
-            e_id = graph.edge_ids(removed[0], removed[1])
+            mask = graph.has_edges_between(removed[0], removed[1])
+            e_id = graph.edge_ids(removed[0][mask], removed[1][mask])
             graph.remove_edges(e_id)
 
         added = edge_flips['added']

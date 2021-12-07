@@ -86,7 +86,8 @@ class FGAttack(TargetedAttacker, SurrogateAttacker):
                     edge_weight = modified_adj[u, v].data.item()
                     modified_adj[u, v].data.fill_(1 - edge_weight)
                     modified_adj[v, u].data.fill_(1 - edge_weight)
-
+                    
+                    assert self.is_legal_edge(u, v)
                     if edge_weight > 0:
                         self.remove_edge(u, v, it)
                     else:

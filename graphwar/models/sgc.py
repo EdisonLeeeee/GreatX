@@ -1,6 +1,7 @@
 import torch.nn as nn
 from graphwar.nn import SGConv
 from graphwar.config import Config
+from graphwar.utils import wrapper
 
 _EDGE_WEIGHT = Config.edge_weight
 
@@ -14,7 +15,8 @@ class SGC(nn.Module):
     # SGC model
     >>> model = SGC(100, 10)
     """
-
+    
+    @wrapper
     def __init__(self,
                  in_feats,
                  out_feats,

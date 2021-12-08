@@ -1,6 +1,7 @@
 import torch.nn as nn
-from graphwar.nn import Sequential, activations
 from dgl.nn.pytorch import GATConv
+from graphwar.nn import Sequential, activations
+from graphwar.utils import wrapper
 
 
 class GAT(nn.Module):
@@ -27,7 +28,8 @@ class GAT(nn.Module):
     Pytorch implementation: https://github.com/Diego999/pyGAT    
 
     """
-
+    
+    @wrapper
     def __init__(self,
                  in_features: int,
                  out_features: int,
@@ -35,7 +37,8 @@ class GAT(nn.Module):
                  num_heads: list = [8],
                  acts: list = ['elu'],
                  dropout: float = 0.6,
-                 bias: bool = True):
+                 bias: bool = True,
+                 includes=['num_heads']):
         r"""
         Parameters
         ----------
@@ -59,7 +62,6 @@ class GAT(nn.Module):
         conv = []
         head = 1
 
-        assert len(hids) == len(num_heads) == len(acts)
         for hid, num_head, act in zip(hids, num_heads, acts):
             conv.append(GATConv(in_features * head,
                                 hid,

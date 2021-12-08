@@ -3,6 +3,7 @@ import torch.nn as nn
 from graphwar.nn import activations
 from graphwar.nn import RobustConv
 from graphwar.config import Config
+from graphwar.utils import wrapper
 
 _EDGE_WEIGHT = Config.edge_weight
 
@@ -25,7 +26,8 @@ class RobustGCN(nn.Module):
     `len(hids)==len(acts)`.
 
     """
-
+    
+    @wrapper
     def __init__(self,
                  in_features: int,
                  out_features: int,

@@ -1,13 +1,15 @@
+import inspect
 import itertools
+import functools
 import numpy as np
 from collections import namedtuple
 from numbers import Number
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
-topk_namedtuple = namedtuple('topk_namedtuple', ['values', 'indices'])
+topk_values_indices = namedtuple('topk_values_indices', ['values', 'indices'])
 
 
-def topk(array: np.ndarray, k: int, largest: bool = True) -> topk_namedtuple:
+def topk(array: np.ndarray, k: int, largest: bool = True) -> topk_values_indices:
     """Returns the k largest/smallest elements and corresponding indices 
     from an array-like input.
 
@@ -30,14 +32,14 @@ def topk(array: np.ndarray, k: int, largest: bool = True) -> topk_namedtuple:
     -------
     >>> array = [5, 3, 7, 2, 1]
     >>> topk(array, 2)
-    topk_namedtuple(values=array([7, 5]), indices=array([2, 0], dtype=int64))
+    topk_values_indices(values=array([7, 5]), indices=array([2, 0], dtype=int64))
 
     >>> topk(array, 2, largest=False)
-    topk_namedtuple(values=array([1, 2]), indices=array([4, 3], dtype=int64))
+    topk_values_indices(values=array([1, 2]), indices=array([4, 3], dtype=int64))
 
     >>> array = [[1, 2], [3, 4], [5, 6]]
     >>> topk(array, 2)
-    topk_namedtuple(values=array([6, 5]), indices=(array([2, 2], dtype=int64), array([1, 0], dtype=int64)))
+    topk_values_indices(values=array([6, 5]), indices=(array([2, 2], dtype=int64), array([1, 0], dtype=int64)))
     """
 
     array = np.asarray(array)
@@ -55,7 +57,7 @@ def topk(array: np.ndarray, k: int, largest: bool = True) -> topk_namedtuple:
     indices = np.unravel_index(indices, array.shape)
     if len(indices) == 1:
         indices, = indices
-    return topk_namedtuple(values=values, indices=indices)
+    return topk_values_indices(values=values, indices=indices)
 
 
 def repeat(src: Any, length: Optional[int] = None) -> Any:
@@ -113,3 +115,131 @@ def get_length(obj: Any) -> int:
     else:
         length = 1
     return length
+
+
+def wrapper(func: Callable) -> Callable:
+    """wrap a function to make some arguments 
+    have the same length. By default, the arguments
+    to be modified are `hids` and `acts`. Uses can custom
+    these arguments by setting argument 
+    * `includes` : to includes custom arguments
+    * `excludes` : to excludes custom arguments
+    * `length_as` : to make the length of the arguments 
+    the same as `length_as`, by default, it is `hids`.
+
+    Parameters
+    ----------
+    func : Callable
+        a function to be wrapped.
+
+    Returns
+    -------
+    Callable
+        a wrapped function.
+
+    Raises
+    ------
+    TypeError
+        if the required arguments of the function is missing.
+
+
+    Example
+    -------
+
+    .. code-block:: python
+
+
+    @wrapper
+    def func(hids=[16], acts=None):
+        print(locals())
+
+    >>> func(100)
+    {'hids': [100], 'acts': [None]}
+
+    >>> func([100, 64])
+    {'hids': [100, 64], 'acts': [None, None]}
+
+    >>> func([100, 64], excludes=['acts'])
+    {'hids': [100, 64], 'acts': None}
+
+
+    @wrapper
+    def func(self, hids=[16], acts=None):
+        print(locals())    
+
+    >>> func()
+    TypeError: The decorated function missing required argument 'self'.
+
+    >>> func('class_itself')
+    {'self': 'class_itself', 'hids': [16], 'acts': [None]}
+
+    >>> func('class_itself', hids=[])
+    {'self': 'class_itself', 'hids': [], 'acts': []}
+
+
+    @wrapper
+    def func(self, hids=[16], acts=None, heads=8):
+        print(locals())    
+
+    >>> func('class_itself', hids=[100, 200])
+    {'self': 'class_itself', 'hids': [100, 200], 'acts': [None, None], 'heads': 8}
+
+    >>> func('class_itself', hids=[100, 200], includes=['heads'])
+    {'self': 'class_itself', 'hids': [100, 200], 'acts': [None, None], 'heads': [8, 8]}
+
+    """
+
+    @functools.wraps(func)
+    def decoracte(*args, **kwargs) -> Any:
+        inspect_paras = inspect.signature(func).parameters
+        inspect_paras = list(inspect_paras.values())
+
+        paras = {}
+        unspecified = []
+        i = 0
+        max_length = len(args)
+        for p in inspect_paras:
+            if i < max_length:
+                paras[p.name] = args[i]
+                i += 1
+                continue
+
+            if p.default == inspect._empty:
+                if p.name in kwargs:
+                    paras[p.name] = kwargs[p.name]
+                    continue
+
+                if i >= max_length:
+                    raise TypeError(f"The decorated function missing required argument '{p.name}'.")
+            else:
+                paras[p.name] = p.default
+
+        for k, v in kwargs.items():
+            paras[k] = v
+
+        includes = paras.get("includes", [])
+        excludes = paras.get("excludes", [])
+        length_as = paras.get("length_as", "hids")
+
+        assert isinstance(includes, list)
+        assert isinstance(excludes, list)
+        assert isinstance(length_as, str)
+
+        accepted_vars = includes + ['hids', 'acts']
+        accepted_vars = list(set(accepted_vars) - set(excludes))
+
+        assert length_as in accepted_vars
+
+        repeated = get_length(paras.get(length_as, 0))
+        for var in accepted_vars:
+            if var in paras:
+                val = paras[var]
+                paras[var] = repeat(val, repeated)
+
+        paras.pop('includes', None)
+        paras.pop('excludes', None)
+        paras.pop('length_as', None)
+
+        return func(**paras)
+
+    return decoracte

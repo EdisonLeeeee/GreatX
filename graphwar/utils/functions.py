@@ -168,7 +168,7 @@ def wrapper(func: Callable) -> Callable:
         print(locals())    
 
     >>> func()
-    TypeError: The decorated function missing required argument 'self'.
+    TypeError: The decorated function 'func' missing required argument 'self'.
 
     >>> func('class_itself')
     {'self': 'class_itself', 'hids': [16], 'acts': [None]}
@@ -210,7 +210,7 @@ def wrapper(func: Callable) -> Callable:
                     continue
 
                 if i >= max_length:
-                    raise TypeError(f"The decorated function missing required argument '{p.name}'.")
+                    raise TypeError(f"The decorated function '{func.__name__}' missing required argument '{p.name}'.")
             else:
                 paras[p.name] = p.default
 

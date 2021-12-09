@@ -7,21 +7,9 @@ _FEATURE = Config.feat
 _EDGE_WEIGHT = Config.edge_weight
 
 
-def jaccard_similarity(A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:
-    intersection = torch.count_nonzero(A * B, axis=1)
-    J = intersection * 1.0 / (torch.count_nonzero(A, dim=1) + torch.count_nonzero(B, dim=1) + intersection + 1e-7)
-    return J
-
-
-def cosine_similarity(A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:
-    inner_product = (A * B).sum(1)
-    C = inner_product / (torch.norm(A, 2, 1) * torch.norm(B, 2, 1) + 1e-7)
-    return C
-
-
 class JaccardPurification(torch.nn.Module):
 
-    def __init__(self, threshold=0., allow_singleton=False):
+    def __init__(self, threshold: float = 0., allow_singleton: bool = False):
         # TODO: add percentage purification
         super().__init__()
         self.threshold = threshold
@@ -57,7 +45,7 @@ class JaccardPurification(torch.nn.Module):
 
 class CosinePurification(torch.nn.Module):
 
-    def __init__(self, threshold=0., allow_singleton=False):
+    def __init__(self, threshold: float = 0., allow_singleton: bool = False):
         # TODO: add percentage purification
         super().__init__()
         self.threshold = threshold
@@ -92,28 +80,9 @@ class CosinePurification(torch.nn.Module):
         return f"threshold={self.threshold}, allow_singleton={self.allow_singleton}"
 
 
-def svd(adj_matrix, k=50, threshold=0.01, binarize=False):
-    adj_matrix = adj_matrix.asfptype()
-
-    U, S, V = sp.linalg.svds(adj_matrix, k=k)
-    adj_matrix = (U * S) @ V
-
-    if threshold is not None:
-        # sparsification
-        adj_matrix[adj_matrix <= threshold] = 0.
-
-    adj_matrix = sp.csr_matrix(adj_matrix)
-
-    if binarize:
-        # TODO
-        adj_matrix.data[adj_matrix.data > 0] = 1.0
-
-    return adj_matrix
-
-
 class SVDPurification(torch.nn.Module):
 
-    def __init__(self, k=50, threshold=0.01, binarize=False):
+    def __init__(self, k: int = 50, threshold: float = 0.01, binarize: bool = False):
         # TODO: add percentage purification
         super().__init__()
         self.k = k
@@ -138,3 +107,36 @@ class SVDPurification(torch.nn.Module):
                                                             device=device, dtype=torch.float32)
 
         return defense_g
+
+
+def jaccard_similarity(A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:
+    intersection = torch.count_nonzero(A * B, axis=1)
+    J = intersection * 1.0 / (torch.count_nonzero(A, dim=1) + torch.count_nonzero(B, dim=1) + intersection + 1e-7)
+    return J
+
+
+def cosine_similarity(A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:
+    inner_product = (A * B).sum(1)
+    C = inner_product / (torch.norm(A, 2, 1) * torch.norm(B, 2, 1) + 1e-7)
+    return C
+
+
+def svd(adj_matrix: sp.csr_matrix, k=50,
+        threshold=0.01, binarize=False) -> sp.csr_matrix:
+
+    adj_matrix = adj_matrix.asfptype()
+
+    U, S, V = sp.linalg.svds(adj_matrix, k=k)
+    adj_matrix = (U * S) @ V
+
+    if threshold is not None:
+        # sparsification
+        adj_matrix[adj_matrix <= threshold] = 0.
+
+    adj_matrix = sp.csr_matrix(adj_matrix)
+
+    if binarize:
+        # TODO
+        adj_matrix.data[adj_matrix.data > 0] = 1.0
+
+    return adj_matrix

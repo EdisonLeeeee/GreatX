@@ -13,6 +13,7 @@ from graphwar.utils import BunchDict, Progbar
 from graphwar import Config
 
 _FEATURE = Config.feat
+_LABEL = Config.label
 
 
 class Trainer:
@@ -70,6 +71,10 @@ class Trainer:
         """
         self.device = torch.device(device)
         self.model = model.to(device)
+        
+        cfg.setdefault("lr", 1e-2)
+        cfg.setdefault("weight_decay", 5e-4)
+        
         self.cfg = BunchDict(cfg)
         self.optimizer = self.config_optimizer()
         self.scheduler = self.config_scheduler(self.optimizer)
@@ -310,8 +315,14 @@ class Trainer:
 
     def config_train_data(self, g: DGLGraph, y: Optional[Tensor] = None,
                           index: Optional[Tensor] = None) -> DataLoader:
+        g = g.local_var()
         g, y, index = self.to_device((g, y, index))
-        feat = g.ndata.get(_FEATURE, None)
+        feat = g.ndata.pop(_FEATURE, None)
+        
+        # pop node labels (if exists) to avoid unnecessary computation
+        _label = g.ndata.pop(_LABEL, None)
+        del _label
+        
         dataset = ((g, feat), y, index)
         return DataLoader([dataset], batch_size=None, collate_fn=lambda x: x)
 
@@ -422,3 +433,18 @@ class Trainer:
         if hasattr(self.model, 'cache_clear'):
             self.model.cache_clear()
         return self
+    
+    def __repr__(self) -> str:
+        model = self.model
+        return f"{self.__class__.__name__}(model={model.__class__.__name__}{self.extra_repr()})"    
+    
+    __str__ = __repr__
+
+    def extra_repr(self) -> str:
+        string = ""
+        blank = ' ' * (len(self.__class__.__name__) + 1)
+        for k, v in self.cfg.items():
+            if v is None:
+                continue
+            string += f",\n{blank}{k}={v}"
+        return string

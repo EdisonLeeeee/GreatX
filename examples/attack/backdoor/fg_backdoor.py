@@ -50,4 +50,4 @@ for t in tqdm(range(g.num_nodes())):
     if t_class == target_class:
         count += 1
 
-print(f"{count/g.num_nodes():.2%} of nodes are classified as class {target_class} with trigger")
+print(f"{count/g.num_nodes():.2%} of nodes are classified as class {target_class} after backdoor-attack")

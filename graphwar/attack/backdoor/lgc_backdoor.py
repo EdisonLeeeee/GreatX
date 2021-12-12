@@ -44,5 +44,6 @@ class LGCBackdoor(BackdoorAttacker):
     def get_feat_perturbations(W, target_class, num_budgets):
         D = W - W[:, target_class].view(-1, 1)
         D = D.sum(1)
-        _, indices = torch.topk(-D, k=num_budgets)
+#         _, indices = torch.topk(-D, k=num_budgets)
+        _, indices = torch.topk(D, k=num_budgets, largest=False)
         return indices

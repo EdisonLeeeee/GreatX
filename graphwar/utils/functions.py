@@ -199,11 +199,13 @@ def wrapper(func: Callable) -> Callable:
         i = 0
         max_length = len(args)
         for p in inspect_paras:
+            if p.kind == inspect._ParameterKind.VAR_KEYWORD:
+                # arguments like `**kwargs`
+                continue
             if i < max_length:
                 paras[p.name] = args[i]
                 i += 1
                 continue
-
             if p.default == inspect._empty:
                 if p.name in kwargs:
                     paras[p.name] = kwargs[p.name]

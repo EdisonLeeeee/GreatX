@@ -20,7 +20,6 @@ class BackdoorAttacker(Attacker):
         """
         self.num_budgets = None
         self._trigger = None
-#         self.g.cache_clear()
         self.is_reseted = True
 
         return self
@@ -46,7 +45,6 @@ class BackdoorAttacker(Attacker):
     def trigger(self,):
         return self._trigger
 
-#     @lru_cache(maxsize=1)
     def g(self, target_node: int, symmetric: bool = True) -> dgl.DGLGraph:
         """return the attacked graph
 
@@ -69,8 +67,5 @@ class BackdoorAttacker(Attacker):
 
         if symmetric:
             graph.add_edges(target_node, num_nodes)
-
-        # add selfloops
-        graph.add_edges(num_nodes, num_nodes)
 
         return graph

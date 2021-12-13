@@ -6,3 +6,4 @@ from .gcn_conv import GCNConv
 from .median_conv import MedianConv
 from .robust_conv import RobustConv
 from .drop_edge import DropEdge
+from .reliable_conv import DimwiseMedianConv, SoftKConv

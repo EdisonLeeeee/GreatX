@@ -57,6 +57,9 @@ class TargetedAttacker(FlipAttacker):
             raise RuntimeError(
                 'Before calling attack, you must reset your attacker. Use `attacker.reset()`.'
             )
+            
+        if hasattr(target, 'item'):
+            target = target.item()
 
         if not isinstance(target, Number):
             raise ValueError(target)

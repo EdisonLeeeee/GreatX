@@ -28,7 +28,7 @@ print(f"Target node {target} has label {g.ndata['label'][target]}")
 
 # ============ Before Attack ==================================
 model = SGC(num_feats, num_classes)
-trainer = Trainer(model, device=device)
+trainer = Trainer(model, device=device, lr=0.1, weight_decay=5e-5)
 trainer.fit(g, y_train, splits.train_nodes)
 output = trainer.predict(g, target)
 

@@ -50,13 +50,16 @@ class BackdoorAttacker(Attacker):
 
         Parameters
         ----------
+        target_node : int
+            the target node that the attack performed
         symmetric : bool
-            Determine whether the resulting graph is forcibly symmetric
+            determine whether the resulting graph is forcibly symmetric,
+            by default True
 
         Returns
         -------
         dgl.DGLGraph
-            the attacked graph
+            the attacked graph with backdoor attack performed on the target node
         """
         graph = self.graph.local_var()
         num_nodes = self.num_nodes

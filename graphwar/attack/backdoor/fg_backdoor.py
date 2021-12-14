@@ -5,10 +5,10 @@ from tqdm import tqdm
 from typing import Optional, Union, Callable
 from graphwar.attack.backdoor.backdoor_attacker import BackdoorAttacker
 from graphwar.attack.backdoor.backdoor_utils import backdoor_edges, conv
-from graphwar.attack.surrogate_attacker import SurrogateAttacker
+from graphwar.surrogater import Surrogater
 
 
-class FGBackdoor(BackdoorAttacker, SurrogateAttacker):
+class FGBackdoor(BackdoorAttacker, Surrogater):
 
     def __init__(self, graph: dgl.DGLGraph, device: str = "cpu",
                  seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
@@ -19,8 +19,8 @@ class FGBackdoor(BackdoorAttacker, SurrogateAttacker):
                         loss: Callable = torch.nn.CrossEntropyLoss(),
                         eps: float = 1.0):
 
-        SurrogateAttacker.setup_surrogate(self, surrogate=surrogate,
-                                          loss=loss, eps=eps, freeze=True)
+        Surrogater.setup_surrogate(self, surrogate=surrogate,
+                                   loss=loss, eps=eps, freeze=True)
         W = []
         for para in self.surrogate.parameters():
             if para.ndim == 1:

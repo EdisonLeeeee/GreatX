@@ -7,10 +7,10 @@ from typing import Optional, Callable
 
 from graphwar.utils import normalize, singleton_mask
 from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
-from graphwar.attack.surrogate_attacker import SurrogateAttacker
+from graphwar.surrogater import Surrogater
 
 
-class IGAttack(UntargetedAttacker, SurrogateAttacker):
+class IGAttack(UntargetedAttacker, Surrogater):
     # IGAttack can conduct feature attack
     _allow_feature_attack = True
 
@@ -30,8 +30,8 @@ class IGAttack(UntargetedAttacker, SurrogateAttacker):
                         loss: Callable = torch.nn.CrossEntropyLoss(),
                         eps: float = 1.0):
 
-        SurrogateAttacker.setup_surrogate(self, surrogate=surrogate,
-                                          loss=loss, eps=eps, freeze=True)
+        Surrogater.setup_surrogate(self, surrogate=surrogate,
+                                   loss=loss, eps=eps, freeze=True)
 
         self.victim_nodes = victim_nodes.to(self.device)
         if victim_labels is None:

@@ -8,10 +8,10 @@ from typing import Optional
 
 from graphwar.utils import normalize, singleton_filter
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
-from graphwar.attack.surrogate_attacker import SurrogateAttacker
+from graphwar.surrogater import Surrogater
 
 
-class IGAttack(TargetedAttacker, SurrogateAttacker):
+class IGAttack(TargetedAttacker, Surrogater):
     # IGAttack can conduct feature attack
     _allow_feature_attack = True
 
@@ -63,9 +63,9 @@ class IGAttack(TargetedAttacker, SurrogateAttacker):
 
             for u, v in link_selected[~edge_indicator].tolist():
                 self.add_edge(u, v)
-                
+
             for u, v in link_selected[edge_indicator].tolist():
-                self.remove_edge(u, v)                
+                self.remove_edge(u, v)
 
         elif feature_attack and not structure_attack:
             indices = torch.topk(feature_importance, k=self.num_budgets).indices
@@ -94,9 +94,9 @@ class IGAttack(TargetedAttacker, SurrogateAttacker):
 
             for u, v in link_selected[~edge_indicator].tolist():
                 self.add_edge(u, v)
-                
+
             for u, v in link_selected[edge_indicator].tolist():
-                self.remove_edge(u, v)                
+                self.remove_edge(u, v)
 
             for u, v in feature_selected[feat_indicator].tolist():
                 self.remove_feat(u, v)

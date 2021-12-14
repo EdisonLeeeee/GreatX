@@ -11,10 +11,10 @@ from torch.distributions.bernoulli import Bernoulli
 
 from graphwar.utils import normalize
 from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
-from graphwar.attack.surrogate_attacker import SurrogateAttacker
+from graphwar.surrogater import Surrogater
 
 
-class PGDAttack(UntargetedAttacker, SurrogateAttacker):
+class PGDAttack(UntargetedAttacker, Surrogater):
     # PGDAttack cannot ensure that there is not singleton node after attacks.
     _allow_singleton = True
 
@@ -31,8 +31,8 @@ class PGDAttack(UntargetedAttacker, SurrogateAttacker):
                         eps: float = 1.0,
                         freeze: bool = True):
 
-        SurrogateAttacker.setup_surrogate(self, surrogate=surrogate,
-                                          loss=loss, eps=eps, freeze=freeze)
+        Surrogater.setup_surrogate(self, surrogate=surrogate,
+                                   loss=loss, eps=eps, freeze=freeze)
 
         labeled_nodes = torch.LongTensor(labeled_nodes).to(self.device)
         # poisoning attack in DeepRobust

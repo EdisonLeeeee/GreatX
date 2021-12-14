@@ -6,13 +6,13 @@ from typing import Optional
 
 from graphwar.utils import normalize, singleton_mask
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
-from graphwar.attack.surrogate_attacker import SurrogateAttacker
+from graphwar.surrogater import Surrogater
 
 
-class FGAttack(TargetedAttacker, SurrogateAttacker):
+class FGAttack(TargetedAttacker, Surrogater):
     # FGAttack can conduct feature attack
     _allow_feature_attack = True
-    # FGAttack can not ensure there are no singleton nodes 
+    # FGAttack can not ensure there are no singleton nodes
     _allow_singleton: bool = True
 
     def __init__(self, graph: dgl.DGLGraph, device: str = "cpu",
@@ -88,7 +88,7 @@ class FGAttack(TargetedAttacker, SurrogateAttacker):
                     edge_weight = modified_adj[u, v].data.item()
                     modified_adj[u, v].data.fill_(1 - edge_weight)
                     modified_adj[v, u].data.fill_(1 - edge_weight)
-                    
+
                     assert self.is_legal_edge(u, v)
                     if edge_weight > 0:
                         self.remove_edge(u, v, it)

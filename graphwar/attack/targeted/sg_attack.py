@@ -12,14 +12,14 @@ from graphwar.functional.scatter import scatter_add
 from graphwar.utils import ego_graph
 from graphwar.models import SGC
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
-from graphwar.attack.surrogate_attacker import SurrogateAttacker
+from graphwar.surrogater import Surrogater
 
 from collections import namedtuple
 SubGraph = namedtuple('SubGraph', ['edge_index', 'sub_edges', 'non_edges',
                                    'edge_weight', 'non_edge_weight', 'selfloop_weight'])
 
 
-class SGAttack(TargetedAttacker, SurrogateAttacker):
+class SGAttack(TargetedAttacker, Surrogater):
     # SGAttack cannot ensure that there is not singleton node after attacks.
     _allow_singleton = True
 
@@ -34,8 +34,8 @@ class SGAttack(TargetedAttacker, SurrogateAttacker):
                         eps: float = 5.0,
                         freeze: bool = True):
 
-        SurrogateAttacker.setup_surrogate(self, surrogate=surrogate, loss=loss,
-                                          eps=eps, freeze=freeze, required=SGC)
+        Surrogater.setup_surrogate(self, surrogate=surrogate, loss=loss,
+                                   eps=eps, freeze=freeze, required=SGC)
         self.surrogate.cache_clear()
         self.compute_XW.cache_clear()
         self.logits = self.surrogate(self.graph, self.feat)

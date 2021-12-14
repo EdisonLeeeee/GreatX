@@ -2,7 +2,7 @@ import torch
 from typing import Callable
 
 
-class SurrogateAttacker(torch.nn.Module):
+class Surrogater(torch.nn.Module):
     def setup_surrogate(self, surrogate: torch.nn.Module, *,
                         loss: Callable = torch.nn.CrossEntropyLoss(),
                         eps: float = 1.0,

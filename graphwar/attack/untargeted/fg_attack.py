@@ -7,10 +7,10 @@ from typing import Optional, Callable
 
 from graphwar.utils import normalize, singleton_mask
 from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
-from graphwar.attack.surrogate_attacker import SurrogateAttacker
+from graphwar.surrogater import Surrogater
 
 
-class FGAttack(UntargetedAttacker, SurrogateAttacker):
+class FGAttack(UntargetedAttacker, Surrogater):
     # FGAttack can conduct feature attack
     _allow_feature_attack = True
 
@@ -25,8 +25,8 @@ class FGAttack(UntargetedAttacker, SurrogateAttacker):
                         loss: Callable = torch.nn.CrossEntropyLoss(),
                         eps: float = 1.0):
 
-        SurrogateAttacker.setup_surrogate(self, surrogate=surrogate,
-                                          loss=loss, eps=eps, freeze=True)
+        Surrogater.setup_surrogate(self, surrogate=surrogate,
+                                   loss=loss, eps=eps, freeze=True)
 
         self.victim_nodes = victim_nodes.to(self.device)
         if victim_labels is None:
@@ -87,7 +87,7 @@ class FGAttack(UntargetedAttacker, SurrogateAttacker):
                     edge_weight = modified_adj[u, v].data.item()
                     modified_adj[u, v].data.fill_(1 - edge_weight)
                     modified_adj[v, u].data.fill_(1 - edge_weight)
-                    
+
                     if edge_weight > 0:
                         self.remove_edge(u, v, it)
                     else:
@@ -125,7 +125,7 @@ class FGAttack(UntargetedAttacker, SurrogateAttacker):
 
         if self.structure_attack and self.feature_attack:
             return grad(loss, [modified_adj, modified_feat], create_graph=False)
-        
+
         if self.structure_attack:
             return grad(loss, modified_adj, create_graph=False)[0], None
 

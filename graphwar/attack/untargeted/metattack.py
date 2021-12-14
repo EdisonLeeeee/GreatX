@@ -8,10 +8,10 @@ from typing import Optional, Callable
 
 from graphwar.utils import normalize, singleton_mask
 from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
-from graphwar.attack.surrogate_attacker import SurrogateAttacker
+from graphwar.surrogater import Surrogater
 
 
-class Metattack(UntargetedAttacker, SurrogateAttacker):
+class Metattack(UntargetedAttacker, Surrogater):
     # Metattack can also conduct feature attack
     _allow_feature_attack = True
 
@@ -36,8 +36,8 @@ class Metattack(UntargetedAttacker, SurrogateAttacker):
                 "Invalid argument `lambda_`, allowed values [0: (meta-self), 1: (meta-train), 0.5: (meta-both)]."
             )
 
-        SurrogateAttacker.setup_surrogate(self, surrogate=surrogate,
-                                          loss=loss, eps=eps, freeze=False)
+        Surrogater.setup_surrogate(self, surrogate=surrogate,
+                                   loss=loss, eps=eps, freeze=False)
 
         labeled_nodes = torch.LongTensor(labeled_nodes).to(self.device)
         unlabeled_nodes = torch.LongTensor(unlabeled_nodes).to(self.device)

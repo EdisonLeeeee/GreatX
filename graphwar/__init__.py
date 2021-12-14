@@ -1,5 +1,6 @@
 from .config import Config
 from .utils.seed import set_seed
+from .surrogater import Surrogater
 from .version import __version__
 
 from . import data
@@ -12,5 +13,6 @@ from . import defense
 from . import functional
 
 
-__all__ = ['__version__', 'Config', 'data', 'attack', 'defense',
-           'models', 'training', 'nn', 'functional', 'utils', 'set_seed']
+__all__ = ['__version__', 'Config', 'set_seed', 'Surrogater',
+           'data', 'attack', 'defense',
+           'models', 'training', 'nn', 'functional', 'utils']

@@ -49,8 +49,8 @@ logs = trainer.evaluate(attacker.g(), y_test, splits.test_nodes)
 print(f"After evasion attack\n {logs}")
 
 # ============ After poisoning Attack ==================================
-model = ReliableGNN(num_feats, num_classes, norm='none') # method='dimmedian'
-# model = ReliableGNN(num_feats, num_classes, norm='both', method='softk')
+model = ReliableGNN(num_feats, num_classes) # method='dimmedian'
+# model = ReliableGNN(num_feats, num_classes, method='softk')
 trainer = Trainer(model, device=device)
 trainer.fit(attacker.g(), y_train, splits.train_nodes)
 logs = trainer.evaluate(attacker.g(), y_test, splits.test_nodes)

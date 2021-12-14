@@ -25,6 +25,7 @@ class DimwiseMedianConv(nn.Module):
                  in_feats,
                  out_feats,
                  add_self_loop=True,
+                 row_normalize=False,
                  norm='none',
                  activation=None,
                  weight=True,
@@ -43,6 +44,7 @@ class DimwiseMedianConv(nn.Module):
         self._out_feats = out_feats
         self._norm = norm
         self._add_self_loop = add_self_loop
+        self._row_normalize = row_normalize
         self._activation = activation
 
         if weight:
@@ -102,7 +104,7 @@ class DimwiseMedianConv(nn.Module):
         """
 
         assert edge_weight is None or edge_weight.size(0) == graph.num_edges()
-
+        
         if self._add_self_loop:
             graph = graph.add_self_loop()
             if edge_weight is not None:
@@ -119,10 +121,22 @@ class DimwiseMedianConv(nn.Module):
 
         # ========= weighted dimension-wise Median aggregation ===
         N, D = feat.size()
-        edge_index = torch.stack(graph.edges(order='srcdst'), dim=0)
+        row, col, e_id = graph.edges(order='srcdst', form='all')
+        edge_index = torch.stack([row, col], dim=0)
+        
+        if self._norm != 'none':
+            # if edge_weight is all 1 and it is not necessary
+            # to sort again
+            edge_weight = edge_weight[e_id]
+            
         median_idx = dimmedian_idx(feat, edge_index, edge_weight, N)
         col_idx = torch.arange(D, device=graph.device).view(1, -1).expand(N, D)
         feat = feat[median_idx, col_idx]
+        # Normalization and calculation of new embeddings
+        if self._row_normalize:
+            row_sum = edge_weight.new_zeros(feat.size(0))
+            row_sum.scatter_add_(0, row, edge_weight)
+            feat = row_sum.view(-1, 1) * feat
         # ========================================================
 
         if self.bias is not None:
@@ -149,6 +163,7 @@ class SoftKConv(nn.Module):
                  in_feats,
                  out_feats,
                  add_self_loop=True,
+                 row_normalize=False,
                  k=32,
                  temperature=1.0,
                  with_weight_correction=True,
@@ -170,6 +185,7 @@ class SoftKConv(nn.Module):
         self._out_feats = out_feats
         self._norm = norm
         self._add_self_loop = add_self_loop
+        self._row_normalize = row_normalize
         self._k = k
         self._temperature = temperature
         self._with_weight_correction = with_weight_correction
@@ -240,7 +256,6 @@ class SoftKConv(nn.Module):
                 edge_weight = torch.cat([edge_weight, self_loop])
         else:
             graph = graph.local_var()
-
         edge_weight = dgl_normalize(graph, self._norm, edge_weight)
 
         if self.weight is not None:
@@ -249,7 +264,8 @@ class SoftKConv(nn.Module):
         # ========= Soft Weighted Medoid in the top `k` neighborhood ===
         feat = soft_weighted_medoid_k_neighborhood(graph, feat, edge_weight, k=self._k,
                                                    temperature=self._temperature,
-                                                   with_weight_correction=self._with_weight_correction)
+                                                   with_weight_correction=self._with_weight_correction,
+                                                   row_normalize=self._row_normalize)
         # ==============================================================
 
         if self.bias is not None:
@@ -277,6 +293,7 @@ def soft_weighted_medoid_k_neighborhood(
     k: int = 32,
     temperature: float = 1.0,
     with_weight_correction: bool = True,
+    row_normalize: bool = False
 ) -> torch.Tensor:
     """Soft Weighted Medoid in the top `k` neighborhood (see Eq. 6 and Eq. 7 in our paper). 
     This function can be used as a robust aggregation function 
@@ -299,6 +316,8 @@ def soft_weighted_medoid_k_neighborhood(
         Controlling the steepness of the softmax, by default 1.0.
     with_weight_correction : bool, optional
         For enabling an alternative normalisazion (see above), by default True.
+    row_normalize : bool, optional
+        whether to perform normalization for aggregated features, by default False.        
 
     Returns
     -------
@@ -309,15 +328,16 @@ def soft_weighted_medoid_k_neighborhood(
     n = feat.size(0)
     assert k <= n
 
-    row, col = g.edges(order='srcdst')
+    row, col, e_id = g.edges(order='srcdst', form='all')
     if edge_weight is None:
-        A_values = row.new_ones(row.size(0), dtype=torch.float)
+        edge_weight = row.new_ones(row.size(0), dtype=torch.float)
     else:
-        A_values = edge_weight
+        edge_weight = edge_weight[e_id]
+
     edge_index = torch.stack([row, col], dim=0)
 
     # Custom CUDA extension code for the top k values of the sparse adjacency matrix
-    top_k_weights, top_k_idx = topk(edge_index, A_values, n, k)
+    top_k_weights, top_k_idx = topk(edge_index, edge_weight, n, k)
 
     # Partial distance matrix calculation
     distances_top_k = partial_distance_matrix(feat, top_k_idx)
@@ -346,12 +366,13 @@ def soft_weighted_medoid_k_neighborhood(
     reliable_edge_index = torch.stack([top_k_inv_idx_row[top_k_mask], top_k_inv_idx_column[top_k_mask]])
     reliable_edge_weight = reliable_edge_weight[top_k_mask.view(n, k)]
 
+    out = spmm(reliable_edge_index, reliable_edge_weight, n, feat)
     # Normalization and calculation of new embeddings
-#     a_row_sum = A_values.new_zeros(n)
-#     a_row_sum.scatter_add_(0, edge_index[0], A_values)
-
-    new_embeddings = spmm(reliable_edge_index, reliable_edge_weight, n, feat)
-    return new_embeddings
+    if row_normalize:
+        row_sum = edge_weight.new_zeros(feat.size(0))
+        row_sum.scatter_add_(0, row, edge_weight)
+        out = row_sum.view(-1, 1) * out
+    return out
 
 
 def partial_distance_matrix(feat: torch.Tensor, partial_idx: torch.Tensor) -> torch.Tensor:

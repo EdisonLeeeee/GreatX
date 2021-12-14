@@ -119,7 +119,6 @@ def dgl_normalize(g: dgl.DGLGraph, norm: str = 'both', edge_weight=None):
     else:
         # a weighted graph
         src_degrees = dst_degrees = ops.copy_e_sum(g, edge_weight)
-
     if norm == 'left':
         # A * D^-1
         norm_src = 1.0 / src_degrees

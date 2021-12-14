@@ -76,7 +76,9 @@ def split_nodes_by_classes(labels: torch.Tensor,
     split_test torch.Tensor [num_nodes - 2*n_per_class * num_classes]
         The indices of the test nodes
     """
-    torch.manual_seed(random_state)
+    if random_state is not None:
+        torch.manual_seed(random_state)
+        
     num_classes = labels.max() + 1
 
     split_train, split_val = [], []

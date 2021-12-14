@@ -46,7 +46,8 @@ class ReliableGNN(nn.Module):
                  dropout: float = 0.5,
                  bias: bool = True,
                  norm: str = 'none',
-                 method='dimmedian',
+                 method : str = 'dimmedian',
+                 row_normalize: bool = False,
                  **kwargs):
         r"""
         Parameters
@@ -94,6 +95,8 @@ class ReliableGNN(nn.Module):
                     Controlling the steepness of the softmax, by default 1.0.
                 * with_weight_correction : bool, optional
                     For enabling an alternative normalisazion (see above), by default True.
+        row_normalize : bool, optional
+            whether to perform normalization for aggregated features, by default False.
         kwargs : dict, optional
             the `softk` parameters including `k`, `temperature`, `with_weight_correction`
         """
@@ -112,20 +115,26 @@ class ReliableGNN(nn.Module):
                 conv.append(DimwiseMedianConv(in_features,
                                               hid,
                                               bias=bias, norm=norm,
+                                              row_normalize=row_normalize,
                                               activation=activations.get(act)))
             else:
                 conv.append(SoftKConv(in_features,
                                       hid,
                                       bias=bias, norm=norm,
+                                      row_normalize=row_normalize,
                                       activation=activations.get(act), **kwargs),
                             )
             conv.append(nn.Dropout(dropout))
             in_features = hid
 
         if method == "dimmedian":
-            conv.append(DimwiseMedianConv(in_features, out_features, bias=bias, norm=norm))
+            conv.append(DimwiseMedianConv(in_features, out_features, 
+                                          row_normalize=row_normalize,
+                                          bias=bias, norm=norm))
         else:
-            conv.append(SoftKConv(in_features, out_features, bias=bias, norm=norm, **kwargs))
+            conv.append(SoftKConv(in_features, out_features, 
+                                  row_normalize=row_normalize,
+                                  bias=bias, norm=norm, **kwargs))
 
         self.conv = Sequential(*conv, loc=1)  # `loc=1` specifies the location of features.
 

@@ -3,14 +3,14 @@ from graphwar.data import GraphWarDataset
 from graphwar.training import Trainer
 from graphwar.training.callbacks import ModelCheckpoint
 from graphwar.defense.model_level import ReliableGNN
-from graphwar.utils import split_nodes
+from graphwar.utils import split_nodes_by_classes
 from graphwar import set_seed
 
 
 # ============ Loading datasets ================================
 data = GraphWarDataset('cora', verbose=True, standardize=True)
 g = data[0]
-splits = split_nodes(g.ndata['label'], random_state=15)
+splits = split_nodes_by_classes(g.ndata['label'], random_state=15)
 
 num_feats = g.ndata['feat'].size(1)
 num_classes = data.num_classes
@@ -23,8 +23,8 @@ device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cp
 g = g.to(device)
 
 # ============ Train you model ==================================
-model = ReliableGNN(num_feats, num_classes, norm='none') # method='dimmedian'
-# model = ReliableGNN(num_feats, num_classes, norm='both', method='softk')
+model = ReliableGNN(num_feats, num_classes, hids=64, norm='none') # method='dimmedian'
+# model = ReliableGNN(num_feats, num_classes, hids=64, norm='none', method='softk', temperature=0.5)
 trainer = Trainer(model, device=device)
 ckp = ModelCheckpoint('model.pth', monitor='val_accuracy')
 trainer.fit(g, y_train, splits.train_nodes, val_y=y_val, val_index=splits.val_nodes, callbacks=[ckp])

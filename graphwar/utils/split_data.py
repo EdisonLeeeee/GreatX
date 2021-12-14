@@ -51,3 +51,55 @@ def split_nodes(labels: Tensor, *,
         dict(train_nodes=train_nodes,
              val_nodes=val_nodes,
              test_nodes=test_nodes))
+
+
+def split_nodes_by_classes(labels: torch.Tensor,
+                           n_per_class: int = 20, random_state: Optional[int] = None):
+    """
+    Randomly split the training data by the number of nodes per classes.
+
+    Parameters
+    ----------
+    labels: torch.Tensor [num_nodes]
+        The class labels
+    n_per_class : int
+        Number of samples per class
+    random_state: int
+        Seed
+
+    Returns
+    -------
+    split_train: torch.Tensor [n_per_class * num_classes]
+        The indices of the training nodes
+    split_val: torch.Tensor [n_per_class * num_classes]
+        The indices of the validation nodes
+    split_test torch.Tensor [num_nodes - 2*n_per_class * num_classes]
+        The indices of the test nodes
+    """
+    torch.manual_seed(random_state)
+    num_classes = labels.max() + 1
+
+    split_train, split_val = [], []
+    for c in range(num_classes):
+        perm = (labels == c).nonzero().view(-1)
+        perm = perm[torch.randperm(perm.size(0))]
+        split_train.append(perm[:n_per_class])
+        split_val.append(perm[n_per_class:2 * n_per_class])
+
+    split_train = torch.cat(split_train)
+    split_train = split_train[torch.randperm(split_train.size(0))]
+    split_val = torch.cat(split_val)
+    split_train = split_val[torch.randperm(split_val.size(0))]
+
+    assert split_train.size(0) == split_val.size(0) == n_per_class * num_classes
+
+    mask = torch.ones_like(labels).bool()
+
+    mask[split_train] = False
+    mask[split_val] = False
+    split_test = torch.arange(labels.size(0), device=labels.device)[mask]
+
+    return BunchDict(
+        dict(train_nodes=split_train,
+             val_nodes=split_val,
+             test_nodes=split_test))

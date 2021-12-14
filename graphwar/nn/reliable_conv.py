@@ -6,6 +6,7 @@ import torch.nn.functional as F
 from dgl import DGLError
 from graphwar.utils.normalize import dgl_normalize
 from graphwar.functional import spmm
+from typing import Optional
 
 try:
     from glcore import dimmedian_idx
@@ -246,7 +247,7 @@ class SoftKConv(nn.Module):
             feat = feat @ self.weight
 
         # ========= Soft Weighted Medoid in the top `k` neighborhood ===
-        feat = soft_weighted_medoid_k_neighborhood(graph, feat, k=self._k,
+        feat = soft_weighted_medoid_k_neighborhood(graph, feat, edge_weight, k=self._k,
                                                    temperature=self._temperature,
                                                    with_weight_correction=self._with_weight_correction)
         # ==============================================================
@@ -272,14 +273,17 @@ class SoftKConv(nn.Module):
 def soft_weighted_medoid_k_neighborhood(
     g: dgl.DGLGraph,
     feat: torch.Tensor,
+    edge_weight: Optional[torch.Tensor] = None,
     k: int = 32,
     temperature: float = 1.0,
     with_weight_correction: bool = True,
 ) -> torch.Tensor:
-    """Soft Weighted Medoid in the top `k` neighborhood (see Eq. 6 and Eq. 7 in our paper). This function can be used
-    as a robust aggregation function within a message passing GNN (e.g. see `models#RGNN`).
+    """Soft Weighted Medoid in the top `k` neighborhood (see Eq. 6 and Eq. 7 in our paper). 
+    This function can be used as a robust aggregation function 
+    within a message passing GNN (e.g. see `models#RGNN`).
 
-    Note that if `with_weight_correction` is false, we calculate the Weighted Soft Medoid as in Appendix C.4.
+    Note that if `with_weight_correction` is false, 
+    we calculate the Weighted Soft Medoid as in Appendix C.4.
 
     Parameters
     ----------
@@ -287,6 +291,8 @@ def soft_weighted_medoid_k_neighborhood(
         dgl graph instance.
     x : torch.Tensor
         Dense [n, d] tensor containing the node attributes/embeddings.
+    edge_weight : torch.Tensor, optional
+        edge weights of the edges in the graph `g`, by default `None` (1 for all edges).
     k : int, optional
         Neighborhood size for selecting the top k elements, by default 32.
     temperature : float, optional
@@ -303,12 +309,15 @@ def soft_weighted_medoid_k_neighborhood(
     n = feat.size(0)
     assert k <= n
 
-    A_rows, A_cols = g.edges(order='srcdst')
-    A_values = A_rows.new_ones(A_rows.size(0), dtype=torch.float)
-    A_indices = torch.stack([A_rows, A_cols], dim=0)
+    row, col = g.edges(order='srcdst')
+    if edge_weight is None:
+        A_values = row.new_ones(row.size(0), dtype=torch.float)
+    else:
+        A_values = edge_weight
+    edge_index = torch.stack([row, col], dim=0)
 
     # Custom CUDA extension code for the top k values of the sparse adjacency matrix
-    top_k_weights, top_k_idx = topk(A_indices, A_values, n, k)
+    top_k_weights, top_k_idx = topk(edge_index, A_values, n, k)
 
     # Partial distance matrix calculation
     distances_top_k = partial_distance_matrix(feat, top_k_idx)
@@ -319,13 +328,13 @@ def soft_weighted_medoid_k_neighborhood(
     distances_top_k[~torch.isfinite(distances_top_k)] = torch.finfo(distances_top_k.dtype).max
 
     # Softmax over L1 criterium
-    reliable_adj_values = F.softmax(-distances_top_k / temperature, dim=-1)
+    reliable_edge_weight = F.softmax(-distances_top_k / temperature, dim=-1)
     del distances_top_k
 
     # To have GCN as a special case (see Eq. 6 in our paper)
     if with_weight_correction:
-        reliable_adj_values = reliable_adj_values * top_k_weights
-        reliable_adj_values = reliable_adj_values / reliable_adj_values.sum(-1).view(-1, 1)
+        reliable_edge_weight = reliable_edge_weight * top_k_weights
+        reliable_edge_weight = reliable_edge_weight / reliable_edge_weight.sum(-1).view(-1, 1)
 
     # Map the top k results back to the (sparse) [n,n] matrix
     top_k_inv_idx_row = torch.arange(n, device=g.device)[:, None].expand(n, k).flatten()
@@ -334,14 +343,14 @@ def soft_weighted_medoid_k_neighborhood(
 
     # Note: The adjacency matrix A might have disconnected nodes. In that case applying the top_k_mask will
     # drop the nodes completely from the adj matrix making, changing its shape
-    reliable_adj_index = torch.stack([top_k_inv_idx_row[top_k_mask], top_k_inv_idx_column[top_k_mask]])
-    reliable_adj_values = reliable_adj_values[top_k_mask.view(n, k)]
+    reliable_edge_index = torch.stack([top_k_inv_idx_row[top_k_mask], top_k_inv_idx_column[top_k_mask]])
+    reliable_edge_weight = reliable_edge_weight[top_k_mask.view(n, k)]
 
     # Normalization and calculation of new embeddings
-    a_row_sum = A_values.new_zeros(n)
-    a_row_sum.scatter_add_(0, A_indices[0], A_values)
+#     a_row_sum = A_values.new_zeros(n)
+#     a_row_sum.scatter_add_(0, edge_index[0], A_values)
 
-    new_embeddings = spmm(reliable_adj_index, reliable_adj_values, n, feat)
+    new_embeddings = spmm(reliable_edge_index, reliable_edge_weight, n, feat)
     return new_embeddings
 
 

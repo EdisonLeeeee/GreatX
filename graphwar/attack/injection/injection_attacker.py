@@ -27,6 +27,13 @@ class InjectionAttacker(Attacker):
                num_edges_local: Optional[int] = None, feat_limits: Optional[tuple, dict] = None) -> "InjectionAttacker":
         """Base method that describes the adversarial injection attack
         """
+        
+        _is_setup = getattr(self, "_is_setup", True)
+        
+        if not _is_setup:
+            raise RuntimeError(
+                f'{self.__class__.__name__} requires a surrogate model to conduct attack. '
+                'Use `attacker.setup_surrogate(surrogate_model)`.')        
 
         if not self.is_reseted:
             raise RuntimeError(

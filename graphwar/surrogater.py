@@ -3,6 +3,8 @@ from typing import Callable
 
 
 class Surrogater(torch.nn.Module):
+    _is_setup = False # flags to denote the surrogate model is properly set
+    
     def setup_surrogate(self, surrogate: torch.nn.Module, *,
                         loss: Callable = torch.nn.CrossEntropyLoss(),
                         eps: float = 1.0,
@@ -22,6 +24,9 @@ class Surrogater(torch.nn.Module):
 
         if freeze:
             self.freeze_surrogate()
+        
+        self._is_setup = True
+        
         return self
 
     def estimate_self_training_labels(self, nodes=None):

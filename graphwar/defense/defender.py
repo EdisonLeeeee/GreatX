@@ -6,7 +6,6 @@ from typing import Optional
 
 from graphwar import set_seed, Config
 
-
 _FEATURE = Config.feat
 _LABEL = Config.label
 

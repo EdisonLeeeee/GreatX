@@ -27,6 +27,13 @@ class BackdoorAttacker(Attacker):
     def attack(self, num_budgets: Union[int, float], targets_class: int) -> "BackdoorAttacker":
         """Base method that describes the adversarial backdoor attack
         """
+        
+        _is_setup = getattr(self, "_is_setup", True)
+        
+        if not _is_setup:
+            raise RuntimeError(
+                f'{self.__class__.__name__} requires a surrogate model to conduct attack. '
+                'Use `attacker.setup_surrogate(surrogate_model)`.')        
 
         if not self.is_reseted:
             raise RuntimeError(

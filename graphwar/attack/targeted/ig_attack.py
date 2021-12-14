@@ -61,11 +61,11 @@ class IGAttack(TargetedAttacker, SurrogateAttacker):
             edge_indicator = edge_indicator[indices]
             link_selected = candidate_edges[indices]
 
-            for u, v in link_selected[edge_indicator].tolist():
-                self.remove_edge(u, v)
-
             for u, v in link_selected[~edge_indicator].tolist():
                 self.add_edge(u, v)
+                
+            for u, v in link_selected[edge_indicator].tolist():
+                self.remove_edge(u, v)                
 
         elif feature_attack and not structure_attack:
             indices = torch.topk(feature_importance, k=self.num_budgets).indices
@@ -92,11 +92,11 @@ class IGAttack(TargetedAttacker, SurrogateAttacker):
             feat_indicator = feat_indicator[feat_indices]
             feature_selected = candidate_feats[feat_indices]
 
-            for u, v in link_selected[edge_indicator].tolist():
-                self.remove_edge(u, v)
-
             for u, v in link_selected[~edge_indicator].tolist():
                 self.add_edge(u, v)
+                
+            for u, v in link_selected[edge_indicator].tolist():
+                self.remove_edge(u, v)                
 
             for u, v in feature_selected[feat_indicator].tolist():
                 self.remove_feat(u, v)

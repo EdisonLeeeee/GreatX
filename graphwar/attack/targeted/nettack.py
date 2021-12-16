@@ -8,11 +8,12 @@ from tqdm import tqdm
 from typing import Optional
 from functools import lru_cache
 
+from graphwar import Surrogater
 from graphwar.utils import normalize, add_self_loop, singleton_filter
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 
 
-class Nettack(TargetedAttacker):
+class Nettack(TargetedAttacker, Surrogater):
     """Implementation of the method proposed in the paper:
     'Adversarial Attacks on Neural Networks for Graph Data'
     by Daniel Zügner, Amir Akbarnejad and Stephan Günnemann,
@@ -30,16 +31,18 @@ class Nettack(TargetedAttacker):
         self.cooc_matrix = sp.csr_matrix((feat.t() @ feat).cpu().numpy())
 
     def setup_surrogate(self, surrogate):
+        Surrogater.setup_surrogate(self, surrogate=surrogate, freeze=True)        
         W = None
-        for para in surrogate.parameters():
+        for para in self.surrogate.parameters():
             if para.ndim == 1:
                 warnings.warn(f"The surrogate model has `bias` term, which is ignored and the "
                               "model itself may not be a perfect choice for Nettack.")
                 continue
             if W is None:
-                W = para.detach()
+                W = para
             else:
-                W = W @ para.detach()
+                W = W @ para
+                
         assert W is not None
         self.W = W.cpu().numpy()
         self.num_classes = self.W.shape[-1]

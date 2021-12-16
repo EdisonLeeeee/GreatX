@@ -5,6 +5,10 @@ from typing import Callable
 class Surrogater(torch.nn.Module):
     _is_setup = False # flags to denote the surrogate model is properly set
     
+    def __init__(self, device: str = "cpu"):
+        super().__init__()
+        self.device = torch.device(device)
+    
     def setup_surrogate(self, surrogate: torch.nn.Module, *,
                         loss: Callable = torch.nn.CrossEntropyLoss(),
                         eps: float = 1.0,

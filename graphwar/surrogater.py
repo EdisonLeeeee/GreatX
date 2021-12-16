@@ -12,7 +12,7 @@ class Surrogater(torch.nn.Module):
                         required: torch.nn.Module = None):
 
         if not isinstance(surrogate, torch.nn.Module):
-            raise RuntimeError("The surrogate model must be an instance of `torch.nn.modules`.")
+            raise RuntimeError("The surrogate model must be an instance of `torch.nn.Module`.")
 
         if required is not None and not isinstance(surrogate, required):
             raise RuntimeError(f"The surrogate model is required to be `{required}`, but got `{surrogate.__class__.__name__}`.")

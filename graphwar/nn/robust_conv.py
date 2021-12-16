@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import dgl.function as fn
 from dgl import DGLError
+from dgl.utils import expand_as_pair
 from graphwar.utils.normalize import dgl_normalize
 
 
@@ -58,11 +59,10 @@ class RobustConv(nn.Module):
             nn.init.zeros_(self.bias_var)
 
     def forward(self, graph, feat, edge_weight=None):
-        if not isinstance(feat, tuple):
-            feat = (feat, feat)
+        feat_mean, feat_var = expand_as_pair(feat)
 
-        mean = feat[0] @ self.weight_mean
-        var = feat[1] @ self.weight_var
+        mean = feat_mean @ self.weight_mean
+        var = feat_var @ self.weight_var
 
         if self.bias_mean is not None:
             mean = mean + self.bias_mean

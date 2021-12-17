@@ -6,3 +6,4 @@ from .gf_attack import GFAttack
 from .nettack import Nettack
 from .ig_attack import IGAttack
 from .sg_attack import SGAttack
+from .sg_attack_large import SGAttackLarge

@@ -2,13 +2,14 @@ import torch
 import dgl
 import numpy as np
 import torch.nn.functional as F
+import dgl.function as fn
+import dgl.ops as ops
 
 from tqdm import tqdm
 from functools import lru_cache
 from torch.autograd import grad
 from typing import Optional, Callable
 
-from graphwar.functional.scatter import scatter_add
 from graphwar.utils import ego_graph
 from graphwar.models import SGC
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
@@ -16,10 +17,10 @@ from graphwar.surrogater import Surrogater
 
 from collections import namedtuple
 SubGraph = namedtuple('SubGraph', ['edge_index', 'sub_edges', 'non_edges',
-                                   'edge_weight', 'non_edge_weight', 'selfloop_weight'])
+                                   'edge_weight', 'non_edge_weight', 'selfloop_weight', 'dgl_graph'])
 
 
-class SGAttack(TargetedAttacker, Surrogater):
+class SGAttackLarge(TargetedAttacker, Surrogater):
     # SGAttack cannot ensure that there is not singleton node after attacks.
     _allow_singleton = True
 
@@ -45,7 +46,7 @@ class SGAttack(TargetedAttacker, Surrogater):
         return self
 
     def strongest_wrong_class(self, target, target_label):
-        logit = self.logits[target].clone()
+        logit = self.logits[target]
         logit[target_label] = -1e4
         return logit.argmax()
 
@@ -99,9 +100,11 @@ class SGAttack(TargetedAttacker, Surrogater):
         non_edge_weight = torch.zeros(non_edges.size(1), device=self.device).requires_grad_()
         selfloop_weight = torch.ones(selfloop.size(0), device=self.device)
 
+        dgl_graph = dgl.graph((edge_index[0], edge_index[1]), device=self.device, num_nodes=self.num_nodes)
+
         subgraph = SubGraph(edge_index=edge_index, sub_edges=sub_edges, non_edges=non_edges,
                             edge_weight=edge_weight, non_edge_weight=non_edge_weight,
-                            selfloop_weight=selfloop_weight,)
+                            selfloop_weight=selfloop_weight, dgl_graph=dgl_graph)
         return subgraph
 
     @lru_cache(maxsize=1)
@@ -177,13 +180,20 @@ class SGAttack(TargetedAttacker, Surrogater):
         return grad(loss, [subgraph.non_edge_weight, subgraph.edge_weight], create_graph=False)
 
     def SGConv(self, subgraph, x, edge_weight):
-        row, col = subgraph.edge_index
         norm = (self.degree + 1.).pow(-0.5)
-        edge_weight = (norm[row] * edge_weight * norm[col]).view(-1, 1)
+        graph = subgraph.dgl_graph
+        
+        edge_weight = ops.e_mul_u(graph, edge_weight, norm)
+        edge_weight = ops.e_mul_v(graph, edge_weight, norm)
+
+        graph.ndata['h'] = x
+        graph.edata['edge_weight'] = edge_weight
 
         for _ in range(self.k):
-            src = x[row] * edge_weight
-            x = scatter_add(src, col, dim=-2, dim_size=x.size(0))
+            graph.update_all(fn.u_mul_e('h', 'edge_weight', 'm'),
+                             fn.sum('m', 'h'))
+
+        x = graph.ndata.pop('h')
 
         if self.bias is not None:
             x += self.bias

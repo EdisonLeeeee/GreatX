@@ -70,7 +70,7 @@ class Trainer:
         cfg : other keyword arguments, such as `lr` and `weight_decay`.
         """
         self.device = torch.device(device)
-        self.model = model.to(device)
+        self.model = self.to_device(model)
         
         cfg.setdefault("lr", 1e-2)
         cfg.setdefault("weight_decay", 5e-4)
@@ -119,7 +119,7 @@ class Trainer:
 
         """
 
-        model = self.model
+        model = self.to_device(self.model)
         model.stop_training = False
         validation = val_y is not None
 
@@ -223,6 +223,8 @@ class Trainer:
         """
         if verbose:
             print("Evaluating...")
+            
+        self.to_device(self.model)
 
         test_data = self.config_test_data(g, y=y, index=index)
         progbar = Progbar(target=len(test_data),
@@ -282,6 +284,8 @@ class Trainer:
 
     def predict(self, g: DGLGraph, index: Optional[Tensor] = None,
                 transform: Callable = torch.nn.Softmax(dim=-1)) -> Tensor:
+        
+        self.to_device(self.model)
         predict_data = self.config_predict_data(g, index=index)
         out = self.predict_step(predict_data).squeeze()
         if transform is not None:

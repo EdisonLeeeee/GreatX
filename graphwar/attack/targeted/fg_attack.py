@@ -119,7 +119,7 @@ class FGAttack(TargetedAttacker, Surrogater):
             if not self._allow_singleton:
                 score *= singleton_mask(modified_adj)
             score = torch.triu(score, diagonal=1)
-            # make sure the targeted node would not be selected
+            # make sure the targeted node and its neighbors would not be selected
             score[target] = -1
             score[:, target] = -1
         return score.view(-1)

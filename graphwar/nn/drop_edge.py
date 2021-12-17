@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-
+from graphwar.functional import drop_edge
 
 class DropEdge(nn.Module):
     def __init__(self, p=0.5):
@@ -8,12 +8,4 @@ class DropEdge(nn.Module):
         self.p = p
 
     def forward(self, g):
-        if not self.training or not self.p:
-            return g
-
-        g = g.local_var()
-        num_edges = g.num_edges()
-        num_drops = int(self.p * num_edges)
-        perm = torch.randperm(num_edges, device=g.device)
-        g.remove_edges(perm[:num_drops])
-        return g
+        return drop_edge(g, self.p, self.training)

@@ -18,13 +18,14 @@ class Attacker(torch.nn.Module):
     For example, the attacker model should be defined as follows:
 
     >>> attacker = Attacker(graph, device='cuda')
+    >>> attacker.reset() # reset states
     >>> attacker.attack(attack_arguments)
 
     """
     _max_perturbations: Union[float, int] = 0
     _allow_feature_attack: bool = False
     _allow_structure_attack: bool = True
-    _allow_singleton: bool = False
+    _allow_singleton: bool = True
 
     def __init__(self, graph: dgl.DGLGraph, device: str = "cpu",
                  seed: Optional[int] = None, name: Optional[str] = None, **kwargs):

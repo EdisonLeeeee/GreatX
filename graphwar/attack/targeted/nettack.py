@@ -21,6 +21,7 @@ class Nettack(TargetedAttacker, Surrogater):
     """
     # nettack can conduct feature attack
     _allow_feature_attack = True
+    _allow_singleton: bool = False
 
     def __init__(self, graph: dgl.DGLGraph, device: str = "cpu",
                  seed: Optional[int] = None, name: Optional[str] = None, **kwargs):

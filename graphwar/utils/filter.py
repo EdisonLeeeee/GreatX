@@ -24,7 +24,7 @@ def singleton_filter(edges: np.ndarray, adj_matrix: sp.csr_matrix):
     np.array, shape [M, 2], 
         the edges that removed will not generate singleton nodes.
     """
-    assert edges.shape[1] == 2, "edges should be shape [M, 2], bug got {edges.shape}"
+    assert edges.shape[1] == 2, f"edges should be shape [M, 2], bug got {edges.shape}"
     if len(edges) == 0:
         warnings.warn("No edges found.", RuntimeWarning)
         return edges

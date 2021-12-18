@@ -14,10 +14,6 @@ from graphwar.attack.attacker import Attacker
 class FlipAttacker(Attacker):
     """Adversarial attacker for graph data by edge flipping.
     """
-    _max_perturbations: Union[float, int] = 0
-    _allow_feature_attack: bool = False
-    _allow_structure_attack: bool = True
-    _allow_singleton: bool = False
 
     def reset(self) -> "FlipAttacker":
         super().reset()

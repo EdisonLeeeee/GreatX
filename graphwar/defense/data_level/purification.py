@@ -98,7 +98,7 @@ class SVDPurification(torch.nn.Module):
 
         row, col = adj_matrix.nonzero()
 
-        defense_g = dgl.graph((row, col), device=device)
+        defense_g = dgl.graph((row, col), device=device, num_nodes=g.num_nodes())
         defense_g.ndata.update(g.ndata)
         defense_g.edata.update(g.edata)
 

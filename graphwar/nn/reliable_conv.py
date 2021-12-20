@@ -10,12 +10,12 @@ from typing import Optional
 
 try:
     from glcore import dimmedian_idx
-except ModuleNotFoundError:
+except (ModuleNotFoundError, ImportError):
     dimmedian_idx = None
 
 try:
     from glcore import topk
-except ModuleNotFoundError:
+except (ModuleNotFoundError, ImportError):
     topk = None
 
 

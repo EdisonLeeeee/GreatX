@@ -28,7 +28,7 @@ class GAT(nn.Module):
     Pytorch implementation: https://github.com/Diego999/pyGAT    
 
     """
-    
+
     @wrapper
     def __init__(self,
                  in_features: int,
@@ -70,23 +70,22 @@ class GAT(nn.Module):
                                 feat_drop=dropout,
                                 attn_drop=dropout,
                                 activation=activations.get(act)))
+            conv.append(nn.Flatten(1))
             conv.append(nn.Dropout(dropout))
             in_features = hid
             head = num_head
 
+        conv.append(GATConv(in_features * head, out_features,
+                            num_heads=1, bias=bias,
+                            feat_drop=dropout,
+                            attn_drop=dropout))
         self.conv = Sequential(*conv, loc=1)  # `loc=1` specifies the location of features.
-        self.out_conv = GATConv(in_features * head, out_features,
-                                num_heads=1, bias=bias,
-                                feat_drop=dropout,
-                                attn_drop=dropout)
 
     def reset_parameters(self):
         for conv in self.conv:
             if hasattr(conv, 'reset_parameters'):
                 conv.reset_parameters()
-        self.out_conv.reset_parameters()
 
     def forward(self, g, feat):
         g = g.add_self_loop()
-        feat = self.conv(g, feat).flatten(1)
-        return self.out_conv(g, feat).mean(1)
+        return self.conv(g, feat).mean(1)

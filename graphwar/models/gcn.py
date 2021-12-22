@@ -33,6 +33,7 @@ class GCN(nn.Module):
                  hids: list = [16],
                  acts: list = ['relu'],
                  dropout: float = 0.5,
+                 bn: bool = False,
                  bias: bool = True,
                  norm: str = 'both'):
         r"""
@@ -50,6 +51,8 @@ class GCN(nn.Module):
             the dropout ratio of model, by default 0.5
         bias : bool, optional
             whether to use bias in the layers, by default True
+        bn: bool, optional
+            whether to use `BatchNorm1d` after the convolution layer, by default False
         norm : str, optional
             How to apply the normalizer.  Can be one of the following values:
 
@@ -77,7 +80,10 @@ class GCN(nn.Module):
             conv.append(GCNConv(in_features,
                                 hid,
                                 bias=bias, norm=norm,
-                                activation=activations.get(act)))
+                                activation=None))
+            if bn:
+                conv.append(nn.BatchNorm1d(hid))
+            conv.append(activations.get(act))
             conv.append(nn.Dropout(dropout))
             in_features = hid
         conv.append(GCNConv(in_features, out_features, bias=bias, norm=norm))

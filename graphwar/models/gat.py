@@ -38,6 +38,7 @@ class GAT(nn.Module):
                  acts: list = ['elu'],
                  dropout: float = 0.6,
                  bias: bool = True,
+                 bn: bool = False,
                  includes=['num_heads']):
         r"""
         Parameters
@@ -56,6 +57,8 @@ class GAT(nn.Module):
             the dropout ratio of model, by default 0.5
         bias : bool, optional
             whether to use bias in the layers, by default True      
+        bn: bool, optional
+            whether to use `BatchNorm1d` after the convolution layer, by default False            
         """
         super().__init__()
 
@@ -69,8 +72,11 @@ class GAT(nn.Module):
                                 bias=bias,
                                 feat_drop=dropout,
                                 attn_drop=dropout,
-                                activation=activations.get(act)))
+                                activation=None))
             conv.append(nn.Flatten(1))
+            if bn:
+                conv.append(nn.BatchNorm1d(hid * num_head))
+            conv.append(activations.get(act))            
             conv.append(nn.Dropout(dropout))
             in_features = hid
             head = num_head

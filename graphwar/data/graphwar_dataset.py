@@ -12,7 +12,7 @@ from dgl import transform
 _DATASETS = {
     'citeseer', 'citeseer_full', 'cora', 'cora_ml', 'cora_full', 'amazon_cs',
     'amazon_photo', 'coauthor_cs', 'coauthor_phy',
-    'pubmed', 'flickr', 'blogcatalog', 'dblp', 'acm', 'uai',
+    'pubmed', 'flickr', 'blogcatalog', 'dblp', 'acm', 'uai', 'reddit'
 }
 
 
@@ -49,11 +49,12 @@ class GraphWarDataset(DGLBuiltinDataset):
     ------------------
     'citeseer', 'citeseer_full', 'cora', 'cora_ml', 'cora_full', 'amazon_cs',
     'amazon_photo', 'coauthor_cs', 'coauthor_phy',
-    'pubmed', 'flickr', 'blogcatalog', 'dblp', 'acm', 'uai'
+    'pubmed', 'flickr', 'blogcatalog', 'dblp', 'acm', 'uai', 'reddit'
     """
 
     def __init__(self, name, raw_dir=None,
-                 force_reload=False, verbose=False, standardize=True):
+                 force_reload=False, verbose=False,
+                 standardize=True):
         if name not in _DATASETS:
             raise ValueError(f"Unknow dataset {name}, allowed datasets are {tuple(_DATASETS)}.")
 
@@ -69,12 +70,14 @@ class GraphWarDataset(DGLBuiltinDataset):
 
     def download(self):
         r"""Automatically download data"""
-        download_path = os.path.join(self.raw_dir, 'GraphWarData/datasets', self.name + '.npz')
+        download_path = os.path.join(self.raw_dir, self.name + '.npz')
         if not os.path.exists(download_path):
+            if self.name == 'graphwar-reddit':
+                raise RuntimeError("`reddit` dataset is too large to download. Please download it manually.")  # TODO: add reddit dataset links
             download(self.url, path=download_path)
 
     def process(self):
-        npz_path = os.path.join(self.raw_dir, 'GraphWarData/datasets', self.name + '.npz')
+        npz_path = os.path.join(self.raw_dir, self.name + '.npz')
         g = self._load_npz(npz_path)
         # g = transform.reorder_graph(
         #     g, node_permute_algo='rcmk', edge_permute_algo='dst', store_ids=False)
@@ -112,7 +115,11 @@ class GraphWarDataset(DGLBuiltinDataset):
             adj_matrix = loader['adj_matrix'].item()
             adj_matrix = adj_matrix.maximum(adj_matrix.T)
             adj_matrix = eliminate_self_loops(adj_matrix)
-            attr_matrix = loader['attr_matrix'].item().A
+            attr_matrix = loader['attr_matrix']
+            if not isinstance(attr_matrix, np.ndarray):
+                # scipy sparse matrix
+                attr_matrix = attr_matrix.item().A
+
             labels = loader['label']
             if labels.shape[0] != adj_matrix.shape[0]:
                 _labels = np.full((adj_matrix.shape[0] - labels.shape[0],), -1)
@@ -145,7 +152,7 @@ class GraphWarDataset(DGLBuiltinDataset):
     def save_path(self):
         r"""Path to save the processed dataset.
         """
-        return os.path.join(self._save_dir, 'GraphWarData/datasets', self.name)
+        return os.path.join(self._save_dir, self.name)
 
     def __getitem__(self, idx):
         r"""Get graph by index

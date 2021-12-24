@@ -52,6 +52,8 @@ class SGAttackLarge(TargetedAttacker, Surrogater):
 
     def get_subgraph(self, target, target_label, best_wrong_label):
         sub_nodes, sub_edges = ego_graph(self.adjacency_matrix, int(target), self.k)
+        if sub_edges.size== 0:
+            raise RuntimeError(f"The target node {int(target)} is a singleton node.")        
         sub_nodes = torch.as_tensor(sub_nodes, dtype=torch.long, device=self.device)
         sub_edges = torch.as_tensor(sub_edges, dtype=torch.long, device=self.device)
         attacker_nodes = torch.where(self.label == best_wrong_label)[0].cpu().numpy()

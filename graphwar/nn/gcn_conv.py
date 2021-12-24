@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import dgl.function as fn
 from dgl import DGLError
-from graphwar.utils.normalize import dgl_normalize
+from graphwar.utils.transform import dgl_normalize
 
 
 class GCNConv(nn.Module):
@@ -46,7 +46,7 @@ class GCNConv(nn.Module):
 
         * ``left``, to divide the messages sent out from each node by its out-degrees,
         equivalent to random walk normalization.      
-        
+
     activation : callable activation function/layer or None, optional
         If not None, applies an activation function to the updated node features.
         Default: ``None``.        
@@ -85,13 +85,13 @@ class GCNConv(nn.Module):
                  activation=None,
                  weight=True,
                  bias=True):
-        
+
         super().__init__()
         if norm not in ('none', 'both', 'right', 'left'):
             raise DGLError('Invalid norm value. Must be either "none", "both", "right" or "left".'
-                           ' But got "{}".'.format(norm))     
+                           ' But got "{}".'.format(norm))
         self._in_feats = in_feats
-        self._out_feats = out_feats            
+        self._out_feats = out_feats
         self._norm = norm
         self._add_self_loop = add_self_loop
         self._activation = activation
@@ -106,7 +106,7 @@ class GCNConv(nn.Module):
         else:
             self.register_parameter('bias', None)
 
-        self.reset_parameters()        
+        self.reset_parameters()
 
     def reset_parameters(self):
         r"""
@@ -122,7 +122,7 @@ class GCNConv(nn.Module):
         """
         if self.weight is not None:
             nn.init.xavier_uniform_(self.weight)
-            
+
         if self.bias is not None:
             nn.init.zeros_(self.bias)
 
@@ -160,26 +160,25 @@ class GCNConv(nn.Module):
                 edge_weight = torch.cat([edge_weight, self_loop])
         else:
             graph = graph.local_var()
-            
 
         edge_weight = dgl_normalize(graph, self._norm, edge_weight)
         graph.edata['_edge_weight'] = edge_weight
-        
+
         if self.weight is not None:
             feat = feat @ self.weight
-        
+
         graph.ndata['h'] = feat
         graph.update_all(fn.u_mul_e('h', '_edge_weight', 'm'),
                          fn.sum('m', 'h'))
         feat = graph.ndata.pop('h')
 
         if self.bias is not None:
-            feat = feat + self.bias             
-        
+            feat = feat + self.bias
+
         if self._activation is not None:
             feat = self._activation(feat)
         return feat
-    
+
     def extra_repr(self):
         """Set the extra representation of the module,
         which will come into effect when printing the model.
@@ -188,4 +187,4 @@ class GCNConv(nn.Module):
         summary += ', normalization={_norm}'
         if '_activation' in self.__dict__:
             summary += ', activation={_activation}'
-        return summary.format(**self.__dict__)    
+        return summary.format(**self.__dict__)

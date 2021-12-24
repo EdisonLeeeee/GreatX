@@ -1,6 +1,6 @@
 from .bunchdict import BunchDict
 from .filter import *
-from .normalize import *
+from .transform import *
 from .functions import topk, repeat, wrapper
 from .subgraph import ego_graph, k_hop_subgraph
 from .split_data import split_nodes, split_nodes_by_classes

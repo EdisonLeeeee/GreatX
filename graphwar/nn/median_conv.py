@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import dgl.function as fn
 from dgl import DGLError
-from graphwar.utils.normalize import dgl_normalize
+from graphwar.utils.transform import dgl_normalize
 
 
 class MedianConv(nn.Module):

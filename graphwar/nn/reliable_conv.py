@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from dgl import DGLError
-from graphwar.utils.normalize import dgl_normalize
+from graphwar.utils.transform import dgl_normalize
 from graphwar.functional import spmm
 from typing import Optional
 
@@ -104,7 +104,7 @@ class DimwiseMedianConv(nn.Module):
         """
 
         assert edge_weight is None or edge_weight.size(0) == graph.num_edges()
-        
+
         if self._add_self_loop:
             graph = graph.add_self_loop()
             if edge_weight is not None:
@@ -123,12 +123,12 @@ class DimwiseMedianConv(nn.Module):
         N, D = feat.size()
         row, col, e_id = graph.edges(order='srcdst', form='all')
         edge_index = torch.stack([row, col], dim=0)
-        
+
         if self._norm != 'none':
             # if edge_weight is all 1 and it is not necessary
             # to sort again
             edge_weight = edge_weight[e_id]
-            
+
         median_idx = dimmedian_idx(feat, edge_index, edge_weight, N)
         col_idx = torch.arange(D, device=graph.device).view(1, -1).expand(N, D)
         feat = feat[median_idx, col_idx]

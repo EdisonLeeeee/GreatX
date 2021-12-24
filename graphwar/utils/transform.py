@@ -1,15 +1,17 @@
 import torch
 import dgl
+import math
 import scipy.sparse as sp
 import numpy as np
 import dgl.ops as ops
-from typing import Union
+from typing import Union, Optional
 from torch import Tensor
 
-__all__ = ['normalize', 'add_self_loop']
+__all__ = ['normalize', 'add_self_loop', 'feat_normalize']
 
 
-def normalize(input: Union[Tensor, dgl.DGLGraph, sp.csr_matrix], norm: str = 'both'):
+def normalize(input: Union[Tensor, dgl.DGLGraph, sp.csr_matrix],
+              norm: str = 'both'):
     r"""normalize graph adjacency matrix
 
     Parameters
@@ -65,6 +67,72 @@ def normalize(input: Union[Tensor, dgl.DGLGraph, sp.csr_matrix], norm: str = 'bo
     else:
         raise TypeError("Expected one of dgl.DGLGraph, torch.tensor and scipy.sparse_matrix, "
                         f"but got {type(input)}.")
+
+
+def feat_normalize(feat: Tensor, norm: str = "standardize",
+                   dim: Optional[int] = None,
+                   lim_min: float = -1.0, lim_max: float = 1.0):
+    """Feature normalization function. Adapted from GRB:
+    `https://github.com/THUDM/grb/blob/2f438ccc9e62ffb33a26ca98a95e504985443055/grb/dataset/dataset.py#L638`
+
+    Parameters
+    ----------
+    feat : Tensor
+        node feature matrix with shape [N, D]
+    norm : Optional[str], optional
+        how to normalize feature matrix, including
+        ["linearize", "arctan", "tanh", "standardize", "none"], 
+        by default "standardize"
+    dim : None or int, optional
+        Axis along which the means or standard deviations 
+        are computed. The default is to compute the mean or 
+        standard deviations of the flattened array, by default None
+    lim_min : float, optional
+        mininum limit of feature, by default -1.0
+    lim_max : float, optional
+        maxinum limit of feature, by default 1.0
+
+    Returns
+    -------
+    feat : Tensor
+        normalized feature matrix
+    """
+    if norm not in ("linearize", "arctan", "tanh", "standardize", "none"):
+        raise dgl.DGLError('Invalid norm value. Must be either "linearize", "arctan", "tanh", "standardize" or "none".'
+                           ' But got "{}".'.format(norm))
+
+    if norm == 'none':
+        return feat
+
+    if norm == "linearize":
+        if dim is not None:
+            feat_max = feat.max(dim=dim, keepdim=True)
+            feat_min = feat.min(dim=dim, keepdim=True)
+        else:
+            feat_max = feat.max()
+            feat_min = feat.min()
+
+        k = (lim_max - lim_min) / (feat_max - feat_min)
+        feat = lim_min + k * (feat - feat_min)
+    else:
+        if dim is not None:
+            feat_mean = feat.mean(dim=dim, keepdim=True)
+            feat_std = feat.std(dim=dim, keepdim=True)
+        else:
+            feat_mean = feat.mean()
+            feat_std = feat.std()
+
+        # standardize
+        feat = (feat - feat_mean) / feat_std
+
+        if norm == "arctan":
+            feat = 2 * torch.arctan(feat) / math.pi
+        elif norm == "tanh":
+            feat = torch.tanh(feat)
+        elif norm == "standardize":
+            pass
+
+    return feat
 
 
 def add_self_loop(input: Union[Tensor, dgl.DGLGraph, sp.csr_matrix]):
@@ -139,7 +207,6 @@ def dgl_normalize(g: dgl.DGLGraph, norm: str = 'both', edge_weight=None):
         e_norm = ops.e_mul_u(g, e_norm, norm_src)
         e_norm = ops.e_mul_v(g, e_norm, norm_dst)
     return e_norm
-
 
 
 def scipy_normalize(adj_matrix: sp.csr_matrix, norm: str = 'both'):

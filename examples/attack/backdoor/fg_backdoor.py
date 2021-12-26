@@ -9,7 +9,9 @@ from graphwar.utils import split_nodes
 from graphwar import set_seed
 
 
-# ============ Loading datasets ================================
+# ================================================================== #
+#                      Loading datasets                              #
+# ================================================================== #
 data = GraphWarDataset('cora', verbose=True, standardize=True)
 g = data[0]
 splits = split_nodes(g.ndata['label'], random_state=15)
@@ -22,10 +24,12 @@ y_test = g.ndata['label'][splits.test_nodes]
 
 
 set_seed(123)
-device = torch.device('cuda:1') if torch.cuda.is_available() else torch.device('cpu')
+device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 g = g.to(device)
 
-# ============ Before Attack ==================================
+# ================================================================== #
+#                      Before Attack                                 #
+# ================================================================== #
 model = GCN(num_feats, num_classes, hids=[32], bias=False)
 trainer = Trainer(model, device=device)
 ckp = ModelCheckpoint('model.pth', monitor='val_accuracy')
@@ -36,7 +40,9 @@ predict = trainer.predict(g).argmax(-1)
 count = (predict == target_class).int().sum().item()
 print(f"{count/g.num_nodes():.2%} of nodes are classified as class {target_class} without trigger")
 
-# ============ Attacking ==================================
+# ================================================================== #
+#                      Attacking                                     #
+# ================================================================== #
 from graphwar.attack.backdoor import FGBackdoor
 attacker = FGBackdoor(g, device)
 attacker.setup_surrogate(model)

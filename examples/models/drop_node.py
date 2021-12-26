@@ -7,11 +7,15 @@ from graphwar.utils import split_nodes
 from graphwar.functional import drop_node
 from graphwar import set_seed
 
+
 def drop_hook(self, input):
     g, *others = input
     return (drop_node(g, p=0.1, training=self.training), *others)
 
-# ============ Loading datasets ================================
+
+# ================================================================== #
+#                      Loading datasets                              #
+# ================================================================== #
 data = GraphWarDataset('cora', verbose=True, standardize=True)
 g = data[0]
 splits = split_nodes(g.ndata['label'], random_state=15)
@@ -26,7 +30,9 @@ set_seed(123)
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 g = g.to(device)
 
-# ============ Train you model ==================================
+# ================================================================== #
+#                      Train You Model                               #
+# ================================================================== #
 model = GCN(num_feats, num_classes)
 hook = model.register_forward_pre_hook(drop_hook)
 # hook.remove() # remove hook

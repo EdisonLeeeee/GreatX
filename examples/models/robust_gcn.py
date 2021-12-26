@@ -7,7 +7,9 @@ from graphwar.utils import split_nodes
 from graphwar import set_seed
 
 
-# ============ Loading datasets ================================
+# ================================================================== #
+#                      Loading datasets                              #
+# ================================================================== #
 data = GraphWarDataset('cora', verbose=True, standardize=True)
 g = data[0]
 splits = split_nodes(g.ndata['label'], random_state=15)
@@ -22,7 +24,9 @@ set_seed(123)
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 g = g.to(device)
 
-# ============ Train you model ==================================
+# ================================================================== #
+#                      Train You Model                               #
+# ================================================================== #
 model = RobustGCN(num_feats, num_classes)
 trainer = RobustGCNTrainer(model, device=device)
 ckp = ModelCheckpoint('model.pth', monitor='val_accuracy')

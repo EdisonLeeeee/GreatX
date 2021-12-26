@@ -7,7 +7,9 @@ from graphwar.utils import split_nodes
 from graphwar import set_seed
 
 
-# ============ Loading datasets ================================
+# ================================================================== #
+#                      Loading datasets                              #
+# ================================================================== #
 data = GraphWarDataset('cora', verbose=True, standardize=True)
 g = data[0]
 splits = split_nodes(g.ndata['label'], random_state=15)
@@ -26,7 +28,9 @@ target = 1  # target node to attack
 
 print(f"Target node {target} has label {g.ndata['label'][target]}")
 
-# ============ Before Attack ==================================
+# ================================================================== #
+#                      Before Attack                                 #
+# ================================================================== #
 model = GCN(num_feats, num_classes)
 trainer = Trainer(model, device=device)
 ckp = ModelCheckpoint('model.pth', monitor='val_accuracy')
@@ -35,19 +39,25 @@ output = trainer.predict(g, target)
 
 print(f"Before attack\n {output.tolist()}")
 
-# ============ Attacking ==================================
+# ================================================================== #
+#                      Attacking                                     #
+# ================================================================== #
 from graphwar.attack.targeted import IGAttack
 attacker = IGAttack(g, device=device)
 attacker.setup_surrogate(model)
 attacker.reset()
 attacker.attack(target)
 
-# ============ After evasion Attack ==================================
+# ================================================================== #
+#                      After evasion Attack                          #
+# ================================================================== #
 output = trainer.predict(attacker.g(), target)
 print(f"After evasion attack\n {output.tolist()}")
 
 
-# ============ After poisoning Attack ==================================
+# ================================================================== #
+#                      After poisoning Attack                        #
+# ================================================================== #
 model = GCN(num_feats, num_classes)
 trainer = Trainer(model, device=device)
 trainer.fit(attacker.g(), y_train, splits.train_nodes)

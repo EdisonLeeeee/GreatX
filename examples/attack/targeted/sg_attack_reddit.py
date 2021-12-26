@@ -6,7 +6,9 @@ from graphwar.models import GCN, SGC
 from graphwar.utils import BunchDict
 
 
-# ============ Loading datasets ================================
+# ================================================================== #
+#                      Loading datasets                              #
+# ================================================================== #
 data = RedditDataset()
 g = data[0]
 splits = BunchDict(train_nodes=g.ndata.pop('train_mask').nonzero().squeeze(),
@@ -28,7 +30,9 @@ target = 0  # target node to attack
 
 print(f"Target node {target} has label {y[target]}")
 
-# ============ Before Attack ==================================
+# ================================================================== #
+#                      Before Attack                                 #
+# ================================================================== #
 model = SGC(num_feats, num_classes)
 trainer = Trainer(model, device=device, lr=0.1, weight_decay=5e-5)
 trainer.fit(g, y_train, splits.train_nodes, epochs=200)
@@ -36,23 +40,29 @@ output = trainer.predict(g, target)
 
 print(f"Before attack\n {output[y[target]].item()}")
 
-# ============ Attacking ==================================
+# ================================================================== #
+#                      Attacking                                     #
+# ================================================================== #
 from graphwar.attack.targeted import SGAttackLarge
 # use large-scale version of SGAttack
-attacker = SGAttackLarge(g, device='cpu') # you can still use GPU for accelerating
+attacker = SGAttackLarge(g, device='cpu')  # you can still use GPU for accelerating
 attacker.set_max_perturbations(10)
 attacker.setup_surrogate(model)
 attacker.reset()
 # since reddit is dense, we do not use the degree as attack budgets by default
 attacker.attack(target, num_budgets=10)
 
-# ============ After evasion Attack ==================================
+# ================================================================== #
+#                      After evasion Attack                          #
+# ================================================================== #
 model.cache_clear()  # Important! Since SGC has cached results
 output = trainer.predict(attacker.g().to(device), target)
 print(f"After evasion attack\n {output[y[target]].item()}")
 
 
-# ============ After poisoning Attack ==================================
+# ================================================================== #
+#                      After poisoning Attack                        #
+# ================================================================== #
 model = SGC(num_feats, num_classes)
 trainer = Trainer(model, device=device, lr=0.1, weight_decay=5e-5)
 trainer.fit(attacker.g().to(device), y_train, splits.train_nodes, epochs=200)

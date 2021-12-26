@@ -7,7 +7,9 @@ from graphwar.utils import split_nodes_by_classes
 from graphwar import set_seed
 
 
-# ============ Loading datasets ================================
+# ================================================================== #
+#                      Loading datasets                              #
+# ================================================================== #
 data = GraphWarDataset('cora', verbose=True, standardize=True)
 g = data[0]
 splits = split_nodes_by_classes(g.ndata['label'], random_state=15)
@@ -22,8 +24,10 @@ set_seed(123)
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 g = g.to(device)
 
-# ============ Train you model ==================================
-model = ReliableGNN(num_feats, num_classes) # method='dimmedian'
+# ================================================================== #
+#                      Train You Model                               #
+# ================================================================== #
+model = ReliableGNN(num_feats, num_classes)  # method='dimmedian'
 # model = ReliableGNN(num_feats, num_classes, method='softk')
 trainer = Trainer(model, device=device)
 ckp = ModelCheckpoint('model.pth', monitor='val_accuracy')

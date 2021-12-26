@@ -7,7 +7,9 @@ from graphwar.utils import split_nodes
 from graphwar import set_seed
 
 
-# ============ Loading datasets ================================
+# ================================================================== #
+#                      Loading datasets                              #
+# ================================================================== #
 data = GraphWarDataset('cora', verbose=True, standardize=True)
 g = data[0]
 splits = split_nodes(g.ndata['label'], random_state=15)
@@ -26,7 +28,9 @@ target = 1  # target node to attack
 
 print(f"Target node {target} has label {g.ndata['label'][target]}")
 
-# ============ Before Attack ==================================
+# ================================================================== #
+#                      Before Attack                                 #
+# ================================================================== #
 model = GCN(num_feats, num_classes)
 trainer = Trainer(model, device=device)
 ckp = ModelCheckpoint('model.pth', monitor='val_accuracy')
@@ -35,12 +39,16 @@ output = trainer.predict(g, target)
 
 print(f"Before attack\n {output.tolist()}")
 
-# ============ Attacking ==================================
+# ================================================================== #
+#                      Attacking                                     #
+# ================================================================== #
 from graphwar.attack.targeted import GFAttack
 attacker = GFAttack(g, device=device)
 attacker.reset()
 attacker.attack(target, num_budgets=1)
 
-# ============ After evasion Attack ==================================
+# ================================================================== #
+#                      After evasion Attack                          #
+# ================================================================== #
 output = trainer.predict(attacker.g(), target)
 print(f"After evasion attack\n {output.tolist()}")

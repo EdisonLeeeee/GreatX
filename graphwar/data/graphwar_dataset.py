@@ -116,7 +116,7 @@ class GraphWarDataset(DGLBuiltinDataset):
             adj_matrix = adj_matrix.maximum(adj_matrix.T)
             adj_matrix = eliminate_self_loops(adj_matrix)
             attr_matrix = loader['attr_matrix']
-            if not isinstance(attr_matrix, np.ndarray):
+            if attr_matrix.dtype.kind == 'O':
                 # scipy sparse matrix
                 attr_matrix = attr_matrix.item().A
 

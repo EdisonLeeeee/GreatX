@@ -59,7 +59,7 @@ class Linear(nn.Module):
         where the weight :math:`W^{(l)}` is initialized using Glorot uniform initialization
         and the bias is initialized to be zero.
 
-        """        
+        """
         if self.weight is not None:
             nn.init.xavier_uniform_(self.weight)
         if self.bias is not None:

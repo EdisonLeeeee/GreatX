@@ -31,7 +31,7 @@ device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cp
 g = g.to(device)
 
 # ================================================================== #
-#                      Train You Model                               #
+#                      Train Your Model                               #
 # ================================================================== #
 model = GCN(num_feats, num_classes)
 hook = model.register_forward_pre_hook(drop_hook)

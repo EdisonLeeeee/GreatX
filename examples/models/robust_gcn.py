@@ -25,7 +25,7 @@ device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cp
 g = g.to(device)
 
 # ================================================================== #
-#                      Train You Model                               #
+#                      Train Your Model                               #
 # ================================================================== #
 model = RobustGCN(num_feats, num_classes)
 trainer = RobustGCNTrainer(model, device=device)

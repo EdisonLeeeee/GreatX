@@ -11,7 +11,7 @@ from numba.typed import Dict
 from typing import Union, Tuple, Optional
 from collections import namedtuple
 
-subgraph_namedtuple = namedtuple('ego_graph', ['nodes', 'edges'])
+ego_graph_nodes_edges = namedtuple('ego_graph', ['nodes', 'edges'])
 
 
 __all__ = ['maybe_num_nodes', 'k_hop_subgraph', 'ego_graph', 'subgraph']
@@ -106,7 +106,7 @@ def k_hop_subgraph(node_idx, num_hops, edge_index, relabel_nodes=False,
 
 
 def ego_graph(adj_matrix: sp.csr_matrix,
-              targets: Union[int, list], hops: int = 1) -> subgraph_namedtuple:
+              targets: Union[int, list], hops: int = 1) -> ego_graph_nodes_edges:
     """Returns induced subgraph of neighbors centered at node n within
     a given radius.
 
@@ -176,8 +176,8 @@ def ego_graph(adj_matrix: sp.csr_matrix,
     else:
         e = []
 
-    return subgraph_namedtuple(nodes=np.asarray(targets),
-                               edges=np.asarray(list(edges.keys()) + e).T)
+    return ego_graph_nodes_edges(nodes=np.asarray(targets),
+                                 edges=np.asarray(list(edges.keys()) + e).T)
 
 
 @njit

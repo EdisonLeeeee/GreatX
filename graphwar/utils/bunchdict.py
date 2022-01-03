@@ -34,7 +34,7 @@ class BunchDict(OrderedDict):
         except KeyError:
             raise AttributeError(key)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         table_headers = ["Names", "Objects"]
         items = tuple(map(prettify, self.items()))
         table = tabulate(

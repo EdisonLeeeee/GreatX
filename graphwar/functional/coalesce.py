@@ -4,14 +4,14 @@ from typing import Union, List, Optional, Tuple
 
 import torch
 from torch import Tensor
-from torch_scatter import scatter
+from .scatter import scatter_add
+from .subgraph import maybe_num_nodes
 
 
 def coalesce(
     edge_index: Tensor,
     edge_attr: Optional[Union[Tensor, List[Tensor]]] = None,
     num_nodes: Optional[int] = None,
-    reduce: str = "add",
     is_sorted: bool = False,
     sort_by_row: bool = True,
 ) -> Union[Tensor, Tuple[Tensor, Tensor], Tuple[Tensor, List[Tensor]]]:
@@ -27,9 +27,6 @@ def coalesce(
             its entries. (default: :obj:`None`)
         num_nodes (int, optional): The number of nodes, *i.e.*
             :obj:`max_val + 1` of :attr:`edge_index`. (default: :obj:`None`)
-        reduce (string, optional): The reduce operation to use for merging edge
-            features (:obj:`"add"`, :obj:`"mean"`, :obj:`"min"`, :obj:`"max"`,
-            :obj:`"mul"`). (default: :obj:`"add"`)
         is_sorted (bool, optional): If set to :obj:`True`, will expect
             :obj:`edge_index` to be already sorted row-wise.
         sort_by_row (bool, optional): If set to :obj:`False`, will sort
@@ -39,7 +36,7 @@ def coalesce(
         (:class:`LongTensor`, :obj:`Tensor` or :obj:`List[Tensor]]`)
     """
     nnz = edge_index.size(1)
-    num_nodes = num_nodes if num_nodes is not None else edge_index.max() + 1
+    num_nodes = maybe_num_nodes(edge_index, num_nodes)
 
     idx = edge_index.new_empty(nnz + 1)
     idx[0] = -1
@@ -69,10 +66,10 @@ def coalesce(
     idx.sub_(mask.logical_not_().cumsum(dim=0))
 
     if isinstance(edge_attr, Tensor):
-        edge_attr = scatter(edge_attr, idx, 0, None, dim_size, reduce)
+        edge_attr = scatter_add(edge_attr, idx, 0, None, dim_size)
     else:
         edge_attr = [
-            scatter(e, idx, 0, None, dim_size, reduce) for e in edge_attr
+            scatter_add(e, idx, 0, None, dim_size) for e in edge_attr
         ]
 
     return edge_index, edge_attr

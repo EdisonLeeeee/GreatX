@@ -1,15 +1,17 @@
 import torch
+from dgl import DGLGraph
 from graphwar.functional.subgraph import subgraph
 
-def drop_edge(g, p=0.5, training=True):
+
+def drop_edge(g: DGLGraph, p: float = 0.5, training: bool = True) -> DGLGraph:
     """
     DropEdge: Sampling edge using a uniform distribution.
     """
-    
+
     if p < 0. or p > 1.:
         raise ValueError(f'Dropout probability has to be between 0 and 1 '
-                         f'(got {p}')    
-    
+                         f'(got {p}')
+
     if not training or not p:
         return g
 
@@ -22,15 +24,15 @@ def drop_edge(g, p=0.5, training=True):
     return g
 
 
-def drop_node(g, p=0.5, training=True):
+def drop_node(g: DGLGraph, p: float = 0.5, training: bool = True) -> DGLGraph:
     """
     DropNode: Sampling node using a uniform distribution.
     """
-    
+
     if p < 0. or p > 1.:
         raise ValueError(f'Dropout probability has to be between 0 and 1 '
-                         f'(got {p}')    
-        
+                         f'(got {p}')
+
     if not training or not p:
         return g
 

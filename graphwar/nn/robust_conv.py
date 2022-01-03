@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import dgl.function as fn
 from dgl import DGLError
 from dgl.utils import expand_as_pair
-from graphwar.utils.transform import dgl_normalize
+from graphwar.functional.transform import dgl_normalize
 
 
 class RobustConv(nn.Module):

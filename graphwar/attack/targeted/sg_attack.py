@@ -9,7 +9,7 @@ from torch.autograd import grad
 from typing import Optional, Callable
 
 from graphwar.functional.scatter import scatter_add
-from graphwar.utils import ego_graph
+from graphwar.functional import ego_graph
 from graphwar.models import SGC
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 from graphwar.surrogater import Surrogater

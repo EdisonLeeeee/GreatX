@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from dgl import DGLError
-from graphwar.utils.transform import dgl_normalize
+from graphwar.functional.transform import dgl_normalize
 from graphwar.functional import spmm
 from typing import Optional
 

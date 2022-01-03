@@ -19,7 +19,7 @@ def topk(array: np.ndarray, k: int, largest: bool = True) -> topk_values_indices
         the array-like input
     k : int
         the k in "top-k" 
-    largest ： bool, optional
+    largest : bool, optional
         controls whether to return largest or smallest elements        
 
     Returns

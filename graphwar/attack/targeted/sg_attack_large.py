@@ -10,7 +10,7 @@ from functools import lru_cache
 from torch.autograd import grad
 from typing import Optional, Callable
 
-from graphwar.utils import ego_graph
+from graphwar.functional import ego_graph
 from graphwar.models import SGC
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 from graphwar.surrogater import Surrogater
@@ -52,8 +52,8 @@ class SGAttackLarge(TargetedAttacker, Surrogater):
 
     def get_subgraph(self, target, target_label, best_wrong_label):
         sub_nodes, sub_edges = ego_graph(self.adjacency_matrix, int(target), self.k)
-        if sub_edges.size== 0:
-            raise RuntimeError(f"The target node {int(target)} is a singleton node.")        
+        if sub_edges.size == 0:
+            raise RuntimeError(f"The target node {int(target)} is a singleton node.")
         sub_nodes = torch.as_tensor(sub_nodes, dtype=torch.long, device=self.device)
         sub_edges = torch.as_tensor(sub_edges, dtype=torch.long, device=self.device)
         attacker_nodes = torch.where(self.label == best_wrong_label)[0].cpu().numpy()
@@ -184,7 +184,7 @@ class SGAttackLarge(TargetedAttacker, Surrogater):
     def SGConv(self, subgraph, x, edge_weight):
         norm = (self.degree + 1.).pow(-0.5)
         graph = subgraph.dgl_graph
-        
+
         edge_weight = ops.e_mul_u(graph, edge_weight, norm)
         edge_weight = ops.e_mul_v(graph, edge_weight, norm)
 

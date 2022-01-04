@@ -1,6 +1,8 @@
-import dgl
 import random
 from typing import Optional
+
+import dgl
+
 from graphwar.attack.targeted.random_attack import RandomAttack
 
 

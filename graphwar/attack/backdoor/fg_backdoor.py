@@ -1,8 +1,10 @@
+import warnings
+from typing import Callable, Optional, Union
+
 import dgl
 import torch
-import warnings
 from tqdm import tqdm
-from typing import Optional, Union, Callable
+
 from graphwar.attack.backdoor.backdoor_attacker import BackdoorAttacker
 from graphwar.attack.backdoor.backdoor_utils import backdoor_edges, conv
 from graphwar.surrogater import Surrogater

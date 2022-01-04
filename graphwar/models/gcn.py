@@ -1,7 +1,8 @@
 import torch
 import torch.nn as nn
-from graphwar.nn import Sequential, activations, GCNConv
+
 from graphwar.config import Config
+from graphwar.nn import GCNConv, Sequential, activations
 from graphwar.utils import wrapper
 
 _EDGE_WEIGHT = Config.edge_weight

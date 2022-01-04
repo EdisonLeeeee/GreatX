@@ -1,6 +1,8 @@
 import datetime
-import sphinx_rtd_theme
 import doctest
+
+import sphinx_rtd_theme
+
 import graphwar
 
 extensions = [

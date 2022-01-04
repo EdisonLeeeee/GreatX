@@ -1,9 +1,10 @@
-import dgl
-import torch
 import random
-import numpy as np
 from numbers import Number
 from typing import Optional
+
+import dgl
+import numpy as np
+import torch
 
 __all__ = ["set_seed"]
 

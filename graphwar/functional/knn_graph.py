@@ -1,7 +1,9 @@
 
 import dgl
 import torch
+
 from graphwar.config import Config
+
 from .functions import pairwise_cosine_similarity
 
 _EDGE_WEIGHT = Config.edge_weight

@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
-from graphwar.nn import activations
-from graphwar.nn import RobustConv
+
 from graphwar.config import Config
+from graphwar.nn import RobustConv, activations
 from graphwar.utils import wrapper
 
 _EDGE_WEIGHT = Config.edge_weight

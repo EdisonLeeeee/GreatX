@@ -1,8 +1,10 @@
 import random
-import numpy as np
-import dgl
-from tqdm import tqdm
 from typing import Optional
+
+import dgl
+import numpy as np
+from tqdm import tqdm
+
 from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
 
 

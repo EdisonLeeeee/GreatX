@@ -1,16 +1,16 @@
-import dgl
 import warnings
+from functools import lru_cache
+from typing import Optional
+
+import dgl
 import numpy as np
 import scipy.sparse as sp
 from numba import njit
-
 from tqdm import tqdm
-from typing import Optional
-from functools import lru_cache
 
 from graphwar import Surrogater
-from graphwar.utils import normalize, add_self_loop, singleton_filter
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
+from graphwar.utils import add_self_loop, normalize, singleton_filter
 
 
 class Nettack(TargetedAttacker, Surrogater):

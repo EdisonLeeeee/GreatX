@@ -1,5 +1,7 @@
-import torch
 from typing import Optional
+
+import torch
+
 from .coalesce import coalesce
 
 

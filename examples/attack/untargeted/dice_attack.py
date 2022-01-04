@@ -1,11 +1,11 @@
 import torch
+
+from graphwar import set_seed
 from graphwar.data import GraphWarDataset
+from graphwar.models import GCN
 from graphwar.training import Trainer
 from graphwar.training.callbacks import ModelCheckpoint
-from graphwar.models import GCN
 from graphwar.utils import split_nodes
-from graphwar import set_seed
-
 
 # ================================================================== #
 #                      Loading datasets                              #
@@ -39,6 +39,7 @@ print(f"Before random attack\n {logs}")
 #                      Attacking                                     #
 # ================================================================== #
 from graphwar.attack.untargeted import DICEAttack
+
 attacker = DICEAttack(g, device=device)
 attacker.reset()
 attacker.attack(0.05)

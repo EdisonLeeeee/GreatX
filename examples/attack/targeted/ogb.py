@@ -1,9 +1,10 @@
 import torch
 from ogb.nodeproppred import DglNodePropPredDataset
-from graphwar.training import Trainer
-from graphwar.models import GCN, SGC
+
 from graphwar import set_seed
 from graphwar.attack.targeted import SGAttack
+from graphwar.models import GCN, SGC
+from graphwar.training import Trainer
 
 # ================================================================== #
 #                      Loading datasets                              #

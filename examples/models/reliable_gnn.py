@@ -1,11 +1,11 @@
 import torch
+
+from graphwar import set_seed
 from graphwar.data import GraphWarDataset
+from graphwar.defense.model_level import ReliableGNN
 from graphwar.training import Trainer
 from graphwar.training.callbacks import ModelCheckpoint
-from graphwar.defense.model_level import ReliableGNN
 from graphwar.utils import split_nodes_by_classes
-from graphwar import set_seed
-
 
 # ================================================================== #
 #                      Loading datasets                              #

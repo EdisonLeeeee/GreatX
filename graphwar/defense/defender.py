@@ -1,10 +1,11 @@
 import abc
-import dgl
-import torch
-import scipy.sparse as sp
 from typing import Optional
 
-from graphwar import set_seed, Config
+import dgl
+import scipy.sparse as sp
+import torch
+
+from graphwar import Config, set_seed
 
 _FEATURE = Config.feat
 _LABEL = Config.label

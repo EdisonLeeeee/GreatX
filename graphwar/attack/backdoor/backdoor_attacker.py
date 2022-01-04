@@ -1,10 +1,14 @@
+from functools import lru_cache
+from typing import Optional, Union
+
 import dgl
 import torch
 from torch import Tensor
-from functools import lru_cache
-from typing import Optional, Union
+
 from graphwar import Config
+
 from ..attacker import Attacker
+
 _FEATURE = Config.feat
 
 

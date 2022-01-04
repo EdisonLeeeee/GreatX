@@ -1,4 +1,5 @@
 import torch
+
 from graphwar.training import Trainer
 
 

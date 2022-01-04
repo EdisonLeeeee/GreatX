@@ -1,6 +1,7 @@
+from typing import Any, Optional
+
 import torch
 import torch.nn as nn
-from typing import Optional, Any
 
 act_dict = dict(relu="ReLU",
                 relu6="ReLU6",

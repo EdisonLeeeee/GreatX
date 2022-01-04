@@ -1,15 +1,13 @@
-import torch
+from collections import namedtuple
+from typing import Optional, Tuple, Union
+
 import dgl
 import numpy as np
 import scipy.sparse as sp
-
-from torch import Tensor
-from numba import njit
-from numba import types
+import torch
+from numba import njit, types
 from numba.typed import Dict
-
-from typing import Union, Tuple, Optional
-from collections import namedtuple
+from torch import Tensor
 
 ego_graph_nodes_edges = namedtuple('ego_graph', ['nodes', 'edges'])
 

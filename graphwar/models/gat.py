@@ -1,5 +1,6 @@
 import torch.nn as nn
 from dgl.nn.pytorch import GATConv
+
 from graphwar.nn import Sequential, activations
 from graphwar.utils import wrapper
 

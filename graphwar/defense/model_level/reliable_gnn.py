@@ -1,7 +1,7 @@
 import torch.nn as nn
-from graphwar.nn import Sequential, activations
-from graphwar.nn import DimwiseMedianConv, SoftKConv
+
 from graphwar.config import Config
+from graphwar.nn import DimwiseMedianConv, Sequential, SoftKConv, activations
 from graphwar.utils import wrapper
 
 _EDGE_WEIGHT = Config.edge_weight

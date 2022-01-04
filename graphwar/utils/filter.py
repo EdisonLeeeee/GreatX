@@ -1,7 +1,8 @@
-import torch
 import warnings
+
 import numpy as np
 import scipy.sparse as sp
+import torch
 from torch import Tensor
 
 __all__ = ["singleton_filter", "SingletonFilter",

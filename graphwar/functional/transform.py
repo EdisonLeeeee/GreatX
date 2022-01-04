@@ -1,10 +1,11 @@
-import torch
-import dgl
 import math
-import scipy.sparse as sp
-import numpy as np
+from typing import Optional, Union
+
+import dgl
 import dgl.ops as ops
-from typing import Union, Optional
+import numpy as np
+import scipy.sparse as sp
+import torch
 from torch import Tensor
 
 __all__ = ['normalize', 'add_self_loop', 'feat_normalize']

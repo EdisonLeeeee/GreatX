@@ -1,16 +1,17 @@
 import sys
+from typing import Any, Callable, List, Optional, Union
+
 import torch
 import torch.nn as nn
-
-from torch import Tensor
 from dgl import DGLGraph
-from typing import Optional, Union, Any, Callable, List
+from torch import Tensor
 from torch.utils.data import DataLoader
 
-from graphwar.metrics import Accuracy
-from graphwar.training.callbacks import CallbackList, Callback, Scheduler, Optimizer
-from graphwar.utils import BunchDict, Progbar
 from graphwar import Config
+from graphwar.metrics import Accuracy
+from graphwar.training.callbacks import (Callback, CallbackList, Optimizer,
+                                         Scheduler)
+from graphwar.utils import BunchDict, Progbar
 
 _FEATURE = Config.feat
 _LABEL = Config.label

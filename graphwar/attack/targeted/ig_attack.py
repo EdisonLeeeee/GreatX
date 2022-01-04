@@ -1,14 +1,14 @@
-import torch
-import dgl
-import numpy as np
-
-from torch.autograd import grad
-from tqdm import tqdm
 from typing import Optional
 
-from graphwar.utils import normalize, singleton_filter
+import dgl
+import numpy as np
+import torch
+from torch.autograd import grad
+from tqdm import tqdm
+
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 from graphwar.surrogater import Surrogater
+from graphwar.utils import normalize, singleton_filter
 
 
 class IGAttack(TargetedAttacker, Surrogater):

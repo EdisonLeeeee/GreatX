@@ -1,14 +1,14 @@
-import dgl
-import torch
 import warnings
+from functools import lru_cache
+from typing import Optional, Union
+
+import dgl
 import numpy as np
+import torch
 from torch import Tensor
 
-from typing import Optional, Union
-from functools import lru_cache
-
-from graphwar.utils import BunchDict
 from graphwar.attack.attacker import Attacker
+from graphwar.utils import BunchDict
 
 
 class FlipAttacker(Attacker):

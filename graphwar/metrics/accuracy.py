@@ -1,4 +1,5 @@
 import torch
+
 from graphwar.metrics.metric import Metric
 
 

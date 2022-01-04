@@ -1,6 +1,7 @@
+from typing import List, Optional, Tuple
+
 import torch
 from torch import Tensor
-from typing import Optional, List, Tuple
 
 
 @torch.jit.script

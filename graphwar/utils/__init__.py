@@ -1,10 +1,10 @@
 from .bunchdict import BunchDict
 from .filter import *
-from .functions import topk, repeat, wrapper
-from .split_data import split_nodes, split_nodes_by_classes
+from .functions import repeat, topk, wrapper
+from .logger import get_logger, setup_logger
+from .modification import add_edges, flip_graph, remove_edges
 from .progbar import Progbar
-from .modification import flip_graph, add_edges, remove_edges
-from .logger import setup_logger, get_logger
+from .split_data import split_nodes, split_nodes_by_classes
 
 classes = __all__ = ['Progbar', 'BunchDict', 'topk', 'wrapper',
                      'repeat', 'split_nodes',

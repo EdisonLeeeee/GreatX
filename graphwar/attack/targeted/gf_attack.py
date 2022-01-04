@@ -1,14 +1,15 @@
-import torch
+from typing import Optional
+
 import dgl
 import numpy as np
 import scipy.sparse as sp
+import torch
 from scipy import linalg
-from tqdm import tqdm
 from torch import Tensor
-from typing import Optional
+from tqdm import tqdm
 
-from graphwar.utils import singleton_filter
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
+from graphwar.utils import singleton_filter
 
 
 class GFAttack(TargetedAttacker):

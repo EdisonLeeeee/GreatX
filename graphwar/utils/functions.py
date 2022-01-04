@@ -1,10 +1,11 @@
+import functools
 import inspect
 import itertools
-import functools
-import numpy as np
 from collections import namedtuple
 from numbers import Number
 from typing import Any, Callable, Optional
+
+import numpy as np
 
 topk_values_indices = namedtuple('topk_values_indices', ['values', 'indices'])
 

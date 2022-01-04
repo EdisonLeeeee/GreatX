@@ -1,9 +1,10 @@
-import os
-import sys
 import functools
 import logging
-from termcolor import colored
+import os
+import sys
 from typing import Optional
+
+from termcolor import colored
 
 __all__ = ["setup_logger", "get_logger"]
 

@@ -1,21 +1,21 @@
-import torch
+from collections import namedtuple
+from functools import lru_cache
+from typing import Callable, Optional
+
 import dgl
-import numpy as np
-import torch.nn.functional as F
 import dgl.function as fn
 import dgl.ops as ops
-
-from tqdm import tqdm
-from functools import lru_cache
+import numpy as np
+import torch
+import torch.nn.functional as F
 from torch.autograd import grad
-from typing import Optional, Callable
+from tqdm import tqdm
 
+from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 from graphwar.functional import ego_graph
 from graphwar.models import SGC
-from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 from graphwar.surrogater import Surrogater
 
-from collections import namedtuple
 SubGraph = namedtuple('SubGraph', ['edge_index', 'sub_edges', 'non_edges',
                                    'edge_weight', 'non_edge_weight', 'selfloop_weight', 'dgl_graph'])
 

@@ -1,8 +1,11 @@
-import dgl
-import torch
 import warnings
 from typing import Optional, Union
+
+import dgl
+import torch
+
 from graphwar.attack.backdoor.backdoor_attacker import BackdoorAttacker
+
 
 class LGCBackdoor(BackdoorAttacker):
 

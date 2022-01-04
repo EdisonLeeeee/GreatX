@@ -1,13 +1,13 @@
 import abc
-import dgl
-import torch
-import numpy as np
-import scipy.sparse as sp
 from numbers import Number
 from typing import Optional, Union
 
-from graphwar import set_seed, Config
+import dgl
+import numpy as np
+import scipy.sparse as sp
+import torch
 
+from graphwar import Config, set_seed
 
 _FEATURE = Config.feat
 _LABEL = Config.label

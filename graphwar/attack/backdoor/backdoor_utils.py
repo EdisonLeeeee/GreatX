@@ -1,5 +1,6 @@
 
 import torch
+
 from graphwar.functional.scatter import scatter_add
 
 

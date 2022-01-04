@@ -1,12 +1,13 @@
+from typing import Optional
+
 import dgl
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
 from dgl import DGLError
-from graphwar.functional.transform import dgl_normalize
+
 from graphwar.functional import spmm
-from typing import Optional
+from graphwar.functional.transform import dgl_normalize
 
 try:
     from glcore import dimmedian_idx

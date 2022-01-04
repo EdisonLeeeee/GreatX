@@ -1,14 +1,15 @@
-import torch
+from typing import Callable, Optional
+
 import dgl
+import torch
 from torch import Tensor
 from torch.autograd import grad
 from torch.nn import init
 from tqdm import tqdm
-from typing import Optional, Callable
 
-from graphwar.utils import normalize, singleton_mask
 from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
 from graphwar.surrogater import Surrogater
+from graphwar.utils import normalize, singleton_mask
 
 
 class Metattack(UntargetedAttacker, Surrogater):

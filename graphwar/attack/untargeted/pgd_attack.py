@@ -1,17 +1,18 @@
-from copy import deepcopy
-import torch
 import math
+from copy import deepcopy
+from typing import Callable, Optional
+
 import dgl
+import torch
 import torch.nn.functional as F
 from torch import Tensor
 from torch.autograd import grad
-from tqdm import tqdm
-from typing import Optional, Callable
 from torch.distributions.bernoulli import Bernoulli
+from tqdm import tqdm
 
-from graphwar.utils import normalize
 from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
 from graphwar.surrogater import Surrogater
+from graphwar.utils import normalize
 
 
 class PGDAttack(UntargetedAttacker, Surrogater):

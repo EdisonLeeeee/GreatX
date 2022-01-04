@@ -1,5 +1,6 @@
 import torch
 from dgl import DGLGraph
+
 from graphwar.functional.subgraph import subgraph
 
 

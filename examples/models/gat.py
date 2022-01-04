@@ -1,11 +1,11 @@
 import torch
+
+from graphwar import set_seed
 from graphwar.data import GraphWarDataset
+from graphwar.models import GAT
 from graphwar.training import Trainer
 from graphwar.training.callbacks import ModelCheckpoint
-from graphwar.models import GAT
 from graphwar.utils import split_nodes
-from graphwar import set_seed
-
 
 # ================================================================== #
 #                      Loading datasets                              #

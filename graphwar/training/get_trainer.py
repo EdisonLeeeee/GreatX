@@ -1,5 +1,7 @@
-import torch
 from typing import Union
+
+import torch
+
 from graphwar import training
 
 

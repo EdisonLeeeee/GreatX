@@ -1,5 +1,5 @@
-import os
 import logging
+import os
 from threading import Thread
 
 __version__ = '0.1.0'

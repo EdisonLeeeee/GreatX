@@ -18,12 +18,12 @@
 # limitations under the License.
 # ==============================================================================
 
+import logging
 import os
 import time
-import torch
-import logging
-import numpy as np
 
+import numpy as np
+import torch
 from tqdm import tqdm
 
 from graphwar.utils import BunchDict, Progbar

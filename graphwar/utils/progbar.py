@@ -18,11 +18,12 @@
 # limitations under the License.
 # ==============================================================================
 
-import time
-import sys
 import os
-import numpy as np
+import sys
+import time
 from numbers import Number
+
+import numpy as np
 
 
 class Progbar:

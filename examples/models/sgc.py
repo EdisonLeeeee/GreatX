@@ -1,10 +1,10 @@
 import torch
-from graphwar.data import GraphWarDataset
-from graphwar.training import Trainer
-from graphwar.models import SGC
-from graphwar.utils import split_nodes
-from graphwar import set_seed
 
+from graphwar import set_seed
+from graphwar.data import GraphWarDataset
+from graphwar.models import SGC
+from graphwar.training import Trainer
+from graphwar.utils import split_nodes
 
 # ================================================================== #
 #                      Loading datasets                              #

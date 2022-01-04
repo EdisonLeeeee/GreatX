@@ -1,7 +1,8 @@
+import dgl.function as fn
 import torch
 import torch.nn as nn
-import dgl.function as fn
 from dgl import DGLError
+
 from graphwar.functional.transform import dgl_normalize
 
 

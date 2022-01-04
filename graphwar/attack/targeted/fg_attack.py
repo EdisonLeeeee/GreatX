@@ -1,12 +1,13 @@
-import torch
-import dgl
-from torch.autograd import grad
-from tqdm import tqdm
 from typing import Optional
 
-from graphwar.utils import normalize, singleton_mask
+import dgl
+import torch
+from torch.autograd import grad
+from tqdm import tqdm
+
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 from graphwar.surrogater import Surrogater
+from graphwar.utils import normalize, singleton_mask
 
 
 class FGAttack(TargetedAttacker, Surrogater):

@@ -1,13 +1,14 @@
 """Graph benchmark datasets for adversarial graph learning."""
-import torch
-import scipy.sparse as sp
-import numpy as np
 import os
-from sklearn.preprocessing import LabelEncoder
-from dgl.data.dgl_dataset import DGLBuiltinDataset
-from dgl.data.utils import save_graphs, load_graphs, download
-from dgl.convert import graph as dgl_graph
+
+import numpy as np
+import scipy.sparse as sp
+import torch
 from dgl import transform
+from dgl.convert import graph as dgl_graph
+from dgl.data.dgl_dataset import DGLBuiltinDataset
+from dgl.data.utils import download, load_graphs, save_graphs
+from sklearn.preprocessing import LabelEncoder
 
 _DATASETS = {
     'citeseer', 'citeseer_full', 'cora', 'cora_ml', 'cora_full', 'amazon_cs',

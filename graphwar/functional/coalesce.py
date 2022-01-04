@@ -1,9 +1,10 @@
 """The following codes are adapted from PyTorch Geometric"""
 
-from typing import Union, List, Optional, Tuple
+from typing import List, Optional, Tuple, Union
 
 import torch
 from torch import Tensor
+
 from .scatter import scatter_add
 from .subgraph import maybe_num_nodes
 

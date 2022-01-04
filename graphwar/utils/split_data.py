@@ -1,7 +1,9 @@
-import torch
-from torch import Tensor
 from typing import Optional, Tuple
+
+import torch
 from sklearn.model_selection import train_test_split
+from torch import Tensor
+
 from graphwar.utils import BunchDict
 
 

@@ -1,10 +1,10 @@
 import torch
 from dgl.data import RedditDataset
-from graphwar import set_seed
-from graphwar.training import Trainer
-from graphwar.models import GCN, SGC
-from graphwar.utils import BunchDict
 
+from graphwar import set_seed
+from graphwar.models import GCN, SGC
+from graphwar.training import Trainer
+from graphwar.utils import BunchDict
 
 # ================================================================== #
 #                      Loading datasets                              #
@@ -44,6 +44,7 @@ print(f"Before attack\n {output[y[target]].item()}")
 #                      Attacking                                     #
 # ================================================================== #
 from graphwar.attack.targeted import SGAttackLarge
+
 # use large-scale version of SGAttack
 attacker = SGAttackLarge(g, device='cpu')  # you can still use GPU for accelerating
 attacker.set_max_perturbations(10)

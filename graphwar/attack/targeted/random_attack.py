@@ -1,7 +1,9 @@
 import random
+from typing import Optional
+
 import dgl
 from tqdm import tqdm
-from typing import Optional
+
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 
 

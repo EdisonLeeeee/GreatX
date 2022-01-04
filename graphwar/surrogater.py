@@ -1,5 +1,6 @@
-import torch
 from typing import Callable
+
+import torch
 
 
 class Surrogater(torch.nn.Module):

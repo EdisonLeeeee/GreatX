@@ -1,6 +1,7 @@
-import torch
 import dgl
 import scipy.sparse as sp
+import torch
+
 from graphwar import Config
 
 _FEATURE = Config.feat

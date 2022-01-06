@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 from graphwar.config import Config
-from graphwar.nn import RobustConv, activations
+from graphwar.nn import RobustConv, activations, Sequential
 from graphwar.utils import wrapper
 
 _EDGE_WEIGHT = Config.edge_weight
@@ -26,7 +26,7 @@ class RobustGCN(nn.Module):
     `len(hids)==len(acts)`.
 
     """
-    
+
     @wrapper
     def __init__(self,
                  in_features: int,
@@ -35,6 +35,7 @@ class RobustGCN(nn.Module):
                  acts: list = ['relu'],
                  dropout: float = 0.5,
                  bias: bool = True,
+                 bn: bool = False,
                  gamma: float = 1.0):
         r"""
         Parameters
@@ -51,17 +52,24 @@ class RobustGCN(nn.Module):
             the dropout ratio of model, by default 0.5
         bias : bool, optional
             whether to use bias in the layers, by default True
+        bn: bool, optional
+            whether to use `BatchNorm1d` after the convolution layer, by default False            
         gamma : float, optional
             the attention weight, by default 1.0
         """
 
         super().__init__()
 
-        assert len(hids) == len(acts) and len(hids) > 0
-        self.conv1 = RobustConv(in_features,
+        assert len(hids) > 0
+        conv1 = []
+        conv1.append(RobustConv(in_features,
                                 hids[0],
                                 bias=bias,
-                                activation=activations.get(acts[0]))
+                                activation=activations.get(acts[0])))
+
+        if bn:
+            conv1.append(nn.BatchNorm1d(hids[0]))
+        self.conv1 = Sequential(*conv1)
 
         conv2 = nn.ModuleList()
         in_features = hids[0]
@@ -72,16 +80,24 @@ class RobustGCN(nn.Module):
                                     bias=bias,
                                     gamma=gamma,
                                     activation=activations.get(act)))
-            in_features = hid
+            if bn:
+                conv2.append(nn.BatchNorm1d(hid))
 
+            in_features = hid
+        if bn:
+            conv2.append(nn.BatchNorm1d(in_features))
         conv2.append(RobustConv(in_features, out_features, gamma=gamma, bias=bias))
         self.conv2 = conv2
         self.dropout = nn.Dropout(dropout)
 
     def reset_parameters(self):
-        self.conv1.reset_parameters()
+        for conv in self.conv1:
+            if hasattr(conv, 'reset_parameters'):
+                conv.reset_parameters()
+
         for conv in self.conv2:
-            conv.reset_parameters()
+            if hasattr(conv, 'reset_parameters'):
+                conv.reset_parameters()
 
     def forward(self, g, feat, edge_weight=None):
         if edge_weight is None:

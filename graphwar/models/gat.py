@@ -77,7 +77,7 @@ class GAT(nn.Module):
             conv.append(nn.Flatten(1))
             if bn:
                 conv.append(nn.BatchNorm1d(hid * num_head))
-            conv.append(activations.get(act))            
+            conv.append(activations.get(act))
             conv.append(nn.Dropout(dropout))
             in_features = hid
             head = num_head

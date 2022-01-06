@@ -14,10 +14,10 @@ class ReliableGNN(nn.Module):
     -------
     # ReliableGNN with one hidden layer
     >>> model = ReliableGNN(100, 10)
-    
+
     # ReliableGNN with two hidden layers
     >>> model = ReliableGNN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
-    
+
     # ReliableGNN with two hidden layers, without activation at the first layer
     >>> model = ReliableGNN(100, 10, hids=[32, 16], acts=[None, 'relu'])
 
@@ -45,8 +45,9 @@ class ReliableGNN(nn.Module):
                  acts: list = ['relu'],
                  dropout: float = 0.5,
                  bias: bool = True,
+                 bn: bool = False,
                  norm: str = 'none',
-                 method : str = 'dimmedian',
+                 method: str = 'dimmedian',
                  row_normalize: bool = False,
                  **kwargs):
         r"""
@@ -64,6 +65,8 @@ class ReliableGNN(nn.Module):
             the dropout ratio of model, by default 0.5
         bias : bool, optional
             whether to use bias in the layers, by default True
+        bn: bool, optional
+            whether to use `BatchNorm1d` after the convolution layer, by default False            
         norm : str, optional
             How to apply the normalizer.  Can be one of the following values:
 
@@ -81,7 +84,7 @@ class ReliableGNN(nn.Module):
 
             * ``left``, to divide the messages sent out from each node by its out-degrees,
             equivalent to random walk normalization.   
-            
+
         method : str, `dimmedian` or `softk` optional
             the robust aggregation function, by default `dimmedian`.
             * `dimmedian`: weighted dimension-wise Median aggregation function
@@ -124,15 +127,18 @@ class ReliableGNN(nn.Module):
                                       row_normalize=row_normalize,
                                       activation=activations.get(act), **kwargs),
                             )
+
+            if bn:
+                conv.append(nn.BatchNorm1d(hid))
             conv.append(nn.Dropout(dropout))
             in_features = hid
 
         if method == "dimmedian":
-            conv.append(DimwiseMedianConv(in_features, out_features, 
+            conv.append(DimwiseMedianConv(in_features, out_features,
                                           row_normalize=row_normalize,
                                           bias=bias, norm=norm))
         else:
-            conv.append(SoftKConv(in_features, out_features, 
+            conv.append(SoftKConv(in_features, out_features,
                                   row_normalize=row_normalize,
                                   bias=bias, norm=norm, **kwargs))
 

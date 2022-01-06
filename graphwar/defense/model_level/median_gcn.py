@@ -25,7 +25,7 @@ class MedianGCN(nn.Module):
     `len(hids)==len(acts)`.
 
     """
-    
+
     @wrapper
     def __init__(self,
                  in_features: int,
@@ -34,6 +34,7 @@ class MedianGCN(nn.Module):
                  acts: list = ['relu'],
                  dropout: float = 0.5,
                  bias: bool = True,
+                 bn: bool = False,
                  norm: str = 'none'):
         r"""
         Parameters
@@ -50,6 +51,8 @@ class MedianGCN(nn.Module):
             the dropout ratio of model, by default 0.5
         bias : bool, optional
             whether to use bias in the layers, by default True
+        bn: bool, optional
+            whether to use `BatchNorm1d` after the convolution layer, by default False            
         norm : str, optional
             How to apply the normalizer.  Can be one of the following values:
 
@@ -78,6 +81,9 @@ class MedianGCN(nn.Module):
                                    hid,
                                    bias=bias, norm=norm,
                                    activation=activations.get(act)))
+
+            if bn:
+                conv.append(nn.BatchNorm1d(hid))
             conv.append(nn.Dropout(dropout))
             in_features = hid
         conv.append(MedianConv(in_features, out_features, bias=bias, norm=norm))

@@ -61,19 +61,20 @@ class RobustGCN(nn.Module):
         super().__init__()
 
         assert len(hids) > 0
-        conv1 = []
-        conv1.append(RobustConv(in_features,
+        self.conv1 = RobustConv(in_features,
                                 hids[0],
                                 bias=bias,
-                                activation=activations.get(acts[0])))
+                                activation=activations.get(acts[0]))
 
         if bn:
-            conv1.append(nn.BatchNorm1d(hids[0]))
-        self.conv1 = Sequential(*conv1)
+            self.bn1 = nn.BatchNorm1d(hids[0])
+        else:
+            self.bn1 = lambda x : x
 
         conv2 = nn.ModuleList()
-        in_features = hids[0]
+        bn2 = nn.ModuleList()
 
+        in_features = hids[0]
         for hid, act in zip(hids[1:], acts[1:]):
             conv2.append(RobustConv(in_features,
                                     hid,
@@ -81,19 +82,19 @@ class RobustGCN(nn.Module):
                                     gamma=gamma,
                                     activation=activations.get(act)))
             if bn:
-                conv2.append(nn.BatchNorm1d(hid))
-
+                bn2.append(nn.BatchNorm1d(hid))
+            else:
+                bn2.append(lambda x : x)
+                
             in_features = hid
-        if bn:
-            conv2.append(nn.BatchNorm1d(in_features))
+                
         conv2.append(RobustConv(in_features, out_features, gamma=gamma, bias=bias))
         self.conv2 = conv2
+        self.bn2 = bn2
         self.dropout = nn.Dropout(dropout)
 
     def reset_parameters(self):
-        for conv in self.conv1:
-            if hasattr(conv, 'reset_parameters'):
-                conv.reset_parameters()
+        self.conv1.reset_parameters()
 
         for conv in self.conv2:
             if hasattr(conv, 'reset_parameters'):
@@ -105,11 +106,15 @@ class RobustGCN(nn.Module):
 
         feat = self.dropout(feat)
         mean, var = self.conv1(g, feat, edge_weight=edge_weight)
+        mean, var = self.bn1(mean), self.bn1(var)
         self.mean, self.var = mean, var
 
-        for conv in self.conv2:
+        for ix, conv in enumerate(self.conv2):
             mean, var = self.dropout(mean), self.dropout(var)
             mean, var = conv(g, (mean, var), edge_weight=edge_weight)
+            
+            if ix != len(self.conv2)-1:
+                mean, var = self.bn2[ix](mean), self.bn2[ix](var)
 
         std = torch.sqrt(var + 1e-8)
         eps = torch.randn_like(std)

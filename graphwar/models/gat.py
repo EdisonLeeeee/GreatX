@@ -17,11 +17,6 @@ class GAT(nn.Module):
     # GAT with two hidden layers, without activation at the first layer
     >>> model = GAT(100, 10, hids=[32, 16], num_heads=[8, 8], acts=[None, 'elu'])
 
-    Note
-    ----
-    please make sure `hids`, `num_heads` and `acts` are both `list` or `tuple` and
-    `len(hids) == len(num_heads) == len(acts)`.
-
     References
     ----------
     Paper: https://arxiv.org/abs/1710.10903
@@ -89,9 +84,7 @@ class GAT(nn.Module):
         self.conv = Sequential(*conv, loc=1)  # `loc=1` specifies the location of features.
 
     def reset_parameters(self):
-        for conv in self.conv:
-            if hasattr(conv, 'reset_parameters'):
-                conv.reset_parameters()
+        self.conv.reset_parameters()
 
     def forward(self, g, feat):
         g = g.add_self_loop()

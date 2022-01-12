@@ -80,19 +80,18 @@ class MedianGCN(nn.Module):
             conv.append(MedianConv(in_features,
                                    hid,
                                    bias=bias, norm=norm,
-                                   activation=activations.get(act)))
+                                   activation=None))
 
             if bn:
                 conv.append(nn.BatchNorm1d(hid))
+            conv.append(activations.get(act))
             conv.append(nn.Dropout(dropout))
             in_features = hid
         conv.append(MedianConv(in_features, out_features, bias=bias, norm=norm))
         self.conv = Sequential(*conv, loc=1)  # `loc=1` specifies the location of features.
 
     def reset_parameters(self):
-        for conv in self.conv:
-            if hasattr(conv, 'reset_parameters'):
-                conv.reset_parameters()
+        self.conv.reset_parameters()
 
     def forward(self, g, feat, edge_weight=None):
         if edge_weight is None:

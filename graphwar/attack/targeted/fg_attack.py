@@ -7,7 +7,8 @@ from tqdm import tqdm
 
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 from graphwar.surrogater import Surrogater
-from graphwar.utils import normalize, singleton_mask
+from graphwar.functional import normalize
+from graphwar.utils import singleton_mask
 
 
 class FGAttack(TargetedAttacker, Surrogater):

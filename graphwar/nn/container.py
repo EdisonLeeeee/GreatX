@@ -59,8 +59,6 @@ class Sequential(nn.Sequential):
     
     * The usage of keyword argument must be matched with that of the layers 
     with more than one arguments required.
-    
-
     """
 
     def __init__(self, *args, loc=0):
@@ -88,4 +86,9 @@ class Sequential(nn.Sequential):
                 output = module(*inputs, **kwargs)
             inputs = inputs[:loc] + (output,) + inputs[loc + 1:]
         return output
+    
+    def reset_parameters(self):
+        for layer in self:
+            if hasattr(layer, 'reset_parameters'):
+                layer.reset_parameters()    
 

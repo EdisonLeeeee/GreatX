@@ -7,3 +7,4 @@ from .median_conv import MedianConv
 from .reliable_conv import DimwiseMedianConv, SoftKConv
 from .robust_conv import RobustConv
 from .sgconv import SGConv
+from .elastic_conv import EMPConv

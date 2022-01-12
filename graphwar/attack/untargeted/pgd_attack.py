@@ -12,7 +12,7 @@ from tqdm import tqdm
 
 from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
 from graphwar.surrogater import Surrogater
-from graphwar.utils import normalize
+from graphwar.functional import normalize
 
 
 class PGDAttack(UntargetedAttacker, Surrogater):

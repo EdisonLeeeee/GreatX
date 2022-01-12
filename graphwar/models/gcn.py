@@ -20,11 +20,6 @@ class GCN(nn.Module):
     # GCN with two hidden layers, without activation at the first layer
     >>> model = GCN(100, 10, hids=[32, 16], acts=[None, 'relu'])
 
-    Note
-    ----
-    please make sure `hids` and `acts` are both `list` or `tuple` and
-    `len(hids)==len(acts)`.
-
     """
     
     @wrapper
@@ -91,9 +86,7 @@ class GCN(nn.Module):
         self.conv = Sequential(*conv, loc=1)  # `loc=1` specifies the location of features.
 
     def reset_parameters(self):
-        for conv in self.conv:
-            if hasattr(conv, 'reset_parameters'):
-                conv.reset_parameters()
+        self.conv.reset_parameters()
 
     def forward(self, g, feat, edge_weight=None):
 

@@ -35,7 +35,6 @@ class RobustGCN(nn.Module):
                  acts: list = ['relu'],
                  dropout: float = 0.5,
                  bias: bool = True,
-                 bn: bool = False,
                  gamma: float = 1.0):
         r"""
         Parameters
@@ -52,8 +51,6 @@ class RobustGCN(nn.Module):
             the dropout ratio of model, by default 0.5
         bias : bool, optional
             whether to use bias in the layers, by default True
-        bn: bool, optional
-            whether to use `BatchNorm1d` after the convolution layer, by default False            
         gamma : float, optional
             the attention weight, by default 1.0
         """
@@ -66,13 +63,7 @@ class RobustGCN(nn.Module):
                                 bias=bias,
                                 activation=activations.get(acts[0]))
 
-        if bn:
-            self.bn1 = nn.BatchNorm1d(hids[0])
-        else:
-            self.bn1 = lambda x : x
-
         conv2 = nn.ModuleList()
-        bn2 = nn.ModuleList()
 
         in_features = hids[0]
         for hid, act in zip(hids[1:], acts[1:]):
@@ -81,24 +72,16 @@ class RobustGCN(nn.Module):
                                     bias=bias,
                                     gamma=gamma,
                                     activation=activations.get(act)))
-            if bn:
-                bn2.append(nn.BatchNorm1d(hid))
-            else:
-                bn2.append(lambda x : x)
-                
+
             in_features = hid
-                
+
         conv2.append(RobustConv(in_features, out_features, gamma=gamma, bias=bias))
         self.conv2 = conv2
-        self.bn2 = bn2
         self.dropout = nn.Dropout(dropout)
 
     def reset_parameters(self):
         self.conv1.reset_parameters()
-
-        for conv in self.conv2:
-            if hasattr(conv, 'reset_parameters'):
-                conv.reset_parameters()
+        self.conv2.reset_parameters()
 
     def forward(self, g, feat, edge_weight=None):
         if edge_weight is None:
@@ -106,15 +89,11 @@ class RobustGCN(nn.Module):
 
         feat = self.dropout(feat)
         mean, var = self.conv1(g, feat, edge_weight=edge_weight)
-        mean, var = self.bn1(mean), self.bn1(var)
         self.mean, self.var = mean, var
 
-        for ix, conv in enumerate(self.conv2):
+        for conv in self.conv2:
             mean, var = self.dropout(mean), self.dropout(var)
             mean, var = conv(g, (mean, var), edge_weight=edge_weight)
-            
-            if ix != len(self.conv2)-1:
-                mean, var = self.bn2[ix](mean), self.bn2[ix](var)
 
         std = torch.sqrt(var + 1e-8)
         eps = torch.randn_like(std)

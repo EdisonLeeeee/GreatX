@@ -2,7 +2,7 @@ import torch
 
 from graphwar import set_seed
 from graphwar.data import GraphWarDataset
-from graphwar.defense.model_level import ElasticGNN
+from graphwar.defense.model_level import AirGNN
 from graphwar.models import GCN
 from graphwar.training import Trainer
 from graphwar.training.callbacks import ModelCheckpoint
@@ -49,10 +49,9 @@ attacker.attack(0.05)
 # ================================================================== #
 #                      After evasion Attack                          #
 # ================================================================== #
-model = ElasticGNN(num_feats, num_classes, k=10)
+model = AirGNN(num_feats, num_classes, k=10)
 trainer = Trainer(model, device=device)
 trainer.fit(g, y_train, splits.train_nodes)
-trainer.cache_clear()
 logs = trainer.evaluate(attacker.g(), y_test, splits.test_nodes)
 
 print(f"After evasion attack\n {logs}")
@@ -60,7 +59,7 @@ print(f"After evasion attack\n {logs}")
 # ================================================================== #
 #                      After poisoning Attack                        #
 # ================================================================== #
-model = ElasticGNN(num_feats, num_classes, k=10)
+model = AirGNN(num_feats, num_classes, k=10)
 trainer = Trainer(model, device=device)
 trainer.fit(attacker.g(), y_train, splits.train_nodes)
 logs = trainer.evaluate(attacker.g(), y_test, splits.test_nodes)

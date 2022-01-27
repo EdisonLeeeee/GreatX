@@ -44,7 +44,7 @@ def inc_norm(inc_mat, graph):
     return inc_mat
 
 
-class EMPConv(nn.Module):
+class ElasticConv(nn.Module):
     r"""
 
     Description
@@ -80,12 +80,11 @@ class EMPConv(nn.Module):
     >>> import dgl
     >>> import numpy as np
     >>> import torch as th
-    >>> from graphwar.nn import EMPConv
+    >>> from graphwar.nn import ElasticConv
     >>>
     >>> graph = dgl.graph(([0,1,2,3,2,5], [1,2,3,4,0,3]))
-    >>> graph = dgl.add_self_loop(graph)
     >>> feat = th.ones(6, 5)
-    >>> conv = EMPConv()
+    >>> conv = ElasticConv()
     >>> res = conv(graph, feat)
     >>> res
     tensor([[0.9851, 0.9851, 0.9851, 0.9851, 0.9851],
@@ -98,15 +97,15 @@ class EMPConv(nn.Module):
 
     def __init__(self,
                  k: int = 3,
-                 lambda1: float = None,
-                 lambda2: float = None,
+                 lambda1: float = 3.,
+                 lambda2: float = 3.,
                  L21: bool = True,
                  cached: bool = True,
-                 add_self_loop=True,
+                 add_self_loop: bool = True,
                  norm='both'):
 
         super().__init__()
-        assert torch_sparse, "'EMPConv' requires a 'torch_sparse' installed." + \
+        assert torch_sparse, "'ElasticConv' requires a 'torch_sparse' installed." + \
             "See <https://github.com/rusty1s/pytorch_sparse> for more information."
 
         if norm not in ('none', 'both', 'right', 'left'):
@@ -185,12 +184,12 @@ class EMPConv(nn.Module):
         gamma = 1 / (1 + lambda2)
         beta = 1 / (2 * gamma)
 
-        if lambda1 > 0:
+        if lambda1:
             z = self.init_z
 
         for k in range(k):
 
-            if lambda2 > 0:
+            if lambda2:
                 graph.ndata['h'] = feat
                 graph.update_all(fn.u_mul_e('h', '_edge_weight', 'm'),
                                  fn.sum('m', 'h'))
@@ -199,7 +198,7 @@ class EMPConv(nn.Module):
             else:
                 y = gamma * hh + (1 - gamma) * feat  # y = feat - gamma * (feat - hh)
 
-            if lambda1 > 0:
+            if lambda1:
                 x_bar = y - gamma * (inc_mat.t() @ z)
                 z_bar = z + beta * (inc_mat @ x_bar)
                 if self.L21:

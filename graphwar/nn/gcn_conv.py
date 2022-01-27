@@ -65,7 +65,6 @@ class GCNConv(nn.Module):
     >>> from graphwar.nn import GCNConv
     >>>
     >>> g = dgl.graph(([0,1,2,3,2,5], [1,2,3,4,0,3]))
-    >>> g = dgl.add_self_loop(g)
     >>> feat = th.ones(6, 10)
     >>> conv = GCNConv(10, 2)
     >>> res = conv(g, feat)

@@ -73,6 +73,9 @@ In detail, the following methods are currently implemented:
 
 ## Backdoor Attack
 
+| Methods                 | Venue                                                                                                                                         |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| **LGCBackdoor**, **FGBackdoor** | *Chen et al.* [📝Neighboring Backdoor Attacks on Graph Convolutional Network](https://arxiv.org/abs/2201.06202), *arXiv'22*        |
 
 ## Defense
 
@@ -84,6 +87,7 @@ In detail, the following methods are currently implemented:
 | **RobustGCN**   | *Zhu et al.*  [📝Robust Graph Convolutional Networks Against Adversarial Attacks](http://pengcui.thumedialab.com/papers/RGCN.pdf), *KDD'19*                                                                                                    |
 | **ReliableGNN** | *Geisler et al.* [📝Reliable Graph Neural Networks via Robust Aggregation](https://arxiv.org/abs/2010.15651), *NeurIPS'20*<br>*Geisler et al.* [📝Robustness of Graph Neural Networks at Scale](https://arxiv.org/abs/2110.14038), *NeurIPS'21* |
 | **ElasticGNN** | *Liu et al.* [📝Elastic Graph Neural Networks](https://arxiv.org/abs/2107.06996), *ICML'21* |
+| **AirGNN** | *Liu et al.* [📝Graph Neural Networks with Adaptive Residual](https://openreview.net/forum?id=hfkER_KJiNw), *NeurIPS'21* |
 
 ### Data-Level
 

@@ -1,21 +1,21 @@
 import torch.nn as nn
 from torch.nn import Linear
-from graphwar.nn import Sequential, activations, ElasticConv
+from graphwar.nn import Sequential, activations, AdaptiveConv
 from graphwar.config import Config
 
 _EDGE_WEIGHT = Config.edge_weight
 
 
-class ElasticGNN(nn.Module):
-    """Elastic Graph Neural Networks.
+class AirGNN(nn.Module):
+    """Graph Neural Networks with Adaptive residual.
     Example
     -------
-    # ElasticGNN with one hidden layer
-    >>> model = ElasticGNN(100, 10)
-    # ElasticGNN with two hidden layers
-    >>> model = ElasticGNN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
-    # ElasticGNN with two hidden layers, without activation at the first layer
-    >>> model = ElasticGNN(100, 10, hids=[32, 16], acts=[None, 'relu'])
+    # AirGNN with one hidden layer
+    >>> model = AirGNN(100, 10)
+    # AirGNN with two hidden layers
+    >>> model = AirGNN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
+    # AirGNN with two hidden layers, without activation at the first layer
+    >>> model = AirGNN(100, 10, hids=[32, 16], acts=[None, 'relu'])
     """
 
     def __init__(self,
@@ -25,12 +25,10 @@ class ElasticGNN(nn.Module):
                  acts: list = ['relu'],
                  dropout: float = 0.8,
                  k: int = 3,
-                 lambda1: float = 3,
-                 lambda2: float = 3,
+                 lambda_amp: float = 0.5,
                  bn: bool = False,
                  bias: bool = True,
-                 norm: str = 'both',
-                 cached=True):
+                 norm: str = 'both'):
         r"""
         Parameters
         ----------
@@ -82,12 +80,9 @@ class ElasticGNN(nn.Module):
         lin.append(nn.Dropout(dropout))
         lin.append(Linear(in_features, out_features, bias=bias))
 
-        self.prop = ElasticConv(k=k,
-                                lambda1=lambda1,
-                                lambda2=lambda2,
-                                L21=True,
-                                norm=norm,
-                                cached=cached)
+        self.prop = AdaptiveConv(k=k,
+                                 lambda_amp=lambda_amp,
+                                 norm=norm)
 
         self.lin = Sequential(*lin)
 
@@ -102,6 +97,3 @@ class ElasticGNN(nn.Module):
         feat = self.prop(g, feat, edge_weight=edge_weight)
         return feat
 
-    def cache_clear(self):
-        self.prop._cached_inc = None
-        return self

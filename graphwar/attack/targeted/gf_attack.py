@@ -32,7 +32,10 @@ class GFAttack(TargetedAttacker):
             the random seed of reproduce the attack, by default None
         name : Optional[str], optional
             name of the attacker, if None, it would be `__class__.__name__`, by default None
-
+            
+        NOTE
+        ----
+        T=128 for citeseer and pubmed, T=num_nodes//2 for cora to reproduce results in paper.
         """
         super().__init__(graph=graph, device=device, seed=seed, name=name, **kwargs)
         self._check_feature_matrix_exists()
@@ -141,7 +144,8 @@ class GFAttack(TargetedAttacker):
             "sum" or "nosum"
             Indicates the score are calculated from which loss as in Equation (8) or Equation (12).
             "nosum" denotes Equation (8), where the loss is derived from Graph Convolutional Networks,
-            "sum" denotes Equation (12), where the loss is derived from Sampling-based Graph Embedding Methods., by default "nosum"
+            "sum" denotes Equation (12), where the loss is derived from Sampling-based Graph Embedding Methods.
+            by default "nosum"
 
         Returns
         -------
@@ -168,10 +172,10 @@ class GFAttack(TargetedAttacker):
             else:
                 eig_vals_res = (eig_vals_res + 1.).square().pow(K)
 
-            least_t = torch.topk(-eig_vals_res, k=T).indices
+            least_t = torch.topk(eig_vals_res, k=T, largest=False).indices # # from small to large
             eig_vals_k_sum = eig_vals_res[least_t].sum()
-            u_k = eig_vec[:, least_t].t()
-            u_x_mean = u_k @ x_mean
+            u_k = eig_vec[:, least_t]
+            u_x_mean = u_k.t() @ x_mean
             score_u_v = eig_vals_k_sum * torch.square(torch.linalg.norm(u_x_mean))
             score.append(score_u_v.item())
         return torch.as_tensor(score)

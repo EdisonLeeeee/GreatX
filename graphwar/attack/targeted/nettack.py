@@ -10,7 +10,8 @@ from tqdm import tqdm
 
 from graphwar import Surrogater
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
-from graphwar.utils import add_self_loop, normalize, singleton_filter
+from graphwar.functional import add_self_loop, normalize
+from graphwar.utils import singleton_filter
 
 
 class Nettack(TargetedAttacker, Surrogater):

@@ -10,7 +10,7 @@ from graphwar.utils import split_nodes
 # ================================================================== #
 #                      Loading datasets                              #
 # ================================================================== #
-data = GraphWarDataset('cora', verbose=True, standardize=True)
+data = GraphWarDataset('citeseer', verbose=True, standardize=True)
 g = data[0]
 splits = split_nodes(g.ndata['label'], random_state=15)
 
@@ -43,8 +43,8 @@ print(f"Before attack\n {output.tolist()}")
 #                      Attacking                                     #
 # ================================================================== #
 from graphwar.attack.targeted import GFAttack
-
-attacker = GFAttack(g, device=device)
+# T=128 for citeseer and pubmed, T=g.num_nodes()//2 for cora to reproduce results in paper.
+attacker = GFAttack(g, device=device, T=128)
 attacker.reset()
 attacker.attack(target, num_budgets=1)
 

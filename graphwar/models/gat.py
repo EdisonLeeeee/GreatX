@@ -27,8 +27,8 @@ class GAT(nn.Module):
 
     @wrapper
     def __init__(self,
-                 in_features: int,
-                 out_features: int,
+                 in_feats: int,
+                 out_feats: int,
                  hids: list = [8],
                  num_heads: list = [8],
                  acts: list = ['elu'],
@@ -39,9 +39,9 @@ class GAT(nn.Module):
         r"""
         Parameters
         ----------
-        in_features : int, 
+        in_feats : int, 
             the input dimmensions of model
-        out_features : int, 
+        out_feats : int, 
             the output dimensions of model
         hids : list, optional
             the number of hidden units of each hidden layer, by default [8]
@@ -62,7 +62,7 @@ class GAT(nn.Module):
         head = 1
 
         for hid, num_head, act in zip(hids, num_heads, acts):
-            conv.append(GATConv(in_features * head,
+            conv.append(GATConv(in_feats * head,
                                 hid,
                                 num_heads=num_head,
                                 bias=bias,
@@ -74,10 +74,10 @@ class GAT(nn.Module):
                 conv.append(nn.BatchNorm1d(hid * num_head))
             conv.append(activations.get(act))
             conv.append(nn.Dropout(dropout))
-            in_features = hid
+            in_feats = hid
             head = num_head
 
-        conv.append(GATConv(in_features * head, out_features,
+        conv.append(GATConv(in_feats * head, out_feats,
                             num_heads=1, bias=bias,
                             feat_drop=dropout,
                             attn_drop=dropout))

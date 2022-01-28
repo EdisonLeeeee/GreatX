@@ -9,3 +9,5 @@ from .robust_conv import RobustConv
 from .sgconv import SGConv
 from .elastic_conv import ElasticConv
 from .adaptive_conv import AdaptiveConv
+from .dagnn_conv import DAGNNConv
+from .appnp_conv import APPNPConv

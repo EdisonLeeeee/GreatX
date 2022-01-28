@@ -2,7 +2,7 @@ import torch
 
 from graphwar import set_seed
 from graphwar.data import GraphWarDataset
-from graphwar.defense.model_level import AirGNN
+from graphwar.models import APPNP
 from graphwar.training import Trainer
 from graphwar.training.callbacks import ModelCheckpoint
 from graphwar.utils import split_nodes
@@ -27,7 +27,7 @@ g = g.to(device)
 # ================================================================== #
 #                      Train your model                              #
 # ================================================================== #
-model = AirGNN(num_feats, num_classes, k=10)
+model = APPNP(num_feats, num_classes)
 trainer = Trainer(model, device=device)
 ckp = ModelCheckpoint('model.pth', monitor='val_accuracy')
 trainer.fit(g, y_train, splits.train_nodes, val_y=y_val, val_index=splits.val_nodes, callbacks=[ckp])

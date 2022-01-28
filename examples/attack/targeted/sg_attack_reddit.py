@@ -7,7 +7,7 @@ from graphwar.training import Trainer
 from graphwar.utils import BunchDict
 
 # ================================================================== #
-#                      Loading datasets                              #
+#                      Load datasets                                 #
 # ================================================================== #
 data = RedditDataset()
 g = data[0]

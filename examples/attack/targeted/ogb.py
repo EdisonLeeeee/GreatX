@@ -7,7 +7,7 @@ from graphwar.models import GCN, SGC
 from graphwar.training import Trainer
 
 # ================================================================== #
-#                      Loading datasets                              #
+#                      Load datasets                                 #
 # ================================================================== #
 data = DglNodePropPredDataset(name="ogbn-arxiv")
 splits = data.get_idx_split()

@@ -15,7 +15,7 @@ def drop_hook(self, input):
 
 
 # ================================================================== #
-#                      Loading datasets                              #
+#                      Load datasets                                 #
 # ================================================================== #
 data = GraphWarDataset('cora', verbose=True, standardize=True)
 g = data[0]
@@ -32,7 +32,7 @@ device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cp
 g = g.to(device)
 
 # ================================================================== #
-#                      Train Your Model                               #
+#                      Train your model                              #
 # ================================================================== #
 model = GCN(num_feats, num_classes)
 hook = model.register_forward_pre_hook(drop_hook)

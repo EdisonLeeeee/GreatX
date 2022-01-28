@@ -8,7 +8,7 @@ from ogb.nodeproppred import DglNodePropPredDataset
 
 
 # ================================================================== #
-#                      Loading datasets                              #
+#                      Load datasets                                 #
 # ================================================================== #
 data = DglNodePropPredDataset(name='ogbn-arxiv')
 splits = data.get_idx_split()
@@ -30,7 +30,7 @@ device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cp
 g = g.to(device)
 
 # ================================================================== #
-#                      Train Your Model                               #
+#                      Train your model                              #
 # ================================================================== #
 model = GCN(num_feats, num_classes, hids=[256, 256], bn=True)
 trainer = Trainer(model, device=device)

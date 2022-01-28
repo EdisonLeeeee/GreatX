@@ -9,7 +9,7 @@ from graphwar.training.callbacks import ModelCheckpoint
 from graphwar.utils import split_nodes
 
 # ================================================================== #
-#                      Loading datasets                              #
+#                      Load datasets                                 #
 # ================================================================== #
 data = GraphWarDataset('cora', verbose=True, standardize=True)
 g = data[0]

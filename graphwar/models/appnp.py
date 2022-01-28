@@ -1,21 +1,23 @@
 import torch.nn as nn
 from torch.nn import Linear
-from graphwar.nn import Sequential, activations, ElasticConv
+from graphwar.nn import Sequential, activations, APPNPConv
 from graphwar.config import Config
 
 _EDGE_WEIGHT = Config.edge_weight
 
 
-class ElasticGNN(nn.Module):
-    """Elastic Graph Neural Networks.
+class APPNP(nn.Module):
+    """Approximated personalized propagation
+    of neural predictions (APPNP)
+
     Example
     -------
-    # ElasticGNN with one hidden layer
-    >>> model = ElasticGNN(100, 10)
-    # ElasticGNN with two hidden layers
-    >>> model = ElasticGNN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
-    # ElasticGNN with two hidden layers, without activation at the first layer
-    >>> model = ElasticGNN(100, 10, hids=[32, 16], acts=[None, 'relu'])
+    # APPNP with one hidden layer
+    >>> model = APPNP(100, 10)
+    # APPNP with two hidden layers
+    >>> model = APPNP(100, 10, hids=[32, 16], acts=['relu', 'elu'])
+    # APPNP with two hidden layers, without activation at the first layer
+    >>> model = APPNP(100, 10, hids=[32, 16], acts=[None, 'relu'])
     """
 
     def __init__(self,
@@ -24,13 +26,11 @@ class ElasticGNN(nn.Module):
                  hids: list = [64],
                  acts: list = ['relu'],
                  dropout: float = 0.8,
-                 k: int = 3,
-                 lambda1: float = 3,
-                 lambda2: float = 3,
+                 k: int = 10,
+                 alpha: float = 0.1,
                  bn: bool = False,
                  bias: bool = True,
-                 norm: str = 'both',
-                 cached=True):
+                 norm: str = 'both'):
         r"""
         Parameters
         ----------
@@ -43,7 +43,7 @@ class ElasticGNN(nn.Module):
         acts : list, optional
             the activaction function of each hidden layer, by default ['relu']
         dropout : float, optional
-            the dropout ratio of model, by default 0.8
+            the dropout ratio of model, by default 0.5
         bias : bool, optional
             whether to use bias in the layers, by default True
         bn: bool, optional
@@ -82,13 +82,7 @@ class ElasticGNN(nn.Module):
         lin.append(nn.Dropout(dropout))
         lin.append(Linear(in_feats, out_feats, bias=bias))
 
-        self.prop = ElasticConv(k=k,
-                                lambda1=lambda1,
-                                lambda2=lambda2,
-                                L21=True,
-                                norm=norm,
-                                cached=cached)
-
+        self.prop = APPNPConv(k, alpha, norm=norm)
         self.lin = Sequential(*lin)
 
     def reset_parameters(self):
@@ -101,7 +95,3 @@ class ElasticGNN(nn.Module):
             edge_weight = g.edata.get(_EDGE_WEIGHT, edge_weight)
         feat = self.prop(g, feat, edge_weight=edge_weight)
         return feat
-
-    def cache_clear(self):
-        self.prop._cached_inc = None
-        return self

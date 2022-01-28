@@ -19,8 +19,8 @@ class AirGNN(nn.Module):
     """
 
     def __init__(self,
-                 in_features: int,
-                 out_features: int,
+                 in_feats: int,
+                 out_feats: int,
                  hids: list = [64],
                  acts: list = ['relu'],
                  dropout: float = 0.8,
@@ -32,12 +32,12 @@ class AirGNN(nn.Module):
         r"""
         Parameters
         ----------
-        in_features : int, 
+        in_feats : int, 
             the input dimmensions of model
-        out_features : int, 
+        out_feats : int, 
             the output dimensions of model
         hids : list, optional
-            the number of hidden units of each hidden layer, by default [16]
+            the number of hidden units of each hidden layer, by default [64]
         acts : list, optional
             the activaction function of each hidden layer, by default ['relu']
         dropout : float, optional
@@ -71,14 +71,14 @@ class AirGNN(nn.Module):
         lin = []
         for hid, act in zip(hids, acts):
             lin.append(nn.Dropout(dropout))
-            lin.append(Linear(in_features, hid, bias=bias))
+            lin.append(Linear(in_feats, hid, bias=bias))
             if bn:
                 lin.append(nn.BatchNorm1d(hid))
-            in_features = hid
+            in_feats = hid
             lin.append(activations.get(act))
 
         lin.append(nn.Dropout(dropout))
-        lin.append(Linear(in_features, out_features, bias=bias))
+        lin.append(Linear(in_feats, out_feats, bias=bias))
 
         self.prop = AdaptiveConv(k=k,
                                  lambda_amp=lambda_amp,
@@ -96,4 +96,3 @@ class AirGNN(nn.Module):
             edge_weight = g.edata.get(_EDGE_WEIGHT, edge_weight)
         feat = self.prop(g, feat, edge_weight=edge_weight)
         return feat
-

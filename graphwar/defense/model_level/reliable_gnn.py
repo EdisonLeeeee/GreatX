@@ -39,8 +39,8 @@ class ReliableGNN(nn.Module):
 
     @wrapper
     def __init__(self,
-                 in_features: int,
-                 out_features: int,
+                 in_feats: int,
+                 out_feats: int,
                  hids: list = [16],
                  acts: list = ['relu'],
                  dropout: float = 0.5,
@@ -53,9 +53,9 @@ class ReliableGNN(nn.Module):
         r"""
         Parameters
         ----------
-        in_features : int, 
+        in_feats : int, 
             the input dimmensions of model
-        out_features : int, 
+        out_feats : int, 
             the output dimensions of model
         hids : list, optional
             the number of hidden units of each hidden layer, by default [16]
@@ -115,13 +115,13 @@ class ReliableGNN(nn.Module):
 
         for hid, act in zip(hids, acts):
             if method == "dimmedian":
-                conv.append(DimwiseMedianConv(in_features,
+                conv.append(DimwiseMedianConv(in_feats,
                                               hid,
                                               bias=bias, norm=norm,
                                               row_normalize=row_normalize,
                                               activation=None))
             else:
-                conv.append(SoftKConv(in_features,
+                conv.append(SoftKConv(in_feats,
                                       hid,
                                       bias=bias, norm=norm,
                                       row_normalize=row_normalize,
@@ -131,14 +131,14 @@ class ReliableGNN(nn.Module):
                 conv.append(nn.BatchNorm1d(hid))
             conv.append(activations.get(act))
             conv.append(nn.Dropout(dropout))
-            in_features = hid
+            in_feats = hid
 
         if method == "dimmedian":
-            conv.append(DimwiseMedianConv(in_features, out_features,
+            conv.append(DimwiseMedianConv(in_feats, out_feats,
                                           row_normalize=row_normalize,
                                           bias=bias, norm=norm))
         else:
-            conv.append(SoftKConv(in_features, out_features,
+            conv.append(SoftKConv(in_feats, out_feats,
                                   row_normalize=row_normalize,
                                   bias=bias, norm=norm, **kwargs))
 

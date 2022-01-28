@@ -8,7 +8,7 @@ from graphwar.utils import BunchDict
 from dgl.data import RedditDataset
 
 # ================================================================== #
-#                      Loading datasets                              #
+#                      Load datasets                                 #
 # ================================================================== #
 data = RedditDataset()
 g = data[0]
@@ -28,7 +28,7 @@ device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cp
 g = g.to(device)
 
 # ================================================================== #
-#                      Train Your Model                               #
+#                      Train your model                              #
 # ================================================================== #
 model = SGC(num_feats, num_classes)
 trainer = Trainer(model, device=device)

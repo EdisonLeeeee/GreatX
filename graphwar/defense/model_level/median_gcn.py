@@ -28,8 +28,8 @@ class MedianGCN(nn.Module):
 
     @wrapper
     def __init__(self,
-                 in_features: int,
-                 out_features: int,
+                 in_feats: int,
+                 out_feats: int,
                  hids: list = [16],
                  acts: list = ['relu'],
                  dropout: float = 0.5,
@@ -39,9 +39,9 @@ class MedianGCN(nn.Module):
         r"""
         Parameters
         ----------
-        in_features : int, 
+        in_feats : int, 
             the input dimmensions of model
-        out_features : int, 
+        out_feats : int, 
             the output dimensions of model
         hids : list, optional
             the number of hidden units of each hidden layer, by default [16]
@@ -77,7 +77,7 @@ class MedianGCN(nn.Module):
         conv = []
         assert len(hids) == len(acts)
         for hid, act in zip(hids, acts):
-            conv.append(MedianConv(in_features,
+            conv.append(MedianConv(in_feats,
                                    hid,
                                    bias=bias, norm=norm,
                                    activation=None))
@@ -86,8 +86,8 @@ class MedianGCN(nn.Module):
                 conv.append(nn.BatchNorm1d(hid))
             conv.append(activations.get(act))
             conv.append(nn.Dropout(dropout))
-            in_features = hid
-        conv.append(MedianConv(in_features, out_features, bias=bias, norm=norm))
+            in_feats = hid
+        conv.append(MedianConv(in_feats, out_feats, bias=bias, norm=norm))
         self.conv = Sequential(*conv, loc=1)  # `loc=1` specifies the location of features.
 
     def reset_parameters(self):

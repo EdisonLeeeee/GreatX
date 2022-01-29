@@ -1,4 +1,4 @@
-# GraphWar: Arms Race in *Graph Adversarial Learning*
+# ⚔🛡 GraphWar: Arms Race in *Graph Adversarial Learning*
 
 The robustness of graph neural networks (GNNs) against adversarial attacks has gained increasing attention in last few years. While
 there are numerous (heuristic) approaches aimed at robustifying GNNs, there is always a newly devised stronger attack attempts to break them, leading to an arms race between attackers and defenders. To this end, GraphWar aims to provide easy implementations with unified interfaces to facilitate the research in Graph Adversarial Learning.
@@ -57,7 +57,7 @@ edge_flips = attacker.edge_flips()
 ```
 
 
-# Implementations
+# 👀 Implementations
 
 In detail, the following methods are currently implemented:
 

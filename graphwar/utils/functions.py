@@ -191,7 +191,7 @@ def wrapper(func: Callable) -> Callable:
     """
 
     @functools.wraps(func)
-    def decoracte(*args, **kwargs) -> Any:
+    def decorate(*args, **kwargs) -> Any:
         inspect_paras = inspect.signature(func).parameters
         inspect_paras = list(inspect_paras.values())
 
@@ -213,7 +213,8 @@ def wrapper(func: Callable) -> Callable:
                     continue
 
                 if i >= max_length:
-                    raise TypeError(f"The decorated function '{func.__name__}' missing required argument '{p.name}'.")
+                    raise TypeError(
+                        f"The decorated function '{func.__name__}' missing required argument '{p.name}'.")
             else:
                 paras[p.name] = p.default
 
@@ -245,4 +246,4 @@ def wrapper(func: Callable) -> Callable:
 
         return func(**paras)
 
-    return decoracte
+    return decorate

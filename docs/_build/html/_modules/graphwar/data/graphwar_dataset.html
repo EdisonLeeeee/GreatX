@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>graphwar.data.graphwar_dataset &mdash; graphwar 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html">
+            <img src="../../../_static/graphwar.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/data.html">graphwar.data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/utils.html">graphwar.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/metrics.html">graphwar.metrics</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">graphwar</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>graphwar.data.graphwar_dataset</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for graphwar.data.graphwar_dataset</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Graph benchmark datasets for adversarial graph learning.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">dgl</span> <span class="kn">import</span> <span class="n">transform</span>
+<span class="kn">from</span> <span class="nn">dgl.convert</span> <span class="kn">import</span> <span class="n">graph</span> <span class="k">as</span> <span class="n">dgl_graph</span>
+<span class="kn">from</span> <span class="nn">dgl.data.dgl_dataset</span> <span class="kn">import</span> <span class="n">DGLBuiltinDataset</span>
+<span class="kn">from</span> <span class="nn">dgl.data.utils</span> <span class="kn">import</span> <span class="n">download</span><span class="p">,</span> <span class="n">load_graphs</span><span class="p">,</span> <span class="n">save_graphs</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span>
+
+<span class="n">_DATASETS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;citeseer&#39;</span><span class="p">,</span> <span class="s1">&#39;citeseer_full&#39;</span><span class="p">,</span> <span class="s1">&#39;cora&#39;</span><span class="p">,</span> <span class="s1">&#39;cora_ml&#39;</span><span class="p">,</span> <span class="s1">&#39;cora_full&#39;</span><span class="p">,</span> <span class="s1">&#39;amazon_cs&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;amazon_photo&#39;</span><span class="p">,</span> <span class="s1">&#39;coauthor_cs&#39;</span><span class="p">,</span> <span class="s1">&#39;coauthor_phy&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;pubmed&#39;</span><span class="p">,</span> <span class="s1">&#39;flickr&#39;</span><span class="p">,</span> <span class="s1">&#39;blogcatalog&#39;</span><span class="p">,</span> <span class="s1">&#39;dblp&#39;</span><span class="p">,</span> <span class="s1">&#39;acm&#39;</span><span class="p">,</span> <span class="s1">&#39;uai&#39;</span><span class="p">,</span> <span class="s1">&#39;reddit&#39;</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">eliminate_self_loops</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Remove self-loops from the adjacency matrix.&quot;&quot;&quot;</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">A</span> <span class="o">-</span> <span class="n">sp</span><span class="o">.</span><span class="n">diags</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+    <span class="n">A</span><span class="o">.</span><span class="n">eliminate_zeros</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">A</span>
+
+
+<span class="k">def</span> <span class="nf">largest_connected_components</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">component_indices</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">csgraph</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="n">component_sizes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">component_indices</span><span class="p">)</span>
+    <span class="n">components_to_keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">component_sizes</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">nodes_to_keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">component_indices</span> <span class="o">==</span> <span class="n">components_to_keep</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">nodes_to_keep</span>
+
+
+<span class="k">def</span> <span class="nf">_get_adversarial_graph_url</span><span class="p">(</span><span class="n">file_url</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get online dataset url for download.&quot;&quot;&quot;</span>
+    <span class="n">repo_url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/EdisonLeeeee/GraphWarData/raw/master/datasets/&#39;</span>
+    <span class="k">return</span> <span class="n">repo_url</span> <span class="o">+</span> <span class="n">file_url</span>
+
+
+<div class="viewcode-block" id="GraphWarDataset"><a class="viewcode-back" href="../../../modules/data.html#graphwar.data.GraphWarDataset">[docs]</a><span class="k">class</span> <span class="nc">GraphWarDataset</span><span class="p">(</span><span class="n">DGLBuiltinDataset</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Base Class for adversarial graph dataset</span>
+
+<span class="sd">    Reference: </span>
+<span class="sd">    [1] GitHub: hhttps://github.com/EdisonLeeeee/GraphWarData</span>
+<span class="sd">    [2] Gitee: hhttps://gitee.com/EdisonLeeeee/GraphWarData</span>
+
+
+<span class="sd">    Available Datasets</span>
+<span class="sd">    ------------------</span>
+<span class="sd">    &#39;citeseer&#39;, &#39;citeseer_full&#39;, &#39;cora&#39;, &#39;cora_ml&#39;, &#39;cora_full&#39;, &#39;amazon_cs&#39;,</span>
+<span class="sd">    &#39;amazon_photo&#39;, &#39;coauthor_cs&#39;, &#39;coauthor_phy&#39;,</span>
+<span class="sd">    &#39;pubmed&#39;, &#39;flickr&#39;, &#39;blogcatalog&#39;, &#39;dblp&#39;, &#39;acm&#39;, &#39;uai&#39;, &#39;reddit&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">raw_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">force_reload</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_DATASETS</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknow dataset </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">, allowed datasets are </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">_DATASETS</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;graphwar-&#39;</span> <span class="o">+</span> <span class="n">name</span>
+        <span class="n">_url</span> <span class="o">=</span> <span class="n">_get_adversarial_graph_url</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.npz&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">standardize</span> <span class="o">=</span> <span class="n">standardize</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                         <span class="n">url</span><span class="o">=</span><span class="n">_url</span><span class="p">,</span>
+                         <span class="n">raw_dir</span><span class="o">=</span><span class="n">raw_dir</span><span class="p">,</span>
+                         <span class="n">force_reload</span><span class="o">=</span><span class="n">force_reload</span><span class="p">,</span>
+                         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GraphWarDataset.download"><a class="viewcode-back" href="../../../modules/data.html#graphwar.data.GraphWarDataset.download">[docs]</a>    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Automatically download data&quot;&quot;&quot;</span>
+        <span class="n">download_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.npz&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">download_path</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;graphwar-reddit&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;`reddit` dataset is too large to download. Please download it manually.&quot;</span><span class="p">)</span>  <span class="c1"># TODO: add reddit dataset links</span>
+            <span class="n">download</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">download_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphWarDataset.process"><a class="viewcode-back" href="../../../modules/data.html#graphwar.data.GraphWarDataset.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">npz_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.npz&#39;</span><span class="p">)</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_npz</span><span class="p">(</span><span class="n">npz_path</span><span class="p">)</span>
+        <span class="c1"># g = transform.reorder_graph(</span>
+        <span class="c1">#     g, node_permute_algo=&#39;rcmk&#39;, edge_permute_algo=&#39;dst&#39;, store_ids=False)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span> <span class="o">=</span> <span class="n">g</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_info</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="GraphWarDataset.has_cache"><a class="viewcode-back" href="../../../modules/data.html#graphwar.data.GraphWarDataset.has_cache">[docs]</a>    <span class="k">def</span> <span class="nf">has_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">graph_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">,</span> <span class="s1">&#39;dgl_graph_v1.bin&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">graph_path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="GraphWarDataset.save"><a class="viewcode-back" href="../../../modules/data.html#graphwar.data.GraphWarDataset.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">graph_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">,</span> <span class="s1">&#39;dgl_graph_v1.bin&#39;</span><span class="p">)</span>
+        <span class="n">save_graphs</span><span class="p">(</span><span class="n">graph_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphWarDataset.load"><a class="viewcode-back" href="../../../modules/data.html#graphwar.data.GraphWarDataset.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">graph_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_path</span><span class="p">,</span> <span class="s1">&#39;dgl_graph_v1.bin&#39;</span><span class="p">)</span>
+        <span class="n">graphs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">load_graphs</span><span class="p">(</span><span class="n">graph_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span> <span class="o">=</span> <span class="n">graphs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">graphs</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_info</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">_print_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  NumNodes: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_graph</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">()))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  NumEdges: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_graph</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  NumFeats: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_graph</span><span class="o">.</span><span class="n">ndata</span><span class="p">[</span><span class="s1">&#39;feat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  NumbClasses: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_load_npz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">allow_pickle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">loader</span><span class="p">:</span>
+            <span class="n">loader</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">loader</span><span class="p">)</span>
+            <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">loader</span><span class="p">[</span><span class="s1">&#39;adj_matrix&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">adj_matrix</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">adj_matrix</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+            <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">eliminate_self_loops</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">)</span>
+            <span class="n">attr_matrix</span> <span class="o">=</span> <span class="n">loader</span><span class="p">[</span><span class="s1">&#39;attr_matrix&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">attr_matrix</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;O&#39;</span><span class="p">:</span>
+                <span class="c1"># scipy sparse matrix</span>
+                <span class="n">attr_matrix</span> <span class="o">=</span> <span class="n">attr_matrix</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="o">.</span><span class="n">A</span>
+
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">loader</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">adj_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">adj_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">labels</span><span class="p">,</span> <span class="n">_labels</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">standardize</span><span class="p">:</span>
+                <span class="n">nodes_to_keep</span> <span class="o">=</span> <span class="n">largest_connected_components</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">)</span>
+                <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">adj_matrix</span><span class="p">[</span><span class="n">nodes_to_keep</span><span class="p">][:,</span> <span class="n">nodes_to_keep</span><span class="p">]</span>
+                <span class="n">attr_matrix</span> <span class="o">=</span> <span class="n">attr_matrix</span><span class="p">[</span><span class="n">nodes_to_keep</span><span class="p">]</span>
+                <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">nodes_to_keep</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">labels</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">labels</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+
+            <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">adj_matrix</span><span class="o">.</span><span class="n">tocoo</span><span class="p">()</span>
+
+        <span class="n">g</span> <span class="o">=</span> <span class="n">dgl_graph</span><span class="p">((</span><span class="n">adj_matrix</span><span class="o">.</span><span class="n">row</span><span class="p">,</span> <span class="n">adj_matrix</span><span class="o">.</span><span class="n">col</span><span class="p">),</span>
+                      <span class="n">num_nodes</span><span class="o">=</span><span class="n">adj_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="c1"># g = transform.to_bidirected(g)</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">ndata</span><span class="p">[</span><span class="s1">&#39;feat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">attr_matrix</span><span class="p">)</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">ndata</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">g</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">num_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Number of classes.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span><span class="o">.</span><span class="n">ndata</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">save_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Path to save the processed dataset.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_save_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get graph by index</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        idx : int</span>
+<span class="sd">            Item index</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`dgl.DGLGraph`</span>
+
+<span class="sd">            The graph contains:</span>
+
+<span class="sd">            - ``ndata[&#39;feat&#39;]``: node features</span>
+<span class="sd">            - ``ndata[&#39;label&#39;]``: node labels</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;This dataset has only one graph&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Number of graphs in the dataset&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">1</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jintang Li.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

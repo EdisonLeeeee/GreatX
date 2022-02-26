@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>graphwar.utils.modification &mdash; graphwar 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html">
+            <img src="../../../_static/graphwar.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/data.html">graphwar.data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/utils.html">graphwar.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/metrics.html">graphwar.metrics</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">graphwar</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>graphwar.utils.modification</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for graphwar.utils.modification</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">dgl</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+
+<div class="viewcode-block" id="add_edges"><a class="viewcode-back" href="../../../modules/utils.html#graphwar.utils.add_edges">[docs]</a><span class="k">def</span> <span class="nf">add_edges</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">dgl</span><span class="o">.</span><span class="n">DGLGraph</span><span class="p">,</span> <span class="n">edges</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+              <span class="n">symmetric</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dgl</span><span class="o">.</span><span class="n">DGLGraph</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;add edges to the graph `g`. This method is </span>
+<span class="sd">    similar to `DGLGraph.add_edges()` but returns a </span>
+<span class="sd">    copy of the graph `g`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    g : dgl.DGLGraph</span>
+<span class="sd">        the dgl graph instance where edges will be added to.</span>
+<span class="sd">    edges : torch.Tensor</span>
+<span class="sd">        shape [2, M], the edges to be added in the graph.</span>
+<span class="sd">    symmetric : bool</span>
+<span class="sd">        whether the graph is symmetric, if True,</span>
+<span class="sd">        it would flip the edges in the graph by:</span>
+<span class="sd">        `edges = torch.cat([edges, edges[[1,0]]])`</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dgl.DGLGraph</span>
+<span class="sd">        the dgl graph instance with edge added.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">edges</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">symmetric</span><span class="p">:</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">edges</span><span class="p">,</span> <span class="n">edges</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">g</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">local_var</span><span class="p">()</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">add_edges</span><span class="p">(</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edges</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">g</span></div>
+
+
+<div class="viewcode-block" id="remove_edges"><a class="viewcode-back" href="../../../modules/utils.html#graphwar.utils.remove_edges">[docs]</a><span class="k">def</span> <span class="nf">remove_edges</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">dgl</span><span class="o">.</span><span class="n">DGLGraph</span><span class="p">,</span> <span class="n">edges</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+                 <span class="n">symmetric</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dgl</span><span class="o">.</span><span class="n">DGLGraph</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;remove edges from the graph `g`. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    g : dgl.DGLGraph</span>
+<span class="sd">        the dgl graph instance where edges will be removed from.</span>
+<span class="sd">    edges : torch.Tensor</span>
+<span class="sd">        shape [2, M], the edges to be removed in the graph.</span>
+<span class="sd">    symmetric : bool</span>
+<span class="sd">        whether the graph is symmetric, if True,</span>
+<span class="sd">        it would flip the edges in the graph by:</span>
+<span class="sd">        `edges = torch.cat([edges, edges[[1,0]]])`</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dgl.DGLGraph</span>
+<span class="sd">        the dgl graph instance with edge removed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">edges</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">symmetric</span><span class="p">:</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">edges</span><span class="p">,</span> <span class="n">edges</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">local_var</span><span class="p">()</span>
+    <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">edges</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">has_edges_between</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span>
+
+    <span class="n">row_to_remove</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+    <span class="n">col_to_remove</span> <span class="o">=</span> <span class="n">col</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="n">eids</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">edge_ids</span><span class="p">(</span><span class="n">row_to_remove</span><span class="p">,</span> <span class="n">col_to_remove</span><span class="p">)</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">remove_edges</span><span class="p">(</span><span class="n">eids</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">g</span></div>
+
+
+<div class="viewcode-block" id="flip_graph"><a class="viewcode-back" href="../../../modules/utils.html#graphwar.utils.flip_graph">[docs]</a><span class="k">def</span> <span class="nf">flip_graph</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">dgl</span><span class="o">.</span><span class="n">DGLGraph</span><span class="p">,</span> <span class="n">edges</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
+               <span class="n">symmetric</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dgl</span><span class="o">.</span><span class="n">DGLGraph</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;flip edges in the graph `g`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    g : dgl.DGLGraph</span>
+<span class="sd">        the dgl graph instance where edges will be flipped from.</span>
+<span class="sd">    edges : torch.Tensor</span>
+<span class="sd">        shape [2, M], the edges to be flipped in the graph.</span>
+<span class="sd">    symmetric : bool</span>
+<span class="sd">        whether the graph is symmetric, if True,</span>
+<span class="sd">        it would flip the edges in the graph by:</span>
+<span class="sd">        `edges = torch.cat([edges, edges[[1,0]]])`</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dgl.DGLGraph</span>
+<span class="sd">        the dgl graph instance with edge flipped.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">edges</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">symmetric</span><span class="p">:</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">edges</span><span class="p">,</span> <span class="n">edges</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">edges</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">local_var</span><span class="p">()</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">has_edges_between</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span>
+
+    <span class="n">row_to_remove</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+    <span class="n">col_to_remove</span> <span class="o">=</span> <span class="n">col</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="n">eids</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">edge_ids</span><span class="p">(</span><span class="n">row_to_remove</span><span class="p">,</span> <span class="n">col_to_remove</span><span class="p">)</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">remove_edges</span><span class="p">(</span><span class="n">eids</span><span class="p">)</span>
+
+    <span class="n">row_to_add</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">]</span>
+    <span class="n">col_to_add</span> <span class="o">=</span> <span class="n">col</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="n">g</span><span class="o">.</span><span class="n">add_edges</span><span class="p">(</span><span class="n">row_to_add</span><span class="p">,</span> <span class="n">col_to_add</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">g</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jintang Li.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

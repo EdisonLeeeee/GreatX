@@ -30,9 +30,10 @@ install_requires = [
     'pandas',
     'termcolor',
     'scikit_learn',
-    #'networkx>=2.3',
-    #'gensim>=3.8.0',
-    #'numba>=0.46.0',
+    'matplotlib',
+    # 'networkx>=2.3',
+    # 'gensim>=3.8.0',
+    # 'numba>=0.46.0',
 ]
 
 setup_requires = ['pytest-runner']

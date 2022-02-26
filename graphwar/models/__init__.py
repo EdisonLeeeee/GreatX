@@ -3,3 +3,4 @@ from .gcn import GCN
 from .sgc import SGC
 from .dagnn import DAGNN
 from .appnp import APPNP
+from .jknet import JKNet

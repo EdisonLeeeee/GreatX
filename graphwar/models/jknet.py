@@ -1,5 +1,3 @@
-from graphwar.models.gcn import GCN
-import torch
 import torch.nn as nn
 import dgl.function as fn
 
@@ -124,7 +122,13 @@ class JKNet(nn.Module):
             feat_list.append(feat)
 
         g = g.local_var()
+
         g.ndata['h'] = self.jump(feat_list)
-        g.update_all(fn.copy_u('h', 'm'), fn.sum('m', 'h'))
+        if edge_weight is not None:
+            g.edata['_edge_weight'] = edge_weight
+            g.update_all(fn.u_mul_e('h', '_edge_weight', 'm'),
+                         fn.sum('m', 'h'))
+        else:
+            g.update_all(fn.copy_u('h', 'm'), fn.sum('m', 'h'))
 
         return self.mlp(g.ndata['h'])

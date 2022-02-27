@@ -31,8 +31,8 @@ class SimPGCN(nn.Module):
                  hids: list = [64],
                  acts: list = [None],
                  dropout: float = 0.5,
-                 bn: bool = False,
-                 bias: bool = False,
+                 bn: bool = False,  # TODO
+                 bias: bool = True,
                  norm: str = 'both',
                  gamma: float = 0.1):
 

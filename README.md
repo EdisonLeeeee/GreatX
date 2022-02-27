@@ -110,6 +110,7 @@ In detail, the following methods are currently implemented:
 | **GAT**   | *Veličković et al.*  [📝Graph Attention Networks](https://arxiv.org/abs/1710.10903), *ICLR'18* |
 | **DAGNN** | *Liu et al.*  [📝Towards Deeper Graph Neural Networks](https://arxiv.org/abs/2007.09296), *KDD'20* |
 | **APPNP** | *Klicpera et al.*  [📝Predict then Propagate: Graph Neural Networks meet Personalized PageRank](https://arxiv.org/abs/1810.05997), *ICLR'19* |
+| **JKNet** | *Xu et al.*  [📝Representation Learning on Graphs with Jumping Knowledge Networks](hhttps://arxiv.org/abs/1806.03536), *ICML'18* |
 
 ### Model-Level
 
@@ -120,6 +121,7 @@ In detail, the following methods are currently implemented:
 | **ReliableGNN** | *Geisler et al.* [📝Reliable Graph Neural Networks via Robust Aggregation](https://arxiv.org/abs/2010.15651), *NeurIPS'20*<br>*Geisler et al.* [📝Robustness of Graph Neural Networks at Scale](https://arxiv.org/abs/2110.14038), *NeurIPS'21* |
 | **ElasticGNN**  | *Liu et al.* [📝Elastic Graph Neural Networks](https://arxiv.org/abs/2107.06996), *ICML'21* |
 | **AirGNN**      | *Liu et al.* [📝Graph Neural Networks with Adaptive Residual](https://openreview.net/forum?id=hfkER_KJiNw), *NeurIPS'21* |
+| **SimPGCN**      | *Jin et al.* [📝Node Similarity Preserving Graph Convolutional Networks](https://arxiv.org/abs/2011.09643), *WSDM'21* |
 
 ### Data-Level
 

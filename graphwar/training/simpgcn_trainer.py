@@ -1,9 +1,7 @@
-import torch
-
 from graphwar.training import Trainer
 
 
-class RobustGCNTrainer(Trainer):
+class SimPGCNTrainer(Trainer):
 
     def train_step(self, dataloader):
         loss_fn = self.loss
@@ -12,7 +10,7 @@ class RobustGCNTrainer(Trainer):
         self.reset_metrics()
         model.train()
 
-        kl = self.cfg.get('kl', 5e-4)
+        lambda_ = self.cfg.get("lambda_", 5.0)
 
         for epoch, batch in enumerate(dataloader):
             self.callbacks.on_train_batch_begin(epoch)
@@ -22,14 +20,12 @@ class RobustGCNTrainer(Trainer):
 
             if not isinstance(x, tuple):
                 x = x,
-            out = model(*x)
+            out, embeddings = model(*x)
             if out_index is not None:
                 out = out[out_index]
-            # ================= add KL loss here =============================
-            mean, var = model.mean, model.var
-            kl_loss = -0.5 * torch.sum(torch.mean(1 + torch.log(var + 1e-8) -
-                                                  mean.pow(2) + var, dim=1))
-            loss = loss_fn(out, y) + kl * kl_loss
+            # ================= add regression loss here =============================
+            loss = loss_fn(out, y) + lambda_ * \
+                model.regression_loss(embeddings)
             # ===============================================================
             loss.backward()
             for metric in self.metrics:

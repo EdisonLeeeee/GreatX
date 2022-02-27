@@ -45,5 +45,5 @@ def get_trainer(model: Union[str, torch.nn.Module]) -> training.trainer.Trainer:
     else:
         class_name = model.__class__.__name__
 
-    trainer = getattr(training, model + "Trainer", default)
+    trainer = getattr(training, class_name + "Trainer", default)
     return trainer

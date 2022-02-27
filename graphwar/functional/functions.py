@@ -44,9 +44,11 @@ def attr_sim(x, k=5):
     x = x.bool().float()  # x[x!=0] = 1
 
     sims = pairwise_cosine_similarity(x)
-    selected = torch.cat([torch.topk(sims, k=k, largest=False).indices,
-                          torch.topk(sims, k=k + 1).indices], dim=1)
-    row = torch.arange(x.size(0), device=x.device).repeat_interleave(selected.size(1))
+    indices_sorted = sims.argsort(1)
+    selected = torch.cat((indices_sorted[:, :k],
+                          indices_sorted[:, - k - 1:]), dim=1)
+    row = torch.arange(x.size(0), device=x.device).repeat_interleave(
+        selected.size(1))
     col = selected.view(-1)
 
     mask = row != col

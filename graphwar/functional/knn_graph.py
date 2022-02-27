@@ -15,7 +15,7 @@ def knn_graph(x: torch.Tensor, k: int = 20):
     """
     x = x.bool().float()  # x[x!=0] = 1
     sims = pairwise_cosine_similarity(x)
-    sims = sims - torch.diag(sims)  # remove self-loops
+    sims = sims - torch.diag(torch.diag(sims))  # remove self-loops
 
     row = torch.arange(x.size(0), device=x.device).repeat_interleave(k)
     topk = torch.topk(sims, k=k, dim=1)

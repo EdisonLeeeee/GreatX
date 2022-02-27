@@ -60,7 +60,7 @@ class ReliableGNN(nn.Module):
         hids : list, optional
             the number of hidden units of each hidden layer, by default [16]
         acts : list, optional
-            the activaction function of each hidden layer, by default ['relu']
+            the activation function of each hidden layer, by default ['relu']
         dropout : float, optional
             the dropout ratio of model, by default 0.5
         bias : bool, optional
@@ -109,7 +109,8 @@ class ReliableGNN(nn.Module):
         conv = []
         assert method in {"dimmedian", "softk"}
         if method == "dimmedian" and kwargs:
-            raise ValueError("keyword arguments were not supported for method='dimmedian'.")
+            raise ValueError(
+                "keyword arguments were not supported for method='dimmedian'.")
 
         assert len(hids) == len(acts)
 
@@ -142,7 +143,8 @@ class ReliableGNN(nn.Module):
                                   row_normalize=row_normalize,
                                   bias=bias, norm=norm, **kwargs))
 
-        self.conv = Sequential(*conv, loc=1)  # `loc=1` specifies the location of features.
+        # `loc=1` specifies the location of features.
+        self.conv = Sequential(*conv, loc=1)
 
     def reset_parameters(self):
         self.conv.reset_parameters()

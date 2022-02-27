@@ -40,7 +40,7 @@ class JKNet(nn.Module):
         hids : list, optional
             the number of hidden units of each hidden layer, by default [16, 16, 16]
         acts : list, optional
-            the activaction function of each hidden layer, by default ['relu', 'relu', 'relu']
+            the activation function of each hidden layer, by default ['relu', 'relu', 'relu']
         dropout : float, optional
             the dropout ratio of model, by default 0.5
         mode : str, optional

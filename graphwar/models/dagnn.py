@@ -39,7 +39,7 @@ class DAGNN(nn.Module):
         hids : list, optional
             the number of hidden units of each hidden layer, by default [64]
         acts : list, optional
-            the activaction function of each hidden layer, by default ['relu']
+            the activation function of each hidden layer, by default ['relu']
         dropout : float, optional
             the dropout ratio of model, by default 0.5
         bias : bool, optional
@@ -82,7 +82,8 @@ class DAGNN(nn.Module):
 
         self.prop = DAGNNConv(out_feats, 1,
                               k=k,
-                              activation=activations.get('sigmoid'),  # use sigmoid activation
+                              # use sigmoid activation
+                              activation=activations.get('sigmoid'),
                               norm=norm)
 
         self.lin = Sequential(*lin)

@@ -48,7 +48,7 @@ class GAT(nn.Module):
         num_heads : list, optional
             the number of attention heads of each hidden layer, by default [8]
         acts : list, optional
-            the activaction function of each hidden layer, by default ['elu']
+            the activation function of each hidden layer, by default ['elu']
         dropout : float, optional
             the dropout ratio of model, by default 0.5
         bias : bool, optional
@@ -81,7 +81,8 @@ class GAT(nn.Module):
                             num_heads=1, bias=bias,
                             feat_drop=dropout,
                             attn_drop=dropout))
-        self.conv = Sequential(*conv, loc=1)  # `loc=1` specifies the location of features.
+        # `loc=1` specifies the location of features.
+        self.conv = Sequential(*conv, loc=1)
 
     def reset_parameters(self):
         self.conv.reset_parameters()

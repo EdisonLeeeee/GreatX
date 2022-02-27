@@ -11,3 +11,4 @@ from .elastic_conv import ElasticConv
 from .adaptive_conv import AdaptiveConv
 from .dagnn_conv import DAGNNConv
 from .appnp_conv import APPNPConv
+from .jumping_knowledge import JumpingKnowledge

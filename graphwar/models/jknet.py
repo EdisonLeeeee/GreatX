@@ -4,7 +4,7 @@ import torch.nn as nn
 import dgl.function as fn
 
 from graphwar.config import Config
-from graphwar.nn import GCNConv, Sequential, activations
+from graphwar.nn import GCNConv, Sequential, activations, JumpingKnowledge
 from graphwar.utils import wrapper
 
 _EDGE_WEIGHT = Config.edge_weight
@@ -44,7 +44,7 @@ class JKNet(nn.Module):
         dropout : float, optional
             the dropout ratio of model, by default 0.5
         mode : str, optional
-            the mode of jumping knowledge, including 'cat', 'lstm', 'max' and 'last',
+            the mode of jumping knowledge, including 'cat', 'lstm', and 'max',
             by default 'cat'
         bias : bool, optional
             whether to use bias in the layers, by default True
@@ -70,7 +70,6 @@ class JKNet(nn.Module):
         """
 
         super().__init__()
-        assert mode in {'cat', 'lstm', 'max', 'last'}
         self.mode = mode
         num_JK_layers = len(list(hids)) - 1  # number of JK layers
 
@@ -97,12 +96,13 @@ class JKNet(nn.Module):
 
         assert len(conv) == num_JK_layers + 1
 
+        if self.mode == 'lstm':
+            self.jump = JumpingKnowledge(mode, hid, num_JK_layers)
+        else:
+            self.jump = JumpingKnowledge(mode)
+
         if self.mode == 'cat':
             hid = hid * (num_JK_layers + 1)
-        elif self.mode == 'lstm':
-            self.lstm = nn.LSTM(hid, (num_JK_layers * hid) //
-                                2, bidirectional=True, batch_first=True)
-            self.attn = nn.Linear(2 * ((num_JK_layers * hid) // 2), 1)
 
         self.mlp = nn.Linear(hid, out_feats)
 
@@ -123,22 +123,8 @@ class JKNet(nn.Module):
             feat = conv(g, feat, edge_weight=edge_weight)
             feat_list.append(feat)
 
-        if self.mode == 'cat':
-            out = torch.cat(feat_list, dim=-1)
-        elif self.mode == 'max':
-            out = torch.stack(feat_list, dim=-1).max(dim=-1)[0]
-        elif self.mode == 'last':
-            out = feat_list[-1]
-        else:
-            # lstm
-            x = torch.stack(feat_list, dim=1)
-            alpha, _ = self.lstm(x)
-            alpha = self.attn(alpha).squeeze(-1)
-            alpha = torch.softmax(alpha, dim=-1).unsqueeze(-1)
-            out = (x * alpha).sum(dim=1)
-
         g = g.local_var()
-        g.ndata['h'] = out
+        g.ndata['h'] = self.jump(feat_list)
         g.update_all(fn.copy_u('h', 'm'), fn.sum('m', 'h'))
 
         return self.mlp(g.ndata['h'])

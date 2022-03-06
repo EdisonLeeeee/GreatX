@@ -1,7 +1,7 @@
 import torch.nn as nn
 
 from graphwar.config import Config
-from graphwar.nn import DimwiseMedianConv, Sequential, SoftKConv, activations
+from graphwar.nn import DimwiseMedianConv, Sequential, activations
 from graphwar.utils import wrapper
 
 _EDGE_WEIGHT = Config.edge_weight
@@ -21,15 +21,6 @@ class ReliableGNN(nn.Module):
     # ReliableGNN with two hidden layers, without activation at the first layer
     >>> model = ReliableGNN(100, 10, hids=[32, 16], acts=[None, 'relu'])
 
-    # ReliableGNN with weighted dimension-wise Median aggregation
-    >>> model = ReliableGNN(100, 10, method="dimmedian")
-
-    # ReliableGNN with Soft Weighted Medoid topk aggregation
-    >>> model = ReliableGNN(100, 10, method="softk")
-
-    # ReliableGNN with Soft Weighted Medoid topk aggregation
-    >>> model = ReliableGNN(100, 10, method="softk", k=64, temperature=0.5)    
-
     Note
     ----
     please make sure `hids` and `acts` are both `list` or `tuple` and
@@ -47,9 +38,8 @@ class ReliableGNN(nn.Module):
                  bias: bool = True,
                  bn: bool = False,
                  norm: str = 'none',
-                 method: str = 'dimmedian',
                  row_normalize: bool = False,
-                 **kwargs):
+                 cached: bool = True):
         r"""
         Parameters
         ----------
@@ -84,20 +74,6 @@ class ReliableGNN(nn.Module):
 
             * ``left``, to divide the messages sent out from each node by its out-degrees,
             equivalent to random walk normalization.   
-
-        method : str, `dimmedian` or `softk` optional
-            the robust aggregation function, by default `dimmedian`.
-            * `dimmedian`: weighted dimension-wise Median aggregation function
-            * `softk`: Soft Weighted Medoid in the top `k` 
-            neighborhood aggregation function
-
-            if method=`softk`, users can specify the `softk` parameters, including:
-                * k : int, optional
-                    Neighborhood size for selecting the top k elements, by default 32.
-                * temperature : float, optional
-                    Controlling the steepness of the softmax, by default 1.0.
-                * with_weight_correction : bool, optional
-                    For enabling an alternative normalisazion (see above), by default True.
         row_normalize : bool, optional
             whether to perform normalization for aggregated features, by default False.
         kwargs : dict, optional
@@ -106,27 +82,15 @@ class ReliableGNN(nn.Module):
 
         super().__init__()
 
-        conv = []
-        assert method in {"dimmedian", "softk"}
-        if method == "dimmedian" and kwargs:
-            raise ValueError(
-                "keyword arguments were not supported for method='dimmedian'.")
-
         assert len(hids) == len(acts)
+        conv = []
 
         for hid, act in zip(hids, acts):
-            if method == "dimmedian":
-                conv.append(DimwiseMedianConv(in_feats,
-                                              hid,
-                                              bias=bias, norm=norm,
-                                              row_normalize=row_normalize,
-                                              activation=None))
-            else:
-                conv.append(SoftKConv(in_feats,
-                                      hid,
-                                      bias=bias, norm=norm,
-                                      row_normalize=row_normalize,
-                                      activation=None, **kwargs))
+            conv.append(DimwiseMedianConv(in_feats,
+                                          hid,
+                                          bias=bias, norm=norm,
+                                          row_normalize=row_normalize,
+                                          activation=None, cached=cached))
 
             if bn:
                 conv.append(nn.BatchNorm1d(hid))
@@ -134,14 +98,9 @@ class ReliableGNN(nn.Module):
             conv.append(nn.Dropout(dropout))
             in_feats = hid
 
-        if method == "dimmedian":
-            conv.append(DimwiseMedianConv(in_feats, out_feats,
-                                          row_normalize=row_normalize,
-                                          bias=bias, norm=norm))
-        else:
-            conv.append(SoftKConv(in_feats, out_feats,
-                                  row_normalize=row_normalize,
-                                  bias=bias, norm=norm, **kwargs))
+        conv.append(DimwiseMedianConv(in_feats, out_feats,
+                                      row_normalize=row_normalize,
+                                      bias=bias, norm=norm, cached=cached))
 
         # `loc=1` specifies the location of features.
         self.conv = Sequential(*conv, loc=1)
@@ -153,3 +112,9 @@ class ReliableGNN(nn.Module):
         if edge_weight is None:
             edge_weight = g.edata.get(_EDGE_WEIGHT, edge_weight)
         return self.conv(g, feat, edge_weight=edge_weight)
+
+    def cache_clear(self):
+        for conv in self.conv:
+            if hasattr(conv, '_cached_edges'):
+                conv._cached_edges = None
+        return self

@@ -2,6 +2,7 @@ import torch
 
 from graphwar import set_seed
 from graphwar.data import GraphWarDataset
+from graphwar.attack.untargeted import FGAttack
 from graphwar.defense.model_level import ReliableGNN
 from graphwar.models import GCN
 from graphwar.training import Trainer
@@ -22,7 +23,8 @@ y_val = g.ndata['label'][splits.val_nodes]
 y_test = g.ndata['label'][splits.test_nodes]
 
 set_seed(42)
-device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+device = torch.device(
+    'cuda') if torch.cuda.is_available() else torch.device('cpu')
 g = g.to(device)
 
 # ================================================================== #
@@ -31,7 +33,8 @@ g = g.to(device)
 model = GCN(num_feats, num_classes)
 trainer = Trainer(model, device=device)
 ckp = ModelCheckpoint('model.pth', monitor='val_accuracy')
-trainer.fit(g, y_train, splits.train_nodes, val_y=y_val, val_index=splits.val_nodes, callbacks=[ckp])
+trainer.fit(g, y_train, splits.train_nodes, val_y=y_val,
+            val_index=splits.val_nodes, callbacks=[ckp])
 logs = trainer.evaluate(g, y_test, splits.test_nodes)
 
 print(f"Before attack\n {logs}")
@@ -39,7 +42,6 @@ print(f"Before attack\n {logs}")
 # ================================================================== #
 #                      Attacking                                     #
 # ================================================================== #
-from graphwar.attack.untargeted import FGAttack
 
 attacker = FGAttack(g, device=device)
 attacker.setup_surrogate(model, splits.train_nodes)
@@ -50,7 +52,6 @@ attacker.attack(0.05)
 #                      After evasion Attack                          #
 # ================================================================== #
 model = ReliableGNN(num_feats, num_classes, norm='none')  # method='dimmedian'
-# model = ReliableGNN(num_feats, num_classes, norm='both', method='softk')
 trainer = Trainer(model, device=device)
 trainer.fit(g, y_train, splits.train_nodes)
 logs = trainer.evaluate(attacker.g(), y_test, splits.test_nodes)
@@ -60,8 +61,7 @@ print(f"After evasion attack\n {logs}")
 # ================================================================== #
 #                      After poisoning Attack                        #
 # ================================================================== #
-model = ReliableGNN(num_feats, num_classes)  # method='dimmedian'
-# model = ReliableGNN(num_feats, num_classes, method='softk')
+model = ReliableGNN(num_feats, num_classes, norm='none')  # method='dimmedian'
 trainer = Trainer(model, device=device)
 trainer.fit(attacker.g(), y_train, splits.train_nodes)
 logs = trainer.evaluate(attacker.g(), y_test, splits.test_nodes)

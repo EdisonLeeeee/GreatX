@@ -4,7 +4,7 @@ import os
 import numpy as np
 import scipy.sparse as sp
 import torch
-from dgl import transform
+# from dgl import transform
 from dgl.convert import graph as dgl_graph
 from dgl.data.dgl_dataset import DGLBuiltinDataset
 from dgl.data.utils import download, load_graphs, save_graphs

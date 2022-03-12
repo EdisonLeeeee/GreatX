@@ -177,7 +177,8 @@ def tensor_normalize(adj_matrix: Tensor, norm: str = 'both'):
 
 
 def dgl_normalize(g: dgl.DGLGraph, norm: str = 'both', edge_weight=None):
-    e_norm = torch.ones(g.num_edges(), device=g.device) if edge_weight is None else edge_weight
+    e_norm = torch.ones(
+        g.num_edges(), device=g.device) if edge_weight is None else edge_weight
 
     if norm == 'none':
         return e_norm
@@ -187,7 +188,8 @@ def dgl_normalize(g: dgl.DGLGraph, norm: str = 'both', edge_weight=None):
         dst_degrees = g.out_degrees().clamp(min=1)
     else:
         # a weighted graph
-        src_degrees = dst_degrees = ops.copy_e_sum(g, edge_weight)
+        src_degrees = ops.copy_e_sum(g, edge_weight)
+        dst_degrees = ops.copy_e_sum(dgl.reverse(g), edge_weight)
     if norm == 'left':
         # A * D^-1
         norm_src = 1.0 / src_degrees

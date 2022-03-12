@@ -22,7 +22,8 @@ class JaccardPurification(torch.nn.Module):
         if feat is None:
             feat = g.ndata.get(_FEATURE, None)
             if feat is None:
-                raise ValueError(f"The node feature matrix is not spefified, please add argument `feat` during forward or specify `g.ndata['{_FEATURE}']=feat`")
+                raise ValueError(
+                    f"The node feature matrix is not spefified, please add argument `feat` during forward or specify `g.ndata['{_FEATURE}']=feat`")
         row, col = g.edges()
         A = feat[row]
         B = feat[col]
@@ -32,7 +33,8 @@ class JaccardPurification(torch.nn.Module):
         if self.allow_singleton:
             condition = score <= self.threshold
         else:
-            condition = torch.logical_and(score <= self.threshold, deg[col] > 1)
+            condition = torch.logical_and(
+                score <= self.threshold, deg[col] > 1)
 
         e_id = torch.where(condition)[0]
         g.remove_edges(e_id)
@@ -57,7 +59,8 @@ class CosinePurification(torch.nn.Module):
         if feat is None:
             feat = g.ndata.get(_FEATURE, None)
             if feat is None:
-                raise ValueError(f"The node feature matrix is not spefified, please add argument `feat` during forward or specify `g.ndata['{_FEATURE}']=feat`")
+                raise ValueError(
+                    f"The node feature matrix is not spefified, please add argument `feat` during forward or specify `g.ndata['{_FEATURE}']=feat`")
 
         row, col = g.edges()
         A = feat[row]
@@ -69,7 +72,8 @@ class CosinePurification(torch.nn.Module):
         if self.allow_singleton:
             condition = score <= self.threshold
         else:
-            condition = torch.logical_and(score <= self.threshold, deg[col] > 1)
+            condition = torch.logical_and(
+                score <= self.threshold, deg[col] > 1)
 
         e_id = torch.where(condition)[0]
         g.remove_edges(e_id)
@@ -99,7 +103,8 @@ class SVDPurification(torch.nn.Module):
 
         row, col = adj_matrix.nonzero()
 
-        defense_g = dgl.graph((row, col), device=device, num_nodes=g.num_nodes())
+        defense_g = dgl.graph((row, col), device=device,
+                              num_nodes=g.num_nodes())
         defense_g.ndata.update(g.ndata)
         defense_g.edata.update(g.edata)
 
@@ -112,7 +117,8 @@ class SVDPurification(torch.nn.Module):
 
 def jaccard_similarity(A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:
     intersection = torch.count_nonzero(A * B, axis=1)
-    J = intersection * 1.0 / (torch.count_nonzero(A, dim=1) + torch.count_nonzero(B, dim=1) + intersection + 1e-7)
+    J = intersection * 1.0 / (torch.count_nonzero(A, dim=1) +
+                              torch.count_nonzero(B, dim=1) - intersection + 1e-7)
     return J
 
 

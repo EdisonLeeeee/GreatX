@@ -1,6 +1,7 @@
 import dgl
 import scipy.sparse as sp
 import torch
+import torch.nn.functional as F
 
 from graphwar import Config
 
@@ -23,7 +24,7 @@ class JaccardPurification(torch.nn.Module):
             feat = g.ndata.get(_FEATURE, None)
             if feat is None:
                 raise ValueError(
-                    f"The node feature matrix is not spefified, please add argument `feat` during forward or specify `g.ndata['{_FEATURE}']=feat`")
+                    f"The node feature matrix is not specified, please add argument '{_FEATURE}' during forward or specify `g.ndata['{_FEATURE}']=feat`")
         row, col = g.edges()
         A = feat[row]
         B = feat[col]
@@ -60,12 +61,12 @@ class CosinePurification(torch.nn.Module):
             feat = g.ndata.get(_FEATURE, None)
             if feat is None:
                 raise ValueError(
-                    f"The node feature matrix is not spefified, please add argument `feat` during forward or specify `g.ndata['{_FEATURE}']=feat`")
+                    f"The node feature matrix is not specified, please add argument '{_FEATURE}' during forward or specify `g.ndata['{_FEATURE}']=feat`")
 
         row, col = g.edges()
         A = feat[row]
         B = feat[col]
-        score = cosine_similarity(A, B)
+        score = F.cosine_similarity(A, B)
 
         deg = g.in_degrees()
 
@@ -87,19 +88,19 @@ class CosinePurification(torch.nn.Module):
 
 class SVDPurification(torch.nn.Module):
 
-    def __init__(self, k: int = 50, threshold: float = 0.01, binarize: bool = False):
+    def __init__(self, k: int = 50, threshold: float = 0.01, binaryzation: bool = False):
         # TODO: add percentage purification
         super().__init__()
         self.k = k
         self.threshold = threshold
-        self.binarize = binarize
+        self.binaryzation = binaryzation
 
     def forward(self, g):
         device = g.device
         adj_matrix = g.adjacency_matrix(scipy_fmt='csr')
         adj_matrix = svd(adj_matrix, k=self.k,
                          threshold=self.threshold,
-                         binarize=self.binarize)
+                         binaryzation=self.binaryzation)
 
         row, col = adj_matrix.nonzero()
 
@@ -108,7 +109,7 @@ class SVDPurification(torch.nn.Module):
         defense_g.ndata.update(g.ndata)
         defense_g.edata.update(g.edata)
 
-        if not self.binarize:
+        if not self.binaryzation:
             defense_g.edata[_EDGE_WEIGHT] = torch.as_tensor(adj_matrix.data,
                                                             device=device, dtype=torch.float32)
 
@@ -122,14 +123,14 @@ def jaccard_similarity(A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:
     return J
 
 
-def cosine_similarity(A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:
-    inner_product = (A * B).sum(1)
-    C = inner_product / (torch.norm(A, 2, 1) * torch.norm(B, 2, 1) + 1e-7)
-    return C
+# def cosine_similarity(A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:
+#     inner_product = (A * B).sum(1)
+#     C = inner_product / (torch.norm(A, 2, 1) * torch.norm(B, 2, 1) + 1e-7)
+#     return C
 
 
 def svd(adj_matrix: sp.csr_matrix, k=50,
-        threshold=0.01, binarize=False) -> sp.csr_matrix:
+        threshold=0.01, binaryzation=False) -> sp.csr_matrix:
 
     adj_matrix = adj_matrix.asfptype()
 
@@ -142,7 +143,7 @@ def svd(adj_matrix: sp.csr_matrix, k=50,
 
     adj_matrix = sp.csr_matrix(adj_matrix)
 
-    if binarize:
+    if binaryzation:
         # TODO
         adj_matrix.data[adj_matrix.data > 0] = 1.0
 

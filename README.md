@@ -1,7 +1,6 @@
 # ⚔🛡 GraphWar: Arms Race in *Graph Adversarial Learning*
 
-The robustness of graph neural networks (GNNs) against adversarial attacks has gained increasing attention in last few years. While
-there are numerous (heuristic) approaches aimed at robustifying GNNs, there is always a newly devised stronger attack attempts to break them, leading to an arms race between attackers and defenders. To this end, GraphWar aims to provide easy implementations with unified interfaces to facilitate the research in Graph Adversarial Learning.
+The robustness of graph neural networks (GNNs) against adversarial attacks has gained increasing attention in last few years. While there are numerous (heuristic) approaches aimed at robustifying GNNs, there is always a newly devised stronger attack attempts to break them, leading to an arms race between attackers and defenders. To this end, GraphWar aims to provide easy implementations with unified interfaces to facilitate the research in Graph Adversarial Learning.
 
 ---
 
@@ -129,6 +128,9 @@ In detail, the following methods are currently implemented:
 | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | **JaccardPurification** | *Wu et al.* [📝Adversarial Examples on Graph Data: Deep Insights into Attack and Defense](https://arxiv.org/abs/1903.01610), *IJCAI'19*        |
 | **SVDPurification**     | *Entezari et al.* [📝All You Need Is Low (Rank): Defending Against Adversarial Attacks on Graphs](https://arxiv.org/abs/1903.01610), *WSDM'20* |
+| **GNNGUARD**            | *Zhang et al.* [📝GNNGUARD: Defending Graph Neural Networks against Adversarial Attacks](https://arxiv.org/abs/2006.08149), *NeurIPS'20*       |
+| **GUARD**               | *Li et al.* [📝GUARD: Graph Universal Adversarial Defense](https://arxiv.org/abs/2204.09803), *arXiv'22*                                       |
 
+# Issues
 
 More details of literatures and the official codes can be found at [Awesome Graph Adversarial Learning](https://github.com/gitgiter/Graph-Adversarial-Learning).

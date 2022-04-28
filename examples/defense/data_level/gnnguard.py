@@ -3,7 +3,7 @@ import torch
 
 from graphwar import set_seed
 from graphwar.data import GraphWarDataset
-from graphwar.defense.data_level import JaccardPurification
+from graphwar.defense.model_level import GCNGUARD
 from graphwar.models import GCN
 from graphwar.training import Trainer
 from graphwar.training.callbacks import ModelCheckpoint
@@ -48,21 +48,8 @@ attacker.setup_surrogate(model, splits.train_nodes)
 attacker.reset()
 attacker.attack(0.1)
 
-# ============ Jaccard Defense =============================================
-defense_g = JaccardPurification(0.01)(attacker.g())
-
 # ================================================================== #
-#                      After evasion Attack                          #
-# ================================================================== #==
-logs = trainer.evaluate(attacker.g(), y_test, splits.test_nodes)
-print(f"After evasion attack\n {logs}")
-
-# ============ After evasion Attack (with Jaccard) =========================
-logs = trainer.evaluate(defense_g, y_test, splits.test_nodes)
-print(f"After evasion attack with Jaccard\n {logs}")
-
-# ================================================================== #
-#                      After poisoning Attack                        #
+#          Vanilla GCN After poisoning Attack                        #
 # ================================================================== #
 model = GCN(num_feats, num_classes)
 trainer = Trainer(model, device=device)
@@ -70,9 +57,11 @@ trainer.fit(attacker.g(), y_train, splits.train_nodes)
 logs = trainer.evaluate(attacker.g(), y_test, splits.test_nodes)
 print(f"After poisoning attack\n {logs}")
 
-# ============ After poisoning Attack (with Jaccard) ======================
-model = GCN(num_feats, num_classes)
+# ================================================================== #
+#          GCN + GNNGUARD After poisoning Attack                        #
+# ================================================================== #
+model = GCNGUARD(num_feats, num_classes)
 trainer = Trainer(model, device=device)
-trainer.fit(defense_g, y_train, splits.train_nodes)
-logs = trainer.evaluate(defense_g, y_test, splits.test_nodes)
-print(f"After poisoning attack with Jaccard\n {logs}")
+trainer.fit(attacker.g(), y_train, splits.train_nodes)
+logs = trainer.evaluate(g, y_test, splits.test_nodes)
+print(f"After poisoning attack with GNNGUARD\n {logs}")

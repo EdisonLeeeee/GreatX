@@ -185,6 +185,7 @@ class GCNConv(nn.Module):
         """
         summary = 'in={_in_feats}, out={_out_feats}'
         summary += ', normalization={_norm}'
+        summary += ', add_self_loop={_add_self_loop}'
         if '_activation' in self.__dict__:
             summary += ', activation={_activation}'
         return summary.format(**self.__dict__)

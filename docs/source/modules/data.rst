@@ -4,6 +4,7 @@ graphwar.data
 .. currentmodule:: graphwar.data
 
 .. autosummary::
+    :toctree: _autosummary
     :nosignatures:
     {% for cls in graphwar.data.classes %}
       {{ cls }}

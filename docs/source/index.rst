@@ -16,7 +16,7 @@ Package API
 ===========
 .. toctree::
    :glob:
-   :maxdepth: 1
+   :maxdepth: 4
    :caption: Package Reference
    
    modules/data

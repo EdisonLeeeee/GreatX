@@ -1,8 +1,8 @@
 graphwar.attack
 ===================
 
-Base Class
----------------------------------------
+Base Classes
+------------------------------------------------
 .. currentmodule:: graphwar.attack
 
 .. autosummary::
@@ -18,8 +18,25 @@ Base Class
     :exclude-members: extra_repr
 
 
+Backdoor Attacks
+------------------------------------------------
+.. currentmodule:: graphwar.attack.backdoor
+
+.. autosummary::
+    :toctree: _autosummary
+    :nosignatures:
+    {% for cls in graphwar.attack.backdoor.classes %}
+      {{ cls }}
+    {% endfor %}
+
+.. automodule:: graphwar.attack.backdoor
+    :members:
+    :undoc-members:
+    :exclude-members: extra_repr
+
+
 Targeted Attacks
----------------------------------------
+------------------------------------------------
 .. currentmodule:: graphwar.attack.targeted
 
 .. autosummary::
@@ -30,6 +47,23 @@ Targeted Attacks
     {% endfor %}
 
 .. automodule:: graphwar.attack.targeted
+    :members:
+    :undoc-members:
+    :exclude-members: extra_repr
+
+
+Untargeted Attacks
+------------------------------------------------
+.. currentmodule:: graphwar.attack.untargeted
+
+.. autosummary::
+    :toctree: _autosummary
+    :nosignatures:
+    {% for cls in graphwar.attack.untargeted.classes %}
+      {{ cls }}
+    {% endfor %}
+
+.. automodule:: graphwar.attack.untargeted
     :members:
     :undoc-members:
     :exclude-members: extra_repr

@@ -39,13 +39,13 @@ intersphinx_mapping = {'python': ('https://docs.python.org/', None)}
 html_theme_options = {
     'collapse_navigation': False,
     'display_version': True,
-    'logo_only': True,
-    'navigation_depth': 2,
+    'logo_only': False,
+    'navigation_depth': 4,
 }
 
 html_logo = '../../imgs/graphwar.svg'
 html_static_path = ['_static']
-html_context = {'css_files': ['_static/css/custom.css']}
+# html_context = {'css_files': ['_static/css/custom.css']}
 rst_context = {'graphwar': graphwar}
 
 add_module_names = False

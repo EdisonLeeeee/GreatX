@@ -14,12 +14,14 @@ _LABEL = Config.label
 
 
 class Attacker(torch.nn.Module):
-    """Adversarial attacker for graph data.
-    For example, the attacker model should be defined as follows:
+    """Adversarial attacker for graph data. Note that this is an abstract class.
 
-    >>> attacker = Attacker(graph, device='cuda')
-    >>> attacker.reset() # reset states
-    >>> attacker.attack(attack_arguments)
+    Examples:
+        For example, the attacker model should be defined as follows:
+
+        >>> attacker = Attacker(graph, device='cuda')
+        >>> attacker.reset() # reset states
+        >>> attacker.attack(attack_arguments)
 
     """
     _max_perturbations: Union[float, int] = 0
@@ -31,33 +33,31 @@ class Attacker(torch.nn.Module):
                  seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
         f"""Initialization of an attacker model.
 
-        Parameters
-        ----------
-        graph : dgl.DGLGraph
-            the DGL graph. If the attack requires node features,
+        Args:
+            graph (dgl.DGLGraph): 
+                the DGL graph. If the attack requires node features,
+                `graph.ndata[{_FEATURE}]` should be specified. 
+                If the attack requires node labels, 
+                `graph.ndata[{_LABEL}]` should be specified
+            device (str, optional):
+                the device of the attack running on, by default "cpu"
+            seed (Optional[int], optional): 
+                the random seed of reproduce the attack, by default None
+            name (Optional[str], optional): 
+                name of the attacker, if None, it would be `__class__.__name__`, 
+                by default None
+            kwargs (optional): 
+                additional arguments of :class:`graphwar.attack.Attacker`,
+                including (`{_FEATURE}`, `{_LABEL}`) to specify the node features 
+                and the node labels, if they are not in `graph.ndata`
+
+        Notes:
+            * If the attack requires node features,
             `graph.ndata[{_FEATURE}]` should be specified. 
-            If the attack requires node labels, 
-            `graph.ndata[{_LABEL}]` should be specified
-        device : str, optional
-            the device of the attack running on, by default "cpu"
-        seed : Optional[int], optional
-            the random seed of reproduce the attack, by default None
-        name : Optional[str], optional
-            name of the attacker, if None, it would be `__class__.__name__`, 
-            by default None
-        kwargs : optional
-            additional arguments of :class:`graphwar.attack.Attacker`,
-            including (`{_FEATURE}`, `{_LABEL}`) to specify the node features 
-            and the node labels, if they are not in `graph.ndata`
 
+            * If the attack requires node labels, 
+            `graph.ndata[{_LABEL}]` should be specified.
 
-        Note
-        ----
-        * If the attack requires node features,
-        `graph.ndata[{_FEATURE}]` should be specified. 
-
-        * If the attack requires node labels, 
-        `graph.ndata[{_LABEL}]` should be specified.
         """
         super().__init__()
         feat = kwargs.pop(_FEATURE, None)
@@ -103,27 +103,27 @@ class Attacker(torch.nn.Module):
         self.is_reseted = False
 
     def reset(self):
+        """Reset attacker state. 
+        Override this method in subclass to implement specific function."""
         self.is_reseted = True
         return self
 
     def g(self):
+        """Get the attacked graph. 
+
+        Raises:
+            NotImplementedError: The subclass does not implement this interface.
+        """
         raise NotImplementedError
-
-    @property
-    def feat(self):
-        return getattr(self, '_' + _FEATURE, None)
-
-    @property
-    def label(self):
-        return getattr(self, '_' + _LABEL, None)
-
-    @property
-    def graph(self):
-        return self._graph
 
     @abc.abstractmethod
     def attack(self) -> "Attacker":
-        """defined for attacker model."""
+        """Abstract method. 
+        The subclass must override this method to implement specific attack for itself.
+        
+        Raises:
+            NotImplementedError: The subclass does not implement this interface.
+        """
         raise NotImplementedError
 
     def _check_budget(self, num_budgets: Union[float, int],
@@ -150,6 +150,12 @@ class Attacker(torch.nn.Module):
 
     def set_max_perturbations(self, max_perturbations: Union[float, int] = np.inf,
                               verbose: bool = True):
+        """Set the maximum allowable perturbation size for the attacker.
+
+        Args:
+            max_perturbations (float or int): the maximum allowable perturbation size. Default: `np.inf`.
+            verbose (bool): Whether to print information about this method. Default: `True`.
+        """
         assert isinstance(max_perturbations, Number), max_perturbations
         self._max_perturbations = max_perturbations
         if verbose:
@@ -157,7 +163,23 @@ class Attacker(torch.nn.Module):
 
     @property
     def max_perturbations(self) -> Union[float, int]:
+        """float or int: Maximum allowable perturbation size."""
         return self._max_perturbations
+
+    @property
+    def graph(self):
+        """dgl.DGLGraph: The attacked graph."""
+        return self._graph
+
+    @property
+    def feat(self):
+        """Node features of the attacked graph."""
+        return getattr(self, '_' + _FEATURE, None)
+
+    @property
+    def label(self):
+        """Node labels of the attacked graph."""
+        return getattr(self, '_' + _LABEL, None)
 
     def _check_feature_matrix_exists(self):
         if self.feat is None:

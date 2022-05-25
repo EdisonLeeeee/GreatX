@@ -7,3 +7,6 @@ from .random_attack import RandomAttack
 from .sg_attack import SGAttack
 from .sg_attack_large import SGAttackLarge
 from .targeted_attacker import TargetedAttacker
+
+classes = __all__ = ['DICEAttack', 'FGAttack', 'GFAttack', 'IGAttack', 'Nettack', 
+                    'RandomAttack', 'SGAttack', 'SGAttackLarge', 'TargetedAttacker']

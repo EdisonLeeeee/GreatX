@@ -1,7 +1,7 @@
 import random
 from typing import Optional
 
-import dgl
+from torch_geometric.data import Data
 
 from graphwar.attack.targeted.random_attack import RandomAttack
 
@@ -13,16 +13,11 @@ class DICEAttack(RandomAttack):
     with high correlations and connecting edges with low correlations.
 
     Reference
-    --------
+    ---------
     [1] M. Waniek, T. P. Michalak, M. J. Wooldridge, and T. Rahwan, 
-    “Hiding individuals and communities in a social network,” 
+    “Hidding individuals and communities in a social network,” 
     Nature Human Behaviour, vol. 2, no. 2, pp. 139–147, 2018.
     """
-
-    def __init__(self, graph: dgl.DGLGraph,
-                 device: str = "cpu", seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
-        super().__init__(graph=graph, device=device, seed=seed, name=name, **kwargs)
-        self._check_node_label_exists()
 
     def get_added_edge(self, influence_nodes: list) -> Optional[tuple]:
         u = random.choice(influence_nodes)

@@ -2,16 +2,23 @@ import warnings
 from functools import lru_cache
 from typing import Optional
 
-import dgl
 import numpy as np
 import scipy.sparse as sp
 from numba import njit
 from tqdm import tqdm
+from torch_geometric.data import Data
 
 from graphwar import Surrogater
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
-from graphwar.functional import add_self_loop, normalize
 from graphwar.utils import singleton_filter
+
+def scipy_normalize(adj_matrix: sp.csr_matrix, add_self_loops: bool = True):
+    adj_matrix = adj_matrix + sp.eye(adj_matrix.shape[0], 
+                                     dtype=adj_matrix.dtype, format='csr')
+    degree = np.maximum(adj_matrix.sum(1).A1, 1)
+    norm = sp.diags(np.power(degree, -0.5))
+    adj_matrix = norm @ adj_matrix @ norm
+    return adj_matrix
 
 
 class Nettack(TargetedAttacker, Surrogater):
@@ -20,14 +27,13 @@ class Nettack(TargetedAttacker, Surrogater):
     by Daniel Zügner, Amir Akbarnejad and Stephan Günnemann,
     published at SIGKDD'18, August 2018, London, UK
     """
-    # nettack can conduct feature attack
+    # Nettack can conduct feature attack
     _allow_feature_attack = True
     _allow_singleton: bool = False
 
-    def __init__(self, graph: dgl.DGLGraph, device: str = "cpu",
+    def __init__(self, data: Data, device: str = "cpu",
                  seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
-        super().__init__(graph=graph, device=device, seed=seed, name=name, **kwargs)
-        self._check_feature_matrix_exists()
+        super().__init__(data=data, device=device, seed=seed, name=name, **kwargs)
         feat = self.feat
         self.scipy_feat = sp.csr_matrix(feat.cpu().numpy())
         self.cooc_matrix = sp.csr_matrix((feat.t() @ feat).cpu().numpy())
@@ -38,15 +44,15 @@ class Nettack(TargetedAttacker, Surrogater):
         for para in self.surrogate.parameters():
             if para.ndim == 1:
                 warnings.warn(f"The surrogate model has `bias` term, which is ignored and the "
-                              "model itself may not be a perfect choice for Nettack.")
+                              f"model itself may not be a perfect choice for {self.name}.")
                 continue
             if W is None:
                 W = para
             else:
-                W = W @ para
+                W = para @ W
                 
         assert W is not None
-        self.W = W.cpu().numpy()
+        self.W = W.t().cpu().numpy()
         self.num_classes = self.W.shape[-1]
         return self
 
@@ -54,7 +60,7 @@ class Nettack(TargetedAttacker, Surrogater):
         super().reset()
         self.modified_adj = self.adjacency_matrix.copy()
         self.modified_feat = self.scipy_feat.copy()
-        self.adj_norm = normalize(add_self_loop(self.modified_adj))
+        self.adj_norm = scipy_normalize(self.modified_adj)
         self.cooc_constraint = None
         return self
 
@@ -182,7 +188,6 @@ class Nettack(TargetedAttacker, Surrogater):
         # Ignore warnings:
         #     NumbaPendingDeprecationWarning:
         # Encountered the use of a type that is scheduled for deprecation: type 'reflected set' found for argument 'edges_set' of function 'compute_new_a_hat_uv'.
-
         # For more information please refer to http://numba.pydata.org/numba-doc/latest/reference/deprecation.html#deprecation-of-reflection-for-list-and-set-types
         with warnings.catch_warnings(record=True):
             warnings.filterwarnings(
@@ -203,7 +208,7 @@ class Nettack(TargetedAttacker, Surrogater):
         # Potential edges are all edges from any attacker to any other node, except the respective
         # attacker itself or the node being attacked.
         target = self.target
-        N = self.graph.num_nodes()
+        N = self.num_nodes
         nodes_set = set(range(N)) - set([target])
 
         if self.direct_attack:
@@ -294,7 +299,7 @@ class Nettack(TargetedAttacker, Surrogater):
                 modified_adj = self.modified_adj.tolil(copy=False)
                 modified_adj[(u, v)] = modified_adj[(v, u)] = 1 - modified_adj[(u, v)]
                 self.modified_adj = modified_adj.tocsr(copy=False)
-                self.adj_norm = normalize(add_self_loop(self.modified_adj))
+                self.adj_norm = scipy_normalize(self.modified_adj)
                 if edge_weight > 0:
                     self.remove_edge(u, v, it)
                 else:

@@ -22,7 +22,6 @@ Package API
    modules/data
    modules/attack
    modules/utils
-   modules/metrics
    
 
 Indices and Tables

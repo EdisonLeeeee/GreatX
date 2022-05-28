@@ -1,30 +1,32 @@
 from typing import Optional
 
-import dgl
-import numpy as np
 import torch
-from torch.autograd import grad
+import numpy as np
+import torch.nn.functional as F
 from tqdm import tqdm
+from torch.autograd import grad
+from torch_geometric.data import Data
 
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 from graphwar.surrogater import Surrogater
-from graphwar.functional import normalize
 from graphwar.utils import singleton_filter
+from graphwar.functional import to_dense_adj
 
 
 class IGAttack(TargetedAttacker, Surrogater):
     # IGAttack can conduct feature attack
-    _allow_feature_attack = True
+    _allow_feature_attack: bool = True
 
-    def __init__(self, graph: dgl.DGLGraph, device: str = "cpu",
+    def __init__(self, data: Data, device: str = "cpu",
                  seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
-        super().__init__(graph=graph, device=device, seed=seed, name=name, **kwargs)
-        self._check_feature_matrix_exists()
+        super().__init__(data=data, device=device, seed=seed, name=name, **kwargs)
+
         num_nodes, num_feats = self.num_nodes, self.num_feats
         self.nodes_set = set(range(num_nodes))
         self.feats_list = list(range(num_feats))
-        self.adj = self.graph.add_self_loop().adjacency_matrix().to_dense().to(self.device)
-        self.adj_norm = normalize(self.adj)
+        self.adj = to_dense_adj(self.edge_index,
+                                self.edge_weight,
+                                num_nodes=self.num_nodes).to(self.device)
 
     def attack(self,
                target, *,
@@ -47,15 +49,18 @@ class IGAttack(TargetedAttacker, Surrogater):
             assert self.target_label is not None, "please specify argument `target_label` as the node label does not exist."
             target_label = self.target_label.view(-1)
         else:
-            target_label = torch.as_tensor(target_label, device=self.device, dtype=torch.long).view(-1)
+            target_label = torch.as_tensor(
+                target_label, device=self.device, dtype=torch.long).view(-1)
 
         if structure_attack:
             candidate_edges = self.get_candidate_edges()
-            link_importance, edge_indicator = self.get_link_importance(candidate_edges, steps, target, target_label, disable=disable)
+            link_importance, edge_indicator = self.get_link_importance(
+                candidate_edges, steps, target, target_label, disable=disable)
 
         if feature_attack:
             candidate_feats = self.get_candidate_features()
-            feature_importance, feat_indicator = self.get_feature_importance(candidate_feats, steps, target, target_label, disable=disable)
+            feature_importance, feat_indicator = self.get_feature_importance(
+                candidate_feats, steps, target, target_label, disable=disable)
 
         if structure_attack and not feature_attack:
             indices = torch.topk(link_importance, k=self.num_budgets).indices
@@ -69,7 +74,8 @@ class IGAttack(TargetedAttacker, Surrogater):
                 self.remove_edge(u, v)
 
         elif feature_attack and not structure_attack:
-            indices = torch.topk(feature_importance, k=self.num_budgets).indices
+            indices = torch.topk(feature_importance,
+                                 k=self.num_budgets).indices
             feat_indicator = feat_indicator[indices]
             feature_selected = candidate_feats[indices]
 
@@ -120,13 +126,15 @@ class IGAttack(TargetedAttacker, Surrogater):
         else:
             influencers = self.adjacency_matrix[target].indices
             row = np.repeat(influencers, N - 2)
-            col = np.hstack([list(nodes_set - set([infl])) for infl in influencers])
+            col = np.hstack([list(nodes_set - set([infl]))
+                            for infl in influencers])
 
         candidate_edges = np.stack([row, col], axis=1)
         if not self._allow_singleton:
             candidate_edges = singleton_filter(candidate_edges,
                                                self.adjacency_matrix)
-        candidate_edges = torch.as_tensor(candidate_edges, dtype=torch.long, device=self.device)
+        candidate_edges = torch.as_tensor(
+            candidate_edges, dtype=torch.long, device=self.device)
         return candidate_edges
 
     def get_candidate_features(self):
@@ -144,7 +152,8 @@ class IGAttack(TargetedAttacker, Surrogater):
                 for infl in influencers
             ])
 
-        candidate_feats = torch.as_tensor(candidate_feats, dtype=torch.long, device=self.device)
+        candidate_feats = torch.as_tensor(
+            candidate_feats, dtype=torch.long, device=self.device)
         return candidate_feats
 
     def get_link_importance(self, candidates, steps, target, target_label, disable=False):
@@ -177,7 +186,8 @@ class IGAttack(TargetedAttacker, Surrogater):
             adj_step = baseline_remove + alpha * adj_diff
             adj_step.requires_grad_()
 
-            gradients = self._compute_structure_gradients(adj_step, feat, target, target_label)
+            gradients = self.compute_structure_gradients(
+                feat, adj_step, target, target_label)
             edge_gradients += gradients[edges[:, 0], edges[:, 1]]
 
             ###### Compute integrated gradients for adding edges ######
@@ -185,7 +195,8 @@ class IGAttack(TargetedAttacker, Surrogater):
             adj_step = baseline_add - alpha * adj_diff
             adj_step.requires_grad_()
 
-            gradients = self._compute_structure_gradients(adj_step, feat, target, target_label)
+            gradients = self.compute_structure_gradients(
+                feat, adj_step, target, target_label)
             non_edge_gradients += gradients[non_edges[:, 0], non_edges[:, 1]]
 
         integrated_grads = adj.new_zeros(edge_indicator.size(0))
@@ -196,7 +207,7 @@ class IGAttack(TargetedAttacker, Surrogater):
 
     def get_feature_importance(self, candidates, steps, target, target_label, disable=False):
 
-        adj = self.adj_norm
+        adj = self.adj
         feat = self.feat
         mask = (candidates[:, 0], candidates[:, 1])
 
@@ -220,7 +231,8 @@ class IGAttack(TargetedAttacker, Surrogater):
             feat_step = baseline_remove + alpha * feat_diff
             feat_step.requires_grad_()
 
-            gradients = self._compute_feature_gradients(adj, feat_step, target, target_label)
+            gradients = self.compute_feature_gradients(
+                feat_step, adj, target, target_label)
             feat_gradients += gradients[features[:, 0], features[:, 1]]
 
             ###### Compute integrated gradients for adding features ######
@@ -228,8 +240,9 @@ class IGAttack(TargetedAttacker, Surrogater):
             feat_step = baseline_add - alpha * feat_diff
             feat_step.requires_grad_()
 
-            gradients = self._compute_feature_gradients(adj, feat_step, target, target_label)
-            non_feat_gradients += gradients[non_features[:, 0], non_features[:, 1]]
+            gradients = self.compute_feature_gradients(
+                feat_step, adj, target, target_label)
+            non_feat_gradients += gradients[non_features[:,0], non_features[:, 1]]
 
         integrated_grads = feat.new_zeros(feat_indicator.size(0))
         integrated_grads[feat_indicator] = feat_gradients
@@ -237,15 +250,14 @@ class IGAttack(TargetedAttacker, Surrogater):
 
         return integrated_grads, feat_indicator
 
-    def _compute_structure_gradients(self, adj_step, feat, target, target_label):
+    def compute_structure_gradients(self, feat, adj_step, target, target_label):
 
-        adj_norm = normalize(adj_step)
-        logit = self.surrogate(adj_norm, feat)[target].view(1, -1) / self.eps
-        loss = self.loss_fn(logit, target_label)
+        logit = self.surrogate(feat, adj_step)[target].view(1, -1) / self.eps
+        loss = F.cross_entropy(logit, target_label)
         return grad(loss, adj_step, create_graph=False)[0]
 
-    def _compute_feature_gradients(self, adj_norm, feat_step, target, target_label):
+    def compute_feature_gradients(self, feat_step, adj, target, target_label):
 
-        logit = self.surrogate(adj_norm, feat_step)[target].view(1, -1) / self.eps
-        loss = self.loss_fn(logit, target_label)
+        logit = self.surrogate(feat_step, adj)[target].view(1, -1) / self.eps
+        loss = F.cross_entropy(logit, target_label)
         return grad(loss, feat_step, create_graph=False)[0]

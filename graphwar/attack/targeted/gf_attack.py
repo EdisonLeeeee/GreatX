@@ -1,12 +1,12 @@
 from typing import Optional
 
-import dgl
 import numpy as np
 import scipy.sparse as sp
 import torch
 from scipy import linalg
 from torch import Tensor
 from tqdm import tqdm
+from torch_geometric.data import Data
 
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 from graphwar.utils import singleton_filter
@@ -14,14 +14,14 @@ from graphwar.utils import singleton_filter
 
 class GFAttack(TargetedAttacker):
 
-    def __init__(self, graph: dgl.DGLGraph, K: int = 2, T: int = 128, device: str = "cpu",
+    def __init__(self, data: Data, K: int = 2, T: int = 128, device: str = "cpu",
                  seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
         """Initialization of GFAttack.
 
         Parameters
         ----------
-        graph : dgl.DGLGraph
-            the DGL graph
+        data : Data
+            the PyG data
         K : int, optional
             the order of graph filter, by default 2
         T : int, optional
@@ -32,23 +32,25 @@ class GFAttack(TargetedAttacker):
             the random seed of reproduce the attack, by default None
         name : Optional[str], optional
             name of the attacker, if None, it would be `__class__.__name__`, by default None
-            
+
         NOTE
         ----
         T=128 for citeseer and pubmed, T=num_nodes//2 for cora to reproduce results in paper.
         """
-        super().__init__(graph=graph, device=device, seed=seed, name=name, **kwargs)
-        self._check_feature_matrix_exists()
+        super().__init__(data=data, device=device, seed=seed, name=name, **kwargs)
 
         adj = self.adjacency_matrix
         adj = adj + sp.eye(adj.shape[0], format='csr')
         deg = np.diag(adj.sum(1).A1)
         eig_vals, eig_vec = linalg.eigh(adj.A, deg)
-        self.eig_vals = torch.as_tensor(eig_vals, device=self.device, dtype=torch.float32)
-        self.eig_vec = torch.as_tensor(eig_vec, device=self.device, dtype=torch.float32)
+        self.eig_vals = torch.as_tensor(
+            eig_vals, device=self.device, dtype=torch.float32)
+        self.eig_vec = torch.as_tensor(
+            eig_vec, device=self.device, dtype=torch.float32)
 
         feat = self.feat
-        self.x_mean = feat.sum(1)  # the author named this as `x_mean`, I don't understand why not `x_sum`
+        # the author named this as `x_mean`, I don't understand why not `x_sum`
+        self.x_mean = feat.sum(1)
 
         self.K = K
         self.T = T
@@ -66,7 +68,8 @@ class GFAttack(TargetedAttacker):
         else:
             influencers = self.adjacency_matrix[target].indices
             row = np.repeat(influencers, N - 2)
-            col = np.hstack([list(nodes_set - set([infl])) for infl in influencers])
+            col = np.hstack([list(nodes_set - set([infl]))
+                            for infl in influencers])
         candidate_edges = np.stack([row, col], axis=1)
 
         if not self._allow_singleton:
@@ -91,14 +94,14 @@ class GFAttack(TargetedAttacker):
 
         candidate_edges = self.get_candidate_edges()
 
-        score = self._structure_score(self.adjacency_matrix,
-                                      self.x_mean,
-                                      self.eig_vals,
-                                      self.eig_vec,
-                                      candidate_edges,
-                                      K=self.K,
-                                      T=self.T,
-                                      method="nosum")
+        score = self.structure_score(self.adjacency_matrix,
+                                     self.x_mean,
+                                     self.eig_vals,
+                                     self.eig_vec,
+                                     candidate_edges,
+                                     K=self.K,
+                                     T=self.T,
+                                     method="nosum")
 
         topk = torch.topk(score, k=self.num_budgets).indices.cpu()
         edges = candidate_edges[topk].reshape(-1, 2)
@@ -115,14 +118,14 @@ class GFAttack(TargetedAttacker):
         return self
 
     @staticmethod
-    def _structure_score(A: sp.csr_matrix,
-                         x_mean: Tensor,
-                         eig_vals: Tensor,
-                         eig_vec: Tensor,
-                         candidate_edges: np.ndarray,
-                         K: int,
-                         T: int,
-                         method: str = "nosum"):
+    def structure_score(A: sp.csr_matrix,
+                        x_mean: Tensor,
+                        eig_vals: Tensor,
+                        eig_vec: Tensor,
+                        candidate_edges: np.ndarray,
+                        K: int,
+                        T: int,
+                        method: str = "nosum"):
         """Calculate the score of potential edges as formulated in paper.
 
         Parameters
@@ -172,10 +175,12 @@ class GFAttack(TargetedAttacker):
             else:
                 eig_vals_res = (eig_vals_res + 1.).square().pow(K)
 
-            least_t = torch.topk(eig_vals_res, k=T, largest=False).indices # # from small to large
+            # from small to large
+            least_t = torch.topk(eig_vals_res, k=T, largest=False).indices
             eig_vals_k_sum = eig_vals_res[least_t].sum()
             u_k = eig_vec[:, least_t]
             u_x_mean = u_k.t() @ x_mean
-            score_u_v = eig_vals_k_sum * torch.square(torch.linalg.norm(u_x_mean))
+            score_u_v = eig_vals_k_sum * \
+                torch.square(torch.linalg.norm(u_x_mean))
             score.append(score_u_v.item())
         return torch.as_tensor(score)

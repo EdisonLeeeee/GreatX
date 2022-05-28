@@ -2,7 +2,6 @@ import math
 from copy import deepcopy
 from typing import Callable, Optional
 
-import dgl
 import torch
 import torch.nn.functional as F
 from torch import Tensor
@@ -12,33 +11,26 @@ from tqdm import tqdm
 
 from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
 from graphwar.surrogater import Surrogater
-from graphwar.functional import normalize
+from graphwar.functional import to_dense_adj
 
 
 class PGDAttack(UntargetedAttacker, Surrogater):
     # PGDAttack cannot ensure that there is not singleton node after attacks.
-    _allow_singleton = True
-
-    def __init__(self, graph: dgl.DGLGraph, device: str = "cpu",
-                 seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
-        super().__init__(graph=graph, device=device, seed=seed, name=name, **kwargs)
-        self._check_feature_matrix_exists()
+    _allow_singleton: bool = True
 
     def setup_surrogate(self, surrogate: torch.nn.Module,
                         labeled_nodes: Tensor,
                         unlabeled_nodes: Optional[Tensor] = None,
                         *,
-                        loss: Callable = torch.nn.CrossEntropyLoss(),
                         eps: float = 1.0,
                         freeze: bool = True):
 
         Surrogater.setup_surrogate(self, surrogate=surrogate,
-                                   loss=loss, eps=eps, freeze=freeze)
+                                   eps=eps, freeze=freeze)
 
         labeled_nodes = torch.LongTensor(labeled_nodes).to(self.device)
         # poisoning attack in DeepRobust
         if unlabeled_nodes is None:
-            self._check_node_label_exists()
             victim_nodes = labeled_nodes
             victim_labels = self.label[labeled_nodes]
         else:  # Evasion attack in original paper
@@ -48,10 +40,12 @@ class PGDAttack(UntargetedAttacker, Surrogater):
             victim_labels = torch.cat([self.label[labeled_nodes],
                                        self_training_labels], dim=0)
 
-        adj = self.graph.adjacency_matrix().to_dense().to(self.device)
+        adj = to_dense_adj(self.edge_index,
+                                         self.edge_weight,
+                                         num_nodes=self.num_nodes).to(self.device)
         I = torch.eye(self.num_nodes, device=self.device)
         self.complementary = torch.ones_like(adj) - I - 2. * adj
-        self.adj = adj + I
+        self.adj = adj
         self.victim_nodes = victim_nodes
         self.victim_labels = victim_labels
 
@@ -82,14 +76,14 @@ class PGDAttack(UntargetedAttacker, Surrogater):
         for epoch in tqdm(range(epochs),
                           desc='PGD Training',
                           disable=disable):
-            gradients = self._compute_gradients(perturbations,
+            gradients = self.compute_gradients(perturbations,
                                                 self.victim_nodes,
                                                 self.victim_labels)
             lr = C / math.sqrt(epoch + 1)
             perturbations.data.add_(lr * gradients)
             perturbations = self.projection(perturbations)
 
-        best_s = self.Bernoulli_sample(perturbations, sample_epochs, disable=disable)
+        best_s = self.bernoulli_sample(perturbations, sample_epochs, disable=disable)
         row, col = torch.where(best_s > 0.)
         for it, (u, v) in enumerate(zip(row.tolist(), col.tolist())):
             if self.adj[u, v] > 0:
@@ -153,7 +147,7 @@ class PGDAttack(UntargetedAttacker, Surrogater):
         return clipped_matrix
 
     @torch.no_grad()
-    def Bernoulli_sample(self, perturbations, sample_epochs=20, disable=False):
+    def bernoulli_sample(self, perturbations, sample_epochs=20, disable=False):
         best_loss = -1e4
         best_s = None
         probs = torch.triu(perturbations, diagonal=1)
@@ -166,7 +160,7 @@ class PGDAttack(UntargetedAttacker, Surrogater):
                 continue
 
             perturbations.data.copy_(sampled)
-            loss = self._compute_loss(perturbations, self.victim_nodes, self.victim_labels)
+            loss = self.compute_loss(perturbations, self.victim_nodes, self.victim_labels)
 
             if best_loss < loss:
                 best_loss = loss
@@ -175,10 +169,9 @@ class PGDAttack(UntargetedAttacker, Surrogater):
         assert best_s is not None, "Something went wrong"
         return best_s.cpu()
 
-    def _compute_loss(self, perturbations, victim_nodes, victim_labels):
+    def compute_loss(self, perturbations, victim_nodes, victim_labels):
         adj = self.get_perturbed_adj(perturbations)
-        adj_norm = normalize(adj)
-        logit = self.surrogate(adj_norm, self.feat)[victim_nodes] / self.eps
+        logit = self.surrogate(self.feat, adj)[victim_nodes] / self.eps
 
         if self.CW_loss:
             # logit = F.softmax(logit, dim=1)
@@ -189,11 +182,11 @@ class PGDAttack(UntargetedAttacker, Surrogater):
             loss = -torch.clamp(margin, min=0.)
             return loss.mean()
         else:
-            loss = self.loss_fn(logit, self.victim_labels)
+            loss = F.cross_entropy(logit, self.victim_labels)
         return loss
 
-    def _compute_gradients(self, perturbations, victim_nodes, victim_labels):
-        loss = self._compute_loss(perturbations, victim_nodes, victim_labels)
+    def compute_gradients(self, perturbations, victim_nodes, victim_labels):
+        loss = self.compute_loss(perturbations, victim_nodes, victim_labels)
         return grad(loss, perturbations, create_graph=False)[0]
 
 
@@ -203,12 +196,10 @@ class MinmaxAttack(PGDAttack):
                         labeled_nodes: Tensor,
                         unlabeled_nodes: Optional[Tensor] = None,
                         *,
-                        loss: Callable = torch.nn.CrossEntropyLoss(),
                         eps: float = 1.0):
 
         super().setup_surrogate(surrogate=surrogate, labeled_nodes=labeled_nodes,
-                                unlabeled_nodes=unlabeled_nodes, loss=loss, eps=eps,
-                                freeze=False)
+                                unlabeled_nodes=unlabeled_nodes, eps=eps, freeze=False)
 
         self.cached = deepcopy(self.surrogate.state_dict())
         return self
@@ -242,7 +233,7 @@ class MinmaxAttack(PGDAttack):
                           disable=disable):
 
             # =========== Min-step ===================
-            loss = self._compute_loss(perturbations,
+            loss = self.compute_loss(perturbations,
                                       self.victim_nodes,
                                       self.victim_labels)
 
@@ -252,7 +243,7 @@ class MinmaxAttack(PGDAttack):
             # ========================================
 
             # =========== Max-step ===================
-            gradients = self._compute_gradients(perturbations,
+            gradients = self.compute_gradients(perturbations,
                                                 self.victim_nodes,
                                                 self.victim_labels)
             lr = C / math.sqrt(epoch + 1)
@@ -260,7 +251,7 @@ class MinmaxAttack(PGDAttack):
             perturbations = self.projection(perturbations)
             # ========================================
 
-        best_s = self.Bernoulli_sample(perturbations, sample_epochs, disable=disable)
+        best_s = self.bernoulli_sample(perturbations, sample_epochs, disable=disable)
         row, col = torch.where(best_s > 0.)
         for it, (u, v) in enumerate(zip(row.tolist(), col.tolist())):
             if self.adj[u, v] > 0:

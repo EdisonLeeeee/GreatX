@@ -1,117 +1,70 @@
-import dgl
+
+
 import torch
+from torch import Tensor
+import scipy.sparse as sp
+from torch_geometric.utils import sort_edge_index, to_scipy_sparse_matrix, from_scipy_sparse_matrix
 
-
-def add_edges(g: dgl.DGLGraph, edges: torch.Tensor,
-              symmetric=True) -> dgl.DGLGraph:
+def add_edges(edge_index: Tensor, edges_to_add: Tensor, 
+              symmetric: bool = True, sort_edges: bool = True) -> Tensor:
     """add edges to the graph `g`. This method is 
     similar to `DGLGraph.add_edges()` but returns a 
-    copy of the graph `g`.
-
+    copy of the graph `g`.    
+    
     Parameters
     ----------
-    g : dgl.DGLGraph
-        the dgl graph instance where edges will be added to.
-    edges : torch.Tensor
-        shape [2, M], the edges to be added in the graph.
+    edge_index : Tensor
+        the graph instance where edges will be removed from.
+    edges_to_add : torch.Tensor
+        shape [2, M], the edges to be added into the graph.
     symmetric : bool
         whether the graph is symmetric, if True,
-        it would flip the edges in the graph by:
-        `edges = torch.cat([edges, edges[[1,0]]])`
+        it would add the edges into the graph by:
+        `edges_to_add = torch.cat([edges_to_add, edges_to_add.flip(0)], dim=1)`
 
     Returns
     -------
-    dgl.DGLGraph
-        the dgl graph instance with edge added.
-    """
-
-    edges = edges.to(g.device)
-
+    Tensor
+        the graph instance `edge_index` with edges added.
+    """     
     if symmetric:
-        edges = torch.cat([edges, edges[[1, 0]]], dim=1)
+        edges_to_add = torch.cat([edges_to_add, edges_to_add.flip(0)], dim=1)
+        
+    edges_to_add = edges_to_add.to(edge_index)
+    edge_index = torch.cat([edge_index, edges_to_add], dim=1)
+    edge_index = sort_edge_index(edge_index)
+    return edge_index
 
-    g = g.local_var()
-    g.add_edges(edges[0], edges[1])
-    return g
-
-
-def remove_edges(g: dgl.DGLGraph, edges: torch.Tensor,
-                 symmetric=True) -> dgl.DGLGraph:
-    """remove edges from the graph `g`. 
+def remove_edges(edge_index: Tensor, edges_to_remove: Tensor, symmetric: bool = True) -> Tensor:
+    """remove edges from the graph `edge_index`. 
 
     Parameters
     ----------
-    g : dgl.DGLGraph
-        the dgl graph instance where edges will be removed from.
-    edges : torch.Tensor
+    edge_index : Tensor
+        the graph instance where edges will be removed from.
+    edges_to_remove : torch.Tensor
         shape [2, M], the edges to be removed in the graph.
     symmetric : bool
         whether the graph is symmetric, if True,
-        it would flip the edges in the graph by:
-        `edges = torch.cat([edges, edges[[1,0]]])`
+        it would remove the edges from the graph by:
+        `edges_to_remove = torch.cat([edges_to_remove, edges_to_remove.flip(0)], dim=1)`
 
     Returns
     -------
-    dgl.DGLGraph
-        the dgl graph instance with edge removed.
-    """
-
-    edges = edges.to(g.device)
-
+    Tensor
+        the graph instance `edge_index` with edges removed.
+    """    
+    device = edge_index.device
     if symmetric:
-        edges = torch.cat([edges, edges[[1, 0]]], dim=1)
-    g = g.local_var()
-    row, col = edges
-
-    mask = g.has_edges_between(row, col)
-
-    row_to_remove = row[mask]
-    col_to_remove = col[mask]
-
-    eids = g.edge_ids(row_to_remove, col_to_remove)
-    g.remove_edges(eids)
-
-    return g
-
-
-def flip_graph(g: dgl.DGLGraph, edges: torch.Tensor,
-               symmetric=True) -> dgl.DGLGraph:
-    """flip edges in the graph `g`
-
-    Parameters
-    ----------
-    g : dgl.DGLGraph
-        the dgl graph instance where edges will be flipped from.
-    edges : torch.Tensor
-        shape [2, M], the edges to be flipped in the graph.
-    symmetric : bool
-        whether the graph is symmetric, if True,
-        it would flip the edges in the graph by:
-        `edges = torch.cat([edges, edges[[1,0]]])`
-
-    Returns
-    -------
-    dgl.DGLGraph
-        the dgl graph instance with edge flipped.
-    """
-    edges = edges.to(g.device)
-
-    if symmetric:
-        edges = torch.cat([edges, edges[[1, 0]]], dim=1)
-
-    row, col = edges
-    g = g.local_var()
-    mask = g.has_edges_between(row, col)
-
-    row_to_remove = row[mask]
-    col_to_remove = col[mask]
-
-    eids = g.edge_ids(row_to_remove, col_to_remove)
-    g.remove_edges(eids)
-
-    row_to_add = row[~mask]
-    col_to_add = col[~mask]
-
-    g.add_edges(row_to_add, col_to_add)
-
-    return g
+        edges_to_remove = torch.cat([edges_to_remove, edges_to_remove.flip(0)], dim=1)
+    edges_to_remove = edges_to_remove.to(edge_index)
+    
+    # it's not intuitive to remove edges from a graph represented as `edge_index`
+    edge_weight_remove = torch.zeros(edges_to_remove.size(1)) - 1e5
+    edge_weight = torch.cat([torch.ones(edge_index.size(1)), edge_weight_remove], dim=0)
+    edge_index = torch.cat([edge_index, edges_to_remove], dim=1).cpu().numpy()
+    adj_matrix = sp.csr_matrix((edge_weight.cpu().numpy(), (edge_index[0], edge_index[1])))
+    adj_matrix.data[adj_matrix.data < 0] = 0.
+    adj_matrix.eliminate_zeros()
+    edge_index, _ = from_scipy_sparse_matrix(adj_matrix)
+    return edge_index.to(device)

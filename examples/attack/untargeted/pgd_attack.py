@@ -1,69 +1,55 @@
 import torch
+import numpy as np
+import torch_geometric.transforms as T
 
+from graphwar.dataset import GraphWarDataset
 from graphwar import set_seed
-from graphwar.data import GraphWarDataset
-from graphwar.models import GCN
+from graphwar.nn.models import GCN
 from graphwar.training import Trainer
 from graphwar.training.callbacks import ModelCheckpoint
 from graphwar.utils import split_nodes
+from graphwar.attack.untargeted import PGDAttack
 
-# ================================================================== #
-#                      Load datasets                                 #
-# ================================================================== #
-data = GraphWarDataset('cora', verbose=True, standardize=True)
-g = data[0]
-splits = split_nodes(g.ndata['label'], random_state=15)
+dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+                          transform=T.LargestConnectedComponents())
 
-num_feats = g.ndata['feat'].size(1)
-num_classes = data.num_classes
-y_train = g.ndata['label'][splits.train_nodes]
-y_val = g.ndata['label'][splits.val_nodes]
-y_test = g.ndata['label'][splits.test_nodes]
-
+data = dataset[0]
+splits = split_nodes(data.y, random_state=15)
 set_seed(123)
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-g = g.to(device)
 
 # ================================================================== #
 #                      Before Attack                                 #
 # ================================================================== #
-model = GCN(num_feats, num_classes)
-trainer = Trainer(model, device=device)
-ckp = ModelCheckpoint('model.pth', monitor='val_accuracy')
-trainer.fit(g, y_train, splits.train_nodes, val_y=y_val, val_index=splits.val_nodes, callbacks=[ckp])
-logs = trainer.evaluate(g, y_test, splits.test_nodes)
-
-print(f"Before random attack\n {logs}")
+trainer_before = Trainer(GCN(dataset.num_features, dataset.num_classes), device=device)
+ckp = ModelCheckpoint('model_before.pth', monitor='val_acc')
+trainer_before.fit({'data': data, 'mask': splits.train_nodes}, 
+            {'data': data, 'mask': splits.val_nodes}, callbacks=[ckp])
+logs = trainer_before.evaluate({'data': data, 'mask': splits.test_nodes})
+print(f"Before attack\n {logs}")
 
 # ================================================================== #
 #                      Attacking                                     #
 # ================================================================== #
-from graphwar.attack.untargeted import MinmaxAttack, PGDAttack
-
-attacker = PGDAttack(g, device=device)
-# attacker = MinmaxAttack(g, device=device)
-
+attacker = PGDAttack(data, device=device)
 # Evasion setting
-attacker.setup_surrogate(model, labeled_nodes=splits.train_nodes, unlabeled_nodes=splits.test_nodes)
-# poisoning setting
-# attacker.setup_surrogate(model, labeled_nodes=splits.train_nodes)
-
+# attacker.setup_surrogate(trainer_before.model, labeled_nodes=splits.train_nodes, unlabeled_nodes=splits.test_nodes)
+# Poisoning setting
+attacker.setup_surrogate(trainer_before.model, labeled_nodes=splits.train_nodes)
 attacker.reset()
 attacker.attack(0.05)
 
 # ================================================================== #
 #                      After evasion Attack                          #
 # ================================================================== #
-logs = trainer.evaluate(attacker.g(), y_test, splits.test_nodes)
+logs = trainer_before.evaluate({'data': attacker.data(), 'mask': splits.test_nodes})
 print(f"After evasion attack\n {logs}")
-
-
 # ================================================================== #
 #                      After poisoning Attack                        #
 # ================================================================== #
-model = GCN(num_feats, num_classes)
-trainer = Trainer(model, device=device)
-trainer.fit(attacker.g(), y_train, splits.train_nodes)
-logs = trainer.evaluate(attacker.g(), y_test, splits.test_nodes)
-
+trainer_after = Trainer(GCN(dataset.num_features, dataset.num_classes), device=device)
+ckp = ModelCheckpoint('model_after.pth', monitor='val_acc')
+trainer_after.fit({'data': attacker.data(), 'mask': splits.train_nodes}, 
+            {'data': attacker.data(), 'mask': splits.val_nodes}, callbacks=[ckp])
+logs = trainer_after.evaluate({'data': attacker.data(), 'mask': splits.test_nodes})
 print(f"After poisoning attack\n {logs}")

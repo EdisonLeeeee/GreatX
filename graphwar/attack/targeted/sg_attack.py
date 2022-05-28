@@ -1,8 +1,6 @@
 from collections import namedtuple
-from functools import lru_cache
 from typing import Callable, Optional
 
-import dgl
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -10,9 +8,8 @@ from torch.autograd import grad
 from tqdm import tqdm
 
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
-from graphwar.functional import ego_graph
-from graphwar.functional.scatter import scatter_add
-from graphwar.models import SGC
+from graphwar.utils import ego_graph
+from graphwar.nn.models import SGC
 from graphwar.surrogater import Surrogater
 
 SubGraph = namedtuple('SubGraph', ['edge_index', 'sub_edges', 'non_edges',
@@ -23,26 +20,26 @@ class SGAttack(TargetedAttacker, Surrogater):
     # SGAttack cannot ensure that there is not singleton node after attacks.
     _allow_singleton = True
 
-    def __init__(self, graph: dgl.DGLGraph, device: str = "cpu",
-                 seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
-        super().__init__(graph=graph, device=device, seed=seed, name=name, **kwargs)
-        self._check_feature_matrix_exists()
-        self._check_node_label_exists()
-
+    @torch.no_grad()
     def setup_surrogate(self, surrogate: torch.nn.Module,
-                        loss: Callable = F.nll_loss,
                         eps: float = 5.0,
-                        freeze: bool = True):
+                        freeze: bool = True,
+                        K: int = 2):
 
-        Surrogater.setup_surrogate(self, surrogate=surrogate, loss=loss,
-                                   eps=eps, freeze=freeze, required=SGC)
-        self.surrogate.cache_clear()
-        self.compute_XW.cache_clear()
-        self.logits = self.surrogate(self.graph, self.feat)
-        self.k = self.surrogate.conv._k
-        self.weight = self.surrogate.conv.weight.detach()
-        self.bias = self.surrogate.conv.bias.detach()
+        Surrogater.setup_surrogate(self, surrogate=surrogate,
+                                   eps=eps, freeze=freeze)
+        
+        self.logits = self.surrogate(self.feat, self.edge_index, self.edge_weight)
+        
+        self.K = K
         return self
+    
+    def set_normalize(self, state):
+        for layer in self.surrogate.modules():
+            if hasattr(layer, 'normalize'):
+                layer.normalize = state  
+            if hasattr(layer, 'add_self_loops'):
+                layer.add_self_loops = state 
 
     def strongest_wrong_class(self, target, target_label):
         logit = self.logits[target].clone()
@@ -50,7 +47,7 @@ class SGAttack(TargetedAttacker, Surrogater):
         return logit.argmax()
 
     def get_subgraph(self, target, target_label, best_wrong_label):
-        sub_nodes, sub_edges = ego_graph(self.adjacency_matrix, int(target), self.k)
+        sub_nodes, sub_edges = ego_graph(self.adjacency_matrix, int(target), self.K)
         if sub_edges.size == 0:
             raise RuntimeError(f"The target node {int(target)} is a singleton node.")
         sub_nodes = torch.as_tensor(sub_nodes, dtype=torch.long, device=self.device)
@@ -64,22 +61,22 @@ class SGAttack(TargetedAttacker, Surrogater):
 
         if self.direct_attack:
             influencers = [target]
-            n_attackers = self.num_budgets + 1
+            num_attackers = self.num_budgets + 1
         else:
             influencers = neighbors
-            n_attackers = 3
+            num_attackers = 3
         attacker_nodes = self.get_top_attackers(subgraph, target, target_label,
-                                                best_wrong_label, n_attackers=n_attackers)
+                                                best_wrong_label, num_attackers=num_attackers)
 
         subgraph = self.subgraph_processing(sub_nodes, sub_edges, influencers, attacker_nodes)
 
         return subgraph
 
-    def get_top_attackers(self, subgraph, target, target_label, best_wrong_label, n_attackers):
-        non_edge_grad, _ = self._compute_gradients(subgraph, target, target_label, best_wrong_label)
-        _, index = torch.topk(non_edge_grad, k=n_attackers, sorted=False)
+    def get_top_attackers(self, subgraph, target, target_label, best_wrong_label, num_attackers):
+        non_edge_grad, _ = self.compute_gradients(subgraph, target, target_label, best_wrong_label)
+        _, index = torch.topk(non_edge_grad, k=num_attackers, sorted=False)
         attacker_nodes = subgraph.non_edges[1][index]
-        return attacker_nodes.cpu().tolist()
+        return attacker_nodes.tolist()
 
     def subgraph_processing(self, sub_nodes, sub_edges, influencers, attacker_nodes):
         row = np.repeat(influencers, len(attacker_nodes))
@@ -94,8 +91,8 @@ class SGAttack(TargetedAttacker, Surrogater):
         non_edges = torch.as_tensor(non_edges, dtype=torch.long, device=self.device)
         attacker_nodes = torch.as_tensor(attacker_nodes, dtype=torch.long, device=self.device)
         selfloop = torch.unique(torch.cat([sub_nodes, attacker_nodes]))
-        edge_index = torch.cat([non_edges, sub_edges, non_edges[[1, 0]],
-                                sub_edges[[1, 0]], selfloop.repeat((2, 1))], dim=1)
+        edge_index = torch.cat([non_edges, sub_edges, non_edges.flip(0),
+                                sub_edges.flip(0), selfloop.repeat((2, 1))], dim=1)
 
         edge_weight = torch.ones(sub_edges.size(1), device=self.device).requires_grad_()
         non_edge_weight = torch.zeros(non_edges.size(1), device=self.device).requires_grad_()
@@ -105,10 +102,6 @@ class SGAttack(TargetedAttacker, Surrogater):
                             edge_weight=edge_weight, non_edge_weight=non_edge_weight,
                             selfloop_weight=selfloop_weight,)
         return subgraph
-
-    @lru_cache(maxsize=1)
-    def compute_XW(self):
-        return self.feat @ self.weight
 
     def attack(self,
                target, *,
@@ -122,6 +115,8 @@ class SGAttack(TargetedAttacker, Surrogater):
         super().attack(target, target_label, num_budgets=num_budgets,
                        direct_attack=direct_attack, structure_attack=structure_attack,
                        feature_attack=feature_attack)
+        
+        self.set_normalize(False)
 
         if target_label is None:
             assert self.target_label is not None, "please specify argument `target_label` as the node label does not exist."
@@ -142,8 +137,8 @@ class SGAttack(TargetedAttacker, Surrogater):
                        desc='Peturbing Graph',
                        disable=disable):
 
-            non_edge_grad, edge_grad = self._compute_gradients(subgraph, target,
-                                                               target_label, best_wrong_label)
+            non_edge_grad, edge_grad = self.compute_gradients(subgraph, target,
+                                                              target_label, best_wrong_label)
 
             with torch.no_grad():
                 edge_grad *= -2 * subgraph.edge_weight + 1
@@ -165,28 +160,21 @@ class SGAttack(TargetedAttacker, Surrogater):
                 u, v = subgraph.non_edges[:, max_non_edge_idx].tolist()
                 self.add_edge(u, v, it)
 
+        self.set_normalize(True)
         return self
 
-    def _compute_gradients(self, subgraph, target, target_label, best_wrong_label):
+    def compute_gradients(self, subgraph, target, target_label, best_wrong_label):
         edge_weight = torch.cat([subgraph.non_edge_weight, subgraph.edge_weight,
                                  subgraph.non_edge_weight, subgraph.edge_weight,
                                  subgraph.selfloop_weight], dim=0)
-
-        logit = self.SGConv(subgraph, self.compute_XW(), edge_weight)
-        logit = logit[target].view(1, -1) / self.eps
-        logit = F.log_softmax(logit, dim=1)
-        loss = self.loss_fn(logit, target_label) - self.loss_fn(logit, best_wrong_label)
-        return grad(loss, [subgraph.non_edge_weight, subgraph.edge_weight], create_graph=False)
-
-    def SGConv(self, subgraph, x, edge_weight):
+        
         row, col = subgraph.edge_index
         norm = (self.degree + 1.).pow(-0.5)
-        edge_weight = (norm[row] * edge_weight * norm[col]).view(-1, 1)
+        edge_weight = norm[row] * edge_weight * norm[col]        
 
-        for _ in range(self.k):
-            src = x[row] * edge_weight
-            x = scatter_add(src, col, dim=-2, dim_size=x.size(0))
+        logit = self.surrogate(self.feat, subgraph.edge_index, edge_weight)
+        logit = logit[target].view(1, -1) / self.eps
+        logit = F.log_softmax(logit, dim=1)
+        loss = F.nll_loss(logit, target_label) - F.nll_loss(logit, best_wrong_label)
+        return grad(loss, [subgraph.non_edge_weight, subgraph.edge_weight], create_graph=False)
 
-        if self.bias is not None:
-            x += self.bias
-        return x

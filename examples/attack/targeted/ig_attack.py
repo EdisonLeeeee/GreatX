@@ -1,67 +1,64 @@
 import torch
+import numpy as np
+import torch_geometric.transforms as T
 
+from graphwar.dataset import GraphWarDataset
 from graphwar import set_seed
-from graphwar.data import GraphWarDataset
-from graphwar.models import GCN
+from graphwar.nn.models import GCN
 from graphwar.training import Trainer
 from graphwar.training.callbacks import ModelCheckpoint
 from graphwar.utils import split_nodes
+from graphwar.attack.targeted import IGAttack
 
-# ================================================================== #
-#                      Load datasets                                 #
-# ================================================================== #
-data = GraphWarDataset('cora', verbose=True, standardize=True)
-g = data[0]
-splits = split_nodes(g.ndata['label'], random_state=15)
+dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+                          transform=T.LargestConnectedComponents())
 
-num_feats = g.ndata['feat'].size(1)
-num_classes = data.num_classes
-y_train = g.ndata['label'][splits.train_nodes]
-y_val = g.ndata['label'][splits.val_nodes]
-y_test = g.ndata['label'][splits.test_nodes]
-
+data = dataset[0]
+splits = split_nodes(data.y, random_state=15)
 set_seed(123)
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-g = g.to(device)
 
+# ================================================================== #
+#                     Attack Setting                                 #
+# ================================================================== #
 target = 1  # target node to attack
-
-print(f"Target node {target} has label {g.ndata['label'][target]}")
+target_label = data.y[target].item()
+width = 5
 
 # ================================================================== #
 #                      Before Attack                                 #
 # ================================================================== #
-model = GCN(num_feats, num_classes)
-trainer = Trainer(model, device=device)
-ckp = ModelCheckpoint('model.pth', monitor='val_accuracy')
-trainer.fit(g, y_train, splits.train_nodes, val_y=y_val, val_index=splits.val_nodes, callbacks=[ckp])
-output = trainer.predict(g, target)
-
-print(f"Before attack\n {output.tolist()}")
+trainer_before = Trainer(GCN(dataset.num_features, dataset.num_classes), device=device)
+ckp = ModelCheckpoint('model_before.pth', monitor='val_acc')
+trainer_before.fit({'data': data, 'mask': splits.train_nodes}, 
+            {'data': data, 'mask': splits.val_nodes}, callbacks=[ckp])
+output = trainer_before.predict({'data': data, 'mask': target})
+print(f"Before attack (target_label={target_label})\n {np.round(output.tolist(), 2)}")
+print('-'* target_label * width + '----👆' + '-'* max(dataset.num_classes - target_label - 1, 0) * width)
 
 # ================================================================== #
 #                      Attacking                                     #
 # ================================================================== #
-from graphwar.attack.targeted import IGAttack
-
-attacker = IGAttack(g, device=device)
-attacker.setup_surrogate(model)
+attacker = IGAttack(data, device=device)
+attacker.setup_surrogate(trainer_before.model)
 attacker.reset()
 attacker.attack(target)
 
 # ================================================================== #
 #                      After evasion Attack                          #
 # ================================================================== #
-output = trainer.predict(attacker.g(), target)
-print(f"After evasion attack\n {output.tolist()}")
-
+output = trainer_before.predict({'data': attacker.data(), 'mask': target})
+print(f"After evasion attack (target_label={target_label})\n {np.round(output.tolist(), 2)}")
+print('-'* target_label * width + '----👆' + '-'* max(dataset.num_classes - target_label - 1, 0) * width)
 
 # ================================================================== #
 #                      After poisoning Attack                        #
 # ================================================================== #
-model = GCN(num_feats, num_classes)
-trainer = Trainer(model, device=device)
-trainer.fit(attacker.g(), y_train, splits.train_nodes)
-output = trainer.predict(attacker.g(), target)
+trainer_after = Trainer(GCN(dataset.num_features, dataset.num_classes), device=device)
+ckp = ModelCheckpoint('model_after.pth', monitor='val_acc')
+trainer_after.fit({'data': attacker.data(), 'mask': splits.train_nodes}, 
+            {'data': attacker.data(), 'mask': splits.val_nodes}, callbacks=[ckp])
+output = trainer_after.predict({'data': attacker.data(), 'mask': target})
 
-print(f"After poisoning attack\n {output.tolist()}")
+print(f"After poisoning attack (target_label={target_label})\n {np.round(output.tolist(), 2)}")
+print('-'* target_label * width + '----👆' + '-'* max(dataset.num_classes - target_label - 1, 0) * width)

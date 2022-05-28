@@ -50,7 +50,7 @@ setup(
     url=url,
     download_url='{}/archive/{}.tar.gz'.format(url, VERSION),
     keywords=[
-        'dgl',
+        'torch_geometric',
         'pytorch',
         'benchmark',
         'geometric-adversarial-learning',

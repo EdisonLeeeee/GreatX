@@ -69,7 +69,7 @@ class UntargetedAttacker(FlipAttacker):
             )
 
         num_budgets = self._check_budget(
-            num_budgets, max_perturbations=self.num_edges)
+            num_budgets, max_perturbations=self.num_edges//2)
 
         self.num_budgets = num_budgets
         self.structure_attack = structure_attack

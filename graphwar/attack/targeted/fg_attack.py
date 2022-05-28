@@ -1,30 +1,27 @@
 from typing import Optional
 
-import dgl
 import torch
+import torch.nn.functional as F
 from torch.autograd import grad
 from tqdm import tqdm
 
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 from graphwar.surrogater import Surrogater
-from graphwar.functional import normalize
 from graphwar.utils import singleton_mask
+from graphwar.functional import to_dense_adj
 
 
 class FGAttack(TargetedAttacker, Surrogater):
     # FGAttack can conduct feature attack
-    _allow_feature_attack = True
+    _allow_feature_attack: bool = True
     # FGAttack can not ensure there are no singleton nodes
     _allow_singleton: bool = True
 
-    def __init__(self, graph: dgl.DGLGraph, device: str = "cpu",
-                 seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
-        super().__init__(graph=graph, device=device, seed=seed, name=name, **kwargs)
-        self._check_feature_matrix_exists()
-
     def reset(self):
         super().reset()
-        self.modified_adj = self.graph.add_self_loop().adjacency_matrix().to_dense().to(self.device)
+        self.modified_adj = to_dense_adj(self.edge_index,
+                                         self.edge_weight,
+                                         num_nodes=self.num_nodes).to(self.device)
         self.modified_feat = self.feat.clone()
         return self
 
@@ -48,7 +45,8 @@ class FGAttack(TargetedAttacker, Surrogater):
             assert self.target_label is not None, "please specify argument `target_label` as the node label does not exist."
             target_label = self.target_label.view(-1)
         else:
-            target_label = torch.as_tensor(target_label, device=self.device, dtype=torch.long).view(-1)
+            target_label = torch.as_tensor(
+                target_label, device=self.device, dtype=torch.long).view(-1)
 
         modified_adj = self.modified_adj
         modified_feat = self.modified_feat
@@ -56,16 +54,17 @@ class FGAttack(TargetedAttacker, Surrogater):
         modified_feat.requires_grad_(bool(feature_attack))
 
         target = torch.as_tensor(target, device=self.device, dtype=torch.long)
-        target_label = torch.as_tensor(target_label, device=self.device, dtype=torch.long).view(-1)
+        target_label = torch.as_tensor(
+            target_label, device=self.device, dtype=torch.long).view(-1)
         num_nodes, num_feats = self.num_nodes, self.num_feats
 
         for it in tqdm(range(self.num_budgets),
                        desc='Peturbing Graph',
                        disable=disable):
 
-            adj_grad, feat_grad = self._compute_gradients(modified_adj,
-                                                          modified_feat,
-                                                          target, target_label)
+            adj_grad, feat_grad = self.compute_gradients(modified_adj,
+                                                         modified_feat,
+                                                         target, target_label)
 
             adj_grad_score = modified_adj.new_zeros(1)
             feat_grad_score = modified_feat.new_zeros(1)
@@ -137,11 +136,11 @@ class FGAttack(TargetedAttacker, Surrogater):
         score[target] = -1
         return score.view(-1)
 
-    def _compute_gradients(self, modified_adj, modified_feat, target, target_label):
+    def compute_gradients(self, modified_adj, modified_feat, target, target_label):
 
-        adj_norm = normalize(modified_adj)
-        logit = self.surrogate(adj_norm, modified_feat)[target].view(1, -1) / self.eps
-        loss = self.loss_fn(logit, target_label)
+        logit = self.surrogate(modified_feat, modified_adj)[
+            target].view(1, -1) / self.eps
+        loss = F.cross_entropy(logit, target_label)
 
         if self.structure_attack and self.feature_attack:
             return grad(loss, [modified_adj, modified_feat], create_graph=False)

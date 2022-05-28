@@ -3,19 +3,16 @@ from typing import Any, Callable, List, Optional, Union
 
 import torch
 import torch.nn as nn
-from dgl import DGLGraph
+import torch.nn.functional as F
 from torch import Tensor
 from torch.utils.data import DataLoader
 
-from graphwar import Config
-from graphwar.metrics import Accuracy
+from torch_geometric.data import Data
+from torch_geometric.loader import DataLoader as PyGLoader
+
 from graphwar.training.callbacks import (Callback, CallbackList, Optimizer,
                                          Scheduler)
 from graphwar.utils import BunchDict, Progbar
-
-_FEATURE = Config.feat
-_LABEL = Config.label
-
 
 class Trainer:
     """A simple trainer to train graph neural network models conveniently.
@@ -25,37 +22,25 @@ class Trainer:
     >>> from graphwar.trainig import Trainer
     >>> model = ... # your model
     >>> trainer = Trainer(model, device='cuda')
+    
+    >>> data # PyG-like data
+    Data(x=[2485, 1433], y=[2485], adj_t=[2485, 2485, nnz=10138])
 
     >>> # simple training
-    >>> g = ... # DGL graph
-    >>> g.ndata['feat'] = feat # setup node features
-    >>> y_train = ... # trainig node labels
-    >>> train_nodes = ... #  training nodes
-    >>> trainer.fit(g, y=y_train, index=train_nodes)
+    >>> trainer.fit({'data': data, 'mask': train_mask})
 
     >>> # train with model picking
-    >>> g = ... # DGL graph
-    >>> g.ndata['feat'] = feat # setup node features
-    >>> y_train = ... # trainig node labels
-    >>> train_nodes = ... #  training nodes
-    >>> y_val = ... # validation node labels
-    >>> val_nodes = ... #  validation nodes    
     >>> from graphwar.trainig import ModelCheckpoint
-    >>> cb = ModelCheckpoint('my_ckpy', monitor='val_accuracy)
-    >>> trainer.fit(g, y=y_train, index=train_nodes, val_y=y_val, 
-                    val_index=val_nodes, callbacks=[cb])    
+    >>> cb = ModelCheckpoint('my_ckpy', monitor='val_acc')
+    >>> trainer.fit({'data': data, 'mask': train_mask},
+    {'data': data, 'mask': val_mask}, callbacks=[cb])    
 
     >>> # get training logs
     >>> history = trainer.model.history
 
-    >>> y_test = ... # testing node labels
-    >>> test_nodes = ... # testing nodes
-    >>> trainer.evaluate(g, y=y_test, index=test_nodes)
+    >>> trainer.evaluate({'data': data, 'mask': data.test_mask}) # evaluation
 
-    >>> trainer.predict(g, index=y_test)
-
-    >>> import torch.nn as nn
-    >>> trainer.predict(g, index=y_test, transform=nn.Softmax(dim=-1))
+    >>> predict = trainer.predict({'data': data, 'mask': your_mask}) # prediction
 
     """
 
@@ -71,7 +56,7 @@ class Trainer:
         cfg : other keyword arguments, such as `lr` and `weight_decay`.
         """
         self.device = torch.device(device)
-        self.model = self.to_device(model)
+        self.model = model.to(self.device)
         
         cfg.setdefault("lr", 1e-2)
         cfg.setdefault("weight_decay", 5e-4)
@@ -79,36 +64,18 @@ class Trainer:
         self.cfg = BunchDict(cfg)
         self.optimizer = self.config_optimizer()
         self.scheduler = self.config_scheduler(self.optimizer)
-        self.loss = self.config_loss()
-        metrics = self.config_metrics()
-        if not isinstance(metrics, list):
-            metrics = [metrics]
-        self.metrics = metrics
 
-    def fit(self, g: DGLGraph, y: Optional[Tensor] = None, index: Optional[Tensor] = None,
-            val_g: Optional[DGLGraph] = None, val_y: Optional[Tensor] = None,
-            val_index: Optional[Tensor] = None,
+    def fit(self, train_inputs, val_inputs: Optional[dict] = None,
             callbacks: Optional[Callback] = None,
             verbose: Optional[int] = 1, epochs: int = 100) -> "Trainer":
         """Simple training method designed for `:attr:model`
 
         Parameters
         ----------
-        g : DGLGraph
-            the dgl graph used for training
-        y : Optional[Tensor], optional
-            the training labels, by default None
-        index : Optional[Tensor], optional
-            the training index/mask, such as training nodes 
-            index or mask, by default None
-        val_g : Optional[DGLGraph], optional
-            the dgl graph used for validation, if None, 
-            it will set as `g`, by default None
-        val_y : Optional[Tensor], optional
-            the validation labels, by default None
-        val_index : Optional[Tensor], optional
-            the validation index/mask, such as validation nodes 
-            index or mask, by default None
+        train_inputs : dict
+            training data.
+        val_inputs : Optional[dict]
+            used for validatiaon.
         callbacks : Optional[Callback], optional
             callbacks used for training, 
             see `graphwar.training.callbacks`, by default None
@@ -117,21 +84,14 @@ class Trainer:
             None, 1, 2, 3, 4, by default 1
         epochs : int, optional
             training epochs, by default 100
-
         """
 
-        model = self.to_device(self.model)
+        model = self.model.to(self.device)
         model.stop_training = False
-        validation = val_y is not None
-
-        if validation:
-            validation = True
-            val_g = g if val_g is None else val_g
-            val_data = self.config_test_data(val_g, val_y, val_index)
+        validation = val_inputs is not None
 
         # Setup callbacks
         self.callbacks = callbacks = self.config_callbacks(verbose, epochs, callbacks=callbacks)
-        train_data = self.config_train_data(g, y, index)
 
         logs = BunchDict()
 
@@ -142,12 +102,13 @@ class Trainer:
         try:
             for epoch in range(epochs):
                 callbacks.on_epoch_begin(epoch)
-                train_logs = self.train_step(train_data)
-                logs.update({k: self.to_item(v) for k, v in train_logs.items()})
+                train_logs = self.train_step(train_inputs)
+                logs.update(train_logs)
 
                 if validation:
-                    valid_logs = self.test_step(val_data)
-                    logs.update({("val_" + k): self.to_item(v) for k, v in valid_logs.items()})
+                    val_logs = self.test_step(val_inputs)
+                    val_logs = {f'val_{k}': v for k, v in val_logs.items()}
+                    logs.update(val_logs)
 
                 callbacks.on_epoch_end(epoch, logs)
 
@@ -160,60 +121,49 @@ class Trainer:
 
         return self
 
-    def train_step(self, dataloader: DataLoader) -> dict:
+    def train_step(self, inputs: dict) -> dict:
         """One-step training on the input dataloader.
 
         Parameters
         ----------
-        dataloader : DataLoader
-            the trianing dataloader
+        inputs : dict
+            the trianing data.
 
         Returns
         -------
         dict
-            the output logs, including `loss` and `val_accuracy`, etc.
+            the output logs, including `loss` and `val_acc`, etc.
         """
-        loss_fn = self.loss
         model = self.model
+        self.callbacks.on_train_batch_begin(0)
 
-        self.reset_metrics()
         model.train()
+        data = inputs['data'].to(self.device)
+        mask = inputs.get('mask', None)
+        adj_t = getattr(data, 'adj_t', None)
+        y = data.y.squeeze()
+        
+        if adj_t is None:
+            out = model(data.x, data.edge_index, data.edge_weight)
+        else:
+            out = model(data.x, adj_t)
+        
+        if mask is not None:
+            out = out[mask]
+            y = y[mask]
+            
+        loss = F.cross_entropy(out, y)
+        loss.backward()
+        self.callbacks.on_train_batch_end(0)
 
-        for epoch, batch in enumerate(dataloader):
-            self.callbacks.on_train_batch_begin(epoch)
-            x, y, out_index = self.unravel_batch(batch)
-            x = self.to_device(x)
-            y = self.to_device(y)
+        return dict(loss=loss.item(), acc=out.argmax(1).eq(y).float().mean().item())
 
-            if not isinstance(x, tuple):
-                x = x,
-            out = model(*x)
-            if out_index is not None:
-                out = out[out_index]
-            loss = loss_fn(out, y)
-            loss.backward()
-            for metric in self.metrics:
-                metric.update_state(y.cpu(), out.detach().cpu())
-            self.callbacks.on_train_batch_end(epoch)
-
-        metrics = [metric.result() for metric in self.metrics]
-        results = [loss.cpu().item()] + metrics
-
-        return dict(zip(self.metrics_names, results))
-
-    def evaluate(self, g: DGLGraph, y: Optional[Tensor] = None,
-                 index: Optional[Tensor] = None, verbose: Optional[int] = 1) -> BunchDict:
+    def evaluate(self, inputs: dict, verbose: Optional[int] = 1) -> BunchDict:
         """Simple evaluation step for `:attr:model`
 
         Parameters
         ----------
-        g : DGLGraph
-            the dgl graph used for evaluation
-        y : Optional[Tensor], optional
-            the evaluation labels, by default None
-        index : Optional[Tensor], optional
-            the evaluation index/mask, such as testing nodes 
-            index or mask, by default None
+        inputs : dict
         verbose : Optional[int], optional
             verbosity during evaluation, by default 1
 
@@ -225,70 +175,66 @@ class Trainer:
         if verbose:
             print("Evaluating...")
             
-        self.to_device(self.model)
+        self.model = self.model.to(self.device)
 
-        test_data = self.config_test_data(g, y=y, index=index)
-        progbar = Progbar(target=len(test_data),
+        progbar = Progbar(target=1,
                           verbose=verbose)
-        logs = BunchDict(**self.test_step(test_data))
-        logs.update({k: self.to_item(v) for k, v in logs.items()})
-        progbar.update(len(test_data), logs)
+        logs = BunchDict(**self.test_step(inputs))
+        progbar.update(1, logs)
         return logs
 
     @torch.no_grad()
-    def test_step(self, dataloader: DataLoader) -> dict:
-        loss_fn = self.loss
+    def test_step(self, inputs: dict) -> dict:
         model = self.model
         model.eval()
-        callbacks = self.callbacks
-        self.reset_metrics()
+        data = inputs['data'].to(self.device)
+        mask = inputs.get('mask', None)
+        adj_t = getattr(data, 'adj_t', None)
+        y = data.y.squeeze()
+        
+        if adj_t is None:
+            out = model(data.x, data.edge_index, data.edge_weight)
+        else:
+            out = model(data.x, adj_t)
+        
+        if mask is not None:
+            out = out[mask]
+            y = y[mask]
+            
+        loss = F.cross_entropy(out, y)
 
-        for epoch, batch in enumerate(dataloader):
-            callbacks.on_test_batch_begin(epoch)
-            x, y, out_index = self.unravel_batch(batch)
-            x = self.to_device(x)
-            y = self.to_device(y)
-            if not isinstance(x, tuple):
-                x = x,
-            out = model(*x)
-            if out_index is not None:
-                out = out[out_index]
-            loss = loss_fn(out, y)
-            for metric in self.metrics:
-                metric.update_state(y.cpu(), out.detach().cpu())
-            callbacks.on_test_batch_end(epoch)
-
-        metrics = [metric.result() for metric in self.metrics]
-        results = [loss.cpu().item()] + metrics
-
-        return dict(zip(self.metrics_names, results))
+        return dict(loss=loss.item(), acc=out.argmax(1).eq(y).float().mean().item())
 
     @torch.no_grad()
-    def predict_step(self, dataloader: DataLoader) -> Tensor:
+    def predict_step(self, inputs: dict) -> Tensor:
         model = self.model
         model.eval()
-        outs = []
         callbacks = self.callbacks
-        for epoch, batch in enumerate(dataloader):
-            callbacks.on_predict_batch_begin(epoch)
-            x, y, out_index = self.unravel_batch(batch)
-            x = self.to_device(x)
-            if not isinstance(x, tuple):
-                x = x,
-            out = model(*x)
-            if out_index is not None:
-                out = out[out_index]
-            outs.append(out)
-            callbacks.on_predict_batch_end(epoch)
-
-        return torch.cat(outs, dim=0)
-
-    def predict(self, g: DGLGraph, index: Optional[Tensor] = None,
-                transform: Callable = torch.nn.Softmax(dim=-1)) -> Tensor:
+        data = inputs['data'].to(self.device)
+        mask = inputs.get('mask', None)
+        adj_t = getattr(data, 'adj_t', None)
         
-        self.to_device(self.model)
-        predict_data = self.config_predict_data(g, index=index)
-        out = self.predict_step(predict_data).squeeze()
+        if adj_t is None:
+            out = model(data.x, data.edge_index, data.edge_weight)
+        else:
+            out = model(data.x, adj_t)
+        
+        if mask is not None:
+            out = out[mask]
+        return out
+
+    def predict(self, inputs: dict,
+                transform: Callable = torch.nn.Softmax(dim=-1)) -> Tensor:
+        """
+        Parameters
+        ----------
+        inputs : dict
+        transform : Callable
+            Callable function applied on outputs.
+        """
+        
+        self.model.to(self.device)
+        out = self.predict_step(inputs).squeeze()
         if transform is not None:
             out = transform(out)
         return out
@@ -301,12 +247,6 @@ class Trainer:
     def config_scheduler(self, optimizer: torch.optim.Optimizer):
         return None
 
-    def config_loss(self) -> Callable:
-        return torch.nn.CrossEntropyLoss()
-
-    def config_metrics(self) -> Callable:
-        return Accuracy()
-
     def config_callbacks(self, verbose, epochs, callbacks=None) -> CallbackList:
         callbacks = CallbackList(callbacks=callbacks, add_history=True,
                                  add_progbar=True if verbose else False)
@@ -318,31 +258,6 @@ class Trainer:
         callbacks.set_params(dict(verbose=verbose, epochs=epochs))
         return callbacks
 
-    def config_train_data(self, g: DGLGraph, y: Optional[Tensor] = None,
-                          index: Optional[Tensor] = None) -> DataLoader:
-        g = g.local_var()
-        g, y, index = self.to_device((g, y, index))
-        feat = g.ndata.pop(_FEATURE, None)
-        
-        # pop node labels (if exists) to avoid unnecessary computation
-        _label = g.ndata.pop(_LABEL, None)
-        del _label
-        
-        dataset = ((g, feat), y, index)
-        return DataLoader([dataset], batch_size=None, collate_fn=lambda x: x)
-
-    def config_test_data(self, g: DGLGraph, y: Optional[Tensor] = None,
-                         index: Optional[Tensor] = None) -> DataLoader:
-        return self.config_train_data(g, y=y, index=index)
-
-    def config_predict_data(self, g: DGLGraph, index: Optional[Tensor] = None) -> DataLoader:
-        return self.config_test_data(g, y=None, index=index)
-
-    @property
-    def metrics_names(self) -> List[str]:
-        assert self.metrics is not None
-        return ['loss'] + [metric.name for metric in self.metrics]
-
     @property
     def model(self):
         return self._model
@@ -351,88 +266,6 @@ class Trainer:
     def model(self, m):
         assert m is None or isinstance(m, torch.nn.Module)
         self._model = m
-
-    def reset_metrics(self):
-        if self.metrics is None:
-            return
-        for metric in self.metrics:
-            metric.reset_states()
-
-    @staticmethod
-    def unravel_batch(batch):
-        inputs = labels = out_index = None
-        if isinstance(batch, (list, tuple)):
-            inputs = batch[0]
-            labels = batch[1]
-            if len(batch) > 2:
-                out_index = batch[-1]
-        else:
-            inputs = batch
-
-        if isinstance(labels, (list, tuple)) and len(labels) == 1:
-            labels = labels[0]
-        if isinstance(out_index, (list, tuple)) and len(out_index) == 1:
-            out_index = out_index[0]
-
-        return inputs, labels, out_index
-
-    @staticmethod
-    def to_item(value: Any) -> Any:
-        """Convert value to Python object
-
-        Parameters
-        ----------
-        value : Any
-            Tensor or Numpy array
-
-        Returns
-        -------
-        Any
-            Python object
-
-        Example
-        -------
-        >>> x = torch.tensor(1.)
-        >>> to_item(x)
-        1.
-        """
-        if value is None:
-            return value
-
-        elif hasattr(value, 'numpy'):
-            value = value.cpu().detach().numpy()
-
-        if hasattr(value, 'item'):
-            value = value.item()
-
-        return value
-
-    def to_device(self, x: Any) -> Any:
-        """Put `x` into the device `self.device`.
-
-        Parameters
-        ----------
-        x : any object, probably `torch.Tensor`.
-            the input variable used for model.
-
-        Returns
-        -------
-        x : any object, probably `torch.Tensor`.
-            the input variable that in the device `self.device`.
-        """
-        device = self.device
-
-        def wrapper(inputs):
-            if isinstance(inputs, tuple):
-                return tuple(wrapper(input) for input in inputs)
-            elif isinstance(inputs, dict):
-                for k, v in inputs.items():
-                    inputs[k] = wrapper(v)
-                return inputs
-            else:
-                return inputs.to(device) if hasattr(inputs, 'to') else inputs
-
-        return wrapper(x)
 
     def cache_clear(self):
         if hasattr(self.model, 'cache_clear'):

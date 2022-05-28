@@ -1,8 +1,6 @@
 import random
 from typing import Optional
 
-import dgl
-
 from graphwar.attack.untargeted.random_attack import RandomAttack
 
 
@@ -18,11 +16,6 @@ class DICEAttack(RandomAttack):
     “Hiding individuals and communities in a social network,” 
     Nature Human Behaviour, vol. 2, no. 2, pp. 139–147, 2018.
     """
-
-    def __init__(self, graph: dgl.DGLGraph,
-                 device: str = "cpu", seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
-        super().__init__(graph=graph, device=device, seed=seed, name=name, **kwargs)
-        self._check_node_label_exists()
 
     def get_added_edge(self, influence_nodes: list) -> Optional[tuple]:
         u = random.choice(influence_nodes)

@@ -11,7 +11,7 @@ If you are interested in this project, don't hesitate to contact me or make a PR
 
 # 🚀 Installation
 
-Please make sure you have installed [PyTorch](https://pytorch.org) and [Deep Graph Library (DGL)](https://www.dgl.ai/pages/start.html).
+Please make sure you have installed [PyTorch](https://pytorch.org) and [PyTorch Geometric (PyG)](https://github.com/pyg-team/pytorch_geometric).
 
 ```bash
 # Comming soon
@@ -21,7 +21,7 @@ pip install -U graphwar
 or
 
 ```bash
-# Recommended now
+# Recommended
 git clone https://github.com/EdisonLeeeee/GraphWar.git && cd GraphWar
 pip install -e . --verbose
 ```
@@ -30,16 +30,15 @@ where `-e` means "editable" mode so you don't have to reinstall every time you m
 
 # ⚡ Get Started
 
-Assume that you have a `dgl.DGLgraph` instance `g` that describes your dataset.
-NOTE: Please make sure that `g` DO NOT contain selfloops, i.e., run `g = g.remove_self_loop()`.
+Assume that you have a `torch_geometric.data.Data` instance `data` that describes your graph.
 
 ## A simple targeted manipulation attack
 
 ```python
 from graphwar.attack.targeted import RandomAttack
-attacker = RandomAttack(g)
+attacker = RandomAttack(data)
 attacker.attack(1, num_budgets=3) # attacking target node `1` with `3` edges 
-attacked_g = attacker.g()
+attacked_data = attacker.data()
 edge_flips = attacker.edge_flips()
 
 ```
@@ -48,9 +47,9 @@ edge_flips = attacker.edge_flips()
 
 ```python
 from graphwar.attack.untargeted import RandomAttack
-attacker = RandomAttack(g)
+attacker = RandomAttack(data)
 attacker.attack(num_budgets=0.05) # attacking the graph with 5% edges perturbations
-attacked_g = attacker.g()
+attacked_data = attacker.data()
 edge_flips = attacker.edge_flips()
 
 ```
@@ -62,7 +61,7 @@ In detail, the following methods are currently implemented:
 
 ## Attack
 
-### Manipulation Attack
+### Graph Manipulation Attack (GMA)
 
 #### Targeted Attack
 
@@ -86,11 +85,11 @@ In detail, the following methods are currently implemented:
 | **Metattack**             | *Zügner et al.* [📝Adversarial Attacks on Graph Neural Networks via Meta Learning](https://arxiv.org/abs/1902.08412), *ICLR'19*                                                                                                                                                                                                                                                                                                                                                                                 |
 | **PGD**, **MinmaxAttack** | *Xu et al.* [📝Topology Attack and Defense for Graph Neural Networks: An Optimization Perspective](https://arxiv.org/abs/1906.04214), *IJCAI'19*                                                                                                                                                                                                                                                                                                                                                                |
 
-### Injection Attack
+### Graph Injection Attack (GIA)
 
-### Universal Attack
+### Graph Universal Attack (GUA)
 
-### Backdoor Attack
+### Graph Backdoor Attack (GBA)
 
 | Methods                         | Venue                                                                                                                      |
 | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
@@ -111,18 +110,18 @@ In detail, the following methods are currently implemented:
 | **APPNP** | *Klicpera et al.*  [📝Predict then Propagate: Graph Neural Networks meet Personalized PageRank](https://arxiv.org/abs/1810.05997), *ICLR'19* |
 | **JKNet** | *Xu et al.*  [📝Representation Learning on Graphs with Jumping Knowledge Networks](hhttps://arxiv.org/abs/1806.03536), *ICML'18*             |
 
-### Model-Level
+### Robust GNNs
 
 | Methods         | Venue                                                                                                                                                                                                                                         |
 | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **MedianGCN**   | *Chen et al.* [📝Understanding Structural Vulnerability in Graph Convolutional Networks](https://www.ijcai.org/proceedings/2021/310), *IJCAI'21*                                                                                               |
 | **RobustGCN**   | *Zhu et al.*  [📝Robust Graph Convolutional Networks Against Adversarial Attacks](http://pengcui.thumedialab.com/papers/RGCN.pdf), *KDD'19*                                                                                                    |
-| **ReliableGNN** | *Geisler et al.* [📝Reliable Graph Neural Networks via Robust Aggregation](https://arxiv.org/abs/2010.15651), *NeurIPS'20*<br>*Geisler et al.* [📝Robustness of Graph Neural Networks at Scale](https://arxiv.org/abs/2110.14038), *NeurIPS'21* |
+| **SoftMedianGCN** | *Geisler et al.* [📝Reliable Graph Neural Networks via Robust Aggregation](https://arxiv.org/abs/2010.15651), *NeurIPS'20*<br>*Geisler et al.* [📝Robustness of Graph Neural Networks at Scale](https://arxiv.org/abs/2110.14038), *NeurIPS'21* |
 | **ElasticGNN**  | *Liu et al.* [📝Elastic Graph Neural Networks](https://arxiv.org/abs/2107.06996), *ICML'21*                                                                                                                                                    |
 | **AirGNN**      | *Liu et al.* [📝Graph Neural Networks with Adaptive Residual](https://openreview.net/forum?id=hfkER_KJiNw), *NeurIPS'21*                                                                                                                       |
 | **SimPGCN**     | *Jin et al.* [📝Node Similarity Preserving Graph Convolutional Networks](https://arxiv.org/abs/2011.09643), *WSDM'21*                                                                                                                          |
 
-### Data-Level
+### Defense Strategy
 
 | Methods                 | Venue                                                                                                                                         |
 | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -133,6 +132,7 @@ In detail, the following methods are currently implemented:
 
 
 More details of literatures and the official codes can be found at [Awesome Graph Adversarial Learning](https://github.com/gitgiter/Graph-Adversarial-Learning).
+
 # Known Issues
 1. Despite our best efforts, we still had difficulty reproducing the results of [GNNGUARD](https://arxiv.org/abs/2006.08149) in the paper. If you find any problems, please don't hesitate to contact me.
 2. Untargeted attacks are suffering from performance degradation, as also in DeepRobust, when you use a validation set during training. Such phenomenon has also been revealed in [Black-box Gradient Attack on Graph Neural Networks: Deeper Insights in Graph-based Attack and Defense](https://arxiv.org/abs/2104.15061).

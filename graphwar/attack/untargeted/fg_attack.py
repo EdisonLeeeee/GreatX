@@ -1,45 +1,40 @@
-from typing import Callable, Optional
+from typing import Optional
 
-import dgl
 import torch
-from torch import Tensor
+import torch.nn.functional as F
 from torch.autograd import grad
+from torch import Tensor
 from tqdm import tqdm
 
 from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
 from graphwar.surrogater import Surrogater
-from graphwar.functional import normalize
 from graphwar.utils import singleton_mask
+from graphwar.functional import to_dense_adj
 
 
 class FGAttack(UntargetedAttacker, Surrogater):
     # FGAttack can conduct feature attack
-    _allow_feature_attack = True
-
-    def __init__(self, graph: dgl.DGLGraph, device: str = "cpu",
-                 seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
-        super().__init__(graph=graph, device=device, seed=seed, name=name, **kwargs)
-        self._check_feature_matrix_exists()
+    _allow_feature_attack: bool = True
 
     def setup_surrogate(self, surrogate: torch.nn.Module,
                         victim_nodes: Tensor,
                         victim_labels: Optional[Tensor] = None, *,
-                        loss: Callable = torch.nn.CrossEntropyLoss(),
                         eps: float = 1.0):
 
         Surrogater.setup_surrogate(self, surrogate=surrogate,
-                                   loss=loss, eps=eps, freeze=True)
+                                   eps=eps, freeze=True)
 
         self.victim_nodes = victim_nodes.to(self.device)
         if victim_labels is None:
-            self._check_node_label_exists()
             victim_labels = self.label[victim_nodes]
         self.victim_labels = victim_labels.to(self.device)
         return self
 
     def reset(self):
         super().reset()
-        self.modified_adj = self.graph.add_self_loop().adjacency_matrix().to_dense().to(self.device)
+        self.modified_adj = to_dense_adj(self.edge_index,
+                                         self.edge_weight,
+                                         num_nodes=self.num_nodes).to(self.device)
         self.modified_feat = self.feat.clone()
         return self
 
@@ -67,20 +62,22 @@ class FGAttack(UntargetedAttacker, Surrogater):
                        desc='Peturbing Graph',
                        disable=disable):
 
-            adj_grad, feat_grad = self._compute_gradients(modified_adj,
-                                                          modified_feat,
-                                                          self.victim_nodes,
-                                                          self.victim_labels)
+            adj_grad, feat_grad = self.compute_gradients(modified_adj,
+                                                         modified_feat,
+                                                         self.victim_nodes,
+                                                         self.victim_labels)
 
             adj_grad_score = modified_adj.new_zeros(1)
             feat_grad_score = modified_feat.new_zeros(1)
 
             with torch.no_grad():
                 if structure_attack:
-                    adj_grad_score = self.structure_score(modified_adj, adj_grad)
+                    adj_grad_score = self.structure_score(
+                        modified_adj, adj_grad)
 
                 if feature_attack:
-                    feat_grad_score = self.feature_score(modified_feat, feat_grad)
+                    feat_grad_score = self.feature_score(
+                        modified_feat, feat_grad)
 
                 adj_max, adj_argmax = torch.max(adj_grad_score, dim=0)
                 feat_max, feat_argmax = torch.max(feat_grad_score, dim=0)
@@ -119,11 +116,11 @@ class FGAttack(UntargetedAttacker, Surrogater):
         score -= score.min()
         return score.view(-1)
 
-    def _compute_gradients(self, modified_adj, modified_feat, victim_nodes, victim_labels):
+    def compute_gradients(self, modified_adj, modified_feat, victim_nodes, victim_labels):
 
-        adj_norm = normalize(modified_adj)
-        logit = self.surrogate(adj_norm, modified_feat)[victim_nodes] / self.eps
-        loss = self.loss_fn(logit, victim_labels)
+        logit = self.surrogate(modified_feat, modified_adj)[
+            victim_nodes] / self.eps
+        loss = F.cross_entropy(logit, victim_labels)
 
         if self.structure_attack and self.feature_attack:
             return grad(loss, [modified_adj, modified_feat], create_graph=False)

@@ -1,22 +1,13 @@
-import random
 from typing import Optional
 
-import dgl
+import random
 import numpy as np
 from tqdm import tqdm
 
 from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
 
-
 class RandomAttack(UntargetedAttacker):
-    """Random attacker that randomly chooses edges to flip.
-    """
-
-    def __init__(self, graph: dgl.DGLGraph, device: str = "cpu",
-                 seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
-
-        super().__init__(graph=graph, device=device, seed=seed, name=name, **kwargs)
-        self.nodes_set = set(range(self.num_nodes))
+    """Random attacker that randomly chooses edges to flip."""
 
     def attack(self,
                num_budgets=0.05, *,

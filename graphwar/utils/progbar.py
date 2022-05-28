@@ -1,4 +1,4 @@
-# The following codes are mainly modified from tensorflow and some changes are made.
+# The following codes are mainly adapted from tensorflow and some changes are made.
 # You may refer to tensorflow for more details:
 #
 #     https://github.com/tensorflow/tensorflow

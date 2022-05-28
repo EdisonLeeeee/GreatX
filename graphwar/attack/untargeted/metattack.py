@@ -1,26 +1,20 @@
-from typing import Callable, Optional
-
-import dgl
 import torch
+import torch.nn.functional as F
 from torch import Tensor
 from torch.autograd import grad
 from torch.nn import init
 from tqdm import tqdm
 
-from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
 from graphwar.surrogater import Surrogater
-from graphwar.functional import normalize
 from graphwar.utils import singleton_mask
+from graphwar.functional import to_dense_adj
+from graphwar.nn.layers.gcn_conv import dense_gcn_norm
+from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
 
 
 class Metattack(UntargetedAttacker, Surrogater):
     # Metattack can also conduct feature attack
-    _allow_feature_attack = True
-
-    def __init__(self, graph: dgl.DGLGraph, device: str = "cpu",
-                 seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
-        super().__init__(graph=graph, device=device, seed=seed, name=name, **kwargs)
-        self._check_feature_matrix_exists()
+    _allow_feature_attack: bool = True
 
     def setup_surrogate(self, surrogate: torch.nn.Module,
                         labeled_nodes: Tensor,
@@ -30,7 +24,6 @@ class Metattack(UntargetedAttacker, Surrogater):
                         momentum: float = 0.9,
                         lambda_: float = 0.,
                         *,
-                        loss: Callable = torch.nn.CrossEntropyLoss(),
                         eps: float = 1.0):
 
         if lambda_ not in (0., 0.5, 1.):
@@ -38,8 +31,7 @@ class Metattack(UntargetedAttacker, Surrogater):
                 "Invalid argument `lambda_`, allowed values [0: (meta-self), 1: (meta-train), 0.5: (meta-both)]."
             )
 
-        Surrogater.setup_surrogate(self, surrogate=surrogate,
-                                   loss=loss, eps=eps, freeze=False)
+        Surrogater.setup_surrogate(self, surrogate=surrogate, eps=eps)
 
         labeled_nodes = torch.LongTensor(labeled_nodes).to(self.device)
         unlabeled_nodes = torch.LongTensor(unlabeled_nodes).to(self.device)
@@ -49,13 +41,16 @@ class Metattack(UntargetedAttacker, Surrogater):
 
         self.y_train = self.label[labeled_nodes]
         self.y_self_train = self.estimate_self_training_labels(unlabeled_nodes)
-        self.adj = self.graph.add_self_loop().adjacency_matrix().to_dense().to(self.device)
+        self.adj = to_dense_adj(self.edge_index,
+                                self.edge_weight,
+                                num_nodes=self.num_nodes).to(self.device)
 
         weights = []
         w_velocities = []
 
         for para in self.surrogate.parameters():
             if para.ndim == 2:
+                para = para.t()
                 weights.append(torch.zeros_like(para, requires_grad=True))
                 w_velocities.append(torch.zeros_like(para))
             else:
@@ -99,8 +94,8 @@ class Metattack(UntargetedAttacker, Surrogater):
             self.weights[i] = self.weights[i].detach().requires_grad_()
             self.w_velocities[i] = self.w_velocities[i].detach()
 
-    def forward(self, adj, feat):
-        h = feat
+    def forward(self, adj, x):
+        h = x
         for w in self.weights[:-1]:
             h = adj @ (h @ w)
             h = h.relu()
@@ -112,7 +107,7 @@ class Metattack(UntargetedAttacker, Surrogater):
 
         for _ in range(self.epochs):
             out = self(adj, feat)
-            loss = self.loss_fn(out[self.labeled_nodes], self.y_train)
+            loss = F.cross_entropy(out[self.labeled_nodes], self.y_train)
             grads = torch.autograd.grad(loss,
                                         self.weights,
                                         create_graph=True)
@@ -159,21 +154,23 @@ class Metattack(UntargetedAttacker, Surrogater):
             if feature_attack:
                 modified_feat = self.get_perturbed_feat(feat_changes)
 
-            adj_norm = normalize(modified_adj)
+            adj_norm = dense_gcn_norm(modified_adj)
             self.inner_train(adj_norm, modified_feat)
 
-            adj_grad, feat_grad = self._compute_gradients(adj_norm,
-                                                          modified_feat)
+            adj_grad, feat_grad = self.compute_gradients(adj_norm,
+                                                         modified_feat)
 
             adj_grad_score = modified_adj.new_zeros(1)
             feat_grad_score = modified_feat.new_zeros(1)
 
             with torch.no_grad():
                 if structure_attack:
-                    adj_grad_score = self.structure_score(modified_adj, adj_grad)
+                    adj_grad_score = self.structure_score(
+                        modified_adj, adj_grad)
 
                 if feature_attack:
-                    feat_grad_score = self.feature_score(modified_feat, feat_grad)
+                    feat_grad_score = self.feature_score(
+                        modified_feat, feat_grad)
 
                 adj_max, adj_argmax = torch.max(adj_grad_score, dim=0)
                 feat_max, feat_argmax = torch.max(feat_grad_score, dim=0)
@@ -213,18 +210,22 @@ class Metattack(UntargetedAttacker, Surrogater):
         score -= score.min()
         return score.view(-1)
 
-    def _compute_gradients(self, modified_adj, modified_feat):
+    def compute_gradients(self, modified_adj, modified_feat):
 
         logit = self(modified_adj, modified_feat) / self.eps
 
         if self.lambda_ == 1:
-            loss = self.loss_fn(logit[self.labeled_nodes], self.y_train)
+            loss = F.cross_entropy(logit[self.labeled_nodes], self.y_train)
         elif self.lambda_ == 0.:
-            loss = self.loss_fn(logit[self.unlabeled_nodes], self.y_self_train)
+            loss = F.cross_entropy(
+                logit[self.unlabeled_nodes], self.y_self_train)
         else:
-            loss_labeled = self.loss_fn(logit[self.labeled_nodes], self.y_train)
-            loss_unlabeled = self.loss_fn(logit[self.unlabeled_nodes], self.y_self_train)
-            loss = self.lambda_ * loss_labeled + (1 - self.lambda_) * loss_unlabeled
+            loss_labeled = F.cross_entropy(
+                logit[self.labeled_nodes], self.y_train)
+            loss_unlabeled = F.cross_entropy(
+                logit[self.unlabeled_nodes], self.y_self_train)
+            loss = self.lambda_ * loss_labeled + \
+                (1 - self.lambda_) * loss_unlabeled
 
         if self.structure_attack and self.feature_attack:
             return grad(loss, [self.adj_changes, self.feat_changes])

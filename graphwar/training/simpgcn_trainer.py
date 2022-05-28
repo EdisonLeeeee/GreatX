@@ -1,38 +1,46 @@
+import torch.nn.functional as F
 from graphwar.training import Trainer
 
 
 class SimPGCNTrainer(Trainer):
+    def train_step(self, inputs: dict) -> dict:
+        """One-step training on the input dataloader.
 
-    def train_step(self, dataloader):
-        loss_fn = self.loss
+        Parameters
+        ----------
+        inputs : dict
+            the trianing data.
+
+        Returns
+        -------
+        dict
+            the output logs, including `loss` and `val_acc`, etc.
+        """
         model = self.model
+        self.callbacks.on_train_batch_begin(0)
 
-        self.reset_metrics()
         model.train()
-
+        data = inputs['data'].to(self.device)
+        mask = inputs.get('mask', None)
+        adj_t = getattr(data, 'adj_t', None)
+        y = data.y
+        
+        if adj_t is None:
+            out, embeddings = model(data.x, data.edge_index, data.edge_weight)
+        else:
+            out, embeddings = model(data.x, adj_t)
+        
+        if mask is not None:
+            out = out[mask]
+            y = y[mask]
+            
+        # ================= add regression loss here ====================
         lambda_ = self.cfg.get("lambda_", 5.0)
-
-        for epoch, batch in enumerate(dataloader):
-            self.callbacks.on_train_batch_begin(epoch)
-            x, y, out_index = self.unravel_batch(batch)
-            x = self.to_device(x)
-            y = self.to_device(y)
-
-            if not isinstance(x, tuple):
-                x = x,
-            out, embeddings = model(*x)
-            if out_index is not None:
-                out = out[out_index]
-            # ================= add regression loss here =============================
-            loss = loss_fn(out, y) + lambda_ * \
+        loss = F.cross_entropy(out, y) + lambda_ * \
                 model.regression_loss(embeddings)
-            # ===============================================================
-            loss.backward()
-            for metric in self.metrics:
-                metric.update_state(y.cpu(), out.detach().cpu())
-            self.callbacks.on_train_batch_end(epoch)
+        # ===============================================================            
+        loss.backward()
+        self.callbacks.on_train_batch_end(0)
+        return dict(loss=loss.item(), acc=out.argmax(1).eq(y).float().mean().item())
+    
 
-        metrics = [metric.result() for metric in self.metrics]
-        results = [loss.cpu().item()] + metrics
-
-        return dict(zip(self.metrics_names, results))

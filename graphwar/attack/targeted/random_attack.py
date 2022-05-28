@@ -1,7 +1,6 @@
 import random
 from typing import Optional
 
-import dgl
 from tqdm import tqdm
 
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
@@ -10,13 +9,6 @@ from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 class RandomAttack(TargetedAttacker):
     """Random attacker that randomly chooses edges to flip.
     """
-
-    def __init__(self, graph: dgl.DGLGraph, device: str = "cpu",
-                 seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
-
-        super().__init__(graph=graph, device=device, seed=seed, name=name, **kwargs)
-        self.nodes_set = set(range(self.num_nodes))
-
     def attack(self,
                target, *,
                num_budgets=None,

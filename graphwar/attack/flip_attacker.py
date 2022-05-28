@@ -1,29 +1,30 @@
 import warnings
-from functools import lru_cache
-from typing import Optional, Union
-
-import dgl
 import numpy as np
 import torch
+
+from functools import lru_cache
+from typing import Optional, Union
+from copy import copy
 from torch import Tensor
+from torch_geometric.data import Data
+from torch_geometric.utils import to_scipy_sparse_matrix, from_scipy_sparse_matrix
 
 from graphwar.attack.attacker import Attacker
-from graphwar.utils import BunchDict
+from graphwar.utils import BunchDict, remove_edges, add_edges
 
 
 class FlipAttacker(Attacker):
-    """Adversarial attacker for graph data by flipping edge.
-    """
+    """Adversarial attacker for graph data by flipping edge."""
 
     def reset(self) -> "FlipAttacker":
         """Reset attacker by recovering the flipped edges and features."""
         super().reset()
-        self.g.cache_clear()
+        self.data.cache_clear()
         self._removed_edges = {}
         self._added_edges = {}
         self._removed_feats = {}
         self._added_feats = {}
-        self.degree = self._degree.clone().to(self.device)
+        self.degree = self._degree.clone()
         return self
 
     def remove_edge(self, u: int, v: int, it: Optional[int] = None):
@@ -40,7 +41,8 @@ class FlipAttacker(Attacker):
             is_singleton_v = self.degree[v] <= 1
 
             if is_singleton_u or is_singleton_v:
-                warnings.warn(f"You are trying to remove an edge ({u}-{v}) that would result in singleton nodes. If the behavior is not intended, please make sure you have set `attacker.set_allow_singleton(False)` or check your algorithm.", UserWarning)
+                warnings.warn(f"You are trying to remove an edge ({u}-{v}) that would result in singleton nodes. "
+                              "If the behavior is not intended, please make sure you have set `attacker.set_allow_singleton(False)` or check your algorithm.", UserWarning)
 
         self._removed_edges[(u, v)] = it
         self.degree[u] -= 1
@@ -73,13 +75,6 @@ class FlipAttacker(Attacker):
             edges = list(edges.keys())
 
         removed = torch.tensor(np.asarray(edges, dtype="int64").T, device=self.device)
-        mask = self.graph.has_edges_between(removed[0], removed[1])
-        if not torch.all(mask):
-            warnings.warn("You are trying to remove some edges that does not belong to the graph. "
-                          "We would ignore these edges by default. "
-                         "Please make sure this is an intended behavior or check your data/algorithm.")
-            removed = removed[:, mask]
-        
         return removed
 
     def added_edges(self) -> Optional[Tensor]:
@@ -161,7 +156,7 @@ class FlipAttacker(Attacker):
         return BunchDict(added=added, removed=removed, all=_all)
 
     @lru_cache(maxsize=1)
-    def g(self, symmetric: bool = True) -> dgl.DGLGraph:
+    def data(self, symmetric: bool = True) -> Data:
         """Get the attacked graph.
 
         Args:
@@ -169,24 +164,28 @@ class FlipAttacker(Attacker):
                 Determine whether the resulting graph is forcibly symmetric. Default: `True`.
 
         Returns:
-            dgl.DGLGraph: The attacked graph.
+            Data: The attacked graph denoted as PyG-like Data.
         """
-        graph = self.graph.local_var()
+        data = copy(self.ori_data)
+        edge_index = data.edge_index
+        edge_weight = data.edge_weight
+        assert edge_weight is None, 'weighted graph is not supported now.'
+        device = self.device
 
         edge_flips = self.edge_flips()
         removed = edge_flips['removed']
 
         if removed is not None:
-            if symmetric:
-                removed = torch.cat([removed, removed[[1, 0]]], dim=1)
-            e_id = graph.edge_ids(removed[0], removed[1])
-            graph.remove_edges(e_id)
-
+            edge_index = remove_edges(edge_index, removed, symmetric=symmetric)
+            
         added = edge_flips['added']
         if added is not None:
-            if symmetric:
-                added = torch.cat([added, added[[1, 0]]], dim=1)
-            graph.add_edges(added[0], added[1])
+            edge_index = add_edges(edge_index, added, symmetric=symmetric)
+                
+        data.edge_index = edge_index
+        
+        if edge_weight is not None:
+            data.edge_weight = edge_weight
 
         if self.feature_attack:
             feat = self.feat.detach().clone()
@@ -198,9 +197,9 @@ class FlipAttacker(Attacker):
             added = feat_flips['added']
             if added is not None:
                 feat[added[0], added[1]] = 1.
-                graph.ndata['feat'] = feat
+            data.x = feat
 
-        return graph
+        return data
 
     def set_allow_singleton(self, state: bool):
         """Set whether the attacked graph allow singleton node with degree lower than or equal to one.
@@ -244,7 +243,7 @@ class FlipAttacker(Attacker):
             bool: `True` if the edge is an singleton edge, otherwise `False`.
         """
         threshold = 1
-        # threshold=2 if the graph has selfloop before otherwise threshold=1
+        # threshold = 2 if the graph has selfloop before otherwise threshold = 1
         if not self._allow_singleton and (self.degree[u] <= threshold or self.degree[v] <= threshold):
             return True
         return False

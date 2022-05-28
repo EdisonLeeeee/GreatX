@@ -1,12 +1,12 @@
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader
 from functools import partial
 from warnings import warn
 from typing import List, Dict
 
 import matplotlib.pyplot as plt
 from mpl_toolkits import axes_grid1
+from torch_geometric.data import Data
 
 
 def add_colorbar(im, aspect=10, pad_fraction=0.5, **kwargs):
@@ -54,14 +54,11 @@ class CKA:
 
         Example
         -------
-        >>> g = ... # get your graph
-        >>> trainer1 = ... # get your trainer1
-        >>> trainer2 = ... # get your trainer2
-        >>> dataloader = trainer1.config_test_data(g)
-        >>> m1 = trainer1.model
-        >>> m2 = trainer2.model
+        >>> data = ... # get your graph
+        >>> m1 = ... # get your model1
+        >>> m2 = ... # get your model2
         >>> cka = CKA(m1, m2)
-        >>> cka.compare(dataloader)
+        >>> cka.compare(data)
         >>> cka.plot_results()
 
         """
@@ -177,24 +174,26 @@ class CKA:
 
     @torch.no_grad()
     def compare(self,
-                dataloader1: DataLoader,
-                dataloader2: DataLoader = None) -> None:
+                data1: Data,
+                data2: Data = None) -> None:
         """
         Computes the feature similarity between the models on the
         given datasets.
 
         Parameters
         ----------
-        dataloader1 : DataLoader
+        data1 : Data
             the dataset where model 1 run on.
-        dataloader2 : DataLoader, optional
+        data2 : Data, optional
             If given, model 2 will run on this dataset. by default None
         """
-
-        if dataloader2 is None:
+        data1.to(self.device)
+        if data2 is None:
             warn(
-                "Dataloader for Model 2 is not given. Using the same dataloader for both models.")
-            dataloader2 = dataloader1
+                "Data for Model 2 is not given. Using the same data for both models.")
+            data2 = data1
+        else:
+            data2 = data2.to(self.device)
 
 #         self.model1_info['Dataset'] = dataloader1.dataset.__repr__().split('\n')[0]
 #         self.model2_info['Dataset'] = dataloader2.dataset.__repr__().split('\n')[0]
@@ -203,14 +202,9 @@ class CKA:
         self.model2_features = {}
         self.model1.eval()
         self.model2.eval()
-
-        for data, *_ in dataloader1:
-            _ = self.model1(*data)
-            break
-
-        for data, *_ in dataloader2:
-            _ = self.model2(*data)
-            break
+        
+        self.model1(data1.x, data1.edge_index, data1.edge_weight)
+        self.model2(data2.x, data2.edge_index, data2.edge_weight)
 
         N = len(self.model1_layers) if self.model1_layers is not None else len(
             self.model1_features)
@@ -260,8 +254,8 @@ class CKA:
                      title: str = None):
         fig, ax = plt.subplots()
         im = ax.imshow(self.hsic_matrix, origin='lower', cmap='magma')
-        ax.set_xlabel(f"Layers {self.model2_info['Name']}", fontsize=15)
-        ax.set_ylabel(f"Layers {self.model1_info['Name']}", fontsize=15)
+        ax.set_xlabel(f"Layers of {self.model2_info['Name']}", fontsize=15)
+        ax.set_ylabel(f"Layers of {self.model1_info['Name']}", fontsize=15)
 
         if title is not None:
             ax.set_title(f"{title}", fontsize=18)

@@ -1,16 +1,13 @@
 from functools import lru_cache
 from typing import Optional, Union
+from copy import copy
 
-import dgl
 import torch
 from torch import Tensor
+from torch_geometric.data import Data
 
-from graphwar import Config
-
-from ..attacker import Attacker
-
-_FEATURE = Config.feat
-
+from graphwar.attack.attacker import Attacker
+from graphwar.utils import add_edges
 
 class BackdoorAttacker(Attacker):
 
@@ -56,7 +53,7 @@ class BackdoorAttacker(Attacker):
     def trigger(self,):
         return self._trigger
 
-    def g(self, target_node: int, symmetric: bool = True) -> dgl.DGLGraph:
+    def data(self, target_node: int, symmetric: bool = True) -> Data:
         """return the attacked graph
 
         Parameters
@@ -72,14 +69,12 @@ class BackdoorAttacker(Attacker):
         dgl.DGLGraph
             the attacked graph with backdoor attack performed on the target node
         """
-        graph = self.graph.local_var()
+        data = copy(self.ori_data)
         num_nodes = self.num_nodes
-        data = self.trigger().view(1, -1)
+        feat = self.trigger().view(1, -1)
+        edges_to_add = torch.tensor([num_nodes, target_node]).view(2, 1).to(data.edge_index)
+        data.x = torch.cat([data.x, feat], dim=0)
+        data.edge_index = add_edges(data.edge_index, edges_to_add)
+        assert data.edge_weight is None
 
-        graph.add_nodes(1, data={_FEATURE: data})
-        graph.add_edges(num_nodes, target_node)
-
-        if symmetric:
-            graph.add_edges(target_node, num_nodes)
-
-        return graph
+        return data

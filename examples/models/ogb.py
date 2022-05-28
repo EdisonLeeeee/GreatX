@@ -1,39 +1,27 @@
 import torch
+import torch_geometric.transforms as T
 
+from ogb.nodeproppred import PygNodePropPredDataset
 from graphwar import set_seed
-from graphwar.models import GCN
+from graphwar.nn.models import GCN
 from graphwar.training import Trainer
 from graphwar.training.callbacks import ModelCheckpoint
-from ogb.nodeproppred import DglNodePropPredDataset
+from graphwar.utils import split_nodes, BunchDict
 
+dataset = PygNodePropPredDataset(root='~/data/pygdata', name=f'ogbn-arxiv', 
+                                 transform=T.ToUndirected())
+data = dataset[0]
+splits = dataset.get_idx_split()
 
-# ================================================================== #
-#                      Load datasets                                 #
-# ================================================================== #
-data = DglNodePropPredDataset(name='ogbn-arxiv')
-splits = data.get_idx_split()
-g, y = data[0]
-y = y.flatten()
-
-srcs, dsts = g.edges()
-g.add_edges(dsts, srcs)
-g = g.remove_self_loop()
-
-num_feats = g.ndata["feat"].size(1)
-num_classes = (y.max() + 1).item()
-y_train = y[splits['train']]
-y_val = y[splits['valid']]
-y_test = y[splits['test']]
+splits = BunchDict(train_nodes=splits['train'], 
+                   val_nodes=splits['valid'], 
+                   test_nodes=splits['test'])
 
 set_seed(123)
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-g = g.to(device)
-
-# ================================================================== #
-#                      Train your model                              #
-# ================================================================== #
-model = GCN(num_feats, num_classes, hids=[256, 256], bn=True)
+model = GCN(dataset.num_features, dataset.num_classes, hids=[256, 256], bn=True)
 trainer = Trainer(model, device=device)
-ckp = ModelCheckpoint('model.pth', monitor='val_accuracy')
-trainer.fit(g, y_train, splits['train'], val_y=y_val, val_index=splits['valid'], callbacks=[ckp])
-trainer.evaluate(g, y_test, splits['test'])
+ckp = ModelCheckpoint('model.pth', monitor='val_acc')
+trainer.fit({'data': data, 'mask': splits.train_nodes}, 
+            {'data': data, 'mask': splits.val_nodes}, callbacks=[ckp])
+trainer.evaluate({'data': data, 'mask': splits.test_nodes})

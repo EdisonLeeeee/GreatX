@@ -9,6 +9,9 @@ NOTE: GraphWar is still in the early stages and the API will likely continue to 
 If you are interested in this project, don't hesitate to contact me or make a PR directly.
 
 
+# 💨 News
+- May 27, 2022: GraphWar has been refactored with [PyTorch Geometric (PyG)](https://github.com/pyg-team/pytorch_geometric), the old code based on DGL can be found [here](). GraphWar now has better flexibility and usability.
+
 # 🚀 Installation
 
 Please make sure you have installed [PyTorch](https://pytorch.org) and [PyTorch Geometric (PyG)](https://github.com/pyg-team/pytorch_geometric).
@@ -134,5 +137,5 @@ In detail, the following methods are currently implemented:
 More details of literatures and the official codes can be found at [Awesome Graph Adversarial Learning](https://github.com/gitgiter/Graph-Adversarial-Learning).
 
 # Known Issues
-1. Despite our best efforts, we still had difficulty reproducing the results of [GNNGUARD](https://arxiv.org/abs/2006.08149) in the paper. If you find any problems, please don't hesitate to contact me.
-2. Untargeted attacks are suffering from performance degradation, as also in DeepRobust, when you use a validation set during training. Such phenomenon has also been revealed in [Black-box Gradient Attack on Graph Neural Networks: Deeper Insights in Graph-based Attack and Defense](https://arxiv.org/abs/2104.15061).
++ Despite our best efforts, we still had difficulty reproducing the results of [GNNGUARD](https://arxiv.org/abs/2006.08149) in the paper. If you find any problems, please don't hesitate to contact me.
++ Untargeted attacks are suffering from performance degradation, as also in DeepRobust, when a validation set is used during training. Such phenomenon has also been revealed in [Black-box Gradient Attack on Graph Neural Networks: Deeper Insights in Graph-based Attack and Defense](https://arxiv.org/abs/2104.15061).

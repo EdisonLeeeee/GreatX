@@ -19,16 +19,16 @@ class GAT(nn.Module):
 
     References
     ----------
-    Paper: https://arxiv.org/abs/1710.10903
-    Author's code: https://github.com/PetarV-/GAT
-    Pytorch implementation: https://github.com/Diego999/pyGAT    
+    * Paper: https://arxiv.org/abs/1710.10903
+    * Author's code: https://github.com/PetarV-/GAT
+    * Pytorch implementation: https://github.com/Diego999/pyGAT    
 
     """
 
     @wrapper
     def __init__(self,
-                 in_feats: int,
-                 out_feats: int,
+                 in_channels: int,
+                 out_channels: int,
                  hids: list = [8],
                  num_heads: list = [8],
                  acts: list = ['elu'],
@@ -39,9 +39,9 @@ class GAT(nn.Module):
         r"""
         Parameters
         ----------
-        in_feats : int, 
-            the input dimmensions of model
-        out_feats : int, 
+        in_channels : int, 
+            the input dimensions of model
+        out_channels : int, 
             the output dimensions of model
         hids : list, optional
             the number of hidden units of each hidden layer, by default [8]
@@ -60,27 +60,27 @@ class GAT(nn.Module):
         head = 1
         conv = []
         for hid, num_head, act in zip(hids, num_heads, acts):
-            conv.append(GATConv(in_feats * head,
+            conv.append(GATConv(in_channels * head,
                                 hid,
                                 heads=num_head,
                                 bias=bias,
                                 dropout=dropout))
             if bn:
-                conv.append(nn.BatchNorm1d(hid))            
+                conv.append(nn.BatchNorm1d(hid))
             conv.append(activations.get(act))
             conv.append(nn.Dropout(dropout))
-            in_feats = hid
+            in_channels = hid
             head = num_head
 
-        conv.append(GATConv(in_feats * head,
-                            out_feats,
+        conv.append(GATConv(in_channels * head,
+                            out_channels,
                             heads=1,
                             bias=bias,
                             concat=False,
                             dropout=dropout))
-        
-        self.conv = Sequential(*conv)      
-        
+
+        self.conv = Sequential(*conv)
+
     def reset_parameters(self):
         self.conv.reset_parameters()
 

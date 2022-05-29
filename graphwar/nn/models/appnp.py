@@ -1,8 +1,9 @@
 import torch.nn as nn
 from torch_geometric.nn import APPNP as APPNPConv
 
-from graphwar.nn.layers import activations
+from graphwar.nn.layers import activations, Sequential
 from graphwar.utils import wrapper
+
 
 class APPNP(nn.Module):
     """Approximated personalized propagation
@@ -19,8 +20,8 @@ class APPNP(nn.Module):
     """
     @wrapper
     def __init__(self,
-                 in_feats: int,
-                 out_feats: int,
+                 in_channels: int,
+                 out_channels: int,
                  hids: list = [16],
                  acts: list = ['relu'],
                  dropout: float = 0.8,
@@ -32,9 +33,9 @@ class APPNP(nn.Module):
         r"""
         Parameters
         ----------
-        in_feats : int, 
-            the input dimmensions of model
-        out_feats : int, 
+        in_channels : int, 
+            the input dimensions of model
+        out_channels : int, 
             the output dimensions of model
         hids : list, optional
             the number of hidden units of each hidden layer, by default [64]
@@ -54,17 +55,17 @@ class APPNP(nn.Module):
         lin = []
         for hid, act in zip(hids, acts):
             lin.append(nn.Dropout(dropout))
-            lin.append(nn.Linear(in_feats, hid, bias=bias))
+            lin.append(nn.Linear(in_channels, hid, bias=bias))
             if bn:
                 lin.append(nn.BatchNorm1d(hid))
-            in_feats = hid
+            in_channels = hid
             lin.append(activations.get(act))
 
         lin.append(nn.Dropout(dropout))
-        lin.append(nn.Linear(in_feats, out_feats, bias=bias))
+        lin.append(nn.Linear(in_channels, out_channels, bias=bias))
 
-        self.prop = APPNPConv(K, alpha, cached=False)
-        self.lin = nn.Sequential(*lin)
+        self.prop = APPNPConv(K, alpha, cached=cached)
+        self.lin = Sequential(*lin)
 
     def reset_parameters(self):
         self.prop.reset_parameters()
@@ -73,4 +74,3 @@ class APPNP(nn.Module):
     def forward(self, x, edge_index, edge_weight=None):
         x = self.lin(x)
         return self.prop(x, edge_index, edge_weight)
-    

@@ -20,8 +20,8 @@ class JKNet(nn.Module):
 
     @wrapper
     def __init__(self,
-                 in_feats: int,
-                 out_feats: int,
+                 in_channels: int,
+                 out_channels: int,
                  hids: list = [16]*3,
                  acts: list = ['relu']*3,
                  dropout: float = 0.5,
@@ -31,9 +31,9 @@ class JKNet(nn.Module):
         r"""
         Parameters
         ----------
-        in_feats : int, 
-            the input dimmensions of model
-        out_feats : int, 
+        in_channels : int, 
+            the input dimensions of model
+        out_channels : int, 
             the output dimensions of model
         hids : list, optional
             the number of hidden units of each hidden layer, by default [16, 16, 16]
@@ -62,14 +62,14 @@ class JKNet(nn.Module):
         for hid, act in zip(hids, acts):
             block = []
             block.append(nn.Dropout(dropout))
-            block.append(GCNConv(in_feats,
+            block.append(GCNConv(in_channels,
                                  hid,
                                  bias=bias))
             if bn:
                 block.append(nn.BatchNorm1d(hid))
             block.append(activations.get(act))
             conv.append(Sequential(*block))
-            in_feats = hid
+            in_channels = hid
 
         # `loc=1` specifies the location of features.
         self.conv = Sequential(*conv)
@@ -84,7 +84,7 @@ class JKNet(nn.Module):
         if self.mode == 'cat':
             hid = hid * (num_JK_layers + 1)
 
-        self.mlp = nn.Linear(hid, out_feats, bias=bias)
+        self.mlp = nn.Linear(hid, out_channels, bias=bias)
 
     def reset_parameters(self):
         self.conv.reset_parameters()
@@ -98,11 +98,11 @@ class JKNet(nn.Module):
         for conv in self.conv:
             x = conv(x, edge_index, edge_weight)
             xs.append(x)
-            
+
         x = self.jump(xs)
-        
+
         is_edge_like = is_edge_index(edge_index)
-        
+
         if is_edge_like:
             edge_index, edge_weight = gcn_norm(
                 edge_index, edge_weight, x.size(0), False,
@@ -113,12 +113,11 @@ class JKNet(nn.Module):
                 add_self_loops=True, dtype=x.dtype)
         else:
             # N by N dense adjacency matrix
-            adj = dense_gcn_norm(edge_index, add_self_loops=True)     
-                
+            adj = dense_gcn_norm(edge_index, add_self_loops=True)
+
         if is_edge_like:
             out = spmm(x, edge_index, edge_weight)
         else:
-            out = adj @ x        
-            
+            out = adj @ x
+
         return self.mlp(out)
-    

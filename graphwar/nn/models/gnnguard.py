@@ -5,6 +5,7 @@ from graphwar.nn.layers import GCNConv, Sequential, activations
 from graphwar.defense import GNNGUARD as GNNGUARDLayer
 from graphwar.utils import wrapper
 
+
 class GNNGUARD(nn.Module):
     """Graph Convolution Network (GCN) with GNNGUARD
 
@@ -21,8 +22,8 @@ class GNNGUARD(nn.Module):
 
     @wrapper
     def __init__(self,
-                 in_feats: int,
-                 out_feats: int,
+                 in_channels: int,
+                 out_channels: int,
                  hids: list = [16],
                  acts: list = ['relu'],
                  dropout: float = 0.5,
@@ -32,9 +33,9 @@ class GNNGUARD(nn.Module):
         r"""
         Parameters
         ----------
-        in_feats : int, 
-            the input dimmensions of model
-        out_feats : int, 
+        in_channels : int, 
+            the input dimensions of model
+        out_channels : int, 
             the output dimensions of model
         hids : list, optional
             the number of hidden units of each hidden layer, by default [16]
@@ -53,17 +54,18 @@ class GNNGUARD(nn.Module):
         conv = []
         conv.append(GNNGUARDLayer())
         for hid, act in zip(hids, acts):
-            conv.append(GCNConv(in_feats,
+            conv.append(GCNConv(in_channels,
                                 hid,
-                                bias=bias, 
+                                bias=bias,
                                 normalize=normalize))
             if bn:
                 conv.append(nn.BatchNorm1d(hid))
             conv.append(activations.get(act))
             conv.append(nn.Dropout(dropout))
             conv.append(GNNGUARDLayer())
-            in_feats = hid
-        conv.append(GCNConv(in_feats, out_feats, bias=bias, normalize=normalize))
+            in_channels = hid
+        conv.append(GCNConv(in_channels, out_channels,
+                    bias=bias, normalize=normalize))
         self.conv = Sequential(*conv)
 
     def reset_parameters(self):

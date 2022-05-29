@@ -20,8 +20,8 @@ class SoftMedianGCN(nn.Module):
 
     @wrapper
     def __init__(self,
-                 in_feats: int,
-                 out_feats: int,
+                 in_channels: int,
+                 out_channels: int,
                  hids: list = [16],
                  acts: list = ['relu'],
                  dropout: float = 0.5,
@@ -33,9 +33,9 @@ class SoftMedianGCN(nn.Module):
         r"""
         Parameters
         ----------
-        in_feats : int, 
-            the input dimmensions of model
-        out_feats : int, 
+        in_channels : int, 
+            the input dimensions of model
+        out_channels : int, 
             the output dimensions of model
         hids : list, optional
             the number of hidden units of each hidden layer, by default [16]
@@ -54,7 +54,7 @@ class SoftMedianGCN(nn.Module):
         conv = []
         assert len(hids) == len(acts)
         for hid, act in zip(hids, acts):
-            conv.append(SoftMedianConv(in_feats,
+            conv.append(SoftMedianConv(in_channels,
                                        hid,
                                        bias=bias,
                                        normalize=normalize,
@@ -64,8 +64,8 @@ class SoftMedianGCN(nn.Module):
                 conv.append(nn.BatchNorm1d(hid))
             conv.append(activations.get(act))
             conv.append(nn.Dropout(dropout))
-            in_feats = hid
-        conv.append(SoftMedianConv(in_feats, out_feats, bias=bias,
+            in_channels = hid
+        conv.append(SoftMedianConv(in_channels, out_channels, bias=bias,
                                    normalize=normalize,
                                    row_normalize=row_normalize,
                                    cached=cached))

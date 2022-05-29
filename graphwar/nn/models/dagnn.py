@@ -4,6 +4,7 @@ from torch.nn import Linear
 from graphwar.nn.layers import Sequential, activations, DAGNNConv
 from graphwar.utils import wrapper
 
+
 class DAGNN(nn.Module):
     """Deep Adaptive Graph Neural Networks.
 
@@ -19,8 +20,8 @@ class DAGNN(nn.Module):
 
     @wrapper
     def __init__(self,
-                 in_feats: int,
-                 out_feats: int,
+                 in_channels: int,
+                 out_channels: int,
                  hids: list = [64],
                  acts: list = ['relu'],
                  dropout: float = 0.5,
@@ -30,9 +31,9 @@ class DAGNN(nn.Module):
         r"""
         Parameters
         ----------
-        in_feats : int, 
-            the input dimmensions of model
-        out_feats : int, 
+        in_channels : int, 
+            the input dimensions of model
+        out_channels : int, 
             the output dimensions of model
         hids : list, optional
             the number of hidden units of each hidden layer, by default [64]
@@ -52,16 +53,16 @@ class DAGNN(nn.Module):
         lin = []
         for hid, act in zip(hids, acts):
             lin.append(nn.Dropout(dropout))
-            lin.append(Linear(in_feats, hid, bias=bias))
+            lin.append(Linear(in_channels, hid, bias=bias))
             if bn:
                 lin.append(nn.BatchNorm1d(hid))
             lin.append(activations.get(act))
-            in_feats = hid
+            in_channels = hid
 
         lin.append(nn.Dropout(dropout))
-        lin.append(Linear(in_feats, out_feats, bias=bias))
+        lin.append(Linear(in_channels, out_channels, bias=bias))
 
-        self.prop = DAGNNConv(out_feats, 1, K=K)
+        self.prop = DAGNNConv(out_channels, 1, K=K)
 
         self.lin = Sequential(*lin)
 

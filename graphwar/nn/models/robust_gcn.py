@@ -26,8 +26,8 @@ class RobustGCN(nn.Module):
 
     @wrapper
     def __init__(self,
-                 in_feats: int,
-                 out_feats: int,
+                 in_channels: int,
+                 out_channels: int,
                  hids: list = [32],
                  acts: list = ['relu'],
                  dropout: float = 0.5,
@@ -37,9 +37,9 @@ class RobustGCN(nn.Module):
         r"""
         Parameters
         ----------
-        in_feats : int, 
-            the input dimmensions of model
-        out_feats : int, 
+        in_channels : int, 
+            the input dimensions of model
+        out_channels : int, 
             the output dimensions of model
         hids : list, optional
             the number of hidden units of each hidden layer, by default [32]
@@ -56,25 +56,26 @@ class RobustGCN(nn.Module):
         super().__init__()
 
         assert len(hids) > 0
-        self.conv1 = RobustConv(in_feats,
+        self.conv1 = RobustConv(in_channels,
                                 hids[0],
                                 bias=bias)
         self.act1 = activations.get(acts[0])
 
         conv2 = nn.ModuleList()
 
-        in_feats = hids[0]
+        in_channels = hids[0]
         for hid, act in zip(hids[1:], acts[1:]):
-            conv2.append(RobustConv(in_feats,
+            conv2.append(RobustConv(in_channels,
                                     hid,
                                     bias=bias,
                                     gamma=gamma))
             if bn:
-                conv.append(nn.BatchNorm1d(hid))            
+                conv.append(nn.BatchNorm1d(hid))
             conv2.append(activations.get(act))
-            in_feats = hid
+            in_channels = hid
 
-        conv2.append(RobustConv(in_feats, out_feats, gamma=gamma, bias=bias))
+        conv2.append(RobustConv(
+            in_channels, out_channels, gamma=gamma, bias=bias))
         self.conv2 = conv2
         self.dropout = nn.Dropout(dropout)
 
@@ -83,7 +84,7 @@ class RobustGCN(nn.Module):
         for conv in self.conv2:
             conv.reset_parameters()
         self.cache_clear()
-        
+
     def cache_clear(self):
         self.mean = self.var = None
         return self

@@ -31,8 +31,8 @@ class SimPGCN(nn.Module):
     """
     @wrapper
     def __init__(self,
-                 in_feats: int,
-                 out_feats: int,
+                 in_channels: int,
+                 out_channels: int,
                  hids: list = [64],
                  acts: list = [None],
                  dropout: float = 0.5,
@@ -41,25 +41,25 @@ class SimPGCN(nn.Module):
                  gamma: float = 0.01):
 
         super().__init__()
-        assert len(hids) > 0
+
         if bn:
             raise NotImplementedError
-            
+
         assert bias == True
 
         layers = nn.ModuleList()
         act_layers = nn.ModuleList()
 
-        inc = in_feats
+        inc = in_channels
         for hid, act in zip(hids, acts):
-            layers.append(GCNConv(in_feats,
+            layers.append(GCNConv(in_channels,
                                   hid,
                                   bias=bias))
             act_layers.append(activations.get(act))
             inc = hid
 
         layers.append(GCNConv(inc,
-                              out_feats,
+                              out_channels,
                               bias=bias))
         act_layers.append(activations.get(None))
 
@@ -70,7 +70,7 @@ class SimPGCN(nn.Module):
         self.D_k = nn.ParameterList()
         self.D_bias = nn.ParameterList()
 
-        for hid in [in_feats] + hids:
+        for hid in [in_channels] + hids:
             self.scores.append(nn.Parameter(torch.FloatTensor(hid, 1)))
             self.bias.append(nn.Parameter(torch.FloatTensor(1)))
             self.D_k.append(nn.Parameter(torch.FloatTensor(hid, 1)))
@@ -120,7 +120,7 @@ class SimPGCN(nn.Module):
         embedding = None
         for ix, (layer, act) in enumerate(zip(self.layers, self.act_layers)):
             s = torch.sigmoid(x @ self.scores[ix] + self.bias[ix])
-            
+
             Dk = x @ self.D_k[ix] + self.D_bias[ix]
 
             # graph convolution without graph structure
@@ -154,19 +154,21 @@ class SimPGCN(nn.Module):
         node_pairs = self._node_pairs
         pseudo_labels = self._pseudo_labels
         if len(node_pairs[0]) > K:
-#             sampled = np.random.choice(len(node_pairs[0]), K, replace=False)
+            #             sampled = np.random.choice(len(node_pairs[0]), K, replace=False)
             prob = torch.full((len(node_pairs[0]),), 1./len(node_pairs[0]))
-            sampled = prob.multinomial(num_samples=K, replacement=False)            
+            sampled = prob.multinomial(num_samples=K, replacement=False)
 
             embeddings0 = embeddings[node_pairs[0][sampled]]
             embeddings1 = embeddings[node_pairs[1][sampled]]
             embeddings = self.linear(torch.abs(embeddings0 - embeddings1))
-            loss = F.mse_loss(embeddings, pseudo_labels[sampled].unsqueeze(-1), reduction='mean')
+            loss = F.mse_loss(
+                embeddings, pseudo_labels[sampled].unsqueeze(-1), reduction='mean')
         else:
             embeddings0 = embeddings[node_pairs[0]]
             embeddings1 = embeddings[node_pairs[1]]
             embeddings = self.linear(torch.abs(embeddings0 - embeddings1))
-            loss = F.mse_loss(embeddings, pseudo_labels.unsqueeze(-1), reduction='mean')
+            loss = F.mse_loss(
+                embeddings, pseudo_labels.unsqueeze(-1), reduction='mean')
         return loss
 
 
@@ -185,7 +187,8 @@ def knn_graph(x: torch.Tensor, k: int = 20) -> SparseTensor:
     edge_weight = topk.values.flatten()
 
     N = x.size(0)
-    adj = SparseTensor.from_edge_index(edge_index, edge_weight, sparse_sizes=(N, N))
+    adj = SparseTensor.from_edge_index(
+        edge_index, edge_weight, sparse_sizes=(N, N))
 
     return adj
 

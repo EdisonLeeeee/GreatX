@@ -1,10 +1,11 @@
 import torch.nn as nn
-from graphwar.nn.layers import activations, ElasticConv
+from graphwar.nn.layers import activations, ElasticConv, Sequential
 from graphwar.utils import wrapper
 
+
 class ElasticGNN(nn.Module):
-    """Graph Neural Networks with Adaptive residual.
-    
+    """Graph Neural Networks with elastic message passing.
+
     Example:
     --------
     # ElasticGNN with one hidden layer
@@ -14,11 +15,11 @@ class ElasticGNN(nn.Module):
     # ElasticGNN with two hidden layers, without activation at the first layer
     >>> model = ElasticGNN(100, 10, hids=[32, 16], acts=[None, 'relu'])
     """
-    
+
     @wrapper
     def __init__(self,
-                 in_feats: int,
-                 out_feats: int,
+                 in_channels: int,
+                 out_channels: int,
                  hids: list = [16],
                  acts: list = ['relu'],
                  dropout: float = 0.8,
@@ -31,9 +32,9 @@ class ElasticGNN(nn.Module):
         r"""
         Parameters
         ----------
-        in_feats : int, 
-            the input dimmensions of model
-        out_feats : int, 
+        in_channels : int, 
+            the input dimensions of model
+        out_channels : int, 
             the output dimensions of model
         hids : list, optional
             the number of hidden units of each hidden layer, by default [64]
@@ -48,19 +49,18 @@ class ElasticGNN(nn.Module):
         """
 
         super().__init__()
-        assert len(hids) > 0
 
         lin = []
         for hid, act in zip(hids, acts):
             lin.append(nn.Dropout(dropout))
-            lin.append(nn.Linear(in_feats, hid, bias=bias))
+            lin.append(nn.Linear(in_channels, hid, bias=bias))
             if bn:
                 lin.append(nn.BatchNorm1d(hid))
             lin.append(activations.get(act))
-            in_feats = hid
+            in_channels = hid
 
         lin.append(nn.Dropout(dropout))
-        lin.append(nn.Linear(in_feats, out_feats, bias=bias))
+        lin.append(nn.Linear(in_channels, out_channels, bias=bias))
 
         self.prop = ElasticConv(K=K,
                                 lambda1=lambda1,
@@ -68,17 +68,16 @@ class ElasticGNN(nn.Module):
                                 L21=True,
                                 cached=cached)
 
-        self.lin = nn.Sequential(*lin)
+        self.lin = Sequential(*lin)
 
     def reset_parameters(self):
         self.prop.reset_parameters()
         self.lin.reset_parameters()
-        
+
     def cache_clear(self):
         self.prop._cached_inc = None
-        return self        
-        
+        return self
+
     def forward(self, x, edge_index, edge_weight=None):
         x = self.lin(x)
         return self.prop(x, edge_index, edge_weight)
-    

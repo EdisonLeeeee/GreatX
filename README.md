@@ -10,7 +10,7 @@ If you are interested in this project, don't hesitate to contact me or make a PR
 
 
 # 💨 News
-- May 27, 2022: GraphWar has been refactored with [PyTorch Geometric (PyG)](https://github.com/pyg-team/pytorch_geometric), the old code based on DGL can be found [here](). GraphWar now has better flexibility and usability.
+- May 27, 2022: GraphWar has been refactored with [PyTorch Geometric (PyG)](https://github.com/pyg-team/pytorch_geometric), the old code based on DGL can be found [here](https://github.com/EdisonLeeeee/GraphWar/tree/dgl). GraphWar now has better flexibility and usability. We will sonn release the first version GraphWar, stay tuned!
 
 # 🚀 Installation
 

@@ -39,15 +39,15 @@ class UntargetedAttacker(FlipAttacker):
             whether to conduct feature attack, i.e., modify the node features
 
         """
-        
+
         _is_setup = getattr(self, "_is_setup", True)
-        
+
         if not _is_setup:
             raise RuntimeError(
                 f'{self.__class__.__name__} requires a surrogate model to conduct attack. '
-                'Use `attacker.setup_surrogate(surrogate_model)`.')        
+                'Use `attacker.setup_surrogate(surrogate_model)`.')
 
-        if not self.is_reseted:
+        if not self._is_reset:
             raise RuntimeError(
                 'Before calling attack, you must reset your attacker. Use `attacker.reset()`.'
             )
@@ -75,6 +75,6 @@ class UntargetedAttacker(FlipAttacker):
         self.structure_attack = structure_attack
         self.feature_attack = feature_attack
 
-        self.is_reseted = False
+        self._is_reset = False
 
         return self

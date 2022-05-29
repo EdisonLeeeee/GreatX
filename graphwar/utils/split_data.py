@@ -11,7 +11,7 @@ def train_val_test_split_tabular(N: int, *,
                                  train: float = 0.1,
                                  test: float = 0.8,
                                  val: float = 0.1,
-                                 stratify=None,
+                                 stratify: Optional[bool] = None,
                                  random_state: Optional[int] = None) -> Tuple:
 
     idx = torch.arange(N)
@@ -21,7 +21,8 @@ def train_val_test_split_tabular(N: int, *,
                                            test_size=test,
                                            stratify=stratify)
     if val:
-        stratify = stratify[idx_train]
+        if stratify:
+            stratify = stratify[idx_train]
         idx_train, idx_val = train_test_split(idx_train,
                                               random_state=random_state,
                                               train_size=train / (train + val),
@@ -56,7 +57,8 @@ def split_nodes(labels: Tensor, *,
 
 
 def split_nodes_by_classes(labels: torch.Tensor,
-                           n_per_class: int = 20, random_state: Optional[int] = None):
+                           n_per_class: int = 20,
+                           random_state: Optional[int] = None) -> BunchDict:
     """
     Randomly split the training data by the number of nodes per classes.
 
@@ -66,21 +68,22 @@ def split_nodes_by_classes(labels: torch.Tensor,
         The class labels
     n_per_class : int
         Number of samples per class
-    random_state: int
-        Seed
+    random_state: Optional[int]
+        Random seed
 
     Returns
     -------
-    split_train: torch.Tensor [n_per_class * num_classes]
-        The indices of the training nodes
-    split_val: torch.Tensor [n_per_class * num_classes]
-        The indices of the validation nodes
-    split_test torch.Tensor [num_nodes - 2*n_per_class * num_classes]
-        The indices of the test nodes
+    BunchDict with the following items:
+        * train_nodes: torch.Tensor [n_per_class * num_classes]
+            The indices of the training nodes
+        * val_nodes: torch.Tensor [n_per_class * num_classes]
+            The indices of the validation nodes
+        * test_nodes torch.Tensor [num_nodes - 2*n_per_class * num_classes]
+            The indices of the test nodes
     """
     if random_state is not None:
         torch.manual_seed(random_state)
-        
+
     num_classes = labels.max() + 1
 
     split_train, split_val = [], []
@@ -95,7 +98,8 @@ def split_nodes_by_classes(labels: torch.Tensor,
     split_val = torch.cat(split_val)
     split_train = split_val[torch.randperm(split_val.size(0))]
 
-    assert split_train.size(0) == split_val.size(0) == n_per_class * num_classes
+    assert split_train.size(0) == split_val.size(
+        0) == n_per_class * num_classes
 
     mask = torch.ones_like(labels).bool()
 

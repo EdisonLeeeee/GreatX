@@ -7,7 +7,8 @@ from torch import Tensor
 from torch_geometric.utils import subgraph, degree
 from torch_geometric.utils.num_nodes import maybe_num_nodes
 
-def drop_edge(edge_index: Tensor, edge_weight: Optional[Tensor] = None, 
+
+def drop_edge(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
               p: float = 0.5, training: bool = True) -> Tuple[Tensor, Tensor]:
     """
     DropEdge: Sampling edge using a uniform distribution.
@@ -30,7 +31,7 @@ def drop_edge(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
     return edge_index, edge_weight
 
 
-def drop_node(edge_index: Tensor, edge_weight: Optional[Tensor] = None, 
+def drop_node(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
               p: float = 0.5, training: bool = True,
               num_nodes: Optional[int] = None) -> Tuple[Tensor, Tensor]:
     """
@@ -52,22 +53,22 @@ def drop_node(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
     return subgraph(subset, edge_index, edge_weight)
 
 
-def drop_path(edge_index: Tensor, edge_weight: Optional[Tensor] = None, 
-              r: float = 0.5, 
+def drop_path(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
+              r: float = 0.5,
               walks_per_node: int = 2,
               walk_length: int = 4,
-              p: float = 1, q: float = 1, 
+              p: float = 1, q: float = 1,
               training: bool = True,
               num_nodes: int = None,
               by: str = 'degree') -> Tuple[Tensor, Tensor]:
 
     if r < 0. or r > 1.:
         raise ValueError(f'Root node sampling ratio `r` has to be between 0 and 1 '
-                         f'(got {r}')    
-        
+                         f'(got {r}')
+
     if not training or not r:
         return edge_index, edge_weight
-    
+
     assert by in {'degree', 'uniform'}
     num_nodes = maybe_num_nodes(edge_index, num_nodes)
 
@@ -80,12 +81,13 @@ def drop_path(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
             prob = deg / deg.sum()
             start = prob.multinomial(num_samples=num_starts, replacement=True)
         else:
-            start = torch.randperm(num_nodes, device=edge_index.device)[:num_starts]
+            start = torch.randperm(num_nodes, device=edge_index.device)[
+                :num_starts]
     elif torch.is_tensor(r):
         start = r.to(edge_index)
     else:
         raise ValueError('Root node sampling ratio `r` must be '
-                        f'`float`, `torch.Tensor`, but got {r}.')
+                         f'`float`, `torch.Tensor`, but got {r}.')
 
     if walks_per_node:
         start = start.repeat(walks_per_node)
@@ -93,10 +95,11 @@ def drop_path(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
     rowptr = row.new_zeros(num_nodes + 1)
     torch.cumsum(deg, 0, out=rowptr[1:])
 
-    n_id, e_id = torch.ops.torch_cluster.random_walk(rowptr, col, start, walk_length, p, q)
+    n_id, e_id = torch.ops.torch_cluster.random_walk(
+        rowptr, col, start, walk_length, p, q)
     mask = row.new_ones(row.size(0), dtype=torch.bool)
     mask[e_id.view(-1)] = False
-    
+
     if edge_weight is not None:
         edge_weight = edge_weight[mask]
     return edge_index[:, mask], edge_weight

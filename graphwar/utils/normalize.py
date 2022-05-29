@@ -3,9 +3,10 @@ from typing import Optional, Union
 import torch
 from torch import Tensor
 
+
 def normalize(feat: Tensor, norm: str = "standardize",
               dim: Optional[int] = None,
-              lim_min: float = -1.0, lim_max: float = 1.0):
+              lim_min: float = -1.0, lim_max: float = 1.0) -> Tensor:
     """Feature normalization function. Adapted from GRB:
     `https://github.com/THUDM/grb/blob/2f438ccc9e62ffb33a26ca98a95e504985443055/grb/dataset/dataset.py#L638`
 
@@ -22,9 +23,9 @@ def normalize(feat: Tensor, norm: str = "standardize",
         are computed. The default is to compute the mean or 
         standard deviations of the flattened array, by default None
     lim_min : float, optional
-        mininum limit of feature, by default -1.0
+        minimum limit of feature, by default -1.0
     lim_max : float, optional
-        maxinum limit of feature, by default 1.0
+        maximum limit of feature, by default 1.0
 
     Returns
     -------
@@ -33,7 +34,7 @@ def normalize(feat: Tensor, norm: str = "standardize",
     """
     if norm not in ("linearize", "arctan", "tanh", "standardize", "none"):
         raise ValueError('Invalid norm value. Must be either "linearize", "arctan", "tanh", "standardize" or "none".'
-                           ' But got "{}".'.format(norm))
+                         ' But got "{}".'.format(norm))
 
     if norm == 'none':
         return feat
@@ -67,5 +68,3 @@ def normalize(feat: Tensor, norm: str = "standardize",
             pass
 
     return feat
-
-

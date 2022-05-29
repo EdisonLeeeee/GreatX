@@ -9,7 +9,7 @@ class SimPGCNTrainer(Trainer):
         Parameters
         ----------
         inputs : dict
-            the trianing data.
+            the training data.
 
         Returns
         -------
@@ -24,23 +24,21 @@ class SimPGCNTrainer(Trainer):
         mask = inputs.get('mask', None)
         adj_t = getattr(data, 'adj_t', None)
         y = data.y
-        
+
         if adj_t is None:
             out, embeddings = model(data.x, data.edge_index, data.edge_weight)
         else:
             out, embeddings = model(data.x, adj_t)
-        
+
         if mask is not None:
             out = out[mask]
             y = y[mask]
-            
+
         # ================= add regression loss here ====================
         lambda_ = self.cfg.get("lambda_", 5.0)
         loss = F.cross_entropy(out, y) + lambda_ * \
-                model.regression_loss(embeddings)
-        # ===============================================================            
+            model.regression_loss(embeddings)
+        # ===============================================================
         loss.backward()
         self.callbacks.on_train_batch_end(0)
         return dict(loss=loss.item(), acc=out.argmax(1).eq(y).float().mean().item())
-    
-

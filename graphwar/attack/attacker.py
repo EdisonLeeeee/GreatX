@@ -52,18 +52,19 @@ class Attacker(torch.nn.Module):
             raise TypeError(
                 f"Got an unexpected keyword argument '{next(iter(kwargs.keys()))}'."
             )
-            
+
         assert isinstance(data, Data)
 
         self.device = torch.device(device)
         self.ori_data = data.to(self.device)
-        
-        self.adjacency_matrix: sp.csr_matrix = to_scipy_sparse_matrix(data.edge_index, 
+
+        self.adjacency_matrix: sp.csr_matrix = to_scipy_sparse_matrix(data.edge_index,
                                                                       num_nodes=data.num_nodes).tocsr()
         self.name = name or self.__class__.__name__
         self.seed = seed
 
-        self._degree = degree(data.edge_index[0], num_nodes=data.num_nodes, dtype=torch.float)
+        self._degree = degree(
+            data.edge_index[0], num_nodes=data.num_nodes, dtype=torch.float)
 
         self.num_nodes = data.num_nodes
         self.num_edges = data.num_edges
@@ -72,12 +73,12 @@ class Attacker(torch.nn.Module):
 
         set_seed(seed)
 
-        self.is_reseted = False
+        self._is_reset = False
 
     def reset(self):
         """Reset attacker state. 
         Override this method in subclass to implement specific function."""
-        self.is_reseted = True
+        self._is_reset = True
         return self
 
     @abc.abstractmethod
@@ -149,16 +150,16 @@ class Attacker(torch.nn.Module):
     def label(self) -> torch.Tensor:
         """Node labels of the original graph."""
         return self.ori_data.y
-    
+
     @property
     def edge_index(self) -> torch.Tensor:
         """Edge index of the original graph."""
-        return self.ori_data.edge_index   
-    
+        return self.ori_data.edge_index
+
     @property
     def edge_weight(self) -> torch.Tensor:
         """Edge weight of the original graph."""
-        return self.ori_data.edge_weight      
+        return self.ori_data.edge_weight
 
     def _check_feature_matrix_binary(self):
         feat = self.feat

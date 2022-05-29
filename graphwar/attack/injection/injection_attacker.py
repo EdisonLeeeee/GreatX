@@ -1,11 +1,11 @@
 from functools import lru_cache
 from typing import Optional, Union
 
-import dgl
 import torch
 from torch import Tensor
 
 from graphwar.attack.attacker import Attacker
+from torch_geometric.data import Data
 
 
 class InjectionAttacker(Attacker):
@@ -21,23 +21,23 @@ class InjectionAttacker(Attacker):
         self.num_budgets = None
         self._added_edges = {}
         self._added_nodes = {}
-        self.g.cache_clear()
+        self.data.cache_clear()
 
         return self
 
     def attack(self, num_budgets: Union[int, float], *, targets: Optional[Tensor] = None, num_edges_global: Optional[int] = None,
-               num_edges_local: Optional[int] = None, feat_limits: Optional[tuple, dict] = None) -> "InjectionAttacker":
+               num_edges_local: Optional[int] = None, feat_limits: Optional[Union[tuple, dict]] = None) -> "InjectionAttacker":
         """Base method that describes the adversarial injection attack
         """
-        
+
         _is_setup = getattr(self, "_is_setup", True)
-        
+
         if not _is_setup:
             raise RuntimeError(
                 f'{self.__class__.__name__} requires a surrogate model to conduct attack. '
-                'Use `attacker.setup_surrogate(surrogate_model)`.')        
+                'Use `attacker.setup_surrogate(surrogate_model)`.')
 
-        if not self.is_reseted:
+        if not self._is_reset:
             raise RuntimeError(
                 'Before calling attack, you must reset your attacker. Use `attacker.reset()`.'
             )
@@ -59,9 +59,11 @@ class InjectionAttacker(Attacker):
                 min_limits = feat_limits.pop('min', None)
                 max_limits = feat_limits.pop('max', None)
                 if feat_limits:
-                    raise ValueError(f"Unrecognized key {next(iter(feat_limits.keys()))}.")
+                    raise ValueError(
+                        f"Unrecognized key {next(iter(feat_limits.keys()))}.")
             else:
-                raise TypeError(f"`feat_limits` should be an instance of tuple and dict, but got {feat_limits}.")
+                raise TypeError(
+                    f"`feat_limits` should be an instance of tuple and dict, but got {feat_limits}.")
 
         feat = self.feat
 
@@ -77,7 +79,7 @@ class InjectionAttacker(Attacker):
             self.targets = torch.arange(self.num_nodes, device=self.device)
         else:
             self.targets = torch.LongTensor([targets]).view(-1).to(self.device)
-        self.is_reseted = False
+        self._is_reset = False
 
         return self
 
@@ -91,7 +93,7 @@ class InjectionAttacker(Attacker):
         ...
 
     @lru_cache(maxsize=1)
-    def g(self, symmetric: bool = True) -> dgl.DGLGraph:
+    def data(self, symmetric: bool = True) -> Data:
         """return the attacked graph
 
         Parameters
@@ -101,7 +103,7 @@ class InjectionAttacker(Attacker):
 
         Returns
         -------
-        dgl.DGLGraph
+        Data
             the attacked graph
         """
         graph = self.graph.local_var()

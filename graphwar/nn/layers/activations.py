@@ -17,15 +17,16 @@ act_dict = dict(relu="ReLU",
                 tanh="Tanh")
 
 
-
 def get(act: Optional[str] = None, inplace: bool = False) -> nn.Module:
-    """get activation functions by `string`
+    """Get activation functions by input `string`
 
     Example
     -------
-    >>> from graphwar.nn import activations
+    >>> from graphwar.nn.layers import activations
     >>> activations.get('relu')
     ReLU()
+    >>> activations.get(None)
+    Identity()
 
     Parameters
     ----------
@@ -36,7 +37,7 @@ def get(act: Optional[str] = None, inplace: bool = False) -> nn.Module:
         the inplace argument in activation functions
         currently it is not work since not all the functions 
         take this argument, by default False
-        
+
     NOTE
     ----
     We currently do not support `inplace=True` since
@@ -62,4 +63,5 @@ def get(act: Optional[str] = None, inplace: bool = False) -> nn.Module:
     if out:
         return getattr(nn, out)()
     else:
-        raise ValueError(f"Unknown activation {act}. The allowed activation functions are {tuple(act_dict.keys())} or `None`.")
+        raise ValueError(
+            f"Unknown activation {act}. The allowed activation functions are {tuple(act_dict.keys())} or `None`.")

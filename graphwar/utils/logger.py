@@ -35,14 +35,13 @@ def setup_logger(
     abbrev_name : Optional[str], optional
         an abbreviation of the module, to avoid long names in logs.
         Set to "" to not log the root module in logs.
-        By default, will abbreviate "detectron2" to "d2" and leave other
-        modules unchanged.
+        By default, None.
 
     Returns
     -------
     logging.Logger
         a logger
-        
+
     Example
     -------
     >>> logger = setup_logger(name='my exp')
@@ -55,12 +54,12 @@ def setup_logger(
 
     >>> logger.warning('message')
     WARNING [12/19 17:02:32 my exp]: message
-    
+
     # specify output files
     >>> logger = setup_logger(output='log.txt', name='my exp')
     # additive, by default mode='w' 
     >>> logger = setup_logger(output='log.txt', name='my exp', mode='a')    
-    
+
     # once you logger is set, you can call it by
     >>> logger = get_logger(name='my exp')
     """

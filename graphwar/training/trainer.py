@@ -4,34 +4,33 @@ from typing import Any, Callable, List, Optional, Union
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch import Tensor
-from torch.utils.data import DataLoader
-
-from torch_geometric.data import Data
-from torch_geometric.loader import DataLoader as PyGLoader
-
 from graphwar.training.callbacks import (Callback, CallbackList, Optimizer,
                                          Scheduler)
+from torch import Tensor
+from torch.utils.data import DataLoader
+from torch_geometric.data import Data
+from torch_geometric.loader import DataLoader as PyGLoader
 from graphwar.utils import BunchDict, Progbar
+
 
 class Trainer:
     """A simple trainer to train graph neural network models conveniently.
 
     Example
     -------
-    >>> from graphwar.trainig import Trainer
+    >>> from graphwar.training import Trainer
     >>> model = ... # your model
     >>> trainer = Trainer(model, device='cuda')
-    
-    >>> data # PyG-like data
+
+    >>> data # PyG-like data, e.g., Cora
     Data(x=[2485, 1433], y=[2485], adj_t=[2485, 2485, nnz=10138])
 
     >>> # simple training
     >>> trainer.fit({'data': data, 'mask': train_mask})
 
     >>> # train with model picking
-    >>> from graphwar.trainig import ModelCheckpoint
-    >>> cb = ModelCheckpoint('my_ckpy', monitor='val_acc')
+    >>> from graphwar.training import ModelCheckpoint
+    >>> cb = ModelCheckpoint('my_ckpt', monitor='val_acc')
     >>> trainer.fit({'data': data, 'mask': train_mask},
     {'data': data, 'mask': val_mask}, callbacks=[cb])    
 
@@ -41,7 +40,6 @@ class Trainer:
     >>> trainer.evaluate({'data': data, 'mask': data.test_mask}) # evaluation
 
     >>> predict = trainer.predict({'data': data, 'mask': your_mask}) # prediction
-
     """
 
     def __init__(self, model: nn.Module, device: Union[str, torch.device] = 'cpu', **cfg):
@@ -57,10 +55,10 @@ class Trainer:
         """
         self.device = torch.device(device)
         self.model = model.to(self.device)
-        
+
         cfg.setdefault("lr", 1e-2)
         cfg.setdefault("weight_decay", 5e-4)
-        
+
         self.cfg = BunchDict(cfg)
         self.optimizer = self.config_optimizer()
         self.scheduler = self.config_scheduler(self.optimizer)
@@ -72,10 +70,10 @@ class Trainer:
 
         Parameters
         ----------
-        train_inputs : dict
-            training data.
+        train_inputs : dict like inputs
+            training data. It is used for `train_step`.
         val_inputs : Optional[dict]
-            used for validatiaon.
+            used for validation.
         callbacks : Optional[Callback], optional
             callbacks used for training, 
             see `graphwar.training.callbacks`, by default None
@@ -84,6 +82,17 @@ class Trainer:
             None, 1, 2, 3, 4, by default 1
         epochs : int, optional
             training epochs, by default 100
+
+        Example
+        -------
+        >>> # simple training
+        >>> trainer.fit({'data': data, 'mask': train_mask})
+
+        >>> # train with model picking
+        >>> from graphwar.training import ModelCheckpoint
+        >>> cb = ModelCheckpoint('my_ckpt', monitor='val_acc')
+        >>> trainer.fit({'data': data, 'mask': train_mask},
+        {'data': data, 'mask': val_mask}, callbacks=[cb])           
         """
 
         model = self.model.to(self.device)
@@ -91,7 +100,8 @@ class Trainer:
         validation = val_inputs is not None
 
         # Setup callbacks
-        self.callbacks = callbacks = self.config_callbacks(verbose, epochs, callbacks=callbacks)
+        self.callbacks = callbacks = self.config_callbacks(
+            verbose, epochs, callbacks=callbacks)
 
         logs = BunchDict()
 
@@ -126,8 +136,8 @@ class Trainer:
 
         Parameters
         ----------
-        inputs : dict
-            the trianing data.
+        inputs : dict like inputs
+            the training data.
 
         Returns
         -------
@@ -142,16 +152,16 @@ class Trainer:
         mask = inputs.get('mask', None)
         adj_t = getattr(data, 'adj_t', None)
         y = data.y.squeeze()
-        
+
         if adj_t is None:
             out = model(data.x, data.edge_index, data.edge_weight)
         else:
             out = model(data.x, adj_t)
-        
+
         if mask is not None:
             out = out[mask]
             y = y[mask]
-            
+
         loss = F.cross_entropy(out, y)
         loss.backward()
         self.callbacks.on_train_batch_end(0)
@@ -163,7 +173,8 @@ class Trainer:
 
         Parameters
         ----------
-        inputs : dict
+        inputs : dict like inputs
+            test data, it is used for `test_step`.
         verbose : Optional[int], optional
             verbosity during evaluation, by default 1
 
@@ -171,10 +182,14 @@ class Trainer:
         -------
         BunchDict
             the dict-like output logs
+
+        Example
+        -------
+        >>> trainer.evaluate({'data': data, 'mask': data.test_mask}) # evaluation
         """
         if verbose:
             print("Evaluating...")
-            
+
         self.model = self.model.to(self.device)
 
         progbar = Progbar(target=1,
@@ -191,16 +206,16 @@ class Trainer:
         mask = inputs.get('mask', None)
         adj_t = getattr(data, 'adj_t', None)
         y = data.y.squeeze()
-        
+
         if adj_t is None:
             out = model(data.x, data.edge_index, data.edge_weight)
         else:
             out = model(data.x, adj_t)
-        
+
         if mask is not None:
             out = out[mask]
             y = y[mask]
-            
+
         loss = F.cross_entropy(out, y)
 
         return dict(loss=loss.item(), acc=out.argmax(1).eq(y).float().mean().item())
@@ -213,12 +228,12 @@ class Trainer:
         data = inputs['data'].to(self.device)
         mask = inputs.get('mask', None)
         adj_t = getattr(data, 'adj_t', None)
-        
+
         if adj_t is None:
             out = model(data.x, data.edge_index, data.edge_weight)
         else:
             out = model(data.x, adj_t)
-        
+
         if mask is not None:
             out = out[mask]
         return out
@@ -228,11 +243,16 @@ class Trainer:
         """
         Parameters
         ----------
-        inputs : dict
+        inputs : dict like inputs
+            predict data, it is used for `predict_step`
         transform : Callable
-            Callable function applied on outputs.
+            Callable function applied on output predictions.
+
+        Example
+        -------
+        >>> predict = trainer.predict({'data': data, 'mask': mask_or_not_given}) # prediction
         """
-        
+
         self.model.to(self.device)
         out = self.predict_step(inputs).squeeze()
         if transform is not None:
@@ -267,15 +287,15 @@ class Trainer:
         assert m is None or isinstance(m, torch.nn.Module)
         self._model = m
 
-    def cache_clear(self):
+    def cache_clear(self) -> "Trainer":
         if hasattr(self.model, 'cache_clear'):
             self.model.cache_clear()
         return self
-    
+
     def __repr__(self) -> str:
         model = self.model
-        return f"{self.__class__.__name__}(model={model.__class__.__name__}{self.extra_repr()})"    
-    
+        return f"{self.__class__.__name__}(model={model.__class__.__name__}{self.extra_repr()})"
+
     __str__ = __repr__
 
     def extra_repr(self) -> str:

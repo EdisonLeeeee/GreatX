@@ -9,6 +9,7 @@ from torch_geometric.data import Data
 from graphwar.attack.attacker import Attacker
 from graphwar.utils import add_edges
 
+
 class BackdoorAttacker(Attacker):
 
     def reset(self) -> "BackdoorAttacker":
@@ -21,22 +22,22 @@ class BackdoorAttacker(Attacker):
         """
         self.num_budgets = None
         self._trigger = None
-        self.is_reseted = True
+        self._is_reset = True
 
         return self
 
     def attack(self, num_budgets: Union[int, float], targets_class: int) -> "BackdoorAttacker":
         """Base method that describes the adversarial backdoor attack
         """
-        
+
         _is_setup = getattr(self, "_is_setup", True)
-        
+
         if not _is_setup:
             raise RuntimeError(
                 f'{self.__class__.__name__} requires a surrogate model to conduct attack. '
-                'Use `attacker.setup_surrogate(surrogate_model)`.')        
+                'Use `attacker.setup_surrogate(surrogate_model)`.')
 
-        if not self.is_reseted:
+        if not self._is_reset:
             raise RuntimeError(
                 'Before calling attack, you must reset your attacker. Use `attacker.reset()`.'
             )
@@ -45,8 +46,9 @@ class BackdoorAttacker(Attacker):
             num_budgets, max_perturbations=self.num_feats)
 
         self.num_budgets = num_budgets
-        self.targets_class = torch.LongTensor([targets_class]).view(-1).to(self.device)
-        self.is_reseted = False
+        self.targets_class = torch.LongTensor(
+            [targets_class]).view(-1).to(self.device)
+        self._is_reset = False
 
         return self
 
@@ -66,13 +68,14 @@ class BackdoorAttacker(Attacker):
 
         Returns
         -------
-        dgl.DGLGraph
+        Data
             the attacked graph with backdoor attack performed on the target node
         """
         data = copy(self.ori_data)
         num_nodes = self.num_nodes
         feat = self.trigger().view(1, -1)
-        edges_to_add = torch.tensor([num_nodes, target_node]).view(2, 1).to(data.edge_index)
+        edges_to_add = torch.tensor([num_nodes, target_node]).view(
+            2, 1).to(data.edge_index)
         data.x = torch.cat([data.x, feat], dim=0)
         data.edge_index = add_edges(data.edge_index, edges_to_add)
         assert data.edge_weight is None

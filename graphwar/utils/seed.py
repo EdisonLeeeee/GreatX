@@ -2,7 +2,6 @@ import random
 from numbers import Number
 from typing import Optional
 
-import dgl
 import numpy as np
 import torch
 
@@ -16,5 +15,4 @@ def set_seed(seed: Optional[int] = None):
     if seed is not None:
         torch.manual_seed(seed)
         torch.cuda.manual_seed(seed)
-        dgl.random.seed(seed)
         # torch.cuda.manual_seed_all(seed)

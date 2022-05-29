@@ -94,11 +94,13 @@ class LikelihoodFilter:
             degree_sequence_start = degree
 
             d_min = 2  # denotes the minimum degree a node needs to have to be considered in the power-law test
-            S_d_start = np.sum(np.log(degree_sequence_start[degree_sequence_start >= d_min]))
+            S_d_start = np.sum(
+                np.log(degree_sequence_start[degree_sequence_start >= d_min]))
             n_start = np.sum(degree_sequence_start >= d_min)
             alpha_start = self.compute_alpha(n_start, S_d_start, d_min)
 
-            self.log_likelihood_start = self.compute_log_likelihood(n_start, alpha_start, S_d_start, d_min)
+            self.log_likelihood_start = self.compute_log_likelihood(
+                n_start, alpha_start, S_d_start, d_min)
             self.S_d_start = S_d_start
             self.current_S_d = S_d_start.copy()
             self.S_d_start = n_start
@@ -122,12 +124,16 @@ class LikelihoodFilter:
         deltas = 1 - 2 * edge_weights
         d_edges_old = self.current_degree_sequence[edges]
         d_edges_new = self.current_degree_sequence[edges] + deltas[:, None]
-        new_S_d, new_n = self.update_Sx(current_S_d, current_n, d_edges_old, d_edges_new, d_min)
+        new_S_d, new_n = self.update_Sx(
+            current_S_d, current_n, d_edges_old, d_edges_new, d_min)
         new_alphas = self.compute_alpha(new_n, new_S_d, d_min)
         new_ll = self.compute_log_likelihood(new_n, new_alphas, new_S_d, d_min)
-        alphas_combined = self.compute_alpha(new_n + n_start, new_S_d + S_d_start, d_min)
-        new_ll_combined = self.compute_log_likelihood(new_n + n_start, alphas_combined, new_S_d + S_d_start, d_min)
-        new_ratios = -2 * new_ll_combined + 2 * (new_ll + self.log_likelihood_start)
+        alphas_combined = self.compute_alpha(
+            new_n + n_start, new_S_d + S_d_start, d_min)
+        new_ll_combined = self.compute_log_likelihood(
+            new_n + n_start, alphas_combined, new_S_d + S_d_start, d_min)
+        new_ratios = -2 * new_ll_combined + 2 * \
+            (new_ll + self.log_likelihood_start)
         mask = self.filter_chisquare(new_ratios, self.ll_cutoff)
 
         self.new_S_d = new_S_d[mask]
@@ -222,7 +228,7 @@ class LikelihoodFilter:
         float: the estimated log likelihood
         """
 
-        return n * np.log(alpha) + n * alpha * np.log(d_min) + (alpha + 1) * S_d
+        return n * np.log(alpha) + n * alpha * np.log(d_min) - (alpha + 1) * S_d
 
     @staticmethod
     def filter_chisquare(ll_ratios, cutoff):
@@ -239,12 +245,15 @@ class LikelihoodFilterTorch:
             # Setup starting values of the likelihood ratio test.
             degree_sequence_start = degree
 
-            d_min = torch.as_tensor(2.0).to(degree)  # denotes the minimum degree a node needs to have to be considered in the power-law test
-            S_d_start = torch.sum(torch.log(degree_sequence_start[degree_sequence_start >= d_min]))
+            # denotes the minimum degree a node needs to have to be considered in the power-law test
+            d_min = torch.as_tensor(2.0).to(degree)
+            S_d_start = torch.sum(
+                torch.log(degree_sequence_start[degree_sequence_start >= d_min]))
             n_start = torch.sum(degree_sequence_start >= d_min)
             alpha_start = self.compute_alpha(n_start, S_d_start, d_min)
 
-            self.log_likelihood_start = self.compute_log_likelihood(n_start, alpha_start, S_d_start, d_min)
+            self.log_likelihood_start = self.compute_log_likelihood(
+                n_start, alpha_start, S_d_start, d_min)
             self.S_d_start = S_d_start
             self.current_S_d = S_d_start.clone()
             self.S_d_start = n_start
@@ -268,12 +277,16 @@ class LikelihoodFilterTorch:
         deltas = 1 - 2 * edge_weights
         d_edges_old = self.current_degree_sequence[edges]
         d_edges_new = self.current_degree_sequence[edges] + deltas[:, None]
-        new_S_d, new_n = self.update_Sx(current_S_d, current_n, d_edges_old, d_edges_new, d_min)
+        new_S_d, new_n = self.update_Sx(
+            current_S_d, current_n, d_edges_old, d_edges_new, d_min)
         new_alphas = self.compute_alpha(new_n, new_S_d, d_min)
         new_ll = self.compute_log_likelihood(new_n, new_alphas, new_S_d, d_min)
-        alphas_combined = self.compute_alpha(new_n + n_start, new_S_d + S_d_start, d_min)
-        new_ll_combined = self.compute_log_likelihood(new_n + n_start, alphas_combined, new_S_d + S_d_start, d_min)
-        new_ratios = -2 * new_ll_combined + 2 * (new_ll + self.log_likelihood_start)
+        alphas_combined = self.compute_alpha(
+            new_n + n_start, new_S_d + S_d_start, d_min)
+        new_ll_combined = self.compute_log_likelihood(
+            new_n + n_start, alphas_combined, new_S_d + S_d_start, d_min)
+        new_ratios = -2 * new_ll_combined + 2 * \
+            (new_ll + self.log_likelihood_start)
         mask = self.filter_chisquare(new_ratios, self.ll_cutoff)
 
         self.new_S_d = new_S_d[mask]

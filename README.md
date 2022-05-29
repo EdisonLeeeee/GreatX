@@ -8,16 +8,15 @@ NOTE: GraphWar is still in the early stages and the API will likely continue to 
 
 If you are interested in this project, don't hesitate to contact me or make a PR directly.
 
-
 # 💨 News
-- May 27, 2022: GraphWar has been refactored with [PyTorch Geometric (PyG)](https://github.com/pyg-team/pytorch_geometric), the old code based on DGL can be found [here](https://github.com/EdisonLeeeee/GraphWar/tree/dgl). GraphWar now has better flexibility and usability. We will sonn release the first version GraphWar, stay tuned!
+- May 27, 2022: GraphWar has been refactored with [PyTorch Geometric (PyG)](https://github.com/pyg-team/pytorch_geometric), the old code based on DGL can be found [here](https://github.com/EdisonLeeeee/GraphWar/tree/dgl). GraphWar now has better flexibility and usability. We will soon release the first version GraphWar, stay tuned!
 
 # 🚀 Installation
 
 Please make sure you have installed [PyTorch](https://pytorch.org) and [PyTorch Geometric (PyG)](https://github.com/pyg-team/pytorch_geometric).
 
 ```bash
-# Comming soon
+# Coming soon
 pip install -U graphwar
 ```
 
@@ -35,6 +34,18 @@ where `-e` means "editable" mode so you don't have to reinstall every time you m
 
 Assume that you have a `torch_geometric.data.Data` instance `data` that describes your graph.
 
+## How fast can we run and evaluate a GNN?
+Take `GCN` as an example:
+```python
+from graphwar.nn.models import GCN
+from graphwar.training import Trainer
+dataset = ... # Any PyG dataset
+data = dataset[0]
+model = GCN(dataset.num_features, dataset.num_classes)
+trainer = Trainer(model, device='cuda:0')
+trainer.fit({'data': data, 'mask': data.train_mask})
+trainer.evaluate({'data': data, 'mask': data.test_mask})
+```
 ## A simple targeted manipulation attack
 
 ```python
@@ -115,14 +126,14 @@ In detail, the following methods are currently implemented:
 
 ### Robust GNNs
 
-| Methods         | Venue                                                                                                                                                                                                                                         |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **MedianGCN**   | *Chen et al.* [📝Understanding Structural Vulnerability in Graph Convolutional Networks](https://www.ijcai.org/proceedings/2021/310), *IJCAI'21*                                                                                               |
-| **RobustGCN**   | *Zhu et al.*  [📝Robust Graph Convolutional Networks Against Adversarial Attacks](http://pengcui.thumedialab.com/papers/RGCN.pdf), *KDD'19*                                                                                                    |
+| Methods           | Venue                                                                                                                                                                                                                                         |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **MedianGCN**     | *Chen et al.* [📝Understanding Structural Vulnerability in Graph Convolutional Networks](https://www.ijcai.org/proceedings/2021/310), *IJCAI'21*                                                                                               |
+| **RobustGCN**     | *Zhu et al.*  [📝Robust Graph Convolutional Networks Against Adversarial Attacks](http://pengcui.thumedialab.com/papers/RGCN.pdf), *KDD'19*                                                                                                    |
 | **SoftMedianGCN** | *Geisler et al.* [📝Reliable Graph Neural Networks via Robust Aggregation](https://arxiv.org/abs/2010.15651), *NeurIPS'20*<br>*Geisler et al.* [📝Robustness of Graph Neural Networks at Scale](https://arxiv.org/abs/2110.14038), *NeurIPS'21* |
-| **ElasticGNN**  | *Liu et al.* [📝Elastic Graph Neural Networks](https://arxiv.org/abs/2107.06996), *ICML'21*                                                                                                                                                    |
-| **AirGNN**      | *Liu et al.* [📝Graph Neural Networks with Adaptive Residual](https://openreview.net/forum?id=hfkER_KJiNw), *NeurIPS'21*                                                                                                                       |
-| **SimPGCN**     | *Jin et al.* [📝Node Similarity Preserving Graph Convolutional Networks](https://arxiv.org/abs/2011.09643), *WSDM'21*                                                                                                                          |
+| **ElasticGNN**    | *Liu et al.* [📝Elastic Graph Neural Networks](https://arxiv.org/abs/2107.06996), *ICML'21*                                                                                                                                                    |
+| **AirGNN**        | *Liu et al.* [📝Graph Neural Networks with Adaptive Residual](https://openreview.net/forum?id=hfkER_KJiNw), *NeurIPS'21*                                                                                                                       |
+| **SimPGCN**       | *Jin et al.* [📝Node Similarity Preserving Graph Convolutional Networks](https://arxiv.org/abs/2011.09643), *WSDM'21*                                                                                                                          |
 
 ### Defense Strategy
 
@@ -138,4 +149,4 @@ More details of literatures and the official codes can be found at [Awesome Grap
 
 # Known Issues
 + Despite our best efforts, we still had difficulty reproducing the results of [GNNGUARD](https://arxiv.org/abs/2006.08149) in the paper. If you find any problems, please don't hesitate to contact me.
-+ Untargeted attacks are suffering from performance degradation, as also in DeepRobust, when a validation set is used during training. Such phenomenon has also been revealed in [Black-box Gradient Attack on Graph Neural Networks: Deeper Insights in Graph-based Attack and Defense](https://arxiv.org/abs/2104.15061).
++ Untargeted attacks are suffering from performance degradation, as also in DeepRobust, when a validation set is used during training with model picking. Such phenomenon has also been revealed in [Black-box Gradient Attack on Graph Neural Networks: Deeper Insights in Graph-based Attack and Defense](https://arxiv.org/abs/2104.15061).

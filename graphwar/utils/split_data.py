@@ -21,7 +21,7 @@ def train_val_test_split_tabular(N: int, *,
                                            test_size=test,
                                            stratify=stratify)
     if val:
-        if stratify:
+        if stratify is not None:
             stratify = stratify[idx_train]
         idx_train, idx_val = train_test_split(idx_train,
                                               random_state=random_state,

@@ -25,7 +25,7 @@ class GNNGUARD(torch.nn.Module):
         att_score_norm = torch.tensor(adj_matrix[row, col]).to(x).view(-1)
 
         if self.add_self_loops:
-            degree = (adj_matrix != 0).sum(1).A1
+            degree = adj_matrix.getnnz(axis=1)
             self_weight = torch.tensor(1.0 / (degree + 1)).to(x)
             att_score_norm = torch.cat([att_score_norm, self_weight])
             edge_index, _ = add_self_loops(edge_index)

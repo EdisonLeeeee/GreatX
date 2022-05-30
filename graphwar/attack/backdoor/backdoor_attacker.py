@@ -47,7 +47,7 @@ class BackdoorAttacker(Attacker):
 
         self.num_budgets = num_budgets
         self.targets_class = torch.LongTensor(
-            [targets_class]).view(-1).to(self.device)
+            targets_class).view(-1).to(self.device)
         self._is_reset = False
 
         return self

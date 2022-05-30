@@ -54,6 +54,9 @@ class Attacker(torch.nn.Module):
             )
 
         assert isinstance(data, Data)
+        assert data.x is not None
+        assert data.edge_index is not None
+        assert data.edge_weight is None
 
         self.device = torch.device(device)
         self.ori_data = data.to(self.device)

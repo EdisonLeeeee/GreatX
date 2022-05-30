@@ -1,19 +1,21 @@
 # ⚔🛡 GraphWar: Arms Race in *Graph Adversarial Learning*
 
-The robustness of graph neural networks (GNNs) against adversarial attacks has gained increasing attention in last few years. While there are numerous (heuristic) approaches aimed at robustifying GNNs, there is always a newly devised stronger attack attempts to break them, leading to an arms race between attackers and defenders. To this end, GraphWar aims to provide easy implementations with unified interfaces to facilitate the research in Graph Adversarial Learning.
+> Know thy self, know thy enemy. A thousand battles, a thousand victories.
+> 
+> 知己知彼，百战百胜。 ——《孙子兵法•谋攻篇》
 
----
 
-NOTE: GraphWar is still in the early stages and the API will likely continue to change. 
 
-If you are interested in this project, don't hesitate to contact me or make a PR directly.
 
 # 💨 News
-- May 27, 2022: GraphWar has been refactored with [PyTorch Geometric (PyG)](https://github.com/pyg-team/pytorch_geometric), the old code based on DGL can be found [here](https://github.com/EdisonLeeeee/GraphWar/tree/dgl). GraphWar now has better flexibility and usability. We will soon release the first version GraphWar, stay tuned!
+- May 27, 2022: GraphWar has been refactored with [PyTorch Geometric (PyG)](https://github.com/pyg-team/pytorch_geometric), the old code based on [DGL](https://www.dgl.ai) can be found [here](https://github.com/EdisonLeeeee/GraphWar/tree/dgl). GraphWar now has better flexibility and usability. We will soon release the first version of GraphWar, stay tuned!
 
+NOTE: GraphWar is still in the early stages and the API will likely continue to change. 
+If you are interested in this project, don't hesitate to contact me or make a PR directly.
 # 🚀 Installation
 
-Please make sure you have installed [PyTorch](https://pytorch.org) and [PyTorch Geometric (PyG)](https://github.com/pyg-team/pytorch_geometric).
+Please make sure you have installed [PyTorch](https://pytorch.org) and [PyTorch Geometric (PyG)](https://pytorch-geometric.readthedocs.io/en/latest/notes/installation.html).
+
 
 ```bash
 # Coming soon
@@ -122,7 +124,7 @@ In detail, the following methods are currently implemented:
 | **GAT**   | *Veličković et al.*  [📝Graph Attention Networks](https://arxiv.org/abs/1710.10903), *ICLR'18*                                               |
 | **DAGNN** | *Liu et al.*  [📝Towards Deeper Graph Neural Networks](https://arxiv.org/abs/2007.09296), *KDD'20*                                           |
 | **APPNP** | *Klicpera et al.*  [📝Predict then Propagate: Graph Neural Networks meet Personalized PageRank](https://arxiv.org/abs/1810.05997), *ICLR'19* |
-| **JKNet** | *Xu et al.*  [📝Representation Learning on Graphs with Jumping Knowledge Networks](hhttps://arxiv.org/abs/1806.03536), *ICML'18*             |
+| **JKNet** | *Xu et al.*  [📝Representation Learning on Graphs with Jumping Knowledge Networks](https://arxiv.org/abs/1806.03536), *ICML'18*             |
 
 ### Robust GNNs
 
@@ -147,6 +149,6 @@ In detail, the following methods are currently implemented:
 
 More details of literatures and the official codes can be found at [Awesome Graph Adversarial Learning](https://github.com/gitgiter/Graph-Adversarial-Learning).
 
-# Known Issues
+# ❓ Known Issues
 + Despite our best efforts, we still had difficulty reproducing the results of [GNNGUARD](https://arxiv.org/abs/2006.08149) in the paper. If you find any problems, please don't hesitate to contact me.
 + Untargeted attacks are suffering from performance degradation, as also in DeepRobust, when a validation set is used during training with model picking. Such phenomenon has also been revealed in [Black-box Gradient Attack on Graph Neural Networks: Deeper Insights in Graph-based Attack and Defense](https://arxiv.org/abs/2104.15061).

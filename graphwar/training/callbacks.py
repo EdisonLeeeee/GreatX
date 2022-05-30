@@ -789,18 +789,19 @@ class ModelCheckpoint(Callback):
         super().__init__()
         self.monitor = monitor
         self.verbose = verbose
-        self.filepath = filepath if filepath.endswith('.pth') else filepath + '.pth'
+        self.filepath = filepath if filepath.endswith(
+            '.pth') else filepath + '.pth'
         self.save_best_only = save_best_only
         self.epochs_since_last_save = 0
         self._batches_seen_since_last_saving = 0
         self._last_batch_seen = 0
         self._filepaths = []
-        
+
         if autoload and not save_weights_only:
             logging.warning('`autoload` is only work for `save_weights_only=True`, '
                             'fallback to `save_weights_only.')
             save_weights_only = True
-            
+
         self.save_weights_only = save_weights_only
         self.autoload = autoload
 
@@ -830,14 +831,14 @@ class ModelCheckpoint(Callback):
             if self.verbose > 0:
                 print(f"mkdir {folder}.")
             os.mkdir(folder)
-    
+
     def on_train_end(self, logs=None):
         if self.autoload and self._filepaths:
             self.model.load_state_dict(torch.load(self._filepaths[-1]))
             for filepath in self._filepaths:
                 if os.path.exists(filepath):
                     os.remove(filepath)
-            
+
     def on_train_batch_end(self, batch, logs=None):
         pass
 
@@ -883,13 +884,14 @@ class ModelCheckpoint(Callback):
                                   (epoch + 1, self.monitor, self.best))
             else:
                 if self.verbose > 0:
-                    print('\nEpoch %05d: saving model to %s' % (epoch + 1, filepath))
+                    print('\nEpoch %05d: saving model to %s' %
+                          (epoch + 1, filepath))
                 if self.save_weights_only:
                     torch.save(self.model.state_dict(), filepath)
                 else:
                     torch.save(self.model, filepath)
                 self._filepaths.append(filepath)
-                    
+
         except IOError as e:
             # `e.errno` appears to be `None` so checking the content of `e.args[0]`.
             if 'is a directory' in str(e.args[0]).lower():
@@ -1141,7 +1143,6 @@ class ProgbarLogger(Callback):
         return f"{self.__class__.__name__}(epochs={self.epochs}, verbose={self.verbose})"
     __repr__ = __str__
 
-    
 
 class Scheduler(Callback):
     def __init__(self, scheduler):
@@ -1260,7 +1261,6 @@ class LambdaCallback(Callback):
             self.on_train_end = lambda logs: None
 
 
-
 class TqdmCallback(Callback):
     """Callback that prints metrics to stdout.
     TODO: on_[test/predict]_[begin/end] haven't been tested.
@@ -1330,7 +1330,8 @@ class TqdmCallback(Callback):
 
     def _maybe_init_progbar(self):
         if self.progbar is None:
-            self.progbar = self.tqdm_class(total=self.target, desc='', disable=not self.verbose)
+            self.progbar = self.tqdm_class(
+                total=self.target, desc='', disable=not self.verbose)
 
     def _batch_update_progbar(self, batch, logs=None):
         """Updates the progbar."""

@@ -124,21 +124,23 @@ class IGAttack(UntargetedAttacker, Surrogater):
         gradients = torch.zeros_like(adj)
 
         for alpha in tqdm(torch.linspace(0., 1.0, steps + 1),
-                          desc='Computing link importance',
+                          desc='Computing link importance...',
                           disable=disable):
             ###### Compute integrated gradients for removing edges ######
             adj_diff = adj - baseline_remove
             adj_step = baseline_remove + alpha * adj_diff
             adj_step.requires_grad_()
 
-            gradients += self.compute_structure_gradients(adj_step, feat, victim_nodes, victim_labels)
+            gradients += self.compute_structure_gradients(
+                adj_step, feat, victim_nodes, victim_labels)
 
             ###### Compute integrated gradients for adding edges ######
             adj_diff = baseline_add - adj
             adj_step = baseline_add - alpha * adj_diff
             adj_step.requires_grad_()
 
-            gradients += self.compute_structure_gradients(adj_step, feat, victim_nodes, victim_labels)
+            gradients += self.compute_structure_gradients(
+                adj_step, feat, victim_nodes, victim_labels)
 
         return gradients
 
@@ -153,21 +155,23 @@ class IGAttack(UntargetedAttacker, Surrogater):
         gradients = torch.zeros_like(feat)
 
         for alpha in tqdm(torch.linspace(0., 1.0, steps + 1),
-                          desc='Computing feature importance',
+                          desc='Computing feature importance...',
                           disable=disable):
             ###### Compute integrated gradients for removing features ######
             feat_diff = feat - baseline_remove
             feat_step = baseline_remove + alpha * feat_diff
             feat_step.requires_grad_()
 
-            gradients += self.compute_feature_gradients(adj, feat_step, victim_nodes, victim_labels)
+            gradients += self.compute_feature_gradients(
+                adj, feat_step, victim_nodes, victim_labels)
 
             ###### Compute integrated gradients for adding features ######
             feat_diff = baseline_add - feat
             feat_step = baseline_add - alpha * feat_diff
             feat_step.requires_grad_()
 
-            gradients += self.compute_feature_gradients(adj, feat_step, victim_nodes, victim_labels)
+            gradients += self.compute_feature_gradients(
+                adj, feat_step, victim_nodes, victim_labels)
 
         return gradients
 

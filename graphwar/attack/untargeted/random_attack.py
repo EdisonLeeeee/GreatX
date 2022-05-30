@@ -6,6 +6,7 @@ from tqdm import tqdm
 
 from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
 
+
 class RandomAttack(UntargetedAttacker):
     """Random attacker that randomly chooses edges to flip."""
 
@@ -25,7 +26,7 @@ class RandomAttack(UntargetedAttacker):
 
         influence_nodes = list(self.nodes_set)
         for it, remove_or_insert in tqdm(enumerate(random_arr),
-                                         desc='Peturbing Graph',
+                                         desc='Peturbing graph...',
                                          disable=disable):
             # randomly choose to add or remove edges
             if remove_or_insert > 0:

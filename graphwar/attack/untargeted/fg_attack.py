@@ -59,7 +59,7 @@ class FGAttack(UntargetedAttacker, Surrogater):
         num_nodes, num_feats = self.num_nodes, self.num_feats
 
         for it in tqdm(range(self.num_budgets),
-                       desc='Peturbing Graph',
+                       desc='Peturbing graph...',
                        disable=disable):
 
             adj_grad, feat_grad = self.compute_gradients(modified_adj,

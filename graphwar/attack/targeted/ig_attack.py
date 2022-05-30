@@ -179,7 +179,7 @@ class IGAttack(TargetedAttacker, Surrogater):
         non_edge_gradients = adj.new_zeros(non_edges.size(0))
 
         for alpha in tqdm(torch.linspace(0., 1.0, steps + 1),
-                          desc='Computing link importance',
+                          desc='Computing link importance...',
                           disable=disable):
             ###### Compute integrated gradients for removing edges ######
             adj_diff = adj - baseline_remove
@@ -224,7 +224,7 @@ class IGAttack(TargetedAttacker, Surrogater):
         non_feat_gradients = feat.new_zeros(non_features.size(0))
 
         for alpha in tqdm(torch.linspace(0., 1.0, steps + 1),
-                          desc='Computing feature importance',
+                          desc='Computing feature importance...',
                           disable=disable):
             ###### Compute integrated gradients for removing features ######
             feat_diff = feat - baseline_remove
@@ -242,7 +242,8 @@ class IGAttack(TargetedAttacker, Surrogater):
 
             gradients = self.compute_feature_gradients(
                 feat_step, adj, target, target_label)
-            non_feat_gradients += gradients[non_features[:,0], non_features[:, 1]]
+            non_feat_gradients += gradients[non_features[:,
+                                                         0], non_features[:, 1]]
 
         integrated_grads = feat.new_zeros(feat_indicator.size(0))
         integrated_grads[feat_indicator] = feat_gradients

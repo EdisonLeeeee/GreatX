@@ -92,7 +92,7 @@ class FGBackdoor(BackdoorAttacker, Surrogater):
             trigger_edge_index, trigger_edge_weight,
             augmented_edge_index, augmented_edge_weight) = get_backdoor_edges(self.edge_index, N)
 
-        for _ in tqdm(range(self.num_budgets), desc="Updating trigger using gradients", disable=disable):
+        for _ in tqdm(range(self.num_budgets), desc="Updating trigger using gradients...", disable=disable):
             aug_feat = torch.cat([feat, trigger.repeat(N, 1)], dim=0)
             feat1 = aug_feat @ self.w1
             h1 = spmm(feat1, edge_index_with_self_loop, edge_weight)

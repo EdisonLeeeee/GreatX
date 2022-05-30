@@ -35,14 +35,15 @@ class PGDAttack(UntargetedAttacker, Surrogater):
             victim_labels = self.label[labeled_nodes]
         else:  # Evasion attack in original paper
             unlabeled_nodes = torch.LongTensor(unlabeled_nodes).to(self.device)
-            self_training_labels = self.estimate_self_training_labels(unlabeled_nodes)
+            self_training_labels = self.estimate_self_training_labels(
+                unlabeled_nodes)
             victim_nodes = torch.cat([labeled_nodes, unlabeled_nodes], dim=0)
             victim_labels = torch.cat([self.label[labeled_nodes],
                                        self_training_labels], dim=0)
 
         adj = to_dense_adj(self.edge_index,
-                                         self.edge_weight,
-                                         num_nodes=self.num_nodes).to(self.device)
+                           self.edge_weight,
+                           num_nodes=self.num_nodes).to(self.device)
         I = torch.eye(self.num_nodes, device=self.device)
         self.complementary = torch.ones_like(adj) - I - 2. * adj
         self.adj = adj
@@ -74,16 +75,17 @@ class PGDAttack(UntargetedAttacker, Surrogater):
         C = self.config_C(C)
         perturbations = self.perturbations
         for epoch in tqdm(range(epochs),
-                          desc='PGD Training',
+                          desc='PGD training...',
                           disable=disable):
             gradients = self.compute_gradients(perturbations,
-                                                self.victim_nodes,
-                                                self.victim_labels)
+                                               self.victim_nodes,
+                                               self.victim_labels)
             lr = C / math.sqrt(epoch + 1)
             perturbations.data.add_(lr * gradients)
             perturbations = self.projection(perturbations)
 
-        best_s = self.bernoulli_sample(perturbations, sample_epochs, disable=disable)
+        best_s = self.bernoulli_sample(
+            perturbations, sample_epochs, disable=disable)
         row, col = torch.where(best_s > 0.)
         for it, (u, v) in enumerate(zip(row.tolist(), col.tolist())):
             if self.adj[u, v] > 0:
@@ -153,14 +155,15 @@ class PGDAttack(UntargetedAttacker, Surrogater):
         probs = torch.triu(perturbations, diagonal=1)
         sampler = Bernoulli(probs)
         for it in tqdm(range(sample_epochs),
-                       desc='Bernoulli Sampling',
+                       desc='Bernoulli sampling...',
                        disable=disable):
             sampled = sampler.sample()
             if sampled.sum() > self.num_budgets:
                 continue
 
             perturbations.data.copy_(sampled)
-            loss = self.compute_loss(perturbations, self.victim_nodes, self.victim_labels)
+            loss = self.compute_loss(
+                perturbations, self.victim_nodes, self.victim_labels)
 
             if best_loss < loss:
                 best_loss = loss
@@ -175,10 +178,12 @@ class PGDAttack(UntargetedAttacker, Surrogater):
 
         if self.CW_loss:
             # logit = F.softmax(logit, dim=1)
-            one_hot = torch.eye(logit.size(-1), device=self.device)[victim_labels]
+            one_hot = torch.eye(
+                logit.size(-1), device=self.device)[victim_labels]
             range_idx = torch.arange(victim_nodes.size(0), device=self.device)
             best_wrong_class = (logit - 1000 * one_hot).argmax(1)
-            margin = logit[range_idx, victim_labels] - logit[range_idx, best_wrong_class] + 50
+            margin = logit[range_idx, victim_labels] - \
+                logit[range_idx, best_wrong_class] + 50
             loss = -torch.clamp(margin, min=0.)
             return loss.mean()
         else:
@@ -229,13 +234,13 @@ class MinmaxAttack(PGDAttack):
         optimizer = torch.optim.Adam(self.surrogate.parameters(), lr=lr)
 
         for epoch in tqdm(range(epochs),
-                          desc='Min-MAX Training',
+                          desc='Min-MAX training...',
                           disable=disable):
 
             # =========== Min-step ===================
             loss = self.compute_loss(perturbations,
-                                      self.victim_nodes,
-                                      self.victim_labels)
+                                     self.victim_nodes,
+                                     self.victim_labels)
 
             optimizer.zero_grad()
             loss.backward()
@@ -244,14 +249,15 @@ class MinmaxAttack(PGDAttack):
 
             # =========== Max-step ===================
             gradients = self.compute_gradients(perturbations,
-                                                self.victim_nodes,
-                                                self.victim_labels)
+                                               self.victim_nodes,
+                                               self.victim_labels)
             lr = C / math.sqrt(epoch + 1)
             perturbations.data.add_(lr * gradients)
             perturbations = self.projection(perturbations)
             # ========================================
 
-        best_s = self.bernoulli_sample(perturbations, sample_epochs, disable=disable)
+        best_s = self.bernoulli_sample(
+            perturbations, sample_epochs, disable=disable)
         row, col = torch.where(best_s > 0.)
         for it, (u, v) in enumerate(zip(row.tolist(), col.tolist())):
             if self.adj[u, v] > 0:

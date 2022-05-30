@@ -108,7 +108,7 @@ class GFAttack(TargetedAttacker):
         edge_weights = self.adjacency_matrix[edges[:, 0], edges[:, 1]].A1
 
         for it, edge_weight in tqdm(enumerate(edge_weights),
-                                    desc='Peturbing Graph',
+                                    desc='Peturbing graph...',
                                     disable=disable):
             u, v = edges[it]
             if edge_weight > 0:

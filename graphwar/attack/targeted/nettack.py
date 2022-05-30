@@ -12,8 +12,9 @@ from graphwar import Surrogater
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 from graphwar.utils import singleton_filter
 
+
 def scipy_normalize(adj_matrix: sp.csr_matrix, add_self_loops: bool = True):
-    adj_matrix = adj_matrix + sp.eye(adj_matrix.shape[0], 
+    adj_matrix = adj_matrix + sp.eye(adj_matrix.shape[0],
                                      dtype=adj_matrix.dtype, format='csr')
     degree = np.maximum(adj_matrix.sum(1).A1, 1)
     norm = sp.diags(np.power(degree, -0.5))
@@ -39,7 +40,7 @@ class Nettack(TargetedAttacker, Surrogater):
         self.cooc_matrix = sp.csr_matrix((feat.t() @ feat).cpu().numpy())
 
     def setup_surrogate(self, surrogate):
-        Surrogater.setup_surrogate(self, surrogate=surrogate, freeze=True)        
+        Surrogater.setup_surrogate(self, surrogate=surrogate, freeze=True)
         W = None
         for para in self.surrogate.parameters():
             if para.ndim == 1:
@@ -50,7 +51,7 @@ class Nettack(TargetedAttacker, Surrogater):
                 W = para
             else:
                 W = para @ W
-                
+
         assert W is not None
         self.W = W.t().cpu().numpy()
         self.num_classes = self.W.shape[-1]
@@ -67,7 +68,8 @@ class Nettack(TargetedAttacker, Surrogater):
     def compute_cooccurrence_constraint(self, nodes):
         num_nodes = self.num_nodes
         num_feats = self.num_feats
-        words_graph = self.cooc_matrix - sp.diags(self.cooc_matrix.diagonal(), format='csr')
+        words_graph = self.cooc_matrix - \
+            sp.diags(self.cooc_matrix.diagonal(), format='csr')
         words_graph.eliminate_zeros()
         words_graph.data = words_graph.data > 0
         word_degrees = words_graph.sum(0).A1
@@ -84,10 +86,12 @@ class Nettack(TargetedAttacker, Surrogater):
             common_words = words_graph.multiply(self.modified_feat[n])
             idegs = inv_word_degrees[common_words.nonzero()[1]]
             nnz = common_words.nonzero()[0]
-            scores = np.array([idegs[nnz == ix].sum() for ix in range(num_feats)])
+            scores = np.array([idegs[nnz == ix].sum()
+                              for ix in range(num_feats)])
             scores_matrix[n] = scores
 
-        self.cooc_constraint = sp.csr_matrix(scores_matrix - 0.5 * sd[:, None] > 0)
+        self.cooc_constraint = sp.csr_matrix(
+            scores_matrix - 0.5 * sd[:, None] > 0)
 
     def gradient_wrt_x(self, label):
         return (self.adj_norm @ self.adj_norm)[self.target].T @ sp.coo_matrix(self.W[:, label].reshape(1, -1))
@@ -105,7 +109,8 @@ class Nettack(TargetedAttacker, Surrogater):
 
         logits = self.compute_logits()
         best_wrong_class = self.strongest_wrong_class(logits)
-        gradient = self.gradient_wrt_x(self.target_label) - self.gradient_wrt_x(best_wrong_class)
+        gradient = self.gradient_wrt_x(
+            self.target_label) - self.gradient_wrt_x(best_wrong_class)
         surrogate_loss = logits[self.target_label] - logits[best_wrong_class]
 
         gradients_flipped = (gradient * -1).tolil()
@@ -139,9 +144,11 @@ class Nettack(TargetedAttacker, Surrogater):
 
     def get_attacker_nodes(self, n=5, add_additional_nodes=False):
 
-        assert n < self.modified_adj.shape[0] - 1, "number of influencers cannot be >= number of nodes in the graph!"
+        assert n < self.modified_adj.shape[0] - \
+            1, "number of influencers cannot be >= number of nodes in the graph!"
         neighbors = self.modified_adj[self.target].indices
-        candidate_edges = np.column_stack((np.tile(self.target, len(neighbors)), neighbors)).astype("int32")
+        candidate_edges = np.column_stack(
+            (np.tile(self.target, len(neighbors)), neighbors)).astype("int32")
         # The new A_hat_square_uv values that we would get if we removed the edge from u to each of the neighbors, respectively
         a_hat_uv = self.compute_new_a_hat_uv(candidate_edges)
 
@@ -159,17 +166,21 @@ class Nettack(TargetedAttacker, Surrogater):
             if add_additional_nodes:  # Add additional influencers by connecting them to u first.
                 # Compute the set of possible additional influencers, i.e. all nodes except the ones
                 # that are already connected to u.
-                poss_add_infl = np.setdiff1d(np.setdiff1d(np.arange(self.modified_adj.shape[0]), neighbors), self.target)
+                poss_add_infl = np.setdiff1d(np.setdiff1d(
+                    np.arange(self.modified_adj.shape[0]), neighbors), self.target)
                 n_possible_additional = len(poss_add_infl)
                 n_additional_attackers = n - len(neighbors)
-                possible_edges = np.column_stack((np.tile(self.target, n_possible_additional), poss_add_infl)).astype("int32")
+                possible_edges = np.column_stack(
+                    (np.tile(self.target, n_possible_additional), poss_add_infl)).astype("int32")
 
                 # Compute the struct_scores for all possible additional influencers, and choose the one
                 # with the best struct score.
                 a_hat_uv_additional = self.compute_new_a_hat_uv(possible_edges)
-                additional_struct_scores = self.structure_score(a_hat_uv_additional, XW)
+                additional_struct_scores = self.structure_score(
+                    a_hat_uv_additional, XW)
                 # TODO: is it right?
-                additional_influencers = poss_add_infl[np.argsort(additional_struct_scores)[-n_additional_attackers::]]
+                additional_influencers = poss_add_infl[np.argsort(
+                    additional_struct_scores)[-n_additional_attackers::]]
 
                 return influence_nodes, additional_influencers
             else:
@@ -216,11 +227,13 @@ class Nettack(TargetedAttacker, Surrogater):
             row = np.repeat(influencers, N - 1)
             col = list(nodes_set)
         else:
-            infls, add_infls = self.get_attacker_nodes(n_influencers, add_additional_nodes=True)
+            infls, add_infls = self.get_attacker_nodes(
+                n_influencers, add_additional_nodes=True)
             influencers = np.concatenate((infls, add_infls))
             # influencers = self.adjacency_matrix[target].indices
             row = np.repeat(influencers, N - 2)
-            col = np.hstack([list(nodes_set - set([infl])) for infl in influencers])
+            col = np.hstack([list(nodes_set - set([infl]))
+                            for infl in influencers])
 
         candidate_edges = np.stack([row, col], axis=1)
         self.influence_nodes = np.asarray(influencers)
@@ -254,22 +267,25 @@ class Nettack(TargetedAttacker, Surrogater):
             assert self.target_label is not None, "please specify argument `target_label` as the node label does not exist."
             target_label = self.target_label.item()
 
-        candidate_edges = self.get_candidate_edges(n_influencers).astype("int32")
+        candidate_edges = self.get_candidate_edges(
+            n_influencers).astype("int32")
 
         for it in tqdm(range(self.num_budgets),
-                       desc='Peturbing Graph',
+                       desc='Peturbing graph...',
                        disable=disable):
 
             best_edge_score = best_feature_score = 0
             if structure_attack:
                 # Do not consider edges that, if removed, result in singleton edges in the graph.
                 if not self._allow_singleton:
-                    candidate_edges = singleton_filter(candidate_edges, self.modified_adj)
+                    candidate_edges = singleton_filter(
+                        candidate_edges, self.modified_adj)
 
                 # Compute new entries in A_hat_square_uv
                 a_hat_uv_new = self.compute_new_a_hat_uv(candidate_edges)
                 # Compute the struct scores for each potential edge
-                struct_scores = self.structure_score(a_hat_uv_new, self.compute_XW())
+                struct_scores = self.structure_score(
+                    a_hat_uv_new, self.compute_XW())
                 best_edge_ix = struct_scores.argmin()
                 best_edge_score = struct_scores.min()
                 best_edge = candidate_edges[best_edge_ix]
@@ -297,7 +313,8 @@ class Nettack(TargetedAttacker, Surrogater):
                 u, v = best_edge
                 edge_weight = self.modified_adj[(u, v)]
                 modified_adj = self.modified_adj.tolil(copy=False)
-                modified_adj[(u, v)] = modified_adj[(v, u)] = 1 - modified_adj[(u, v)]
+                modified_adj[(u, v)] = modified_adj[(
+                    v, u)] = 1 - modified_adj[(u, v)]
                 self.modified_adj = modified_adj.tocsr(copy=False)
                 self.adj_norm = scipy_normalize(self.modified_adj)
                 if edge_weight > 0:

@@ -7,13 +7,13 @@ from torch.autograd import grad
 from torch_geometric.data import Data
 from tqdm import tqdm
 
-from graphwar.surrogater import Surrogater
+from graphwar.surrogate import Surrogate
 from graphwar.utils import singleton_mask
 from graphwar.functional import to_dense_adj
 from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
 
 
-class IGAttack(UntargetedAttacker, Surrogater):
+class IGAttack(UntargetedAttacker, Surrogate):
     # IGAttack can conduct feature attack
     _allow_feature_attack: bool = True
 
@@ -33,8 +33,8 @@ class IGAttack(UntargetedAttacker, Surrogater):
                         victim_labels: Optional[Tensor] = None, *,
                         eps: float = 1.0):
 
-        Surrogater.setup_surrogate(self, surrogate=surrogate,
-                                   eps=eps, freeze=True)
+        Surrogate.setup_surrogate(self, surrogate=surrogate,
+                                  eps=eps, freeze=True)
 
         self.victim_nodes = victim_nodes.to(self.device)
         if victim_labels is None:

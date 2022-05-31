@@ -6,15 +6,15 @@ from torch.autograd import grad
 from tqdm import tqdm
 
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
-from graphwar.surrogater import Surrogater
+from graphwar.surrogate import Surrogate
 from graphwar.utils import singleton_mask
 from graphwar.functional import to_dense_adj
 
 
-class FGAttack(TargetedAttacker, Surrogater):
+class FGAttack(TargetedAttacker, Surrogate):
     # FGAttack can conduct feature attack
     _allow_feature_attack: bool = True
-    # FGAttack can not ensure there are no singleton nodes
+    # FGAttack cannot ensure there are no singleton nodes
     _allow_singleton: bool = True
 
     def reset(self):

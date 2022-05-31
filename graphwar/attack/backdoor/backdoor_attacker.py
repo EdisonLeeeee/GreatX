@@ -1,4 +1,3 @@
-from functools import lru_cache
 from typing import Optional, Union
 from copy import copy
 
@@ -52,7 +51,7 @@ class BackdoorAttacker(Attacker):
 
         return self
 
-    def trigger(self,):
+    def trigger(self) -> Tensor:
         return self._trigger
 
     def data(self, target_node: int, symmetric: bool = True) -> Data:
@@ -77,7 +76,7 @@ class BackdoorAttacker(Attacker):
         edges_to_add = torch.tensor([num_nodes, target_node]).view(
             2, 1).to(data.edge_index)
         data.x = torch.cat([data.x, feat], dim=0)
-        data.edge_index = add_edges(data.edge_index, edges_to_add)
-        assert data.edge_weight is None
+        data.edge_index = add_edges(
+            data.edge_index, edges_to_add, symmetric=symmetric)
 
         return data

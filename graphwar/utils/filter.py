@@ -30,13 +30,13 @@ def singleton_filter(edges: np.ndarray, adj_matrix: sp.csr_matrix):
         warnings.warn("No edges found.", RuntimeWarning)
         return edges
 
-    degs = adj_matrix.sum(1).A1
+    deg = adj_matrix.sum(1).A1
     existing_edge = adj_matrix.tocsr(copy=False)[edges[:, 0], edges[:, 1]].A1
 
     if existing_edge.size > 0:
-        edge_degrees = degs[edges] - 2 * existing_edge[:, None] + 1
+        edge_degrees = deg[edges] - 2 * existing_edge[:, None] + 1
     else:
-        edge_degrees = degs[edges] + 1
+        edge_degrees = deg[edges] + 1
 
     mask = np.logical_and(edge_degrees[:, 0] > 0, edge_degrees[:, 1] > 0)
     return edges[mask]

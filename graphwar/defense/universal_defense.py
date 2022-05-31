@@ -3,9 +3,10 @@ from copy import copy
 from torch import Tensor
 from torch.utils.data import DataLoader
 from torch_geometric.data import Data
+from torch_geometric.utils import degree
 import torch
 
-from graphwar import Surrogater
+from graphwar import Surrogate
 from graphwar.nn.models import SGC, GCN
 from graphwar.utils import remove_edges
 
@@ -39,8 +40,8 @@ class UniversalDefense(torch.nn.Module):
             the defended graph with defensive perturbation performed on the target nodes
         """
         data = copy(data)
-        data.edge_index = remove_edges(data.edge_index, 
-                                       self.removed_edges(target_nodes, k), 
+        data.edge_index = remove_edges(data.edge_index,
+                                       self.removed_edges(target_nodes, k),
                                        symmetric=symmetric)
         return data
 
@@ -94,7 +95,7 @@ class UniversalDefense(torch.nn.Module):
         Returns
         -------
         Tensor
-            the 0-1 (boolean) universal patch where 1 denots the edges to be removed.
+            the 0-1 (boolean) universal patch where 1 denotes the edges to be removed.
         """
         _patch = torch.zeros(
             self.num_nodes, dtype=torch.bool, device=self.device)
@@ -102,7 +103,7 @@ class UniversalDefense(torch.nn.Module):
         return _patch
 
 
-class GUARD(UniversalDefense, Surrogater):
+class GUARD(UniversalDefense, Surrogate):
     """Graph Universal Adversarial Defense (GUARD)
 
     Example
@@ -113,25 +114,27 @@ class GUARD(UniversalDefense, Surrogater):
     >>> trainer.fit({'data': data, 'mask': splits.train_nodes}, 
                 {'data': data, 'mask': splits.val_nodes}, callbacks=[ckp])
     >>> trainer.evaluate({'data': data, 'mask': splits.test_nodes})
-    >>> guard = GUARD(device=device)
-    >>> deg = degree(data.edge_index[0], num_nodes=data.num_nodes, dtype=torch.float)
-    >>> guard.setup_surrogate(surrogate, data.x, deg, data.y[splits.train_nodes])
+    >>> guard = GUARD(data, device=device)
+    >>> guard.setup_surrogate(surrogate, data.y[splits.train_nodes])
     >>> target_node = 1
-    >>> guard(data, target_node, k=50)
+    >>> perturbed_data = ... # Other PyG-like Data
+    >>> guard(perturbed_data, target_node, k=50)
     """
 
-    def __init__(self, alpha: float = 2, batch_size: int = 512, device: str = "cpu"):
+    def __init__(self, data: Data, alpha: float = 2, batch_size: int = 512, device: str = "cpu"):
         super().__init__(device=device)
+        self.data = data
         self.alpha = alpha
         self.batch_size = batch_size
+        self.deg = degree(data.edge_index[0],
+                          num_nodes=data.num_nodes, dtype=torch.float)
 
     @torch.no_grad()
     def setup_surrogate(self, surrogate: torch.nn.Module,
-                        feat: Tensor, degree: Tensor,
                         victim_labels: Tensor) -> "GUARD":
 
-        Surrogater.setup_surrogate(self, surrogate=surrogate,
-                                   freeze=True, required=(SGC, GCN))
+        Surrogate.setup_surrogate(self, surrogate=surrogate,
+                                  freeze=True, required=(SGC, GCN))
         W = None
         for para in self.surrogate.parameters():
             if para.ndim == 1:
@@ -141,8 +144,8 @@ class GUARD(UniversalDefense, Surrogater):
             else:
                 W = W @ para.detach()
 
-        W = feat @ W
-        d = degree.clamp(min=1)
+        W = self.data.x.to(self.device) @ W
+        d = self.deg.clamp(min=1).to(self.device)
 
         loader = DataLoader(victim_labels, pin_memory=False,
                             batch_size=self.batch_size, shuffle=False)
@@ -163,15 +166,17 @@ class DegreeGUARD(UniversalDefense):
     Example
     -------
     >>> data = ... # PyG-like Data
-    >>> guard = DegreeGUARD(deg)
+    >>> guard = DegreeGUARD(data))
     >>> target_node = 1
-    >>> guard(data, target_node, k=50)
+    >>> perturbed_data = ... # Other PyG-like Data
+    >>> guard(perturbed_data, target_node, k=50)
     """
 
-    def __init__(self, degree: Tensor, descending: bool = False, device: str = "cpu"):
+    def __init__(self, data: Data, descending: bool = False, device: str = "cpu"):
         super().__init__(device=device)
-        self._anchors = torch.argsort(
-            degree.to(self.device), descending=descending)
+        deg = degree(data.edge_index[0],
+                     num_nodes=data.num_nodes, dtype=torch.float)
+        self._anchors = torch.argsort(deg, descending=descending)
 
 
 class RandomGUARD(UniversalDefense):
@@ -180,13 +185,12 @@ class RandomGUARD(UniversalDefense):
     Example
     -------
     >>> data = ... # PyG-like Data
-    >>> guard = RandomGUARD(data.num_nodes)
+    >>> guard = RandomGUARD(data)
     >>> target_node = 1
-    >>> guard(data, target_node, k=50)
+    >>> perturbed_data = ... # Other PyG-like Data
+    >>> guard(perturbed_data, target_node, k=50)
     """
 
-    def __init__(self, num_nodes: int, device: str = "cpu"):
+    def __init__(self, data: Data, device: str = "cpu"):
         super().__init__(device=device)
-        self.num_nodes = num_nodes
-        self._anchors = torch.randperm(self.num_nodes, device=self.device)
-
+        self._anchors = torch.randperm(data.num_nodes, device=self.device)

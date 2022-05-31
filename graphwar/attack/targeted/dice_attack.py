@@ -1,8 +1,6 @@
 import random
 from typing import Optional
 
-from torch_geometric.data import Data
-
 from graphwar.attack.targeted.random_attack import RandomAttack
 
 
@@ -10,7 +8,7 @@ class DICEAttack(RandomAttack):
     r"""DICE attacker that randomly chooses edges to flip 
     based on “Disconnect Internally, Connect Externally” (DICE), 
     which conducts attacks by removing edges between nodes
-    with high correlations and connecting edges with low correlations.
+    with high correlations and connecting edges with low correlations.
 
     Reference
     ---------
@@ -22,7 +20,8 @@ class DICEAttack(RandomAttack):
     def get_added_edge(self, influence_nodes: list) -> Optional[tuple]:
         u = random.choice(influence_nodes)
         neighbors = self.adjacency_matrix[u].indices.tolist()
-        attacker_nodes = list(self.nodes_set - set(neighbors) - set([self.target, u]))
+        attacker_nodes = list(
+            self.nodes_set - set(neighbors) - set([self.target, u]))
 
         if len(attacker_nodes) == 0:
             return None

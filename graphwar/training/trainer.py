@@ -23,7 +23,7 @@ class Trainer:
     >>> trainer = Trainer(model, device='cuda')
 
     >>> data # PyG-like data, e.g., Cora
-    Data(x=[2485, 1433], y=[2485], adj_t=[2485, 2485, nnz=10138])
+    Data(x=[2485, 1433], edge_index=[2, 10138], y=[2485])
 
     >>> # simple training
     >>> trainer.fit({'data': data, 'mask': train_mask})

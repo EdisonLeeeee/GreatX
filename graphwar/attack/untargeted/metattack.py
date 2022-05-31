@@ -5,14 +5,14 @@ from torch.autograd import grad
 from torch.nn import init
 from tqdm import tqdm
 
-from graphwar.surrogater import Surrogater
+from graphwar.surrogate import Surrogate
 from graphwar.utils import singleton_mask
 from graphwar.functional import to_dense_adj
 from graphwar.nn.layers.gcn_conv import dense_gcn_norm
 from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
 
 
-class Metattack(UntargetedAttacker, Surrogater):
+class Metattack(UntargetedAttacker, Surrogate):
     # Metattack can also conduct feature attack
     _allow_feature_attack: bool = True
 
@@ -31,7 +31,7 @@ class Metattack(UntargetedAttacker, Surrogater):
                 "Invalid argument `lambda_`, allowed values [0: (meta-self), 1: (meta-train), 0.5: (meta-both)]."
             )
 
-        Surrogater.setup_surrogate(self, surrogate=surrogate, eps=eps)
+        Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps)
 
         labeled_nodes = torch.LongTensor(labeled_nodes).to(self.device)
         unlabeled_nodes = torch.LongTensor(unlabeled_nodes).to(self.device)

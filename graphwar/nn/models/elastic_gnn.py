@@ -37,7 +37,7 @@ class ElasticGNN(nn.Module):
         out_channels : int, 
             the output dimensions of model
         hids : list, optional
-            the number of hidden units of each hidden layer, by default [64]
+            the number of hidden units of each hidden layer, by default [16]
         acts : list, optional
             the activation function of each hidden layer, by default ['relu']
         dropout : float, optional

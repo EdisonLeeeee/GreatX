@@ -8,7 +8,7 @@ from numba import njit
 from tqdm import tqdm
 from torch_geometric.data import Data
 
-from graphwar import Surrogater
+from graphwar import Surrogate
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 from graphwar.utils import singleton_filter
 
@@ -22,7 +22,7 @@ def scipy_normalize(adj_matrix: sp.csr_matrix, add_self_loops: bool = True):
     return adj_matrix
 
 
-class Nettack(TargetedAttacker, Surrogater):
+class Nettack(TargetedAttacker, Surrogate):
     """Implementation of the method proposed in the paper:
     'Adversarial Attacks on Neural Networks for Graph Data'
     by Daniel Zügner, Amir Akbarnejad and Stephan Günnemann,
@@ -40,7 +40,7 @@ class Nettack(TargetedAttacker, Surrogater):
         self.cooc_matrix = sp.csr_matrix((feat.t() @ feat).cpu().numpy())
 
     def setup_surrogate(self, surrogate):
-        Surrogater.setup_surrogate(self, surrogate=surrogate, freeze=True)
+        Surrogate.setup_surrogate(self, surrogate=surrogate, freeze=True)
         W = None
         for para in self.surrogate.parameters():
             if para.ndim == 1:

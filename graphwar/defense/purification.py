@@ -91,8 +91,10 @@ class SVDPurification(BaseTransform):
         adj_matrix = svd(adj_matrix, K=self.K,
                          threshold=self.threshold,
                          binaryzation=self.binaryzation)
-        data.edge_index, data.edge_weight = from_scipy_sparse_matrix(
+        edge_index, edge_weight = from_scipy_sparse_matrix(
             adj_matrix)
+        data.edge_index, data.edge_weight = edge_index.to(
+            device), edge_weight.to(device)
 
         return data
 

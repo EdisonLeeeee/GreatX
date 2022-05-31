@@ -10,7 +10,7 @@ from tqdm import tqdm
 from torch_geometric.utils import remove_self_loops, add_self_loops, degree
 from graphwar.attack.backdoor.backdoor_attacker import BackdoorAttacker
 from graphwar.functional import spmm
-from graphwar import Surrogater
+from graphwar import Surrogate
 
 
 class LGCBackdoor(BackdoorAttacker):
@@ -56,13 +56,13 @@ class LGCBackdoor(BackdoorAttacker):
         return indices
 
 
-class FGBackdoor(BackdoorAttacker, Surrogater):
+class FGBackdoor(BackdoorAttacker, Surrogate):
 
     def setup_surrogate(self, surrogate: nn.Module, *,
                         eps: float = 1.0) -> "FGBackdoor":
 
-        Surrogater.setup_surrogate(self, surrogate=surrogate,
-                                   eps=eps, freeze=True)
+        Surrogate.setup_surrogate(self, surrogate=surrogate,
+                                  eps=eps, freeze=True)
         W = []
         for para in self.surrogate.parameters():
             if para.ndim == 1:

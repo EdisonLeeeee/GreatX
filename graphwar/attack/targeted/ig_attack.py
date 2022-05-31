@@ -8,12 +8,12 @@ from torch.autograd import grad
 from torch_geometric.data import Data
 
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
-from graphwar.surrogater import Surrogater
+from graphwar.surrogate import Surrogate
 from graphwar.utils import singleton_filter
 from graphwar.functional import to_dense_adj
 
 
-class IGAttack(TargetedAttacker, Surrogater):
+class IGAttack(TargetedAttacker, Surrogate):
     # IGAttack can conduct feature attack
     _allow_feature_attack: bool = True
 

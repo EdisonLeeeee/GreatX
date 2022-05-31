@@ -24,7 +24,7 @@ def get_trainer(model: Union[str, torch.nn.Module]) -> training.trainer.Trainer:
     >>> graphwar.training.get_trainer('GCN')
     graphwar.training.trainer.Trainer
 
-    >>> from graphwar.models import GCN
+    >>> from graphwar.nn.models import GCN
     >>> graphwar.training.get_trainer(GCN)
     graphwar.training.trainer.Trainer
 

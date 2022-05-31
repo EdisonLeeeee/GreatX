@@ -15,10 +15,9 @@ from graphwar.nn.layers.gcn_conv import dense_gcn_norm
 
 
 class TAGConv(nn.Module):
-
-    _cached_x: Optional[Tensor]
-
-    def __init__(self, in_channels: int, out_channels: int, K: int = 2,
+    def __init__(self, in_channels: int,
+                 out_channels: int,
+                 K: int = 2,
                  add_self_loops: bool = True,
                  normalize: bool = True,
                  bias: bool = True):

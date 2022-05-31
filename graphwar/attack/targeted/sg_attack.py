@@ -10,13 +10,13 @@ from tqdm import tqdm
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 from graphwar.utils import ego_graph
 from graphwar.nn.models import SGC
-from graphwar.surrogater import Surrogater
+from graphwar.surrogate import Surrogate
 
 SubGraph = namedtuple('SubGraph', ['edge_index', 'sub_edges', 'non_edges',
                                    'edge_weight', 'non_edge_weight', 'selfloop_weight'])
 
 
-class SGAttack(TargetedAttacker, Surrogater):
+class SGAttack(TargetedAttacker, Surrogate):
     # SGAttack cannot ensure that there is not singleton node after attacks.
     _allow_singleton = True
 
@@ -26,8 +26,8 @@ class SGAttack(TargetedAttacker, Surrogater):
                         freeze: bool = True,
                         K: int = 2):
 
-        Surrogater.setup_surrogate(self, surrogate=surrogate,
-                                   eps=eps, freeze=freeze)
+        Surrogate.setup_surrogate(self, surrogate=surrogate,
+                                  eps=eps, freeze=freeze)
 
         self.logits = self.surrogate(
             self.feat, self.edge_index, self.edge_weight)

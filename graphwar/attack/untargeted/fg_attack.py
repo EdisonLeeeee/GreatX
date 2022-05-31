@@ -7,12 +7,12 @@ from torch import Tensor
 from tqdm import tqdm
 
 from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
-from graphwar.surrogater import Surrogater
+from graphwar.surrogate import Surrogate
 from graphwar.utils import singleton_mask
 from graphwar.functional import to_dense_adj
 
 
-class FGAttack(UntargetedAttacker, Surrogater):
+class FGAttack(UntargetedAttacker, Surrogate):
     # FGAttack can conduct feature attack
     _allow_feature_attack: bool = True
 
@@ -21,8 +21,8 @@ class FGAttack(UntargetedAttacker, Surrogater):
                         victim_labels: Optional[Tensor] = None, *,
                         eps: float = 1.0):
 
-        Surrogater.setup_surrogate(self, surrogate=surrogate,
-                                   eps=eps, freeze=True)
+        Surrogate.setup_surrogate(self, surrogate=surrogate,
+                                  eps=eps, freeze=True)
 
         self.victim_nodes = victim_nodes.to(self.device)
         if victim_labels is None:

@@ -5,15 +5,14 @@ from graphwar.attack.untargeted.random_attack import RandomAttack
 
 
 class DICEAttack(RandomAttack):
-    """DICE attacker that randomly chooses edges to flip 
+    r"""DICE attacker that randomly chooses edges to flip 
     based on “Disconnect Internally, Connect Externally” (DICE), 
     which conducts attacks by removing edges between nodes
-    with high correlations and connecting edges with low correlations.
+    with high correlations and connecting edges with low correlations.
 
-    Reference
-    --------
+    Reference:
     [1] M. Waniek, T. P. Michalak, M. J. Wooldridge, and T. Rahwan, 
-    “Hiding individuals and communities in a social network,” 
+    “Hidding individuals and communities in a social network,” 
     Nature Human Behaviour, vol. 2, no. 2, pp. 139–147, 2018.
     """
 

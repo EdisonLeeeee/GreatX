@@ -7,7 +7,8 @@ from torch import Tensor
 def normalize(feat: Tensor, norm: str = "standardize",
               dim: Optional[int] = None,
               lim_min: float = -1.0, lim_max: float = 1.0) -> Tensor:
-    """Feature normalization function. Adapted from GRB:
+    """Feature normalization function. 
+    Adapted from GRB:
     `https://github.com/THUDM/grb/blob/2f438ccc9e62ffb33a26ca98a95e504985443055/grb/dataset/dataset.py#L638`
 
     Parameters

@@ -19,7 +19,7 @@ Package API
    :maxdepth: 4
    :caption: Package Reference
    
-   modules/data
+   modules/dataset
    modules/attack
    modules/utils
    

@@ -14,14 +14,14 @@ from graphwar import set_seed
 class Attacker(torch.nn.Module):
     """Adversarial attacker for graph data. Note that this is an abstract class.
 
-    Examples:
-    ---------
-        For example, the attacker model should be defined as follows:
+    Examples
+    --------
+    For example, the attacker model should be defined as follows:
 
-        >>> attacker = Attacker(data, device='cuda')
-        >>> attacker.reset() # reset states
-        >>> attacker.attack(attack_arguments) # attack
-        >>> attacker.data() # get the attacked graph denoted as PyG-like Data
+    >>> attacker = Attacker(data, device='cuda')
+    >>> attacker.reset() # reset states
+    >>> attacker.attack(attack_arguments) # attack
+    >>> attacker.data() # get the attacked graph denoted as PyG-like Data
 
     """
     _max_perturbations: Union[float, int] = 0

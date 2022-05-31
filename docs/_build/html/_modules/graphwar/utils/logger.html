@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>graphwar.utils.logger &mdash; graphwar 0.1.0 documentation</title>
-      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -23,7 +24,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html">
+            <a href="../../../index.html" class="icon icon-home"> graphwar
             <img src="../../../_static/graphwar.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
@@ -43,10 +44,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/data.html">graphwar.data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/dataset.html">graphwar.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/utils.html">graphwar.utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/metrics.html">graphwar.metrics</a></li>
 </ul>
 
         </div>
@@ -111,14 +117,13 @@
 <span class="sd">    abbrev_name : Optional[str], optional</span>
 <span class="sd">        an abbreviation of the module, to avoid long names in logs.</span>
 <span class="sd">        Set to &quot;&quot; to not log the root module in logs.</span>
-<span class="sd">        By default, will abbreviate &quot;detectron2&quot; to &quot;d2&quot; and leave other</span>
-<span class="sd">        modules unchanged.</span>
+<span class="sd">        By default, None.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    logging.Logger</span>
 <span class="sd">        a logger</span>
-<span class="sd">        </span>
+
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; logger = setup_logger(name=&#39;my exp&#39;)</span>
@@ -131,12 +136,12 @@
 
 <span class="sd">    &gt;&gt;&gt; logger.warning(&#39;message&#39;)</span>
 <span class="sd">    WARNING [12/19 17:02:32 my exp]: message</span>
-<span class="sd">    </span>
+
 <span class="sd">    # specify output files</span>
 <span class="sd">    &gt;&gt;&gt; logger = setup_logger(output=&#39;log.txt&#39;, name=&#39;my exp&#39;)</span>
 <span class="sd">    # additive, by default mode=&#39;w&#39; </span>
 <span class="sd">    &gt;&gt;&gt; logger = setup_logger(output=&#39;log.txt&#39;, name=&#39;my exp&#39;, mode=&#39;a&#39;)    </span>
-<span class="sd">    </span>
+
 <span class="sd">    # once you logger is set, you can call it by</span>
 <span class="sd">    &gt;&gt;&gt; logger = get_logger(name=&#39;my exp&#39;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>

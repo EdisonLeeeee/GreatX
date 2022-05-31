@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>graphwar.attack.backdoor.lgc_backdoor &mdash; graphwar 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> graphwar
+            <img src="../../../../_static/graphwar.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notes/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/dataset.html">graphwar.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/attack.html">graphwar.attack</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/utils.html">graphwar.utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">graphwar</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>graphwar.attack.backdoor.lgc_backdoor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for graphwar.attack.backdoor.lgc_backdoor</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="n">remove_self_loops</span><span class="p">,</span> <span class="n">add_self_loops</span><span class="p">,</span> <span class="n">degree</span>
+<span class="kn">from</span> <span class="nn">graphwar.attack.backdoor.backdoor_attacker</span> <span class="kn">import</span> <span class="n">BackdoorAttacker</span>
+<span class="kn">from</span> <span class="nn">graphwar.functional</span> <span class="kn">import</span> <span class="n">spmm</span>
+<span class="kn">from</span> <span class="nn">graphwar</span> <span class="kn">import</span> <span class="n">Surrogate</span>
+
+
+<div class="viewcode-block" id="LGCBackdoor"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.backdoor.LGCBackdoor">[docs]</a><span class="k">class</span> <span class="nc">LGCBackdoor</span><span class="p">(</span><span class="n">BackdoorAttacker</span><span class="p">):</span>
+
+<div class="viewcode-block" id="LGCBackdoor.setup_surrogate"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.backdoor.LGCBackdoor.setup_surrogate">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">setup_surrogate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surrogate</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;LGCBackdoor&quot;</span><span class="p">:</span>
+        <span class="n">W</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">para</span> <span class="ow">in</span> <span class="n">surrogate</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">para</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The surrogate model has `bias` term, which is ignored and the &quot;</span>
+                              <span class="sa">f</span><span class="s2">&quot;model itself may not be a perfect choice for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">W</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">W</span> <span class="o">=</span> <span class="n">para</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">W</span> <span class="o">=</span> <span class="n">para</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span> <span class="o">@</span> <span class="n">W</span>
+
+        <span class="k">assert</span> <span class="n">W</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">W</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">W</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="LGCBackdoor.attack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.backdoor.LGCBackdoor.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_budgets</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">target_class</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+               <span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;LGCBackdoor&quot;</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">num_budgets</span><span class="p">,</span> <span class="n">target_class</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">target_class</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span>
+
+        <span class="n">feat_perturbations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_feat_perturbations</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">W</span><span class="p">,</span> <span class="n">target_class</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_budgets</span><span class="p">)</span>
+
+        <span class="n">trigger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat</span><span class="o">.</span><span class="n">new_zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_feats</span><span class="p">)</span>
+        <span class="n">trigger</span><span class="p">[</span><span class="n">feat_perturbations</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trigger</span> <span class="o">=</span> <span class="n">trigger</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="LGCBackdoor.get_feat_perturbations"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.backdoor.LGCBackdoor.get_feat_perturbations">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_feat_perturbations</span><span class="p">(</span><span class="n">W</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">target_class</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_budgets</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">W</span> <span class="o">-</span> <span class="n">W</span><span class="p">[:,</span> <span class="n">target_class</span><span class="p">]</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">D</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">num_budgets</span><span class="p">,</span> <span class="n">largest</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">indices</span></div></div>
+
+
+<div class="viewcode-block" id="FGBackdoor"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.backdoor.FGBackdoor">[docs]</a><span class="k">class</span> <span class="nc">FGBackdoor</span><span class="p">(</span><span class="n">BackdoorAttacker</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FGBackdoor.setup_surrogate"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.backdoor.FGBackdoor.setup_surrogate">[docs]</a>    <span class="k">def</span> <span class="nf">setup_surrogate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surrogate</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                        <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;FGBackdoor&quot;</span><span class="p">:</span>
+
+        <span class="n">Surrogate</span><span class="o">.</span><span class="n">setup_surrogate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surrogate</span><span class="o">=</span><span class="n">surrogate</span><span class="p">,</span>
+                                  <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span> <span class="n">freeze</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">W</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">para</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">para</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The surrogate model has `bias` term, which is ignored and the &quot;</span>
+                              <span class="sa">f</span><span class="s2">&quot;model itself may not be a perfect choice for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">W</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">para</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">t</span><span class="p">())</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">W</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w2</span> <span class="o">=</span> <span class="n">W</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span> <span class="o">=</span> <span class="n">W</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="FGBackdoor.attack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.backdoor.FGBackdoor.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_budgets</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">target_class</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;FGBackdoor&quot;</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">num_budgets</span><span class="p">,</span> <span class="n">target_class</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">target_class</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span>
+
+        <span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat</span>
+
+        <span class="n">trigger</span> <span class="o">=</span> <span class="n">feat</span><span class="o">.</span><span class="n">new_zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_feats</span><span class="p">)</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
+        <span class="n">target_labels</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">target_class</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+
+        <span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight_with_trigger</span><span class="p">,</span>
+            <span class="n">edge_index_with_self_loop</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span>
+            <span class="n">trigger_edge_index</span><span class="p">,</span> <span class="n">trigger_edge_weight</span><span class="p">,</span>
+            <span class="n">augmented_edge_index</span><span class="p">,</span> <span class="n">augmented_edge_weight</span><span class="p">)</span> <span class="o">=</span> <span class="n">get_backdoor_edges</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_budgets</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Updating trigger using gradients...&quot;</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="n">disable</span><span class="p">):</span>
+            <span class="n">aug_feat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">feat</span><span class="p">,</span> <span class="n">trigger</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">1</span><span class="p">)],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">feat1</span> <span class="o">=</span> <span class="n">aug_feat</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">w1</span>
+            <span class="n">h1</span> <span class="o">=</span> <span class="n">spmm</span><span class="p">(</span><span class="n">feat1</span><span class="p">,</span> <span class="n">edge_index_with_self_loop</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">)</span>
+            <span class="n">h1_aug</span> <span class="o">=</span> <span class="n">spmm</span><span class="p">(</span><span class="n">feat1</span><span class="p">,</span> <span class="n">augmented_edge_index</span><span class="p">,</span>
+                          <span class="n">augmented_edge_weight</span><span class="p">)</span><span class="o">.</span><span class="n">relu</span><span class="p">()</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">spmm</span><span class="p">(</span><span class="n">h1_aug</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">w2</span><span class="p">,</span> <span class="n">trigger_edge_index</span><span class="p">,</span> <span class="n">trigger_edge_weight</span><span class="p">)</span> <span class="o">+</span> \
+                <span class="n">spmm</span><span class="p">(</span><span class="n">h1</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">w2</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight_with_trigger</span><span class="p">)</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">h</span><span class="p">[:</span><span class="n">N</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">target_labels</span><span class="p">)</span>
+            <span class="n">gradients</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="o">-</span><span class="n">loss</span><span class="p">,</span> <span class="n">trigger</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">trigger</span><span class="p">)</span>
+            <span class="n">trigger</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">gradients</span><span class="o">.</span><span class="n">argmax</span><span class="p">()]</span><span class="o">.</span><span class="n">fill_</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trigger</span> <span class="o">=</span> <span class="n">trigger</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">get_backdoor_edges</span><span class="p">(</span><span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">N</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="n">edge_index</span><span class="o">.</span><span class="n">device</span>
+    <span class="n">influence_nodes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="n">N_all</span> <span class="o">=</span> <span class="n">N</span> <span class="o">+</span> <span class="n">influence_nodes</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">trigger_nodes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">N_all</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+    <span class="c1"># 1. edge index of original graph (without selfloops)</span>
+    <span class="n">edge_index</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">remove_self_loops</span><span class="p">(</span><span class="n">edge_index</span><span class="p">)</span>
+
+    <span class="c1"># 2. edge index of original graph (with selfloops)</span>
+    <span class="n">edge_index_with_self_loop</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">add_self_loops</span><span class="p">(</span><span class="n">edge_index</span><span class="p">)</span>
+
+    <span class="c1"># 3. edge index of trigger nodes conneted to victim nodes with selfloops (with self-loop)</span>
+    <span class="n">trigger_edge_index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">trigger_nodes</span><span class="p">,</span> <span class="n">influence_nodes</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">diag_index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N_all</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">trigger_edge_index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">trigger_edge_index</span><span class="p">,</span> <span class="n">trigger_edge_index</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span> <span class="n">diag_index</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># 4. all edge index with trigger nodes</span>
+    <span class="n">augmented_edge_index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">trigger_edge_index</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">d</span> <span class="o">=</span> <span class="n">degree</span><span class="p">(</span><span class="n">edge_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">num_nodes</span><span class="o">=</span><span class="n">N</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+    <span class="n">d_augmented</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+    <span class="n">d_augmented</span><span class="p">[</span><span class="n">influence_nodes</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">1.</span>
+    <span class="n">d_augmented</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">d_augmented</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">(</span>
+        <span class="n">trigger_nodes</span><span class="o">.</span><span class="n">size</span><span class="p">(),</span> <span class="mi">2</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)])</span>
+
+    <span class="n">d_pow</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">d_augmented_pow</span> <span class="o">=</span> <span class="n">d_augmented</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">d_pow</span><span class="p">[</span><span class="n">edge_index_with_self_loop</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> \
+        <span class="n">d_pow</span><span class="p">[</span><span class="n">edge_index_with_self_loop</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">edge_weight_with_trigger</span> <span class="o">=</span> <span class="n">d_augmented_pow</span><span class="p">[</span><span class="n">edge_index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                                               <span class="p">]</span> <span class="o">*</span> <span class="n">d_pow</span><span class="p">[</span><span class="n">edge_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">trigger_edge_weight</span> <span class="o">=</span> <span class="n">d_augmented_pow</span><span class="p">[</span><span class="n">trigger_edge_index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                                          <span class="p">]</span> <span class="o">*</span> <span class="n">d_augmented_pow</span><span class="p">[</span><span class="n">trigger_edge_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">augmented_edge_weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">edge_weight_with_trigger</span><span class="p">,</span> <span class="n">trigger_edge_weight</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight_with_trigger</span><span class="p">,</span>
+            <span class="n">edge_index_with_self_loop</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span>
+            <span class="n">trigger_edge_index</span><span class="p">,</span> <span class="n">trigger_edge_weight</span><span class="p">,</span>
+            <span class="n">augmented_edge_index</span><span class="p">,</span> <span class="n">augmented_edge_weight</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jintang Li.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

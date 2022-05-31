@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>graphwar.utils.functions &mdash; graphwar 0.1.0 documentation</title>
-      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -23,7 +24,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html">
+            <a href="../../../index.html" class="icon icon-home"> graphwar
             <img src="../../../_static/graphwar.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
@@ -43,10 +44,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/data.html">graphwar.data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/dataset.html">graphwar.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/utils.html">graphwar.utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/metrics.html">graphwar.metrics</a></li>
 </ul>
 
         </div>
@@ -197,8 +203,9 @@
 <div class="viewcode-block" id="wrapper"><a class="viewcode-back" href="../../../modules/utils.html#graphwar.utils.wrapper">[docs]</a><span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;wrap a function to make some arguments </span>
 <span class="sd">    have the same length. By default, the arguments</span>
-<span class="sd">    to be modified are `hids` and `acts`. Uses can custom</span>
-<span class="sd">    these arguments by setting argument </span>
+<span class="sd">    to be modified are `hids` and `acts`. </span>
+
+<span class="sd">    Uses can custom these arguments by setting argument </span>
 <span class="sd">    * `includes` : to includes custom arguments</span>
 <span class="sd">    * `excludes` : to excludes custom arguments</span>
 <span class="sd">    * `length_as` : to make the length of the arguments </span>
@@ -267,7 +274,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">decoracte</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="n">inspect_paras</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
         <span class="n">inspect_paras</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inspect_paras</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
@@ -289,7 +296,8 @@
                     <span class="k">continue</span>
 
                 <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">max_length</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The decorated function &#39;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; missing required argument &#39;</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;The decorated function &#39;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; missing required argument &#39;</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">paras</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">default</span>
 
@@ -321,7 +329,7 @@
 
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">**</span><span class="n">paras</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">decoracte</span></div>
+    <span class="k">return</span> <span class="n">decorate</span></div>
 </pre></div>
 
            </div>

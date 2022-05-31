@@ -1,16 +1,16 @@
-graphwar.data
+graphwar.dataset
 ===================
 
-.. currentmodule:: graphwar.data
+.. currentmodule:: graphwar.dataset
 
 .. autosummary::
     :toctree: _autosummary
     :nosignatures:
-    {% for cls in graphwar.data.classes %}
+    {% for cls in graphwar.dataset.classes %}
       {{ cls }}
     {% endfor %}
 
-.. automodule:: graphwar.data
+.. automodule:: graphwar.dataset
     :members:
     :undoc-members:
     :show-inheritance:    

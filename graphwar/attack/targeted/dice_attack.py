@@ -10,8 +10,7 @@ class DICEAttack(RandomAttack):
     which conducts attacks by removing edges between nodes
     with high correlations and connecting edges with low correlations.
 
-    Reference
-    ---------
+    Reference:
     [1] M. Waniek, T. P. Michalak, M. J. Wooldridge, and T. Rahwan, 
     “Hidding individuals and communities in a social network,” 
     Nature Human Behaviour, vol. 2, no. 2, pp. 139–147, 2018.

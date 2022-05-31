@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>graphwar.attack.flip_attacker &mdash; graphwar 0.1.0 documentation</title>
-      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -23,7 +24,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html">
+            <a href="../../../index.html" class="icon icon-home"> graphwar
             <img src="../../../_static/graphwar.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
@@ -43,10 +44,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/data.html">graphwar.data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/dataset.html">graphwar.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/utils.html">graphwar.utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/metrics.html">graphwar.metrics</a></li>
 </ul>
 
         </div>
@@ -75,72 +81,72 @@
              
   <h1>Source code for graphwar.attack.flip_attacker</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
-
-<span class="kn">import</span> <span class="nn">dgl</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
 
 <span class="kn">from</span> <span class="nn">graphwar.attack.attacker</span> <span class="kn">import</span> <span class="n">Attacker</span>
-<span class="kn">from</span> <span class="nn">graphwar.utils</span> <span class="kn">import</span> <span class="n">BunchDict</span>
+<span class="kn">from</span> <span class="nn">graphwar.utils</span> <span class="kn">import</span> <span class="n">BunchDict</span><span class="p">,</span> <span class="n">remove_edges</span><span class="p">,</span> <span class="n">add_edges</span>
 
 
 <div class="viewcode-block" id="FlipAttacker"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker">[docs]</a><span class="k">class</span> <span class="nc">FlipAttacker</span><span class="p">(</span><span class="n">Attacker</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Adversarial attacker for graph data by edge flipping.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Adversarial attacker for graph data by flipping edge.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FlipAttacker.reset"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;FlipAttacker&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Reset attacker by recovering the flipped edges and features.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">cache_clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cache_clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_removed_edges</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_added_edges</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_removed_feats</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_added_feats</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">degree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_degree</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">degree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_degree</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="FlipAttacker.remove_edge"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.remove_edge">[docs]</a>    <span class="k">def</span> <span class="nf">remove_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">it</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;remove one edge from the graph.</span>
+        <span class="sd">&quot;&quot;&quot;Remove one edge from the graph.</span>
 
 <span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        u : int</span>
-<span class="sd">            the src node of the edge</span>
-<span class="sd">        v : int</span>
-<span class="sd">            the dst node of the edge</span>
-<span class="sd">        it : Optional[int], optional</span>
-<span class="sd">            the iteration that indicates the order of the edge being removed, by default None</span>
+<span class="sd">        -----------</span>
+<span class="sd">        u (int): The source node of the edge.</span>
+<span class="sd">        v (int): The destination node of the edge.</span>
+<span class="sd">        it (Optional[int], optional): </span>
+<span class="sd">            The iteration that indicates the order of the edge being removed. Default: `None`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allow_singleton</span><span class="p">:</span>
             <span class="n">is_singleton_u</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span>
             <span class="n">is_singleton_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span>
 
             <span class="k">if</span> <span class="n">is_singleton_u</span> <span class="ow">or</span> <span class="n">is_singleton_v</span><span class="p">:</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;You are trying to remove an edge (</span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">) that would result in singleton nodes. If the behavior is not intended, please make sure you have set `attacker.set_allow_singleton(False)` or check your algorithm.&quot;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;You are trying to remove an edge (</span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">) that would result in singleton nodes. &quot;</span>
+                              <span class="s2">&quot;If the behavior is not intended, please make sure you have set `attacker.set_allow_singleton(False)` or check your algorithm.&quot;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_removed_edges</span><span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)]</span> <span class="o">=</span> <span class="n">it</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span></div>
 
 <div class="viewcode-block" id="FlipAttacker.add_edge"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.add_edge">[docs]</a>    <span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">it</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;add one edge to the graph.</span>
+        <span class="sd">&quot;&quot;&quot;Add one edge to the graph.</span>
 
 <span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        u : int</span>
-<span class="sd">            the src node of the edge</span>
-<span class="sd">        v : int</span>
-<span class="sd">            the dst node of the edge</span>
-<span class="sd">        it : Optional[int], optional</span>
-<span class="sd">            the iteration that indicates the order of the edge being added, by default None</span>
+<span class="sd">        -----------</span>
+<span class="sd">        u (int): The source node of the edge.</span>
+<span class="sd">        v (int): The destination node of the edge.</span>
+<span class="sd">        it (Optional[int], optional):</span>
+<span class="sd">            The iteration that indicates the order of the edge being added. Default: `None`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_added_edges</span><span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)]</span> <span class="o">=</span> <span class="n">it</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
 <div class="viewcode-block" id="FlipAttacker.removed_edges"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.removed_edges">[docs]</a>    <span class="k">def</span> <span class="nf">removed_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Get all the edges to be removed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_removed_edges</span>
         <span class="k">if</span> <span class="n">edges</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -151,17 +157,12 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">edges</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">edges</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
-        <span class="n">removed</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int64&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">has_edges_between</span><span class="p">(</span><span class="n">removed</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">removed</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;You are trying to remove some edges that does not belong to the graph. &quot;</span>
-                          <span class="s2">&quot;We would ignore these edges by default. &quot;</span>
-                         <span class="s2">&quot;Please make sure this is an intended behavior or check your data/algorithm.&quot;</span><span class="p">)</span>
-            <span class="n">removed</span> <span class="o">=</span> <span class="n">removed</span><span class="p">[:,</span> <span class="n">mask</span><span class="p">]</span>
-        
+        <span class="n">removed</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+            <span class="n">edges</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int64&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">removed</span></div>
 
 <div class="viewcode-block" id="FlipAttacker.added_edges"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.added_edges">[docs]</a>    <span class="k">def</span> <span class="nf">added_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Get all the edges to be added.&quot;&quot;&quot;</span>
         <span class="n">edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_added_edges</span>
         <span class="k">if</span> <span class="n">edges</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -175,18 +176,38 @@
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int64&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlipAttacker.edge_flips"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.edge_flips">[docs]</a>    <span class="k">def</span> <span class="nf">edge_flips</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BunchDict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get all the edges to be flipped, including edges to be added and removed.&quot;&quot;&quot;</span>
         <span class="n">added</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">added_edges</span><span class="p">()</span>
         <span class="n">removed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">removed_edges</span><span class="p">()</span>
         <span class="n">_all</span> <span class="o">=</span> <span class="n">cat</span><span class="p">(</span><span class="n">added</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">BunchDict</span><span class="p">(</span><span class="n">added</span><span class="o">=</span><span class="n">added</span><span class="p">,</span> <span class="n">removed</span><span class="o">=</span><span class="n">removed</span><span class="p">,</span> <span class="nb">all</span><span class="o">=</span><span class="n">_all</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlipAttacker.remove_feat"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.remove_feat">[docs]</a>    <span class="k">def</span> <span class="nf">remove_feat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">it</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set a dimension of the specific node to zero.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        u (int): The node to be changed feature.</span>
+<span class="sd">        v (int): The dimension to be changed.</span>
+<span class="sd">        it (Optional[int], optional):</span>
+<span class="sd">            The iteration that indicates the order of the features being removed. Default: `None`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_removed_feats</span><span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)]</span> <span class="o">=</span> <span class="n">it</span></div>
 
 <div class="viewcode-block" id="FlipAttacker.add_feat"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.add_feat">[docs]</a>    <span class="k">def</span> <span class="nf">add_feat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">it</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set a dimension of the specific node to one.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">            u (int): The node to be changed feature.</span>
+<span class="sd">            v (int): The dimension to be changed.</span>
+<span class="sd">            it (Optional[int], optional):</span>
+<span class="sd">                The iteration that indicates the order of the features being added. Default: `None`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_added_feats</span><span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)]</span> <span class="o">=</span> <span class="n">it</span></div>
 
 <div class="viewcode-block" id="FlipAttacker.removed_feats"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.removed_feats">[docs]</a>    <span class="k">def</span> <span class="nf">removed_feats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Get all the features to be removed.&quot;&quot;&quot;</span>
         <span class="n">feats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_removed_feats</span>
         <span class="k">if</span> <span class="n">feats</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">feats</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -200,6 +221,7 @@
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">feats</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int64&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlipAttacker.added_feats"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.added_feats">[docs]</a>    <span class="k">def</span> <span class="nf">added_feats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Get all the features to be added.&quot;&quot;&quot;</span>
         <span class="n">feats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_added_feats</span>
         <span class="k">if</span> <span class="n">feats</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">feats</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -213,41 +235,44 @@
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">feats</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int64&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FlipAttacker.feat_flips"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.feat_flips">[docs]</a>    <span class="k">def</span> <span class="nf">feat_flips</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BunchDict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get all the features to be flipped, including features to be added and removed.&quot;&quot;&quot;</span>
         <span class="n">added</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">added_feats</span><span class="p">()</span>
         <span class="n">removed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">removed_feats</span><span class="p">()</span>
         <span class="n">_all</span> <span class="o">=</span> <span class="n">cat</span><span class="p">(</span><span class="n">added</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">BunchDict</span><span class="p">(</span><span class="n">added</span><span class="o">=</span><span class="n">added</span><span class="p">,</span> <span class="n">removed</span><span class="o">=</span><span class="n">removed</span><span class="p">,</span> <span class="nb">all</span><span class="o">=</span><span class="n">_all</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FlipAttacker.g"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.g">[docs]</a>    <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dgl</span><span class="o">.</span><span class="n">DGLGraph</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;return the attacked graph</span>
+<div class="viewcode-block" id="FlipAttacker.data"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.data">[docs]</a>    <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the attacked graph.</span>
 
 <span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        symmetric : bool</span>
-<span class="sd">            Determine whether the resulting graph is forcibly symmetric</span>
+<span class="sd">        -----------</span>
+<span class="sd">            symmetric (bool): </span>
+<span class="sd">                Determine whether the resulting graph is forcibly symmetric. Default: `True`.</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        dgl.DGLGraph</span>
-<span class="sd">            the attacked graph</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Data: The attacked graph denoted as PyG-like Data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">local_var</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ori_data</span><span class="p">)</span>
+        <span class="n">edge_index</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span>
+        <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_weight</span>
+        <span class="k">assert</span> <span class="n">edge_weight</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;weighted graph is not supported now.&#39;</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span>
 
         <span class="n">edge_flips</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_flips</span><span class="p">()</span>
         <span class="n">removed</span> <span class="o">=</span> <span class="n">edge_flips</span><span class="p">[</span><span class="s1">&#39;removed&#39;</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">removed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">symmetric</span><span class="p">:</span>
-                <span class="n">removed</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">removed</span><span class="p">,</span> <span class="n">removed</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">e_id</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">edge_ids</span><span class="p">(</span><span class="n">removed</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">removed</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-            <span class="n">graph</span><span class="o">.</span><span class="n">remove_edges</span><span class="p">(</span><span class="n">e_id</span><span class="p">)</span>
+            <span class="n">edge_index</span> <span class="o">=</span> <span class="n">remove_edges</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="n">symmetric</span><span class="p">)</span>
 
         <span class="n">added</span> <span class="o">=</span> <span class="n">edge_flips</span><span class="p">[</span><span class="s1">&#39;added&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">added</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">symmetric</span><span class="p">:</span>
-                <span class="n">added</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">added</span><span class="p">,</span> <span class="n">added</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">graph</span><span class="o">.</span><span class="n">add_edges</span><span class="p">(</span><span class="n">added</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">added</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">edge_index</span> <span class="o">=</span> <span class="n">add_edges</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">added</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="n">symmetric</span><span class="p">)</span>
+
+        <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span> <span class="o">=</span> <span class="n">edge_index</span>
+
+        <span class="k">if</span> <span class="n">edge_weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">edge_weight</span> <span class="o">=</span> <span class="n">edge_weight</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_attack</span><span class="p">:</span>
             <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
@@ -259,81 +284,73 @@
             <span class="n">added</span> <span class="o">=</span> <span class="n">feat_flips</span><span class="p">[</span><span class="s1">&#39;added&#39;</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">added</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">feat</span><span class="p">[</span><span class="n">added</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">added</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">1.</span>
-                <span class="n">graph</span><span class="o">.</span><span class="n">ndata</span><span class="p">[</span><span class="s1">&#39;feat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">feat</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">feat</span>
 
-        <span class="k">return</span> <span class="n">graph</span></div>
+        <span class="k">return</span> <span class="n">data</span></div>
 
 <div class="viewcode-block" id="FlipAttacker.set_allow_singleton"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.set_allow_singleton">[docs]</a>    <span class="k">def</span> <span class="nf">set_allow_singleton</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set allow_singleton flag.</span>
+        <span class="sd">&quot;&quot;&quot;Set whether the attacked graph allow singleton node with degree lower than or equal to one.</span>
 
 <span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        state : bool</span>
-<span class="sd">            The value to be set to the flag.</span>
+<span class="sd">        -----------</span>
+<span class="sd">            state (bool): </span>
+<span class="sd">                By `True`, the attacked graph allow singleton node with degree lower than or equal to one.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_allow_singleton</span> <span class="o">=</span> <span class="n">state</span></div>
 
 <div class="viewcode-block" id="FlipAttacker.set_allow_structure_attack"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.set_allow_structure_attack">[docs]</a>    <span class="k">def</span> <span class="nf">set_allow_structure_attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set allow_structure_attack flag.</span>
+        <span class="sd">&quot;&quot;&quot;Set whether the attacker allow attacks on the topology of the graph.</span>
 
 <span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        state : bool</span>
-<span class="sd">            The value to be set to the flag.</span>
+<span class="sd">        ----------- </span>
+<span class="sd">            state (bool):</span>
+<span class="sd">                By `True`, the attacker allow attacks on the topology of the graph.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_allow_structure_attack</span> <span class="o">=</span> <span class="n">state</span></div>
 
 <div class="viewcode-block" id="FlipAttacker.set_allow_feature_attack"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.set_allow_feature_attack">[docs]</a>    <span class="k">def</span> <span class="nf">set_allow_feature_attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set allow_feature_attack flag.</span>
+        <span class="sd">&quot;&quot;&quot;Set whether the attacker allow attacks on the features of nodes in the graph. </span>
 
 <span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        state : bool</span>
-<span class="sd">            The value to be set to the flag.</span>
+<span class="sd">        ----------- </span>
+<span class="sd">        state (bool):</span>
+<span class="sd">            By `True`, the attacker allow attacks on the features of nodes in the graph.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_allow_feature_attack</span> <span class="o">=</span> <span class="n">state</span></div>
 
 <div class="viewcode-block" id="FlipAttacker.is_singleton_edge"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.is_singleton_edge">[docs]</a>    <span class="k">def</span> <span class="nf">is_singleton_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;check if the edge is an sigleton edge that, if removed,</span>
+        <span class="sd">&quot;&quot;&quot;Check if the edge is an sigleton edge that, if removed,</span>
 <span class="sd">        would result in a sigleton node in the graph.</span>
 
-<span class="sd">        Note</span>
-<span class="sd">        ----</span>
-<span class="sd">        please make sure the edge is the one being removed.</span>
+<span class="sd">        Notes:</span>
+<span class="sd">            Please make sure the edge is the one being removed.</span>
 
 <span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        u : int</span>
-<span class="sd">            the src node of the edge</span>
-<span class="sd">        v : int</span>
-<span class="sd">            the dst node of the edge</span>
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        bool</span>
-<span class="sd">            True if the edge is an singleton edge, otherwise False.</span>
+<span class="sd">        -----------</span>
+<span class="sd">            u (int): The source node of the edge.</span>
+<span class="sd">            v (int): The destination node of the edge.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: `True` if the edge is an singleton edge, otherwise `False`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">threshold</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="c1"># threshold=2 if the graph has selfloop before otherwise threshold=1</span>
+        <span class="c1"># threshold = 2 if the graph has selfloop before otherwise threshold = 1</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allow_singleton</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">threshold</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">threshold</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="FlipAttacker.is_legal_edge"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.is_legal_edge">[docs]</a>    <span class="k">def</span> <span class="nf">is_legal_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;check whether the edge (u,v) is legal.</span>
+        <span class="sd">&quot;&quot;&quot;Check whether the edge (u,v) is legal.</span>
 
 <span class="sd">        An edge (u,v) is legal if u!=v and edge (u,v) is not selected before.</span>
 
 <span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        u : int</span>
-<span class="sd">            src node id</span>
-<span class="sd">        v : int</span>
-<span class="sd">            dst node id</span>
+<span class="sd">        -----------</span>
+<span class="sd">            u (int): The source node of the edge.</span>
+<span class="sd">            v (int): The destination node of the edge.</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        bool</span>
-<span class="sd">            True if the u!=v and edge (u,v) is not selected, otherwise False.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: `True` if the u!=v and edge (u,v) is not selected, otherwise `False`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">_removed_edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_removed_edges</span>
         <span class="n">_added_edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_added_edges</span>

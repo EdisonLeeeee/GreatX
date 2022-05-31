@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Overview: module code &mdash; graphwar 0.1.0 documentation</title>
-      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -23,7 +24,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html">
+            <a href="../index.html" class="icon icon-home"> graphwar
             <img src="../_static/graphwar.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
@@ -43,10 +44,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../modules/data.html">graphwar.data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/attack.html">graphwar.attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/dataset.html">graphwar.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/attack.html">graphwar.attack</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules/attack.html#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../modules/utils.html">graphwar.utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../modules/metrics.html">graphwar.metrics</a></li>
 </ul>
 
         </div>
@@ -74,15 +80,34 @@
              
   <h1>All modules for which code is available</h1>
 <ul><li><a href="graphwar/attack/attacker.html">graphwar.attack.attacker</a></li>
+<li><a href="graphwar/attack/backdoor/backdoor_attacker.html">graphwar.attack.backdoor.backdoor_attacker</a></li>
+<li><a href="graphwar/attack/backdoor/lgc_backdoor.html">graphwar.attack.backdoor.lgc_backdoor</a></li>
 <li><a href="graphwar/attack/flip_attacker.html">graphwar.attack.flip_attacker</a></li>
-<li><a href="graphwar/data/graphwar_dataset.html">graphwar.data.graphwar_dataset</a></li>
-<li><a href="graphwar/metrics/accuracy.html">graphwar.metrics.accuracy</a></li>
-<li><a href="graphwar/metrics/metric.html">graphwar.metrics.metric</a></li>
+<li><a href="graphwar/attack/targeted/dice_attack.html">graphwar.attack.targeted.dice_attack</a></li>
+<li><a href="graphwar/attack/targeted/fg_attack.html">graphwar.attack.targeted.fg_attack</a></li>
+<li><a href="graphwar/attack/targeted/gf_attack.html">graphwar.attack.targeted.gf_attack</a></li>
+<li><a href="graphwar/attack/targeted/ig_attack.html">graphwar.attack.targeted.ig_attack</a></li>
+<li><a href="graphwar/attack/targeted/nettack.html">graphwar.attack.targeted.nettack</a></li>
+<li><a href="graphwar/attack/targeted/random_attack.html">graphwar.attack.targeted.random_attack</a></li>
+<li><a href="graphwar/attack/targeted/sg_attack.html">graphwar.attack.targeted.sg_attack</a></li>
+<li><a href="graphwar/attack/targeted/targeted_attacker.html">graphwar.attack.targeted.targeted_attacker</a></li>
+<li><a href="graphwar/attack/untargeted/dice_attack.html">graphwar.attack.untargeted.dice_attack</a></li>
+<li><a href="graphwar/attack/untargeted/fg_attack.html">graphwar.attack.untargeted.fg_attack</a></li>
+<li><a href="graphwar/attack/untargeted/ig_attack.html">graphwar.attack.untargeted.ig_attack</a></li>
+<li><a href="graphwar/attack/untargeted/metattack.html">graphwar.attack.untargeted.metattack</a></li>
+<li><a href="graphwar/attack/untargeted/pgd_attack.html">graphwar.attack.untargeted.pgd_attack</a></li>
+<li><a href="graphwar/attack/untargeted/random_attack.html">graphwar.attack.untargeted.random_attack</a></li>
+<li><a href="graphwar/attack/untargeted/untargeted_attacker.html">graphwar.attack.untargeted.untargeted_attacker</a></li>
+<li><a href="graphwar/dataset/graphwar_dataset.html">graphwar.dataset.graphwar_dataset</a></li>
 <li><a href="graphwar/utils/bunchdict.html">graphwar.utils.bunchdict</a></li>
+<li><a href="graphwar/utils/cka.html">graphwar.utils.cka</a></li>
+<li><a href="graphwar/utils/ego_graph.html">graphwar.utils.ego_graph</a></li>
 <li><a href="graphwar/utils/filter.html">graphwar.utils.filter</a></li>
 <li><a href="graphwar/utils/functions.html">graphwar.utils.functions</a></li>
 <li><a href="graphwar/utils/logger.html">graphwar.utils.logger</a></li>
 <li><a href="graphwar/utils/modification.html">graphwar.utils.modification</a></li>
+<li><a href="graphwar/utils/normalize.html">graphwar.utils.normalize</a></li>
+<li><a href="graphwar/utils/overlap.html">graphwar.utils.overlap</a></li>
 <li><a href="graphwar/utils/progbar.html">graphwar.utils.progbar</a></li>
 <li><a href="graphwar/utils/split_data.html">graphwar.utils.split_data</a></li>
 </ul>

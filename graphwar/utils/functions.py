@@ -121,8 +121,9 @@ def get_length(obj: Any) -> int:
 def wrapper(func: Callable) -> Callable:
     """wrap a function to make some arguments 
     have the same length. By default, the arguments
-    to be modified are `hids` and `acts`. Uses can custom
-    these arguments by setting argument 
+    to be modified are `hids` and `acts`. 
+
+    Uses can custom these arguments by setting argument 
     * `includes` : to includes custom arguments
     * `excludes` : to excludes custom arguments
     * `length_as` : to make the length of the arguments 

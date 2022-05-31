@@ -1,112 +1,109 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
-
+<html class="writer-html5" lang="en" >
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>graphwar.attack.attacker &mdash; graphwar 0.1.0 documentation</title>
-    <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
-    <!--[if lt IE 9]>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>graphwar.attack.attacker &mdash; graphwar 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-
-    <script data-url_root="../../../" id="documentation_options"
-        src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/jquery.js"></script>
-    <script src="../../../_static/underscore.js"></script>
-    <script src="../../../_static/doctools.js"></script>
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-    <div class="wy-grid-for-nav">
-        <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-            <div class="wy-side-scroll">
-                <div class="wy-side-nav-search">
-                    <a href="../../../index.html">
-                        <img src="../../../_static/graphwar.svg" class="logo" alt="Logo" />
-                    </a>
-                    <div class="version">
-                        0.1.0
-                    </div>
-                    <div role="search">
-                        <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-                            <input type="text" name="q" placeholder="Search docs" />
-                            <input type="hidden" name="check_keywords" value="yes" />
-                            <input type="hidden" name="area" value="default" />
-                        </form>
-                    </div>
-                </div>
-                <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-                    <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
-                    <ul>
-                        <li class="toctree-l1"><a class="reference internal"
-                                href="../../../notes/installation.html">Installation</a></li>
-                    </ul>
-                    <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
-                    <ul>
-                        <li class="toctree-l1"><a class="reference internal"
-                                href="../../../modules/data.html">graphwar.data</a></li>
-                        <li class="toctree-l1"><a class="reference internal"
-                                href="../../../modules/attack.html">graphwar.attack</a></li>
-                        <li class="toctree-l1"><a class="reference internal"
-                                href="../../../modules/utils.html">graphwar.utils</a></li>
-                        <li class="toctree-l1"><a class="reference internal"
-                                href="../../../modules/metrics.html">graphwar.metrics</a></li>
-                    </ul>
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> graphwar
+            <img src="../../../_static/graphwar.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/dataset.html">graphwar.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/utils.html">graphwar.utils</a></li>
+</ul>
 
-                </div>
-            </div>
-        </nav>
+        </div>
+      </div>
+    </nav>
 
-        <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-            <nav class="wy-nav-top" aria-label="Mobile navigation menu">
-                <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-                <a href="../../../index.html">graphwar</a>
-            </nav>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">graphwar</a>
+      </nav>
 
-            <div class="wy-nav-content">
-                <div class="rst-content">
-                    <div role="navigation" aria-label="Page navigation">
-                        <ul class="wy-breadcrumbs">
-                            <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-                            <li><a href="../../index.html">Module code</a> &raquo;</li>
-                            <li>graphwar.attack.attacker</li>
-                            <li class="wy-breadcrumbs-aside">
-                            </li>
-                        </ul>
-                        <hr />
-                    </div>
-                    <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-                        <div itemprop="articleBody">
-
-                            <h1>Source code for graphwar.attack.attacker</h1>
-                            <div class="highlight">
-                                <pre>
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>graphwar.attack.attacker</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for graphwar.attack.attacker</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="n">degree</span><span class="p">,</span> <span class="n">to_scipy_sparse_matrix</span>
 
-<span class="kn">import</span> <span class="nn">dgl</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
-<span class="kn">from</span> <span class="nn">graphwar</span> <span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">set_seed</span>
-
-<span class="n">_FEATURE</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">feat</span>
-<span class="n">_LABEL</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">label</span>
+<span class="kn">from</span> <span class="nn">graphwar</span> <span class="kn">import</span> <span class="n">set_seed</span>
 
 
 <div class="viewcode-block" id="Attacker"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.Attacker">[docs]</a><span class="k">class</span> <span class="nc">Attacker</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Adversarial attacker for graph data.</span>
+    <span class="sd">&quot;&quot;&quot;Adversarial attacker for graph data. Note that this is an abstract class.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
 <span class="sd">    For example, the attacker model should be defined as follows:</span>
 
-<span class="sd">    &gt;&gt;&gt; attacker = Attacker(graph, device=&#39;cuda&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; attacker = Attacker(data, device=&#39;cuda&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; attacker.reset() # reset states</span>
-<span class="sd">    &gt;&gt;&gt; attacker.attack(attack_arguments)</span>
+<span class="sd">    &gt;&gt;&gt; attacker.attack(attack_arguments) # attack</span>
+<span class="sd">    &gt;&gt;&gt; attacker.data() # get the attacked graph denoted as PyG-like Data</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_max_perturbations</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
@@ -114,113 +111,89 @@
     <span class="n">_allow_structure_attack</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">_allow_singleton</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">dgl</span><span class="o">.</span><span class="n">DGLGraph</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
                  <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Initialization of an attacker model.</span>
 
-<span class="s2">        Parameters</span>
-<span class="s2">        ----------</span>
-<span class="s2">        graph : dgl.DGLGraph</span>
-<span class="s2">            the DGL graph. If the attack requires node features,</span>
-<span class="s2">            `graph.ndata[</span><span class="si">{</span><span class="n">_FEATURE</span><span class="si">}</span><span class="s2">]` should be specified. </span>
-<span class="s2">            If the attack requires node labels, </span>
-<span class="s2">            `graph.ndata[</span><span class="si">{</span><span class="n">_LABEL</span><span class="si">}</span><span class="s2">]` should be specified</span>
-<span class="s2">        device : str, optional</span>
-<span class="s2">            the device of the attack running on, by default &quot;cpu&quot;</span>
-<span class="s2">        seed : Optional[int], optional</span>
-<span class="s2">            the random seed of reproduce the attack, by default None</span>
-<span class="s2">        name : Optional[str], optional</span>
-<span class="s2">            name of the attacker, if None, it would be `__class__.__name__`, </span>
-<span class="s2">            by default None</span>
-<span class="s2">        kwargs : optional</span>
-<span class="s2">            additional arguments of :class:`graphwar.attack.Attacker`,</span>
-<span class="s2">            including (`</span><span class="si">{</span><span class="n">_FEATURE</span><span class="si">}</span><span class="s2">`, `</span><span class="si">{</span><span class="n">_LABEL</span><span class="si">}</span><span class="s2">`) to specify the node features </span>
-<span class="s2">            and the node labels, if they are not in `graph.ndata`</span>
+<span class="s2">        Args:</span>
+<span class="s2">            data (Data): PyG-like Data tuple.</span>
+<span class="s2">            device (str, optional):</span>
+<span class="s2">                the device of the attack running on, by default &quot;cpu&quot;</span>
+<span class="s2">            seed (Optional[int], optional): </span>
+<span class="s2">                the random seed of reproduce the attack, by default None</span>
+<span class="s2">            name (Optional[str], optional): </span>
+<span class="s2">                name of the attacker, if None, it would be `__class__.__name__`, </span>
+<span class="s2">                by default None</span>
+<span class="s2">            kwargs (optional): </span>
+<span class="s2">                additional arguments of :class:`graphwar.attack.Attacker`,</span>
 
-
-<span class="s2">        Note</span>
-<span class="s2">        ----</span>
-<span class="s2">        * If the attack requires node features,</span>
-<span class="s2">        `graph.ndata[</span><span class="si">{</span><span class="n">_FEATURE</span><span class="si">}</span><span class="s2">]` should be specified. </span>
-
-<span class="s2">        * If the attack requires node labels, </span>
-<span class="s2">        `graph.ndata[</span><span class="si">{</span><span class="n">_LABEL</span><span class="si">}</span><span class="s2">]` should be specified.</span>
 <span class="s2">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="n">feat</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">_FEATURE</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">label</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">_LABEL</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Got an unexpected keyword argument &#39;</span><span class="si">{</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;expected (</span><span class="si">{</span><span class="n">_FEATURE</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">_LABEL</span><span class="si">}</span><span class="s2">).&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Got an unexpected keyword argument &#39;</span><span class="si">{</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
             <span class="p">)</span>
 
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">Data</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">data</span><span class="o">.</span><span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_weight</span> <span class="ow">is</span> <span class="kc">None</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ori_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">feat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">feat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">feat</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
-            <span class="k">assert</span> <span class="n">feat</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">graph</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">ndata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_FEATURE</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">label</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">ndata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_LABEL</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">_FEATURE</span><span class="p">,</span> <span class="n">feat</span><span class="p">)</span>
-        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">_LABEL</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">(</span><span class="n">scipy_fmt</span><span class="o">=</span><span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span> <span class="o">=</span> <span class="n">to_scipy_sparse_matrix</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">,</span>
+                                                                      <span class="n">num_nodes</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">)</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_degree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span><span class="o">.</span><span class="n">in_degrees</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_degree</span> <span class="o">=</span> <span class="n">degree</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">num_nodes</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span><span class="o">.</span><span class="n">edges</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span><span class="o">.</span><span class="n">num_edges</span><span class="p">()</span> <span class="o">//</span> <span class="mi">2</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_feats</span> <span class="o">=</span> <span class="n">feat</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">feat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">num_nodes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_edges</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">num_edges</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_feats</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">))</span>
 
         <span class="n">set_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_reset</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="Attacker.reset"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.Attacker.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reset attacker state. </span>
+<span class="sd">        Override this method in subclass to implement specific function.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_reset</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="Attacker.g"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.Attacker.g">[docs]</a>    <span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Attacker.data"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.Attacker.data">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get the attacked graph denoted as PyG-like Data. </span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: The subclass does not implement this interface.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">feat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">_FEATURE</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">_LABEL</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">graph</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span>
 
 <div class="viewcode-block" id="Attacker.attack"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.Attacker.attack">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Attacker&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;defined for attacker model.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Abstract method. </span>
+<span class="sd">        The subclass must override this method to implement specific attack for itself.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: The subclass does not implement this interface.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
     <span class="k">def</span> <span class="nf">_check_budget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_budgets</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
                       <span class="n">max_perturbations</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Check and return attack budget.&quot;&quot;&quot;</span>
 
         <span class="n">max_perturbations</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_perturbations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_perturbations</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_budgets</span><span class="p">,</span> <span class="n">Number</span><span class="p">)</span> <span class="ow">or</span> <span class="n">num_budgets</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;&#39;num_budgets&#39; must be a postive scalar. but got &#39;</span><span class="si">{</span><span class="n">num_budgets</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;&#39;num_budgets&#39; must be a positive scalar. but got &#39;</span><span class="si">{</span><span class="n">num_budgets</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">num_budgets</span> <span class="o">&gt;</span> <span class="n">max_perturbations</span><span class="p">:</span>
@@ -237,6 +210,12 @@
 
 <div class="viewcode-block" id="Attacker.set_max_perturbations"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.Attacker.set_max_perturbations">[docs]</a>    <span class="k">def</span> <span class="nf">set_max_perturbations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_perturbations</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
                               <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the maximum allowable perturbation size for the attacker.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            max_perturbations (float or int): the maximum allowable perturbation size. Default: `np.inf`.</span>
+<span class="sd">            verbose (bool): Whether to print information about this method. Default: `True`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">max_perturbations</span><span class="p">,</span> <span class="n">Number</span><span class="p">),</span> <span class="n">max_perturbations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_perturbations</span> <span class="o">=</span> <span class="n">max_perturbations</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
@@ -244,60 +223,67 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">max_perturbations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;float or int: Maximum allowable perturbation size.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_perturbations</span>
 
-    <span class="k">def</span> <span class="nf">_check_feature_matrix_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Node feature matrix does not exist&quot;</span>
-                               <span class="sa">f</span><span class="s2">&quot;, please add node feature data externally via `g.ndata[&#39;</span><span class="si">{</span><span class="n">_FEATURE</span><span class="si">}</span><span class="s2">&#39;] = </span><span class="si">{</span><span class="n">_FEATURE</span><span class="si">}</span><span class="s2">` &quot;</span>
-                               <span class="sa">f</span><span class="s2">&quot;or initialize via `attacker = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(g, </span><span class="si">{</span><span class="n">_FEATURE</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">_FEATURE</span><span class="si">}</span><span class="s2">)`.&quot;</span><span class="p">)</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">feat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Node features of the original graph.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ori_data</span><span class="o">.</span><span class="n">x</span>
 
-    <span class="k">def</span> <span class="nf">_check_node_label_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Node labels does not exist&quot;</span>
-                               <span class="sa">f</span><span class="s2">&quot;, please add node labels externally via `g.ndata[&#39;</span><span class="si">{</span><span class="n">_LABEL</span><span class="si">}</span><span class="s2">&#39;] = </span><span class="si">{</span><span class="n">_LABEL</span><span class="si">}</span><span class="s2">` &quot;</span>
-                               <span class="sa">f</span><span class="s2">&quot;or initialize via `attacker = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(g, </span><span class="si">{</span><span class="n">_LABEL</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">_LABEL</span><span class="si">}</span><span class="s2">)`.&quot;</span><span class="p">)</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Node labels of the original graph.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ori_data</span><span class="o">.</span><span class="n">y</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">edge_index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Edge index of the original graph.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ori_data</span><span class="o">.</span><span class="n">edge_index</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">edge_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Edge weight of the original graph.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ori_data</span><span class="o">.</span><span class="n">edge_weight</span>
 
     <span class="k">def</span> <span class="nf">_check_feature_matrix_binary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check_feature_matrix_exists</span><span class="p">()</span>
         <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat</span>
         <span class="c1"># FIXME: (Jintang Li) this is quite time-consuming in large matrix</span>
-        <span class="c1"># so we only check `10` rows of the matrix randomly.</span>
+        <span class="c1"># so I only check `10` rows of the matrix randomly.</span>
         <span class="n">feat</span> <span class="o">=</span> <span class="n">feat</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">feat</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,))]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">torch</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">feat</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Node feature matrix is required to be a 0-1 binary matrix.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;Node feature matrix is required to be a 0-1 binary matrix.&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">extra_repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;device=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="si">}</span><span class="s2">, seed=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="si">}</span><span class="s2">,&quot;</span></div>
-</pre>
-                            </div>
+</pre></div>
 
-                        </div>
-                    </div>
-                    <footer>
+           </div>
+          </div>
+          <footer>
 
-                        <hr />
+  <hr/>
 
-                        <div role="contentinfo">
-                            <p>&#169; Copyright 2022, Jintang Li.</p>
-                        </div>
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jintang Li.</p>
+  </div>
 
-                        Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-                        <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-                        provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
-
-                    </footer>
-                </div>
-            </div>
-        </section>
-    </div>
-    <script>
-        jQuery(function () {
-            SphinxRtdTheme.Navigation.enable(true);
-        });
-    </script>
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
 </body>
-
 </html>

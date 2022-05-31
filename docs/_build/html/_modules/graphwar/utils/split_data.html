@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>graphwar.utils.split_data &mdash; graphwar 0.1.0 documentation</title>
-      <link rel="stylesheet" href="../../../_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -23,7 +24,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html">
+            <a href="../../../index.html" class="icon icon-home"> graphwar
             <img src="../../../_static/graphwar.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
@@ -43,10 +44,15 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/data.html">graphwar.data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/dataset.html">graphwar.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/utils.html">graphwar.utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/metrics.html">graphwar.metrics</a></li>
 </ul>
 
         </div>
@@ -87,7 +93,7 @@
                                  <span class="n">train</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
                                  <span class="n">test</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
                                  <span class="n">val</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
-                                 <span class="n">stratify</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">stratify</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                                  <span class="n">random_state</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
 
     <span class="n">idx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
@@ -97,7 +103,8 @@
                                            <span class="n">test_size</span><span class="o">=</span><span class="n">test</span><span class="p">,</span>
                                            <span class="n">stratify</span><span class="o">=</span><span class="n">stratify</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">val</span><span class="p">:</span>
-        <span class="n">stratify</span> <span class="o">=</span> <span class="n">stratify</span><span class="p">[</span><span class="n">idx_train</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">stratify</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">stratify</span> <span class="o">=</span> <span class="n">stratify</span><span class="p">[</span><span class="n">idx_train</span><span class="p">]</span>
         <span class="n">idx_train</span><span class="p">,</span> <span class="n">idx_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">idx_train</span><span class="p">,</span>
                                               <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
                                               <span class="n">train_size</span><span class="o">=</span><span class="n">train</span> <span class="o">/</span> <span class="p">(</span><span class="n">train</span> <span class="o">+</span> <span class="n">val</span><span class="p">),</span>
@@ -132,7 +139,8 @@
 
 
 <div class="viewcode-block" id="split_nodes_by_classes"><a class="viewcode-back" href="../../../modules/utils.html#graphwar.utils.split_nodes_by_classes">[docs]</a><span class="k">def</span> <span class="nf">split_nodes_by_classes</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
-                           <span class="n">n_per_class</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">random_state</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+                           <span class="n">n_per_class</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+                           <span class="n">random_state</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BunchDict</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Randomly split the training data by the number of nodes per classes.</span>
 
@@ -142,21 +150,22 @@
 <span class="sd">        The class labels</span>
 <span class="sd">    n_per_class : int</span>
 <span class="sd">        Number of samples per class</span>
-<span class="sd">    random_state: int</span>
-<span class="sd">        Seed</span>
+<span class="sd">    random_state: Optional[int]</span>
+<span class="sd">        Random seed</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    split_train: torch.Tensor [n_per_class * num_classes]</span>
-<span class="sd">        The indices of the training nodes</span>
-<span class="sd">    split_val: torch.Tensor [n_per_class * num_classes]</span>
-<span class="sd">        The indices of the validation nodes</span>
-<span class="sd">    split_test torch.Tensor [num_nodes - 2*n_per_class * num_classes]</span>
-<span class="sd">        The indices of the test nodes</span>
+<span class="sd">    BunchDict with the following items:</span>
+<span class="sd">        * train_nodes: torch.Tensor [n_per_class * num_classes]</span>
+<span class="sd">            The indices of the training nodes</span>
+<span class="sd">        * val_nodes: torch.Tensor [n_per_class * num_classes]</span>
+<span class="sd">            The indices of the validation nodes</span>
+<span class="sd">        * test_nodes torch.Tensor [num_nodes - 2*n_per_class * num_classes]</span>
+<span class="sd">            The indices of the test nodes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">random_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
-        
+
     <span class="n">num_classes</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
 
     <span class="n">split_train</span><span class="p">,</span> <span class="n">split_val</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
@@ -171,7 +180,8 @@
     <span class="n">split_val</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">split_val</span><span class="p">)</span>
     <span class="n">split_train</span> <span class="o">=</span> <span class="n">split_val</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">randperm</span><span class="p">(</span><span class="n">split_val</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))]</span>
 
-    <span class="k">assert</span> <span class="n">split_train</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">split_val</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_per_class</span> <span class="o">*</span> <span class="n">num_classes</span>
+    <span class="k">assert</span> <span class="n">split_train</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">split_val</span><span class="o">.</span><span class="n">size</span><span class="p">(</span>
+        <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_per_class</span> <span class="o">*</span> <span class="n">num_classes</span>
 
     <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span>
 

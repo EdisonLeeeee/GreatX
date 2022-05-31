@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>graphwar.attack.targeted.gf_attack &mdash; graphwar 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> graphwar
+            <img src="../../../../_static/graphwar.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notes/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/dataset.html">graphwar.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/attack.html">graphwar.attack</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/utils.html">graphwar.utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">graphwar</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>graphwar.attack.targeted.gf_attack</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for graphwar.attack.targeted.gf_attack</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">linalg</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
+
+<span class="kn">from</span> <span class="nn">graphwar.attack.targeted.targeted_attacker</span> <span class="kn">import</span> <span class="n">TargetedAttacker</span>
+<span class="kn">from</span> <span class="nn">graphwar.utils</span> <span class="kn">import</span> <span class="n">singleton_filter</span>
+
+
+<div class="viewcode-block" id="GFAttack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.targeted.GFAttack">[docs]</a><span class="k">class</span> <span class="nc">GFAttack</span><span class="p">(</span><span class="n">TargetedAttacker</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+                 <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialization of GFAttack.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : Data</span>
+<span class="sd">            the PyG data</span>
+<span class="sd">        K : int, optional</span>
+<span class="sd">            the order of graph filter, by default 2</span>
+<span class="sd">        T : int, optional</span>
+<span class="sd">            top-T largest eigen-values/vectors selected, by default 128            </span>
+<span class="sd">        device : str, optional</span>
+<span class="sd">            the device of the attack running on, by default &quot;cpu&quot;</span>
+<span class="sd">        seed : Optional[int], optional</span>
+<span class="sd">            the random seed of reproduce the attack, by default None</span>
+<span class="sd">        name : Optional[str], optional</span>
+<span class="sd">            name of the attacker, if None, it would be `__class__.__name__`, by default None</span>
+
+<span class="sd">        NOTE</span>
+<span class="sd">        ----</span>
+<span class="sd">        T=128 for citeseer and pubmed, T=num_nodes//2 for cora to reproduce results in paper.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">adj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adjacency_matrix</span>
+        <span class="n">adj</span> <span class="o">=</span> <span class="n">adj</span> <span class="o">+</span> <span class="n">sp</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">adj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+        <span class="n">deg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">adj</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">A1</span><span class="p">)</span>
+        <span class="n">eig_vals</span><span class="p">,</span> <span class="n">eig_vec</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">adj</span><span class="o">.</span><span class="n">A</span><span class="p">,</span> <span class="n">deg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eig_vals</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span>
+            <span class="n">eig_vals</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eig_vec</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span>
+            <span class="n">eig_vec</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat</span>
+        <span class="c1"># the author named this as `x_mean`, I don&#39;t understand why not `x_sum`</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_mean</span> <span class="o">=</span> <span class="n">feat</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="n">K</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="n">T</span>
+
+<div class="viewcode-block" id="GFAttack.get_candidate_edges"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.targeted.GFAttack.get_candidate_edges">[docs]</a>    <span class="k">def</span> <span class="nf">get_candidate_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span>
+        <span class="n">nodes_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">([</span><span class="n">target</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">direct_attack</span><span class="p">:</span>
+            <span class="n">influencers</span> <span class="o">=</span> <span class="p">[</span><span class="n">target</span><span class="p">]</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">influencers</span><span class="p">,</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nodes_set</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">influencers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">.</span><span class="n">indices</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">influencers</span><span class="p">,</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="nb">list</span><span class="p">(</span><span class="n">nodes_set</span> <span class="o">-</span> <span class="nb">set</span><span class="p">([</span><span class="n">infl</span><span class="p">]))</span>
+                            <span class="k">for</span> <span class="n">infl</span> <span class="ow">in</span> <span class="n">influencers</span><span class="p">])</span>
+        <span class="n">candidate_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allow_singleton</span><span class="p">:</span>
+            <span class="n">candidate_edges</span> <span class="o">=</span> <span class="n">singleton_filter</span><span class="p">(</span><span class="n">candidate_edges</span><span class="p">,</span>
+                                               <span class="bp">self</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">candidate_edges</span></div>
+
+<div class="viewcode-block" id="GFAttack.attack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.targeted.GFAttack.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+               <span class="n">target</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+               <span class="n">num_budgets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">direct_attack</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+               <span class="n">structure_attack</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+               <span class="n">feature_attack</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">ll_constraint</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+               <span class="n">ll_cutoff</span><span class="o">=</span><span class="mf">0.004</span><span class="p">,</span>
+               <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">target_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_budgets</span><span class="o">=</span><span class="n">num_budgets</span><span class="p">,</span>
+                       <span class="n">direct_attack</span><span class="o">=</span><span class="n">direct_attack</span><span class="p">,</span> <span class="n">structure_attack</span><span class="o">=</span><span class="n">structure_attack</span><span class="p">,</span>
+                       <span class="n">feature_attack</span><span class="o">=</span><span class="n">feature_attack</span><span class="p">)</span>
+
+        <span class="n">candidate_edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_candidate_edges</span><span class="p">()</span>
+
+        <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">structure_score</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">x_mean</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">eig_vals</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">eig_vec</span><span class="p">,</span>
+                                     <span class="n">candidate_edges</span><span class="p">,</span>
+                                     <span class="n">K</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">,</span>
+                                     <span class="n">T</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+                                     <span class="n">method</span><span class="o">=</span><span class="s2">&quot;nosum&quot;</span><span class="p">)</span>
+
+        <span class="n">topk</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_budgets</span><span class="p">)</span><span class="o">.</span><span class="n">indices</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="n">candidate_edges</span><span class="p">[</span><span class="n">topk</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">edge_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">[</span><span class="n">edges</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">edges</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">A1</span>
+
+        <span class="k">for</span> <span class="n">it</span><span class="p">,</span> <span class="n">edge_weight</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">edge_weights</span><span class="p">),</span>
+                                    <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Peturbing graph...&#39;</span><span class="p">,</span>
+                                    <span class="n">disable</span><span class="o">=</span><span class="n">disable</span><span class="p">):</span>
+            <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">it</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">edge_weight</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">it</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">it</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="GFAttack.structure_score"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.targeted.GFAttack.structure_score">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">structure_score</span><span class="p">(</span><span class="n">A</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">,</span>
+                        <span class="n">x_mean</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+                        <span class="n">eig_vals</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+                        <span class="n">eig_vec</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+                        <span class="n">candidate_edges</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                        <span class="n">K</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                        <span class="n">T</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                        <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;nosum&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate the score of potential edges as formulated in paper.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        A : sp.csr_matrix</span>
+<span class="sd">            the graph adjacency matrix</span>
+<span class="sd">        x_mean : Tensor</span>
+<span class="sd">        eig_vals : Tensor</span>
+<span class="sd">            the eigen value</span>
+<span class="sd">        eig_vec : Tensor</span>
+<span class="sd">            the eigen vector</span>
+<span class="sd">        candidate_edges : np.ndarray</span>
+<span class="sd">            the candidate_edges to be selected</span>
+<span class="sd">        K : int</span>
+<span class="sd">            The order of graph filter K.</span>
+<span class="sd">        T : int</span>
+<span class="sd">            Selecting the Top-T largest eigen-values/vectors.</span>
+<span class="sd">        method : str, optional</span>
+<span class="sd">            &quot;sum&quot; or &quot;nosum&quot;</span>
+<span class="sd">            Indicates the score are calculated from which loss as in Equation (8) or Equation (12).</span>
+<span class="sd">            &quot;nosum&quot; denotes Equation (8), where the loss is derived from Graph Convolutional Networks,</span>
+<span class="sd">            &quot;sum&quot; denotes Equation (12), where the loss is derived from Sampling-based Graph Embedding Methods.</span>
+<span class="sd">            by default &quot;nosum&quot;</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tensor</span>
+<span class="sd">            Scores for potential edges.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="s1">&#39;nosum&#39;</span><span class="p">]</span>
+
+        <span class="n">D_min</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">A1</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># `+1` for the added selfloop</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">candidate_edges</span><span class="p">:</span>
+            <span class="n">eig_vals_res</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">A</span><span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)])</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">eig_vec</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">*</span> <span class="n">eig_vec</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">-</span> <span class="n">eig_vals</span> <span class="o">*</span>
+                                                  <span class="p">((</span><span class="n">eig_vec</span><span class="p">[</span><span class="n">u</span><span class="p">])</span><span class="o">.</span><span class="n">square</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="n">eig_vec</span><span class="p">[</span><span class="n">v</span><span class="p">])</span><span class="o">.</span><span class="n">square</span><span class="p">()))</span>
+            <span class="n">eig_vals_res</span> <span class="o">=</span> <span class="n">eig_vals</span> <span class="o">+</span> <span class="n">eig_vals_res</span>
+
+            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;sum&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">K</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">eig_vals_res</span> <span class="o">=</span> <span class="p">(</span><span class="n">eig_vals_res</span> <span class="o">/</span> <span class="n">K</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">D_min</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">itr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">K</span><span class="p">):</span>
+                        <span class="n">eig_vals_res</span> <span class="o">=</span> <span class="n">eig_vals_res</span> <span class="o">+</span> <span class="n">eig_vals_res</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">itr</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">eig_vals_res</span> <span class="o">=</span> <span class="p">(</span><span class="n">eig_vals_res</span> <span class="o">/</span> <span class="n">K</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">D_min</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">eig_vals_res</span> <span class="o">=</span> <span class="p">(</span><span class="n">eig_vals_res</span> <span class="o">+</span> <span class="mf">1.</span><span class="p">)</span><span class="o">.</span><span class="n">square</span><span class="p">()</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+
+            <span class="c1"># from small to large</span>
+            <span class="n">least_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">eig_vals_res</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">largest</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">indices</span>
+            <span class="n">eig_vals_k_sum</span> <span class="o">=</span> <span class="n">eig_vals_res</span><span class="p">[</span><span class="n">least_t</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">u_k</span> <span class="o">=</span> <span class="n">eig_vec</span><span class="p">[:,</span> <span class="n">least_t</span><span class="p">]</span>
+            <span class="n">u_x_mean</span> <span class="o">=</span> <span class="n">u_k</span><span class="o">.</span><span class="n">t</span><span class="p">()</span> <span class="o">@</span> <span class="n">x_mean</span>
+            <span class="n">score_u_v</span> <span class="o">=</span> <span class="n">eig_vals_k_sum</span> <span class="o">*</span> \
+                <span class="n">torch</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">u_x_mean</span><span class="p">))</span>
+            <span class="n">score</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">score_u_v</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">score</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jintang Li.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

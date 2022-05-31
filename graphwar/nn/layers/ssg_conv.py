@@ -19,8 +19,8 @@ class SSGConv(nn.Module):
     _cached_x: Optional[Tensor]
 
     def __init__(self, in_channels: int, out_channels: int,
-                 K: int = 1,
-                 alpha: float = 0.2,
+                 K: int = 5,
+                 alpha: float = 0.1,
                  cached: bool = False,
                  add_self_loops: bool = True,
                  normalize: bool = True,
@@ -71,16 +71,13 @@ class SSGConv(nn.Module):
                     edge_index = dense_gcn_norm(
                         edge_index, add_self_loops=self.add_self_loops)
 
-            x_out = torch.zeros_like(x)
-            x_in = x
+            x_out = x * self.alpha
             for k in range(self.K):
                 if is_edge_like:
                     x = spmm(x, edge_index, edge_weight)
                 else:
                     x = edge_index @ x
-                x_out += (1 - self.alpha) * x
-            x_out /= self.K
-            x_out += self.alpha * x_in
+                x_out = x_out + (1 - self.alpha)/self.K * x
 
             if self.cached:
                 self._cached_x = x_out

@@ -9,11 +9,12 @@ from .cka import CKA
 from .ego_graph import ego_graph
 from .overlap import overlap
 from .modification import remove_edges, add_edges
+from .scipy_sparse import scipy_normalize
 
 classes = __all__ = ['Progbar', 'BunchDict', 'topk', 'wrapper',
-                     'repeat', 'split_nodes', 'split_nodes_by_classes', 
+                     'repeat', 'split_nodes', 'split_nodes_by_classes',
                      "setup_logger", "get_logger",
                      "singleton_filter", "SingletonFilter",
                      "LikelihoodFilter", "singleton_mask",
-                     'add_edges', 'remove_edges',
-                    'overlap', 'CKA', 'normalize', 'ego_graph']
+                     'add_edges', 'remove_edges', 'scipy_normalize',
+                     'overlap', 'CKA', 'normalize', 'ego_graph']

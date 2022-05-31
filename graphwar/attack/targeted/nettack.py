@@ -10,16 +10,7 @@ from torch_geometric.data import Data
 
 from graphwar import Surrogate
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
-from graphwar.utils import singleton_filter
-
-
-def scipy_normalize(adj_matrix: sp.csr_matrix, add_self_loops: bool = True):
-    adj_matrix = adj_matrix + sp.eye(adj_matrix.shape[0],
-                                     dtype=adj_matrix.dtype, format='csr')
-    degree = np.maximum(adj_matrix.sum(1).A1, 1)
-    norm = sp.diags(np.power(degree, -0.5))
-    adj_matrix = norm @ adj_matrix @ norm
-    return adj_matrix
+from graphwar.utils import singleton_filter, scipy_normalize
 
 
 class Nettack(TargetedAttacker, Surrogate):

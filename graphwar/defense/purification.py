@@ -7,6 +7,8 @@ from torch_geometric.data import Data
 from torch_geometric.transforms import BaseTransform
 from torch_geometric.utils import degree, to_scipy_sparse_matrix, from_scipy_sparse_matrix
 
+from graphwar.utils import scipy_normalize
+
 
 class JaccardPurification(BaseTransform):
 
@@ -100,6 +102,43 @@ class SVDPurification(BaseTransform):
 
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}(K={self.K}, threshold={self.threshold}, allow_singleton={self.allow_singleton})'
+
+
+class Eigendecomposition(BaseTransform):
+
+    def __init__(self, K: int = 50, normalize: bool = True):
+        # TODO: add percentage purification
+        super().__init__()
+        self.K = K
+        self.normalize = normalize
+
+    def __call__(self, data: Data, inplace: bool = True) -> Data:
+        if not inplace:
+            data = copy(data)
+
+        device = data.edge_index.device
+        adj_matrix = to_scipy_sparse_matrix(data.edge_index, data.edge_weight,
+                                            num_nodes=data.num_nodes).tocsr()
+
+        if self.normalize:
+            adj_matrix = scipy_normalize(adj_matrix)
+
+        V, U = sp.linalg.eigsh(adj_matrix, k=self.K)
+        adj_matrix = (U * V) @ U.T
+        adj_matrix[adj_matrix < 0] = 0.
+
+        adj_matrix = torch.as_tensor(adj_matrix, dtype=torch.float)
+        V = torch.as_tensor(V, dtype=torch.float)
+        U = torch.as_tensor(U, dtype=torch.float)
+
+        data.V, data.U = V.to(device), U.to(device)
+        data.dense_adj = adj_matrix.to(device)
+
+        del data.edge_index, data.edge_weight
+        return data
+
+    def __repr__(self) -> str:
+        return f'{self.__class__.__name__}(K={self.K})'
 
 
 def jaccard_similarity(A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:

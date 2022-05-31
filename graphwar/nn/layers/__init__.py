@@ -12,3 +12,4 @@ from .dropouts import DropEdge, DropNode, DropPath
 from .adaptive_conv import AdaptiveConv
 from .elastic_conv import ElasticConv
 from .soft_median_conv import SoftMedianConv
+from .sat_conv import SATConv

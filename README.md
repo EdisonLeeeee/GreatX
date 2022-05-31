@@ -1,14 +1,14 @@
-# ⚔🛡 GraphWar: Arms Race in Graph Adversarial Attack and Defense
+# ⚔🛡 **GraphWar**: Arms Race in Graph Adversarial Attack and Defense
 
 > Know thy self, know thy enemy. A thousand battles, a thousand victories.
 > 
-> 「知己知彼，百战百胜。」 ——《孙子兵法•谋攻篇》
+> 「知己知彼，百战百胜」 ——《孙子兵法•谋攻篇》
 
 
 
 
 # 💨 News
-- May 27, 2022: GraphWar has been refactored with [PyTorch Geometric (PyG)](https://github.com/pyg-team/pytorch_geometric), the old code based on [DGL](https://www.dgl.ai) can be found [here](https://github.com/EdisonLeeeee/GraphWar/tree/dgl). GraphWar now has better flexibility and usability. We will soon release the first version of GraphWar, stay tuned!
+- May 27, 2022: GraphWar has been refactored with [PyTorch Geometric (PyG)](https://github.com/pyg-team/pytorch_geometric), old code based on [DGL](https://www.dgl.ai) can be found [here](https://github.com/EdisonLeeeee/GraphWar/tree/dgl). We will soon release the first version of GraphWar, stay tuned!
 
 NOTE: GraphWar is still in the early stages and the API will likely continue to change. 
 If you are interested in this project, don't hesitate to contact me or make a PR directly.
@@ -36,12 +36,13 @@ where `-e` means "editable" mode so you don't have to reinstall every time you m
 
 Assume that you have a `torch_geometric.data.Data` instance `data` that describes your graph.
 
-## How fast can we run and evaluate a GNN?
+## How fast can we train and evaluate your own GNN?
 Take `GCN` as an example:
 ```python
 from graphwar.nn.models import GCN
 from graphwar.training import Trainer
-dataset = ... # Any PyG dataset
+from torch_geometric.datasets import Planetoid
+dataset = Planetoid(root='.', name='Cora') # Any PyG dataset is available!
 data = dataset[0]
 model = GCN(dataset.num_features, dataset.num_classes)
 trainer = Trainer(model, device='cuda:0')
@@ -67,7 +68,6 @@ attacker = RandomAttack(data)
 attacker.attack(num_budgets=0.05) # attacking the graph with 5% edges perturbations
 attacked_data = attacker.data()
 edge_flips = attacker.edge_flips()
-
 ```
 
 
@@ -75,21 +75,21 @@ edge_flips = attacker.edge_flips()
 
 In detail, the following methods are currently implemented:
 
-## Attack
+## ⚔ Attack
 
 ### Graph Manipulation Attack (GMA)
 
 #### Targeted Attack
 
-| Methods          | Descriptions                                                                                                                                            | Examples                                                                                                        |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| **RandomAttack** | A simple random method that chooses edges to flip randomly.                                                                                             | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/targeted/random_attack.py) |
-| **DICEAttack**   | *Waniek et al.* [📝Hiding Individuals and Communities in a Social Network](https://arxiv.org/abs/1608.00375), *Nature Human Behavior'16*                 | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/targeted/dice_attack.py)   |
-| **Nettack**      | *Zügner et al.* [📝Adversarial Attacks on Neural Networks for Graph Data](https://arxiv.org/abs/1805.07984), *KDD'18*                                    | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/targeted/nettack.py)       |
-| **FGAttack**     | *Chen et al.* [Fast Gradient Attack on Network Embedding](https://arxiv.org/abs/1809.02797), *arXiv'18*                                                 | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/targeted/fg_attack.py)     |
-| **GFAttack**     | *Chang et al*.  [📝A Restricted Black - box Adversarial Framework Towards Attacking Graph Embedding Models](https://arxiv.org/abs/1908.01297), *AAAI'20* | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/targeted/gf_attack.py)     |
-| **IGAttack**     | *Wu et al.* [📝Adversarial Examples on Graph Data: Deep Insights into Attack and Defense](https://arxiv.org/abs/1903.01610), *IJCAI'19*                  | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/targeted/ig_attack.py)     |
-| **SGAttack**     | *Li et al.* [📝 Adversarial Attack on Large Scale Graph](https://arxiv.org/abs/2009.03488), *TKDE'21*                                                    | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/targeted/sg_attack.py)     |
+| Methods          | Descriptions                                                                                                                                           | Examples                                                                                                        |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| **RandomAttack** | A simple random method that chooses edges to flip randomly.                                                                                            | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/targeted/random_attack.py) |
+| **DICEAttack**   | *Waniek et al.* [Hiding Individuals and Communities in a Social Network](https://arxiv.org/abs/1608.00375), *Nature Human Behavior'16*                 | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/targeted/dice_attack.py)   |
+| **Nettack**      | *Zügner et al.* [Adversarial Attacks on Neural Networks for Graph Data](https://arxiv.org/abs/1805.07984), *KDD'18*                                    | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/targeted/nettack.py)       |
+| **FGAttack**     | *Chen et al.* [Fast Gradient Attack on Network Embedding](https://arxiv.org/abs/1809.02797), *arXiv'18*                                                | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/targeted/fg_attack.py)     |
+| **GFAttack**     | *Chang et al*.  [A Restricted Black - box Adversarial Framework Towards Attacking Graph Embedding Models](https://arxiv.org/abs/1908.01297), *AAAI'20* | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/targeted/gf_attack.py)     |
+| **IGAttack**     | *Wu et al.* [Adversarial Examples on Graph Data: Deep Insights into Attack and Defense](https://arxiv.org/abs/1903.01610), *IJCAI'19*                  | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/targeted/ig_attack.py)     |
+| **SGAttack**     | *Li et al.* [ Adversarial Attack on Large Scale Graph](https://arxiv.org/abs/2009.03488), *TKDE'21*                                                    | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/targeted/sg_attack.py)     |
 #### Untargeted Attack
 
 | Methods          | Descriptions                                                                                                                                   | Examples                                                                                                          |
@@ -98,7 +98,7 @@ In detail, the following methods are currently implemented:
 | **DICEAttack**   | *Waniek et al.* [Hiding Individuals and Communities in a Social Network](https://arxiv.org/abs/1608.00375), *Nature Human Behavior'16*         | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/untargeted/dice_attack.py)   |
 | **FGAttack**     | *Chen et al.* [Fast Gradient Attack on Network Embedding](https://arxiv.org/abs/1809.02797), *arXiv'18*                                        | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/untargeted/fg_attack.py)     |
 | **Metattack**    | *Zügner et al.* [Adversarial Attacks on Graph Neural Networks via Meta Learning](https://arxiv.org/abs/1902.08412), *ICLR'19*                  | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/untargeted/metattack.py)     |
-| **IGAttack**     | *Wu et al.* [📝Adversarial Examples on Graph Data: Deep Insights into Attack and Defense](https://arxiv.org/abs/1903.01610), *IJCAI'19*         | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/untargeted/ig_attack.py)     |
+| **IGAttack**     | *Wu et al.* [Adversarial Examples on Graph Data: Deep Insights into Attack and Defense](https://arxiv.org/abs/1903.01610), *IJCAI'19*          | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/untargeted/ig_attack.py)     |
 | **PGD**          | *Xu et al.* [Topology Attack and Defense for Graph Neural Networks: An Optimization Perspective](https://arxiv.org/abs/1906.04214), *IJCAI'19* | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/untargeted/pgd_attack.py)    |
 | **MinmaxAttack** | *Xu et al.* [Topology Attack and Defense for Graph Neural Networks: An Optimization Perspective](https://arxiv.org/abs/1906.04214), *IJCAI'19* | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/untargeted/minmax_attack.py) |
 
@@ -118,21 +118,18 @@ In detail, the following methods are currently implemented:
 
 
 
-## Defense
+## 🛡 Defense
 
 ### Standard GNNs (without defense)
 
-| Methods      | Descriptions                                                                                                                               | Examples                                                                                           |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| **GCN**      | *Kipf et al.* [Semi-Supervised Classification with Graph Convolutional Networks](https://arxiv.org/abs/1609.02907), *ICLR'17*              | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/gcn.py)       |
-| **SGC**      | *Wu et al.*  [Simplifying Graph Convolutional Networks](https://arxiv.org/abs/1902.07153), *ICLR'19*                                       | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/sgc.py)       |
-| **GAT**      | *Veličković et al.*  [Graph Attention Networks](https://arxiv.org/abs/1710.10903), *ICLR'18*                                               | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/gat.py)       |
-| **DAGNN**    | *Liu et al.*  [Towards Deeper Graph Neural Networks](https://arxiv.org/abs/2007.09296), *KDD'20*                                           | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/dagnn.py)     |
-| **APPNP**    | *Klicpera et al.*  [Predict then Propagate: Graph Neural Networks meet Personalized PageRank](https://arxiv.org/abs/1810.05997), *ICLR'19* | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/appnp.py)     |
-| **JKNet**    | *Xu et al.*  [Representation Learning on Graphs with Jumping Knowledge Networks](https://arxiv.org/abs/1806.03536), *ICML'18*              | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/jknet.py)     |
-| **DropEdge** |                                                                                                                                            | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/drop_edge.py) |
-| **DropNode** |                                                                                                                                            | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/drop_node.py) |
-| **DropPath** |                                                                                                                                            | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/drop_path.py) |
+| Methods   | Descriptions                                                                                                                               | Examples                                                                                       |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| **GCN**   | *Kipf et al.* [Semi-Supervised Classification with Graph Convolutional Networks](https://arxiv.org/abs/1609.02907), *ICLR'17*              | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/gcn.py)   |
+| **SGC**   | *Wu et al.*  [Simplifying Graph Convolutional Networks](https://arxiv.org/abs/1902.07153), *ICLR'19*                                       | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/sgc.py)   |
+| **GAT**   | *Veličković et al.*  [Graph Attention Networks](https://arxiv.org/abs/1710.10903), *ICLR'18*                                               | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/gat.py)   |
+| **DAGNN** | *Liu et al.*  [Towards Deeper Graph Neural Networks](https://arxiv.org/abs/2007.09296), *KDD'20*                                           | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/dagnn.py) |
+| **APPNP** | *Klicpera et al.*  [Predict then Propagate: Graph Neural Networks meet Personalized PageRank](https://arxiv.org/abs/1810.05997), *ICLR'19* | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/appnp.py) |
+| **JKNet** | *Xu et al.*  [Representation Learning on Graphs with Jumping Knowledge Networks](https://arxiv.org/abs/1806.03536), *ICML'18*              | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/jknet.py) |
 
 ### Robust GNNs
 

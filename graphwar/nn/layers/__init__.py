@@ -2,6 +2,7 @@ from . import activations
 from .container import Sequential
 from .gcn_conv import GCNConv
 from .sg_conv import SGConv
+from .ssg_conv import SSGConv
 from .dagnn_conv import DAGNNConv
 from .tag_conv import TAGConv
 

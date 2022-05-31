@@ -1,5 +1,6 @@
 from .gcn import GCN
 from .sgc import SGC
+from .ssgc import SSGC
 from .gat import GAT
 from .appnp import APPNP
 from .dagnn import DAGNN

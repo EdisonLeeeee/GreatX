@@ -131,6 +131,7 @@ In detail, the following methods are currently implemented:
 | **APPNP** | *Klicpera et al.*  [Predict then Propagate: Graph Neural Networks meet Personalized PageRank](https://arxiv.org/abs/1810.05997), *ICLR'19* | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/appnp.py) |
 | **JKNet** | *Xu et al.*  [Representation Learning on Graphs with Jumping Knowledge Networks](https://arxiv.org/abs/1806.03536), *ICML'18*              | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/jknet.py) |
 | **TAGCN** | *Du et al.*  [Topological Adaptive Graph Convolutional Networks](https://arxiv.org/abs/1806.03536), *arXiv'17*                             | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/tagcn.py) |
+| **TAGCN** | *ZHu et al.*  [Simple Spectral Graph Convolution](https://openreview.net/forum?id=CYO5T-YjWZV), *ICLR'21*                                  | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/ssgc.py)  |
 
 ### Robust GNNs
 

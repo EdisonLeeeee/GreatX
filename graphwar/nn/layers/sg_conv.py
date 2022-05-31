@@ -4,7 +4,6 @@ from torch import nn
 from torch import Tensor
 from torch_sparse import SparseTensor, matmul
 
-from torch_geometric.nn.conv import MessagePassing
 from torch_geometric.nn.conv.gcn_conv import gcn_norm
 from torch_geometric.nn.dense.linear import Linear
 from torch_geometric.typing import Adj, OptTensor
@@ -12,6 +11,7 @@ from torch_geometric.typing import Adj, OptTensor
 from graphwar import is_edge_index
 from graphwar.functional import spmm
 from graphwar.nn.layers.gcn_conv import dense_gcn_norm
+
 
 class SGConv(nn.Module):
 
@@ -40,17 +40,17 @@ class SGConv(nn.Module):
     def reset_parameters(self):
         self.lin.reset_parameters()
         self.cache_clear()
-        
+
     def cache_clear(self):
         self._cached_x = None
         return self
 
     def forward(self, x: Tensor, edge_index: Adj,
                 edge_weight: OptTensor = None) -> Tensor:
-        
+
         cache = self._cached_x
         is_edge_like = is_edge_index(edge_index)
-        
+
         if cache is None:
             if self.normalize:
                 if is_edge_like:
@@ -63,14 +63,15 @@ class SGConv(nn.Module):
                         self.add_self_loops, dtype=x.dtype)
                 else:
                     # N by N dense adjacency matrix
-                    edge_index = dense_gcn_norm(edge_index, add_self_loops=self.add_self_loops)   
-                    
+                    edge_index = dense_gcn_norm(
+                        edge_index, add_self_loops=self.add_self_loops)
+
             for k in range(self.K):
                 if is_edge_like:
                     x = spmm(x, edge_index, edge_weight)
                 else:
-                    x = edge_index @ x                
-                
+                    x = edge_index @ x
+
             if self.cached:
                 self._cached_x = x
         else:

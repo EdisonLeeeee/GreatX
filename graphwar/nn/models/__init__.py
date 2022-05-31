@@ -4,6 +4,7 @@ from .gat import GAT
 from .appnp import APPNP
 from .dagnn import DAGNN
 from .jknet import JKNet
+from .tagcn import TAGCN
 
 # defense models
 from .median_gcn import MedianGCN

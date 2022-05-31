@@ -62,7 +62,9 @@ class InjectionAttacker(Attacker):
 
         return self
 
-    def attack(self, num_budgets: Union[int, float], *, targets: Optional[Tensor] = None, num_edges_global: Optional[int] = None,
+    def attack(self, num_budgets: Union[int, float], *,
+               targets: Optional[Tensor] = None,
+               num_edges_global: Optional[int] = None,
                num_edges_local: Optional[int] = None,
                feat_limits: Optional[Union[tuple, dict]] = None,
                feat_budgets: Optional[int] = None) -> "InjectionAttacker":
@@ -75,26 +77,28 @@ class InjectionAttacker(Attacker):
         targets : Optional[Tensor], optional
             the targeted nodes where injected nodes perturb,
             if None, it will be all nodes in the graph, by default None
-        interconnection : bool, optional
-            whether the injected nodes can connect to each other, by default False
         num_edges_global : Optional[int], optional
-            the number of total edges to be injected for all injected nodes, by default None
+            the number of total edges in the graph to be injected for 
+            all injected nodes, by default None
         num_edges_local : Optional[int], optional
             the number of edges allowed to inject for each injected nodes, by default None
         feat_limits : Optional[Union[tuple, dict]], optional
             the limitation or allowed budgets of injected node features,
             it can be a tuple, e.g., `(0, 1)` or 
-            a dict, e.g., `{'min':0, 'max': 1}`,
+            a dict, e.g., `{'min':0, 'max': 1}`.
+            if None, it is set as (self.feat.min(), self.feat.max()), by default None
         feat_budgets :  Optional[int], optional
-            the number of features can be flipped for each node,
-            e.g., `10`, denoting 10 features can be flipped, by default None
-        disable : bool, optional
-            whether the tqdm progbar is to disabled, by default False
+            the number of nonzero features can be injected for each node,
+            e.g., `10`, denoting 10 nonzero features can be injected, by default None
 
         Returns
         -------
-        InjectionAttacker
-            the attacker itself
+        the attacker itself
+
+        Note
+        ----
+        * Both `num_edges_local` and `num_edges_global` cannot be used simultaneously.
+        * Both `feat_limits` and `feat_budgets` cannot be used simultaneously.
         """
 
         _is_setup = getattr(self, "_is_setup", True)
@@ -130,7 +134,7 @@ class InjectionAttacker(Attacker):
             num_edges_local = num_edges_global // len(self.targets)
             if num_edges_local == 0:
                 raise ValueError(
-                    f"Too less edges allowed (num_edges_global={num_edges_global}) for injected nodes ({len(self.targets)}). "
+                    f"Too few edges allowed (num_edges_global={num_edges_global}) for injected nodes ({len(self.targets)}). "
                     "Maybe you could use the argument `num_edges_local` instead.")
 
         if num_edges_local is None:

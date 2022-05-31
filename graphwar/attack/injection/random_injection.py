@@ -36,14 +36,15 @@ class RandomInjection(InjectionAttacker):
     >>> attacker.data()
     """
 
-    def attack(self, num_budgets: Union[int, float], *, targets: Optional[Tensor] = None,
+    def attack(self, num_budgets: Union[int, float], *,
+               targets: Optional[Tensor] = None,
                interconnection: bool = False,
                num_edges_global: Optional[int] = None,
                num_edges_local: Optional[int] = None,
                feat_limits: Optional[Union[tuple, dict]] = None,
                feat_budgets:  Optional[int] = None,
                disable: bool = False) -> "RandomInjection":
-        """Method to conduct adversarial injection attack with given budges.
+        """Base method that describes the adversarial injection attack
 
         Parameters
         ----------
@@ -55,23 +56,29 @@ class RandomInjection(InjectionAttacker):
         interconnection : bool, optional
             whether the injected nodes can connect to each other, by default False
         num_edges_global : Optional[int], optional
-            the number of total edges to be injected for all injected nodes, by default None
+            the number of total edges in the graph to be injected for 
+            all injected nodes, by default None
         num_edges_local : Optional[int], optional
             the number of edges allowed to inject for each injected nodes, by default None
         feat_limits : Optional[Union[tuple, dict]], optional
             the limitation or allowed budgets of injected node features,
             it can be a tuple, e.g., `(0, 1)` or 
-            a dict, e.g., `{'min':0, 'max': 1}`,
+            a dict, e.g., `{'min':0, 'max': 1}`.
+            if None, it is set as (self.feat.min(), self.feat.max()), by default None
         feat_budgets :  Optional[int], optional
-            the number of features can be flipped for each node,
-            e.g., `10`, denoting 10 features can be flipped, by default None
+            the number of nonzero features can be injected for each node,
+            e.g., `10`, denoting 10 nonzero features can be injected, by default None
         disable : bool, optional
             whether the tqdm progbar is to disabled, by default False
 
         Returns
         -------
-        RandomInjection
-            the attacker itself
+        the attacker itself
+
+        Note
+        ----
+        * Both `num_edges_local` and `num_edges_global` cannot be used simultaneously.
+        * Both `feat_limits` and `feat_budgets` cannot be used simultaneously.
         """
         super().attack(num_budgets, targets=targets,
                        num_edges_global=num_edges_global,

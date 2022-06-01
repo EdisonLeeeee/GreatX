@@ -127,14 +127,13 @@ class Eigendecomposition(BaseTransform):
         adj_matrix = (U * V) @ U.T
         adj_matrix[adj_matrix < 0] = 0.
 
-        adj_matrix = torch.as_tensor(adj_matrix, dtype=torch.float)
         V = torch.as_tensor(V, dtype=torch.float)
         U = torch.as_tensor(U, dtype=torch.float)
+        
+        edge_index, edge_weight = from_scipy_sparse_matrix(sp.csr_matrix(adj_matrix))
 
         data.V, data.U = V.to(device), U.to(device)
-        data.dense_adj = adj_matrix.to(device)
-
-        del data.edge_index, data.edge_weight
+        data.edge_index, data.edge_weight = edge_index.to(device), edge_weight.to(device)
         return data
 
     def __repr__(self) -> str:

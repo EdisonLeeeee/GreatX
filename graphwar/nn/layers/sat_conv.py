@@ -6,6 +6,8 @@ from torch import Tensor
 
 from torch_geometric.nn.dense.linear import Linear
 from torch_geometric.nn.conv.gcn_conv import gcn_norm
+from torch_geometric.utils import add_self_loops
+
 
 from graphwar import is_edge_index
 from graphwar.functional import spmm
@@ -37,15 +39,19 @@ class SATConv(nn.Module):
         self.lin.reset_parameters()
 
     def forward(self, x: Tensor, U: Tensor, V: Optional[Tensor] = None):
+        # NOTE: torch_sparse.SparseTensor is not supported
         is_edge_like = is_edge_index(U)
         x = self.lin(x)
 
         if is_edge_like:
             edge_index, edge_weight = U, V
+            if self.add_self_loops:
+                edge_index, edge_weight = add_self_loops(edge_index, edge_weight, 
+                                                         num_nodes=x.size(0))            
             if self.normalize:
                 edge_index, edge_weight = gcn_norm(  # yapf: disable
                     edge_index, edge_weight, x.size(0), False,
-                    self.add_self_loops, dtype=x.dtype)
+                    add_self_loops=False, dtype=x.dtype)
 
             x = spmm(x, edge_index, edge_weight)
 

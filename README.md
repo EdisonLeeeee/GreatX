@@ -143,6 +143,8 @@ In detail, the following methods are currently implemented:
 | **ElasticGNN**    | *Liu et al.* [Elastic Graph Neural Networks](https://arxiv.org/abs/2107.06996), *ICML'21*                                                                                                                                                   | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/elastic_gnn.py)     |
 | **AirGNN**        | *Liu et al.* [Graph Neural Networks with Adaptive Residual](https://openreview.net/forum?id=hfkER_KJiNw), *NeurIPS'21*                                                                                                                      | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/air_gnn.py)         |
 | **SimPGCN**       | *Jin et al.* [Node Similarity Preserving Graph Convolutional Networks](https://arxiv.org/abs/2011.09643), *WSDM'21*                                                                                                                         | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/simp_gcn.py)        |
+| **SAT**       |            | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/sat.py)        |
+
 
 ### Defense Strategy
 

@@ -1,5 +1,6 @@
 import torch
 import torch.nn.functional as F
+from torch import Tensor
 from graphwar.training import Trainer
 
 
@@ -64,20 +65,3 @@ class SATTrainer(Trainer):
         self.callbacks.on_train_batch_end(0)
         return dict(loss=loss.item(), acc=out.argmax(1).eq(y).float().mean().item())
 
-    @torch.no_grad()
-    def test_step(self, inputs: dict) -> dict:
-        model = self.model
-        model.eval()
-        data = inputs['data'].to(self.device)
-        mask = inputs.get('mask', None)
-        y = data.y.squeeze()
-
-        out = model(data.x, data.dense_adj)
-
-        if mask is not None:
-            out = out[mask]
-            y = y[mask]
-
-        loss = F.cross_entropy(out, y)
-
-        return dict(loss=loss.item(), acc=out.argmax(1).eq(y).float().mean().item())

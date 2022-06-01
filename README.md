@@ -131,7 +131,7 @@ In detail, the following methods are currently implemented:
 | **APPNP** | *Klicpera et al.*  [Predict then Propagate: Graph Neural Networks meet Personalized PageRank](https://arxiv.org/abs/1810.05997), *ICLR'19* | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/appnp.py) |
 | **JKNet** | *Xu et al.*  [Representation Learning on Graphs with Jumping Knowledge Networks](https://arxiv.org/abs/1806.03536), *ICML'18*              | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/jknet.py) |
 | **TAGCN** | *Du et al.*  [Topological Adaptive Graph Convolutional Networks](https://arxiv.org/abs/1806.03536), *arXiv'17*                             | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/tagcn.py) |
-| **TAGCN** | *ZHu et al.*  [Simple Spectral Graph Convolution](https://openreview.net/forum?id=CYO5T-YjWZV), *ICLR'21*                                  | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/ssgc.py)  |
+| **SSGC**  | *ZHu et al.*  [Simple Spectral Graph Convolution](https://openreview.net/forum?id=CYO5T-YjWZV), *ICLR'21*                                  | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/ssgc.py)  |
 
 ### Robust GNNs
 
@@ -143,7 +143,7 @@ In detail, the following methods are currently implemented:
 | **ElasticGNN**    | *Liu et al.* [Elastic Graph Neural Networks](https://arxiv.org/abs/2107.06996), *ICML'21*                                                                                                                                                   | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/elastic_gnn.py)     |
 | **AirGNN**        | *Liu et al.* [Graph Neural Networks with Adaptive Residual](https://openreview.net/forum?id=hfkER_KJiNw), *NeurIPS'21*                                                                                                                      | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/air_gnn.py)         |
 | **SimPGCN**       | *Jin et al.* [Node Similarity Preserving Graph Convolutional Networks](https://arxiv.org/abs/2011.09643), *WSDM'21*                                                                                                                         | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/simp_gcn.py)        |
-| **SAT**       |            | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/sat.py)        |
+| **SAT**           | *Li et al.* [Spectral Adversarial Training for Robust Graph Neural Network](), *arXiv'22*                                                                                                                                                   |                                                                                                          | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/sat.py) |
 
 
 ### Defense Strategy

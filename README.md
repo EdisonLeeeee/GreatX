@@ -1,5 +1,27 @@
 # ⚔🛡 **GraphWar**: Arms Race in Graph Adversarial Attack and Defense
 
+<p align="center">
+  <img width = "700" height = "300" src="https://github.com/EdisonLeeeee/GraphWar/blob/master/imgs/graphwar.png" alt="banner"/>
+  <br/>
+</p>
+<p align="center"><strong>Arms Race in Graph Adversarial Attack and Defense</strong></p>
+
+<p align=center>
+  <a href="https://www.python.org/downloads/release/python-360/">
+    <img src="https://img.shields.io/badge/Python->=3.6-3776AB?logo=python" alt="Python">
+  </a>    
+  <a href="https://github.com/pytorch/pytorch">
+    <img src="https://img.shields.io/badge/PyTorch->=1.8-FF6F00?logo=pytorch" alt="pytorch">
+  </a>   
+  <a href="https://pypi.org/project/graphwar/">
+    <img src="https://badge.fury.io/py/graphwar.png" alt="pypi">
+  </a>       
+  <a href="https://github.com/EdisonLeeeee/GraphWar/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/EdisonLeeeee/GraphWar" alt="license">
+  </a>       
+</p>
+                                                                   
+
 > Know thy self, know thy enemy. A thousand battles, a thousand victories.
 > 
 > 「知己知彼，百战百胜」 ——《孙子兵法•谋攻篇》

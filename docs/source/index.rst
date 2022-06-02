@@ -2,7 +2,7 @@
 
 Welcome to GraphGallery's documentation!
 =========================================
-.. image:: ../../imgs/graphwar.svg
+.. image:: ../../imgs/graphwar.png
 
 
 .. toctree::

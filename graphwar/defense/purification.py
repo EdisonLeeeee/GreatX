@@ -76,12 +76,15 @@ class CosinePurification(BaseTransform):
 
 class SVDPurification(BaseTransform):
 
-    def __init__(self, K: int = 50, threshold: float = 0.01, binaryzation: bool = False):
+    def __init__(self, K: int = 50, threshold: float = 0.01,
+                 binaryzation: bool = False,
+                 remove_edge_index: bool = True):
         # TODO: add percentage purification
         super().__init__()
         self.K = K
         self.threshold = threshold
         self.binaryzation = binaryzation
+        self.remove_edge_index = remove_edge_index
 
     def __call__(self, data: Data, inplace: bool = True) -> Data:
         if not inplace:
@@ -93,10 +96,14 @@ class SVDPurification(BaseTransform):
         adj_matrix = svd(adj_matrix, K=self.K,
                          threshold=self.threshold,
                          binaryzation=self.binaryzation)
-        edge_index, edge_weight = from_scipy_sparse_matrix(
-            adj_matrix)
-        data.edge_index, data.edge_weight = edge_index.to(
-            device), edge_weight.to(device)
+        data.adj_t = torch.as_tensor(
+            adj_matrix, dtype=torch.float, device=device)
+        if self.remove_edge_index:
+            del data.edge_index, data.edge_weight
+        else:
+            edge_index, edge_weight = from_scipy_sparse_matrix(adj_matrix)
+            data.edge_index, data.edge_weight = edge_index.to(
+                device), edge_weight.to(device)
 
         return data
 
@@ -104,13 +111,14 @@ class SVDPurification(BaseTransform):
         return f'{self.__class__.__name__}(K={self.K}, threshold={self.threshold}, allow_singleton={self.allow_singleton})'
 
 
-class Eigendecomposition(BaseTransform):
+class EigenDecomposition(BaseTransform):
 
-    def __init__(self, K: int = 50, normalize: bool = True):
-        # TODO: add percentage purification
+    def __init__(self, K: int = 50, normalize: bool = True,
+                 remove_edge_index: bool = True):
         super().__init__()
         self.K = K
         self.normalize = normalize
+        self.remove_edge_index = remove_edge_index
 
     def __call__(self, data: Data, inplace: bool = True) -> Data:
         if not inplace:
@@ -123,18 +131,22 @@ class Eigendecomposition(BaseTransform):
         if self.normalize:
             adj_matrix = scipy_normalize(adj_matrix)
 
-        V, U = sp.linalg.eigsh(adj_matrix, k=self.K)
-        adj_matrix = (U * V) @ U.T
-        adj_matrix[adj_matrix < 0] = 0.
+        adj_matrix = eigsh(adj_matrix)
 
         V = torch.as_tensor(V, dtype=torch.float)
         U = torch.as_tensor(U, dtype=torch.float)
 
         data.V, data.U = V.to(device), U.to(device)
-#         edge_index, edge_weight = from_scipy_sparse_matrix(adj_matrix)
-#         data.edge_index, data.edge_weight = edge_index.to(device), edge_weight.to(device)
-        data.adj_t = torch.as_tensor(adj_matrix, dtype=torch.float, device=device)
-        del data.edge_index, data.edge_weight
+
+        data.adj_t = torch.as_tensor(
+            adj_matrix, dtype=torch.float, device=device)
+
+        if self.remove_edge_index:
+            del data.edge_index, data.edge_weight
+        else:
+            edge_index, edge_weight = from_scipy_sparse_matrix(adj_matrix)
+            data.edge_index, data.edge_weight = edge_index.to(
+                device), edge_weight.to(device)
         return data
 
     def __repr__(self) -> str:
@@ -148,8 +160,31 @@ def jaccard_similarity(A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:
     return J
 
 
+def eigsh(adj_matrix: sp.csr_matrix, K: int = 50,
+          threshold: float = 0.,
+          binaryzation: bool = False) -> sp.csr_matrix:
+
+    adj_matrix = adj_matrix.asfptype()
+
+    V, U = sp.linalg.eigsh(adj_matrix, k=K)
+    adj_matrix = (U * V) @ U.T
+
+    if threshold is not None:
+        # sparsification
+        adj_matrix[adj_matrix <= threshold] = 0.
+
+    adj_matrix = sp.csr_matrix(adj_matrix)
+
+    if binaryzation:
+        # TODO
+        adj_matrix.data[adj_matrix.data > 0] = 1.0
+
+    return adj_matrix
+
+
 def svd(adj_matrix: sp.csr_matrix, K: int = 50,
-        threshold: float = 0.01, binaryzation: bool = False) -> sp.csr_matrix:
+        threshold: float = 0.01,
+        binaryzation: bool = False) -> sp.csr_matrix:
 
     adj_matrix = adj_matrix.asfptype()
 

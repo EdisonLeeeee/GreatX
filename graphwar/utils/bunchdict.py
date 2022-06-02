@@ -35,6 +35,29 @@ class BunchDict(OrderedDict):
         except KeyError:
             raise AttributeError(key)
 
+    def to_tensor(self, device: str = 'cpu', dtype=None) -> "BunchDict":
+        """Convert objects in BunchDict to torch.Tensor
+
+        Parameters
+        ----------
+        device : str, optional
+            device of the converted tensors, by default 'cpu'
+        dtype : _type_, optional
+            data types of the converted tensors, by default None
+
+        Returns
+        -------
+        the converted BunchDict
+        """
+        import torch
+        device = torch.device(device)
+        for k, v in self.items():
+            try:
+                self[k] = torch.as_tensor(v, dtype=dtype, device=device)
+            except RuntimeError:
+                pass
+        return self
+
     def __repr__(self) -> str:
         table_headers = ["Names", "Objects"]
         items = tuple(map(prettify, self.items()))

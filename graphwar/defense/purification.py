@@ -131,7 +131,11 @@ class EigenDecomposition(BaseTransform):
         if self.normalize:
             adj_matrix = scipy_normalize(adj_matrix)
 
-        adj_matrix = eigsh(adj_matrix)
+        adj_matrix = adj_matrix.asfptype()
+        V, U = sp.linalg.eigsh(adj_matrix, k=self.K)
+        adj_matrix = (U * V) @ U.T
+        # sparsification
+        adj_matrix[adj_matrix < 0] = 0.
 
         V = torch.as_tensor(V, dtype=torch.float)
         U = torch.as_tensor(U, dtype=torch.float)
@@ -158,28 +162,6 @@ def jaccard_similarity(A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:
     J = intersection * 1.0 / (torch.count_nonzero(A, dim=1) +
                               torch.count_nonzero(B, dim=1) - intersection + 1e-7)
     return J
-
-
-def eigsh(adj_matrix: sp.csr_matrix, K: int = 50,
-          threshold: float = 0.,
-          binaryzation: bool = False) -> sp.csr_matrix:
-
-    adj_matrix = adj_matrix.asfptype()
-
-    V, U = sp.linalg.eigsh(adj_matrix, k=K)
-    adj_matrix = (U * V) @ U.T
-
-    if threshold is not None:
-        # sparsification
-        adj_matrix[adj_matrix <= threshold] = 0.
-
-    adj_matrix = sp.csr_matrix(adj_matrix)
-
-    if binaryzation:
-        # TODO
-        adj_matrix.data[adj_matrix.data > 0] = 1.0
-
-    return adj_matrix
 
 
 def svd(adj_matrix: sp.csr_matrix, K: int = 50,

@@ -4,7 +4,7 @@
   <img width = "500" height = "180" src="https://github.com/EdisonLeeeee/GraphWar/blob/master/imgs/graphwar.png" alt="banner"/>
   <br/>
 </p>
-<p align="center"><em>知己知彼，百战百胜</em></p>
+<p align="center"><em>War is Coming!</em></p>
 
 <p align=center>
   <a href="https://www.python.org/downloads/release/python-360/">

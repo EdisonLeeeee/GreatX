@@ -4,7 +4,7 @@
   <img width = "500" height = "180" src="https://github.com/EdisonLeeeee/GraphWar/blob/master/imgs/graphwar.png" alt="banner"/>
   <br/>
 </p>
-<p align="center"><em>War is Coming!</em></p>
+<p align="center"><em>Graph War is Cooooooooming!</em></p>
 
 <p align=center>
   <a href="https://www.python.org/downloads/release/python-360/">
@@ -13,11 +13,12 @@
   <a href="https://github.com/pytorch/pytorch">
     <img src="https://img.shields.io/badge/PyTorch->=1.8-FF6F00?logo=pytorch" alt="pytorch">
   </a>   
-  <a href="https://pypi.org/project/graphwar/">
+  <!-- <a href="https://pypi.org/project/graphwar/">
     <img src="https://badge.fury.io/py/graphwar.png" alt="pypi">
-  </a>       
+  </a>        -->
   <a href="https://github.com/EdisonLeeeee/GraphWar/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/EdisonLeeeee/GraphWar" alt="license">
+    <img src="https://img.shields.io/badge/Contributions-Welcome-278ea5" alt="Contrib"/>    
   </a>       
 </p>
                                                                    
@@ -165,7 +166,7 @@ In detail, the following methods are currently implemented:
 | **ElasticGNN**    | *Liu et al.* [Elastic Graph Neural Networks](https://arxiv.org/abs/2107.06996), *ICML'21*                                                                                                                                                   | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/elastic_gnn.py)     |
 | **AirGNN**        | *Liu et al.* [Graph Neural Networks with Adaptive Residual](https://openreview.net/forum?id=hfkER_KJiNw), *NeurIPS'21*                                                                                                                      | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/air_gnn.py)         |
 | **SimPGCN**       | *Jin et al.* [Node Similarity Preserving Graph Convolutional Networks](https://arxiv.org/abs/2011.09643), *WSDM'21*                                                                                                                         | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/simp_gcn.py)        |
-| **SAT**           | *Li et al.* [Spectral Adversarial Training for Robust Graph Neural Network](), *arXiv'22*                                                                                                                                                   |                                                                                                          | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/sat.py) |
+| **SAT**           | *Li et al.* [Spectral Adversarial Training for Robust Graph Neural Network](), *arXiv'22*                                                                                                                                                   | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/defense/gcn_sat.py)        |
 
 
 ### Defense Strategy
@@ -183,7 +184,7 @@ More details of literatures and the official codes can be found at [Awesome Grap
 | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | **DropEdge**                        | *Rong et al.* [DropEdge: Towards Deep Graph Convolutional Networks on Node Classification](https://arxiv.org/abs/1907.10903), *ICLR'20*                                                 | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/drop_edge.py) |
 | **DropNode**                        | *You et al.* [Graph Contrastive Learning with Augmentations](https://arxiv.org/abs/2010.13902), *NeurIPS'20*                                                                            | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/drop_node.py) |
-| **DropPath**                        |                                                                                                                                                                                         | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/drop_path.py) |
+| **DropPath**                        | TODO                                                                                                                                                                                    | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/models/drop_path.py) |
 | **Centered Kernel Alignment (CKA)** | *Nguyen et al.* [Do Wide and Deep Networks Learn the Same Things? Uncovering How Neural Network Representations Vary with Width and Depth](https://arxiv.org/abs/2010.15327), *ICLR'21* | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/cka.py)              |
 
 

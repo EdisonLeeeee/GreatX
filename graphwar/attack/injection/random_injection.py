@@ -86,7 +86,7 @@ class RandomInjection(InjectionAttacker):
                        feat_limits=feat_limits,
                        feat_budgets=feat_budgets)
 
-        candidate_nodes = copy(self.targets)
+        candidate_nodes = self.targets.tolist()
 
         for injected_node in tqdm(range(self.num_nodes, self.num_nodes+self.num_budgets),
                                   desc="Injecting nodes...",
@@ -95,6 +95,7 @@ class RandomInjection(InjectionAttacker):
                 candidate_nodes, self.num_edges_local, replace=False)
 
             self.inject_node(injected_node)
+            self.inject_feat()
 
             for target in sampled:
                 self.inject_edge(injected_node, target)

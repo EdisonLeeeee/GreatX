@@ -1,14 +1,14 @@
 from functools import lru_cache
-from typing import Optional, Union
+from typing import Optional, Union, List
 
 from copy import copy
 import torch
 import numpy as np
 from torch import Tensor
 
-from graphwar.attack.attacker import Attacker
-from graphwar.utils import add_edges
 from torch_geometric.data import Data
+from graphwar.attack.attacker import Attacker
+from graphwar.utils import add_edges, BunchDict
 
 
 class InjectionAttacker(Attacker):
@@ -56,7 +56,7 @@ class InjectionAttacker(Attacker):
         self.num_edges_global = None
         self.num_edges_local = None
         self._injected_nodes = []
-        self._injected_edges = {}
+        self._injected_edges = []
         self._injected_feats = []
         self.data.cache_clear()
 
@@ -117,14 +117,18 @@ class InjectionAttacker(Attacker):
             num_budgets, max_perturbations=self.num_nodes)
 
         if targets is None:
-            self.targets = list(range(self.num_nodes))
+            self.targets = torch.arange(self.num_nodes, device=self.device)
+            self.target_labels = self.label
         else:
             if isinstance(targets, torch.BoolTensor):
                 # Boolean mask
-                self.targets = targets.nonzero().view(-1).tolist()
+                self.targets = targets.nonzero().view(-1).to(self.device)
             else:
                 # node indices
-                self.targets = torch.LongTensor(targets).view(-1).tolist()
+                self.targets = torch.LongTensor(
+                    targets).view(-1).to(self.device)
+
+        self.target_labels = self.label[self.targets]
 
         if num_edges_local is not None and num_edges_global is not None:
             raise RuntimeError(
@@ -179,6 +183,7 @@ class InjectionAttacker(Attacker):
 
         if feat_budgets is not None:
             assert feat_budgets <= self.num_feats
+            self._check_feature_matrix_binary()
 
         self.feat_budgets = feat_budgets
 
@@ -217,6 +222,9 @@ class InjectionAttacker(Attacker):
         if edges is None or len(edges) == 0:
             return None
 
+        if isinstance(edges, list) and torch.is_tensor(edges[0]):
+            edges = torch.cat(edges, dim=1)
+
         if torch.is_tensor(edges):
             return edges.to(self.device)
 
@@ -229,26 +237,71 @@ class InjectionAttacker(Attacker):
         """alias of method `injected_edges`"""
         return self.injected_edges()
 
+    def edge_flips(self) -> BunchDict:
+        """Get all the edges to be flipped, including edges to be added and removed."""
+        added = self.injected_edges()
+        removed = None
+        return BunchDict(added=added, removed=removed, all=added)
+
     def injected_feats(self) -> Optional[Tensor]:
         """Get the features injected nodes."""
         feats = self._injected_feats
         if feats is None or len(feats) == 0:
             return None
         # feats = list(self._injected_nodes.values())
-        return torch.stack(feats, dim=0).float().to(self.device)
+        if isinstance(feats, list):
+            return torch.cat(feats, dim=0).float().to(self.device)
+        return feats.float().to(self.device)
 
     def added_feats(self) -> Optional[Tensor]:
         """alias of method `added_edges`"""
         return self.injected_feats()
 
-    def inject_node(self, node, feat: Optional[Tensor] = None):
+    ################## Injection Operation ##############
+    def inject_node(self, node):
+
+        self._injected_nodes.append(node)
+
+    def inject_edge(self, u: int, v: int):
+        """Inject an edge to the graph.
+
+        Parameters
+        ----------
+        u : int
+            The source node of the edge.
+        v : int
+            The destination node of the edge.
+        """
+
+        self._injected_edges.append([u, v])
+
+    def inject_edges(self, edges: Union[Tensor, List]):
+        """Inject a set of edges to the graph.
+
+        Parameters
+        ----------
+        edges : Union[Tensor, List]
+            The newly injected.
+        """
+        self._injected_edges.append(edges)
+
+    def inject_feat(self, feat: Optional[Tensor] = None):
+        """Generate  a feature vector to the graph for a newly 
+        injected node.
+
+        Parameters
+        ----------
+        feat : Optional[Tensor], optional
+            the injected feature. If None, it would be randomly generated,
+             by default None
+        """
         if feat is None:
             if self.feat_budgets is not None:
                 # For boolean features, we generate it
                 # randomly flip features along the feature dimension
                 feat = self.feat.new_zeros(1, self.num_feats)
                 idx = torch.randperm(self.num_feats)[:self.feat_budgets]
-                feat[idx] = 1.0
+                feat[:, idx] = 1.0
             else:
                 # For continuos features, we generate it
                 # following uniform distribution
@@ -260,24 +313,7 @@ class InjectionAttacker(Attacker):
             else:
                 assert feat.min() >= self.feat_limits[0]
                 assert feat.max() <= self.feat_limits[1]
-
-        self._injected_nodes.append(node)
         self._injected_feats.append(feat)
-
-    def inject_edge(self, u: int, v: int, it: Optional[int] = None):
-        """Inject an edge to the graph.
-
-        Parameters
-        ----------
-        u : int
-            The source node of the edge.
-        v : int
-            The destination node of the edge.
-        it : Optional[int], optional
-            The iteration that indicates the order of the edge being added, by default None
-        """
-
-        self._injected_edges[(u, v)] = it
 
     @lru_cache(maxsize=1)
     def data(self, symmetric: bool = True) -> Data:

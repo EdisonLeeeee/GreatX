@@ -1,7 +1,7 @@
 # ⚔🛡 **GraphWar**: Arms Race in Graph Adversarial Attack and Defense
 
 <p align="center">
-  <img width = "500" height = "180" src="https://github.com/EdisonLeeeee/GraphWar/blob/master/imgs/graphwar.png" alt="banner"/>
+  <img width = "450" height = "180" src="https://github.com/EdisonLeeeee/GraphWar/blob/master/imgs/graphwar.png" alt="banner"/>
   <br/>
 </p>
 <p align="center"><em>Graph War is Cooooooooming!</em></p>
@@ -126,9 +126,10 @@ In detail, the following methods are currently implemented:
 | **MinmaxAttack** | *Xu et al.* [Topology Attack and Defense for Graph Neural Networks: An Optimization Perspective](https://arxiv.org/abs/1906.04214), *IJCAI'19* | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/untargeted/minmax_attack.py) |
 
 ### Graph Injection Attack (GIA)
-| Methods             | Descriptions                                                  | Examples                                                                                                            |
-| ------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| **RandomInjection** | A simple random method that chooses nodes to inject randomly. | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/injection/random_injection.py) |
+| Methods             | Descriptions                                                                                                    | Examples                                                                                                            |
+| ------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **RandomInjection** | A simple random method that chooses nodes to inject randomly.                                                   | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/injection/random_injection.py) |
+| **AdvInjection**    | The 2nd place solution of [KDD Cup 2020](https://www.biendata.xyz/competition/kddcup_2020/), team: ADVERSARIES. | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/attack/injection/adv_injection.py)    |
 
 ### Graph Universal Attack (GUA)
 

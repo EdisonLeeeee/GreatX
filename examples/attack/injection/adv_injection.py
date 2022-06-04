@@ -8,7 +8,7 @@ from graphwar.nn.models import GCN
 from graphwar.training import Trainer
 from graphwar.training.callbacks import ModelCheckpoint
 from graphwar.utils import split_nodes
-from graphwar.attack.injection import RandomInjection
+from graphwar.attack.injection import AdvInjection
 
 dataset = GraphWarDataset(root='~/data/pygdata', name='cora',
                           transform=T.LargestConnectedComponents())
@@ -33,7 +33,8 @@ print(f"Before attack\n {logs}")
 # ================================================================== #
 #                      Attacking                                     #
 # ================================================================== #
-attacker = RandomInjection(data, device=device)
+attacker = AdvInjection(data, device=device)
+attacker.setup_surrogate(trainer_before.model)
 attacker.reset()
 attacker.attack(10, feat_limits=(0, 1))  # for continuous features
 # attacker.attack(10, feat_budgets=10)  # for binary features

@@ -1,10 +1,20 @@
 # ⚔🛡 **GraphWar**: Arms Race in Graph Adversarial Attack and Defense
 
 <p align="center">
-  <img width = "450" height = "150" src="https://github.com/EdisonLeeeee/GraphWar/blob/master/imgs/graphwar.png" alt="banner"/>
+  <img width = "600" height = "180" src="https://github.com/EdisonLeeeee/GraphWar/blob/master/imgs/graphwar.png" alt="banner"/>
   <br/>
 </p>
 <p align="center"><em>Graph War is Cooooooooming!</em></p>
+
+<p align=center>
+  <a href="https://graphwar.readthedocs.io/en/latest">
+    [Documentation]
+  </a>         
+  |
+  <a href="https://github.com/EdisonLeeeee/GraphWar/blob/master/examples">
+    [Examples]
+  </a>  
+</p>
 
 <p align=center>
   <a href="https://www.python.org/downloads/release/python-360/">

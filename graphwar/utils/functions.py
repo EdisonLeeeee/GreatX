@@ -148,12 +148,9 @@ def wrapper(func: Callable) -> Callable:
     Example
     -------
 
-    .. code-block:: python
-
-
-    @wrapper
-    def func(hids=[16], acts=None):
-        print(locals())
+    >>> @wrapper
+    >>> def func(hids=[16], acts=None):
+    >>>     print(locals())
 
     >>> func(100)
     {'hids': [100], 'acts': [None]}
@@ -165,9 +162,9 @@ def wrapper(func: Callable) -> Callable:
     {'hids': [100, 64], 'acts': None}
 
 
-    @wrapper
-    def func(self, hids=[16], acts=None):
-        print(locals())    
+    >>> @wrapper
+    >>> def func(self, hids=[16], acts=None):
+    >>> print(locals())    
 
     >>> func()
     TypeError: The decorated function 'func' missing required argument 'self'.
@@ -179,9 +176,9 @@ def wrapper(func: Callable) -> Callable:
     {'self': 'class_itself', 'hids': [], 'acts': []}
 
 
-    @wrapper
-    def func(self, hids=[16], acts=None, heads=8):
-        print(locals())    
+    >>> @wrapper
+    >>> def func(self, hids=[16], acts=None, heads=8):
+    >>>     print(locals())    
 
     >>> func('class_itself', hids=[100, 200])
     {'self': 'class_itself', 'hids': [100, 200], 'acts': [None, None], 'heads': 8}

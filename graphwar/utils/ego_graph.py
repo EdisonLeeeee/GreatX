@@ -34,8 +34,8 @@ def ego_graph(adj_matrix: sp.csr_matrix,
         nodes: shape [N], the nodes of the subgraph
         edges: shape [2, M], the edges of the subgraph
 
-    Notes
-    -----
+    Note
+    ----
     This is a faster implementation of 
     `networkx.ego_graph` based on scipy sparse matrix and numba
 
@@ -43,7 +43,7 @@ def ego_graph(adj_matrix: sp.csr_matrix,
     See Also
     --------
     networkx.ego_graph
-    k_hop_subgraph
+    torch_geometric.utils.k_hop_subgraph
 
     """
     assert sp.issparse(adj_matrix)

@@ -18,23 +18,6 @@ Base Classes
     :exclude-members: extra_repr
 
 
-Backdoor Attacks
-------------------------------------------------
-.. currentmodule:: graphwar.attack.backdoor
-
-.. autosummary::
-    :toctree: _autosummary
-    :nosignatures:
-    {% for cls in graphwar.attack.backdoor.classes %}
-      {{ cls }}
-    {% endfor %}
-
-.. automodule:: graphwar.attack.backdoor
-    :members:
-    :undoc-members:
-    :exclude-members: extra_repr
-
-
 Targeted Attacks
 ------------------------------------------------
 .. currentmodule:: graphwar.attack.targeted
@@ -64,6 +47,38 @@ Untargeted Attacks
     {% endfor %}
 
 .. automodule:: graphwar.attack.untargeted
+    :members:
+    :undoc-members:
+    :exclude-members: extra_repr
+
+Injection Attacks
+------------------------------------------------
+.. currentmodule:: graphwar.attack.injection
+
+.. autosummary::
+    :toctree: _autosummary
+    :nosignatures:
+    {% for cls in graphwar.attack.injection.classes %}
+      {{ cls }}
+    {% endfor %}
+
+.. automodule:: graphwar.attack.injection
+    :members:
+    :undoc-members:
+    :exclude-members: extra_repr
+
+Backdoor Attacks
+------------------------------------------------
+.. currentmodule:: graphwar.attack.backdoor
+
+.. autosummary::
+    :toctree: _autosummary
+    :nosignatures:
+    {% for cls in graphwar.attack.backdoor.classes %}
+      {{ cls }}
+    {% endfor %}
+
+.. automodule:: graphwar.attack.backdoor
     :members:
     :undoc-members:
     :exclude-members: extra_repr

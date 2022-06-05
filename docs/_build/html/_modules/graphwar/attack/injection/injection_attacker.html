@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>graphwar.attack.injection.injection_attacker &mdash; graphwar 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> graphwar
+            <img src="../../../../_static/graphwar.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notes/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/dataset.html">graphwar.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/attack.html">graphwar.attack</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#injection-attacks">Injection Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">graphwar.defense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.html">graphwar.nn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#graphwar-nn-layers">graphwar.nn.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#graphwar-nn-models">graphwar.nn.models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/functional.html">graphwar.functional</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/training.html">graphwar.training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/utils.html">graphwar.utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">graphwar</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>graphwar.attack.injection.injection_attacker</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for graphwar.attack.injection.injection_attacker</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+
+<span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
+<span class="kn">from</span> <span class="nn">graphwar.attack.attacker</span> <span class="kn">import</span> <span class="n">Attacker</span>
+<span class="kn">from</span> <span class="nn">graphwar.utils</span> <span class="kn">import</span> <span class="n">add_edges</span><span class="p">,</span> <span class="n">BunchDict</span>
+
+
+<div class="viewcode-block" id="InjectionAttacker"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.InjectionAttacker">[docs]</a><span class="k">class</span> <span class="nc">InjectionAttacker</span><span class="p">(</span><span class="n">Attacker</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for Injection Attacker, an inherent attack should implement </span>
+<span class="sd">    the `attack` method.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; attacker = InjectionAttacker(data)</span>
+<span class="sd">    &gt;&gt;&gt; attacker.reset()</span>
+<span class="sd">    # inject 10 nodes, where each nodes has 2 edges</span>
+<span class="sd">    &gt;&gt;&gt; attacker.attack(num_budgets=10, num_edges_local=2) </span>
+<span class="sd">    # inject 10 nodes, with 100 edges in total</span>
+<span class="sd">    &gt;&gt;&gt; attacker.attack(num_budgets=10, num_edges_global=100) </span>
+<span class="sd">    # inject 10 nodes, where each nodes has 2 edges, </span>
+<span class="sd">    # the features of injected nodes lies in [0,1]</span>
+<span class="sd">    &gt;&gt;&gt; attacker.attack(num_budgets=10, num_edges_local=2, feat_limits=(0,1)) </span>
+<span class="sd">    &gt;&gt;&gt; attacker.attack(num_budgets=10, num_edges_local=2, feat_limits={&#39;min&#39;: 0, &#39;max&#39;:1}) </span>
+<span class="sd">    # inject 10 nodes, where each nodes has 2 edges, </span>
+<span class="sd">    # the features of injected each node has 10 nonzero elements</span>
+<span class="sd">    &gt;&gt;&gt; attacker.attack(num_budgets=10, num_edges_local=2, feat_budgets=10) </span>
+
+<span class="sd">    # get injected nodes</span>
+<span class="sd">    &gt;&gt;&gt; attacker.injected_nodes()</span>
+<span class="sd">    # get injected edges</span>
+<span class="sd">    &gt;&gt;&gt; attacker.injected_edges()</span>
+<span class="sd">    # get injected nodes&#39; features</span>
+<span class="sd">    &gt;&gt;&gt; attacker.injected_feats()</span>
+<span class="sd">    # get perturbed graph</span>
+<span class="sd">    &gt;&gt;&gt; attacker.data()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="InjectionAttacker.reset"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.InjectionAttacker.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;InjectionAttacker&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Reset the state of the Attacker</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        InjectionAttacker</span>
+<span class="sd">            the attacker itself</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_budgets</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feat_limits</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feat_budgets</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_edges_global</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_edges_local</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_injected_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_injected_edges</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_injected_feats</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cache_clear</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="InjectionAttacker.attack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.InjectionAttacker.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_budgets</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span>
+               <span class="n">targets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">num_edges_global</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">num_edges_local</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">feat_limits</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">feat_budgets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;InjectionAttacker&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Base method that describes the adversarial injection attack</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        num_budgets : Union[int, float]</span>
+<span class="sd">            the number/percentage of nodes allowed to inject</span>
+<span class="sd">        targets : Optional[Tensor], optional</span>
+<span class="sd">            the targeted nodes where injected nodes perturb,</span>
+<span class="sd">            if None, it will be all nodes in the graph, by default None</span>
+<span class="sd">        num_edges_global : Optional[int], optional</span>
+<span class="sd">            the number of total edges in the graph to be injected for </span>
+<span class="sd">            all injected nodes, by default None</span>
+<span class="sd">        num_edges_local : Optional[int], optional</span>
+<span class="sd">            the number of edges allowed to inject for each injected nodes, by default None</span>
+<span class="sd">        feat_limits : Optional[Union[tuple, dict]], optional</span>
+<span class="sd">            the limitation or allowed budgets of injected node features,</span>
+<span class="sd">            it can be a tuple, e.g., `(0, 1)` or </span>
+<span class="sd">            a dict, e.g., `{&#39;min&#39;:0, &#39;max&#39;: 1}`.</span>
+<span class="sd">            if None, it is set as (self.feat.min(), self.feat.max()), by default None</span>
+<span class="sd">        feat_budgets :  Optional[int], optional</span>
+<span class="sd">            the number of nonzero features can be injected for each node,</span>
+<span class="sd">            e.g., `10`, denoting 10 nonzero features can be injected, by default None</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        the attacker itself</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        * Both `num_edges_local` and `num_edges_global` cannot be used simultaneously.</span>
+<span class="sd">        * Both `feat_limits` and `feat_budgets` cannot be used simultaneously.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">_is_setup</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_is_setup&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_setup</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> requires a surrogate model to conduct attack. &#39;</span>
+                <span class="s1">&#39;Use `attacker.setup_surrogate(surrogate_model)`.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_reset</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s1">&#39;Before calling attack, you must reset your attacker. Use `attacker.reset()`.&#39;</span>
+            <span class="p">)</span>
+
+        <span class="n">num_budgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_budget</span><span class="p">(</span>
+            <span class="n">num_budgets</span><span class="p">,</span> <span class="n">max_perturbations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">targets</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">targets</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">target_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">BoolTensor</span><span class="p">):</span>
+                <span class="c1"># Boolean mask</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">targets</span> <span class="o">=</span> <span class="n">targets</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># node indices</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">targets</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span>
+                    <span class="n">targets</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">targets</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">num_edges_local</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">num_edges_global</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;Both `num_edges_local` and `num_edges_global` cannot be used simultaneously.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">num_edges_global</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">num_edges_local</span> <span class="o">=</span> <span class="n">num_edges_global</span> <span class="o">//</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">targets</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">num_edges_local</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Too few edges allowed (num_edges_global=</span><span class="si">{</span><span class="n">num_edges_global</span><span class="si">}</span><span class="s2">) for injected nodes (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">targets</span><span class="p">)</span><span class="si">}</span><span class="s2">). &quot;</span>
+                    <span class="s2">&quot;Maybe you could use the argument `num_edges_local` instead.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">num_edges_local</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">num_edges_local</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_degree</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_budgets</span> <span class="o">=</span> <span class="n">num_budgets</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_edges_global</span> <span class="o">=</span> <span class="n">num_edges_global</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_edges_local</span> <span class="o">=</span> <span class="n">num_edges_local</span>
+
+        <span class="c1"># ============== get feature limitation of injected node ==============</span>
+        <span class="n">min_limits</span> <span class="o">=</span> <span class="n">max_limits</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">feat_limits</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">feat_budgets</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="s2">&quot;Both `feat_limits` and `feat_budgets` cannot be used simultaneously.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">feat_limits</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feat_limits</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">min_limits</span><span class="p">,</span> <span class="n">max_limits</span> <span class="o">=</span> <span class="n">feat_limits</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feat_limits</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">min_limits</span> <span class="o">=</span> <span class="n">feat_limits</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">max_limits</span> <span class="o">=</span> <span class="n">feat_limits</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">feat_limits</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Unrecognized key </span><span class="si">{</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">feat_limits</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;`feat_limits` should be an instance of tuple and dict, but got </span><span class="si">{</span><span class="n">feat_limits</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+        <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat</span>
+        <span class="k">assert</span> <span class="n">feat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">min_limits</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">feat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">min_limits</span> <span class="o">=</span> <span class="n">feat</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">min_limits</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="k">if</span> <span class="n">max_limits</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">feat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">max_limits</span> <span class="o">=</span> <span class="n">feat</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">max_limits</span> <span class="o">=</span> <span class="mf">1.</span>
+
+        <span class="k">if</span> <span class="n">feat_budgets</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">feat_budgets</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_feats</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check_feature_matrix_binary</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">feat_budgets</span> <span class="o">=</span> <span class="n">feat_budgets</span>
+
+        <span class="c1"># TODO</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mu</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_limits</span> <span class="o">-</span> <span class="n">min_limits</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sigma</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_limits</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mu</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span>  <span class="c1"># 3-sigma rule</span>
+        <span class="c1"># ======================================================================</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">feat_limits</span> <span class="o">=</span> <span class="n">min_limits</span><span class="p">,</span> <span class="n">max_limits</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_reset</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="InjectionAttacker.injected_nodes"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.InjectionAttacker.injected_nodes">[docs]</a>    <span class="k">def</span> <span class="nf">injected_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Get all the nodes to be injected.&quot;&quot;&quot;</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_injected_nodes</span>
+        <span class="k">if</span> <span class="n">nodes</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">is_tensor</span><span class="p">(</span><span class="n">nodes</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">nodes</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">nodes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int64&quot;</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InjectionAttacker.added_nodes"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.InjectionAttacker.added_nodes">[docs]</a>    <span class="k">def</span> <span class="nf">added_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;alias of method `added_nodes`&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">injected_nodes</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="InjectionAttacker.injected_edges"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.InjectionAttacker.injected_edges">[docs]</a>    <span class="k">def</span> <span class="nf">injected_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Get all the edges to be injected.&quot;&quot;&quot;</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_injected_edges</span>
+        <span class="k">if</span> <span class="n">edges</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="n">torch</span><span class="o">.</span><span class="n">is_tensor</span><span class="p">(</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">edges</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">is_tensor</span><span class="p">(</span><span class="n">edges</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">edges</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">edges</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">edges</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int64&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InjectionAttacker.added_edges"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.InjectionAttacker.added_edges">[docs]</a>    <span class="k">def</span> <span class="nf">added_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;alias of method `injected_edges`&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">injected_edges</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="InjectionAttacker.edge_flips"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.InjectionAttacker.edge_flips">[docs]</a>    <span class="k">def</span> <span class="nf">edge_flips</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BunchDict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get all the edges to be flipped, including edges to be added and removed.&quot;&quot;&quot;</span>
+        <span class="n">added</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">injected_edges</span><span class="p">()</span>
+        <span class="n">removed</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">BunchDict</span><span class="p">(</span><span class="n">added</span><span class="o">=</span><span class="n">added</span><span class="p">,</span> <span class="n">removed</span><span class="o">=</span><span class="n">removed</span><span class="p">,</span> <span class="nb">all</span><span class="o">=</span><span class="n">added</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InjectionAttacker.injected_feats"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.InjectionAttacker.injected_feats">[docs]</a>    <span class="k">def</span> <span class="nf">injected_feats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Get the features injected nodes.&quot;&quot;&quot;</span>
+        <span class="n">feats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_injected_feats</span>
+        <span class="k">if</span> <span class="n">feats</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">feats</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="c1"># feats = list(self._injected_nodes.values())</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feats</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">feats</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">feats</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InjectionAttacker.added_feats"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.InjectionAttacker.added_feats">[docs]</a>    <span class="k">def</span> <span class="nf">added_feats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;alias of method `added_edges`&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">injected_feats</span><span class="p">()</span></div>
+
+    <span class="c1">################## Injection Operation ##############</span>
+<div class="viewcode-block" id="InjectionAttacker.inject_node"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.InjectionAttacker.inject_node">[docs]</a>    <span class="k">def</span> <span class="nf">inject_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_injected_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InjectionAttacker.inject_edge"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.InjectionAttacker.inject_edge">[docs]</a>    <span class="k">def</span> <span class="nf">inject_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Inject an edge to the graph.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        u : int</span>
+<span class="sd">            The source node of the edge.</span>
+<span class="sd">        v : int</span>
+<span class="sd">            The destination node of the edge.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_injected_edges</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="InjectionAttacker.inject_edges"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.InjectionAttacker.inject_edges">[docs]</a>    <span class="k">def</span> <span class="nf">inject_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edges</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">List</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Inject a set of edges to the graph.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        edges : Union[Tensor, List]</span>
+<span class="sd">            The newly injected.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_injected_edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InjectionAttacker.inject_feat"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.InjectionAttacker.inject_feat">[docs]</a>    <span class="k">def</span> <span class="nf">inject_feat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feat</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate  a feature vector to the graph for a newly </span>
+<span class="sd">        injected node.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        feat : Optional[Tensor], optional</span>
+<span class="sd">            the injected feature. If None, it would be randomly generated,</span>
+<span class="sd">             by default None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">feat</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat_budgets</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># For boolean features, we generate it</span>
+                <span class="c1"># randomly flip features along the feature dimension</span>
+                <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat</span><span class="o">.</span><span class="n">new_zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_feats</span><span class="p">)</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randperm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_feats</span><span class="p">)[:</span><span class="bp">self</span><span class="o">.</span><span class="n">feat_budgets</span><span class="p">]</span>
+                <span class="n">feat</span><span class="p">[:,</span> <span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># For continuos features, we generate it</span>
+                <span class="c1"># following uniform distribution</span>
+                <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat</span><span class="o">.</span><span class="n">new_empty</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">num_feats</span><span class="p">)</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">feat_limits</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat_budgets</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">feat</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat_budgets</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">feat</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">assert</span> <span class="n">feat</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat_limits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_injected_feats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feat</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InjectionAttacker.data"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.InjectionAttacker.data">[docs]</a>    <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;return the attacked graph</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        symmetric : bool</span>
+<span class="sd">            Determine whether the resulting graph is forcibly symmetric</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Data</span>
+<span class="sd">            the attacked graph represented as PyG-like data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ori_data</span><span class="p">)</span>
+        <span class="c1"># injected_nodes = self.injected_nodes()</span>
+        <span class="n">injected_edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">injected_edges</span><span class="p">()</span>
+        <span class="n">injected_feats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">injected_feats</span><span class="p">()</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">injected_feats</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span> <span class="o">=</span> <span class="n">add_edges</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">injected_edges</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="n">symmetric</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">data</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jintang Li.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

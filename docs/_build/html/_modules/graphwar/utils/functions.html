@@ -25,7 +25,7 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../../index.html" class="icon icon-home"> graphwar
-            <img src="../../../_static/graphwar.svg" class="logo" alt="Logo"/>
+            <img src="../../../_static/graphwar.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.1.0
@@ -47,11 +47,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/dataset.html">graphwar.dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#base-classes">Base Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#injection-attacks">Injection Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/defense.html">graphwar.defense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/nn.html">graphwar.nn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/nn.html#graphwar-nn-layers">graphwar.nn.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/nn.html#graphwar-nn-models">graphwar.nn.models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/functional.html">graphwar.functional</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/training.html">graphwar.training</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/utils.html">graphwar.utils</a></li>
 </ul>
 
@@ -230,12 +239,9 @@
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 
-<span class="sd">    .. code-block:: python</span>
-
-
-<span class="sd">    @wrapper</span>
-<span class="sd">    def func(hids=[16], acts=None):</span>
-<span class="sd">        print(locals())</span>
+<span class="sd">    &gt;&gt;&gt; @wrapper</span>
+<span class="sd">    &gt;&gt;&gt; def func(hids=[16], acts=None):</span>
+<span class="sd">    &gt;&gt;&gt;     print(locals())</span>
 
 <span class="sd">    &gt;&gt;&gt; func(100)</span>
 <span class="sd">    {&#39;hids&#39;: [100], &#39;acts&#39;: [None]}</span>
@@ -247,9 +253,9 @@
 <span class="sd">    {&#39;hids&#39;: [100, 64], &#39;acts&#39;: None}</span>
 
 
-<span class="sd">    @wrapper</span>
-<span class="sd">    def func(self, hids=[16], acts=None):</span>
-<span class="sd">        print(locals())    </span>
+<span class="sd">    &gt;&gt;&gt; @wrapper</span>
+<span class="sd">    &gt;&gt;&gt; def func(self, hids=[16], acts=None):</span>
+<span class="sd">    &gt;&gt;&gt; print(locals())    </span>
 
 <span class="sd">    &gt;&gt;&gt; func()</span>
 <span class="sd">    TypeError: The decorated function &#39;func&#39; missing required argument &#39;self&#39;.</span>
@@ -261,9 +267,9 @@
 <span class="sd">    {&#39;self&#39;: &#39;class_itself&#39;, &#39;hids&#39;: [], &#39;acts&#39;: []}</span>
 
 
-<span class="sd">    @wrapper</span>
-<span class="sd">    def func(self, hids=[16], acts=None, heads=8):</span>
-<span class="sd">        print(locals())    </span>
+<span class="sd">    &gt;&gt;&gt; @wrapper</span>
+<span class="sd">    &gt;&gt;&gt; def func(self, hids=[16], acts=None, heads=8):</span>
+<span class="sd">    &gt;&gt;&gt;     print(locals())    </span>
 
 <span class="sd">    &gt;&gt;&gt; func(&#39;class_itself&#39;, hids=[100, 200])</span>
 <span class="sd">    {&#39;self&#39;: &#39;class_itself&#39;, &#39;hids&#39;: [100, 200], &#39;acts&#39;: [None, None], &#39;heads&#39;: 8}</span>

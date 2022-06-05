@@ -16,3 +16,6 @@ from .soft_median_gcn import SoftMedianGCN
 from .simp_gcn import SimPGCN
 from .gnnguard import GNNGUARD
 from .sat import SAT
+
+classes = __all__ = ["GCN", "SGC", "SSGC", "GAT", "APPNP", "DAGNN", "JKNet", "TAGCN", "MedianGCN",
+                     "RobustGCN", "AirGNN", "ElasticGNN", "SoftMedianGCN", "SimPGCN", "GNNGUARD", "SAT"]

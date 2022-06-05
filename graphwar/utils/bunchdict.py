@@ -7,6 +7,9 @@ class BunchDict(OrderedDict):
     """Container object for datasets
     Dictionary-like object that exposes its keys as attributes
     and remembers insertion order.
+
+    Examples
+    --------
     >>> b = BunchDict(a=1, b=2)
     >>> b['b']
     2
@@ -36,7 +39,7 @@ class BunchDict(OrderedDict):
             raise AttributeError(key)
 
     def to_tensor(self, device: str = 'cpu', dtype=None) -> "BunchDict":
-        """Convert objects in BunchDict to torch.Tensor
+        """Convert objects in BunchDict to :class:`torch.Tensor`
 
         Parameters
         ----------

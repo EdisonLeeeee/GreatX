@@ -25,7 +25,7 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../../index.html" class="icon icon-home"> graphwar
-            <img src="../../../_static/graphwar.svg" class="logo" alt="Logo"/>
+            <img src="../../../_static/graphwar.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.1.0
@@ -47,11 +47,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/dataset.html">graphwar.dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#base-classes">Base Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#injection-attacks">Injection Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/defense.html">graphwar.defense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/nn.html">graphwar.nn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/nn.html#graphwar-nn-layers">graphwar.nn.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/nn.html#graphwar-nn-models">graphwar.nn.models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/functional.html">graphwar.functional</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/training.html">graphwar.training</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/utils.html">graphwar.utils</a></li>
 </ul>
 
@@ -155,14 +164,14 @@
     <span class="k">def</span> <span class="nf">processed_file_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s1">&#39;data.pt&#39;</span>
 
-<div class="viewcode-block" id="GraphWarDataset.download"><a class="viewcode-back" href="../../../modules/dataset.html#graphwar.dataset.GraphWarDataset.download">[docs]</a>    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">download_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_dir</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">download_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_dir</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GraphWarDataset.process"><a class="viewcode-back" href="../../../modules/dataset.html#graphwar.dataset.GraphWarDataset.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">load_npz</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre_transform</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">pre_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">data</span><span class="p">,</span> <span class="n">slices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collate</span><span class="p">([</span><span class="n">data</span><span class="p">])</span>
-        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="n">slices</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">processed_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="n">slices</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">processed_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;GraphWar-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span></div>

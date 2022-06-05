@@ -12,5 +12,5 @@ graphwar.dataset
 
 .. automodule:: graphwar.dataset
     :members:
-    :undoc-members:
     :show-inheritance:    
+    :exclude-members: download, process, processed_file_names, raw_file_names, num_classes, url

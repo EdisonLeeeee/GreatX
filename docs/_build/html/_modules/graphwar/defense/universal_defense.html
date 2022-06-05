@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>graphwar.defense.universal_defense &mdash; graphwar 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> graphwar
+            <img src="../../../_static/graphwar.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notes/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/dataset.html">graphwar.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#injection-attacks">Injection Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/defense.html">graphwar.defense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/nn.html">graphwar.nn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/nn.html#graphwar-nn-layers">graphwar.nn.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/nn.html#graphwar-nn-models">graphwar.nn.models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/functional.html">graphwar.functional</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/training.html">graphwar.training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/utils.html">graphwar.utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">graphwar</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>graphwar.defense.universal_defense</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for graphwar.defense.universal_defense</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="n">degree</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">from</span> <span class="nn">graphwar</span> <span class="kn">import</span> <span class="n">Surrogate</span>
+<span class="kn">from</span> <span class="nn">graphwar.nn.models</span> <span class="kn">import</span> <span class="n">SGC</span><span class="p">,</span> <span class="n">GCN</span>
+<span class="kn">from</span> <span class="nn">graphwar.utils</span> <span class="kn">import</span> <span class="n">remove_edges</span>
+
+
+<span class="k">class</span> <span class="nc">UniversalDefense</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_anchors</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">target_nodes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span>
+                <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;return the defended graph with defensive perturbation performed on.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : a graph represented as PyG-like data instance </span>
+<span class="sd">            the graph where the defensive perturbation performed on</span>
+<span class="sd">        target_nodes : Union[int, Tensor]</span>
+<span class="sd">            the target nodes where the defensive perturbation performed on            </span>
+<span class="sd">        k : int</span>
+<span class="sd">            the number of anchor nodes in the defensive perturbation, by default 50</span>
+<span class="sd">        symmetric : bool</span>
+<span class="sd">            Determine whether the resulting graph is forcibly symmetric,</span>
+<span class="sd">            by default True</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Data: PyG-like data</span>
+<span class="sd">            the defended graph with defensive perturbation performed on the target nodes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span> <span class="o">=</span> <span class="n">remove_edges</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">,</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">removed_edges</span><span class="p">(</span><span class="n">target_nodes</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span>
+                                       <span class="n">symmetric</span><span class="o">=</span><span class="n">symmetric</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">def</span> <span class="nf">removed_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_nodes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;return edges to remove with the defensive perturbation performed on </span>
+<span class="sd">        on the target nodes</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        target_nodes : Union[int, Tensor]</span>
+<span class="sd">            the target nodes where the defensive perturbation performed on</span>
+<span class="sd">        k : int</span>
+<span class="sd">            the number of anchor nodes in the defensive perturbation, by default 50</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tensor, shape [2, k]</span>
+<span class="sd">            the edges to remove with the defensive perturbation performed on </span>
+<span class="sd">            on the target nodes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">target_nodes</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anchors</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">col</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">anchors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;return the top-k anchor nodes</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        k : int, optional</span>
+<span class="sd">            the number of anchor nodes in the defensive perturbation, by default 50</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tensor</span>
+<span class="sd">            the top-k anchor nodes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_anchors</span><span class="p">[:</span><span class="n">k</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">patch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;return the universal patch of the defensive perturbation</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        k : int, optional</span>
+<span class="sd">            the number of anchor nodes in the defensive perturbation, by default 50</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tensor</span>
+<span class="sd">            the 0-1 (boolean) universal patch where 1 denotes the edges to be removed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_patch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">bool</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">_patch</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">anchors</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">_patch</span>
+
+
+<div class="viewcode-block" id="GUARD"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.GUARD">[docs]</a><span class="k">class</span> <span class="nc">GUARD</span><span class="p">(</span><span class="n">UniversalDefense</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Graph Universal Adversarial Defense (GUARD)</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; surrogate = GCN(dataset.num_features, dataset.num_classes, bias=False, acts=None)</span>
+<span class="sd">    &gt;&gt;&gt; surrogate_trainer = Trainer(surrogate, device=device)</span>
+<span class="sd">    &gt;&gt;&gt; ckp = ModelCheckpoint(&#39;guard.pth&#39;, monitor=&#39;val_acc&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; trainer.fit({&#39;data&#39;: data, &#39;mask&#39;: splits.train_nodes}, </span>
+<span class="sd">                {&#39;data&#39;: data, &#39;mask&#39;: splits.val_nodes}, callbacks=[ckp])</span>
+<span class="sd">    &gt;&gt;&gt; trainer.evaluate({&#39;data&#39;: data, &#39;mask&#39;: splits.test_nodes})</span>
+<span class="sd">    &gt;&gt;&gt; guard = GUARD(data, device=device)</span>
+<span class="sd">    &gt;&gt;&gt; guard.setup_surrogate(surrogate, data.y[splits.train_nodes])</span>
+<span class="sd">    &gt;&gt;&gt; target_node = 1</span>
+<span class="sd">    &gt;&gt;&gt; perturbed_data = ... # Other PyG-like Data</span>
+<span class="sd">    &gt;&gt;&gt; guard(perturbed_data, target_node, k=50)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deg</span> <span class="o">=</span> <span class="n">degree</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                          <span class="n">num_nodes</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GUARD.setup_surrogate"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.GUARD.setup_surrogate">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">setup_surrogate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surrogate</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+                        <span class="n">victim_labels</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;GUARD&quot;</span><span class="p">:</span>
+
+        <span class="n">Surrogate</span><span class="o">.</span><span class="n">setup_surrogate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surrogate</span><span class="o">=</span><span class="n">surrogate</span><span class="p">,</span>
+                                  <span class="n">freeze</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="p">(</span><span class="n">SGC</span><span class="p">,</span> <span class="n">GCN</span><span class="p">))</span>
+        <span class="n">W</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">para</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">para</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">W</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">W</span> <span class="o">=</span> <span class="n">para</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">W</span> <span class="o">=</span> <span class="n">W</span> <span class="o">@</span> <span class="n">para</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+
+        <span class="n">W</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">@</span> <span class="n">W</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deg</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">victim_labels</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">w_max</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">loader</span><span class="p">:</span>
+            <span class="n">I</span> <span class="o">+=</span> <span class="n">W</span><span class="p">[:,</span> <span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="p">(</span><span class="n">w_max</span> <span class="o">-</span> <span class="n">I</span> <span class="o">/</span> <span class="n">victim_labels</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">/</span> \
+            <span class="n">d</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>  <span class="c1"># node importance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_anchors</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">descending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+
+
+<div class="viewcode-block" id="DegreeGUARD"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.DegreeGUARD">[docs]</a><span class="k">class</span> <span class="nc">DegreeGUARD</span><span class="p">(</span><span class="n">UniversalDefense</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Graph Universal Defense based on node degrees</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; data = ... # PyG-like Data</span>
+<span class="sd">    &gt;&gt;&gt; guard = DegreeGUARD(data))</span>
+<span class="sd">    &gt;&gt;&gt; target_node = 1</span>
+<span class="sd">    &gt;&gt;&gt; perturbed_data = ... # Other PyG-like Data</span>
+<span class="sd">    &gt;&gt;&gt; guard(perturbed_data, target_node, k=50)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">descending</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">deg</span> <span class="o">=</span> <span class="n">degree</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                     <span class="n">num_nodes</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_anchors</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">deg</span><span class="p">,</span> <span class="n">descending</span><span class="o">=</span><span class="n">descending</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RandomGUARD"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.RandomGUARD">[docs]</a><span class="k">class</span> <span class="nc">RandomGUARD</span><span class="p">(</span><span class="n">UniversalDefense</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Graph Universal Defense based on random choice</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; data = ... # PyG-like Data</span>
+<span class="sd">    &gt;&gt;&gt; guard = RandomGUARD(data)</span>
+<span class="sd">    &gt;&gt;&gt; target_node = 1</span>
+<span class="sd">    &gt;&gt;&gt; perturbed_data = ... # Other PyG-like Data</span>
+<span class="sd">    &gt;&gt;&gt; guard(perturbed_data, target_node, k=50)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_anchors</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randperm</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jintang Li.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

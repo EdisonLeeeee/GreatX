@@ -240,7 +240,7 @@ class FlipAttacker(Attacker):
         """Check if the edge is an sigleton edge that, if removed,
         would result in a sigleton node in the graph.
 
-        Notes:
+        Note:
             Please make sure the edge is the one being removed.
 
         Parameters

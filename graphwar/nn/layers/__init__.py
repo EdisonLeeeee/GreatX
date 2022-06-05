@@ -13,3 +13,8 @@ from .adaptive_conv import AdaptiveConv
 from .elastic_conv import ElasticConv
 from .soft_median_conv import SoftMedianConv
 from .sat_conv import SATConv
+
+classes = __all__ = ["activations", "Sequential", "GCNConv", "SGConv",
+                     "SSGConv", "DAGNNConv", "TAGConv",
+                     "MedianConv", "RobustConv", "DropEdge", "DropPath",
+                     "AdaptiveConv", "ElasticConv", "SoftMedianConv", "SATConv"]

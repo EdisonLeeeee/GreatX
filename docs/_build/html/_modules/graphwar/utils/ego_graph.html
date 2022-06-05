@@ -25,7 +25,7 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../../../index.html" class="icon icon-home"> graphwar
-            <img src="../../../_static/graphwar.svg" class="logo" alt="Logo"/>
+            <img src="../../../_static/graphwar.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.1.0
@@ -47,11 +47,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/dataset.html">graphwar.dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#base-classes">Base Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#injection-attacks">Injection Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/defense.html">graphwar.defense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/nn.html">graphwar.nn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/nn.html#graphwar-nn-layers">graphwar.nn.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/nn.html#graphwar-nn-models">graphwar.nn.models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/functional.html">graphwar.functional</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/training.html">graphwar.training</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/utils.html">graphwar.utils</a></li>
 </ul>
 
@@ -116,8 +125,8 @@
 <span class="sd">        nodes: shape [N], the nodes of the subgraph</span>
 <span class="sd">        edges: shape [2, M], the edges of the subgraph</span>
 
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
 <span class="sd">    This is a faster implementation of </span>
 <span class="sd">    `networkx.ego_graph` based on scipy sparse matrix and numba</span>
 
@@ -125,7 +134,7 @@
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
 <span class="sd">    networkx.ego_graph</span>
-<span class="sd">    k_hop_subgraph</span>
+<span class="sd">    torch_geometric.utils.k_hop_subgraph</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">sp</span><span class="o">.</span><span class="n">issparse</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">)</span>

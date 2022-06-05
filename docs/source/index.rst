@@ -21,6 +21,10 @@ Package API
    
    modules/dataset
    modules/attack
+   modules/defense
+   modules/nn
+   modules/functional
+   modules/training
    modules/utils
    
 

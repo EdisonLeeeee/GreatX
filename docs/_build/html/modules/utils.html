@@ -18,7 +18,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="graphwar.attack" href="attack.html" /> 
+    <link rel="prev" title="graphwar.training" href="training.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -27,7 +27,7 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="../index.html" class="icon icon-home"> graphwar
-            <img src="../_static/graphwar.svg" class="logo" alt="Logo"/>
+            <img src="../_static/graphwar.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.1.0
@@ -49,11 +49,20 @@
 <li class="toctree-l1"><a class="reference internal" href="dataset.html">graphwar.dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attack.html">graphwar.attack</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="attack.html#base-classes">Base Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="attack.html#targeted-attacks">Targeted Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="attack.html#untargeted-attacks">Untargeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="attack.html#injection-attacks">Injection Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="defense.html">graphwar.defense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nn.html">graphwar.nn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nn.html#graphwar-nn-layers">graphwar.nn.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nn.html#graphwar-nn-models">graphwar.nn.models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="functional.html">graphwar.functional</a></li>
+<li class="toctree-l1"><a class="reference internal" href="training.html">graphwar.training</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">graphwar.utils</a></li>
 </ul>
 
@@ -134,16 +143,19 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.remove_edges" title="graphwar.utils.remove_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edges</span></code></a></p></td>
 <td><p>remove edges from the graph <cite>edge_index</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.overlap" title="graphwar.utils.overlap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">overlap</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.scipy_normalize" title="graphwar.utils.scipy_normalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy_normalize</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.overlap" title="graphwar.utils.overlap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">overlap</span></code></a></p></td>
 <td><p>Compute graph overlapping according to Node Similarity Preserving Graph Convolutional Networks</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.CKA" title="graphwar.utils.CKA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CKA</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.CKA" title="graphwar.utils.CKA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CKA</span></code></a></p></td>
 <td><p>Centered Kernel Alignment (CKA) metric, where the features of the networks are compared.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.normalize" title="graphwar.utils.normalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.normalize" title="graphwar.utils.normalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize</span></code></a></p></td>
 <td><p>Feature normalization function.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.ego_graph" title="graphwar.utils.ego_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ego_graph</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.ego_graph" title="graphwar.utils.ego_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ego_graph</span></code></a></p></td>
 <td><p>Returns induced subgraph of neighbors centered at node n within a given radius.</p></td>
 </tr>
 </tbody>
@@ -208,18 +220,38 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BunchDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/utils/bunchdict.html#BunchDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.BunchDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Container object for datasets
 Dictionary-like object that exposes its keys as attributes
-and remembers insertion order.
-&gt;&gt;&gt; b = BunchDict(a=1, b=2)
-&gt;&gt;&gt; b[‘b’]
-2
-&gt;&gt;&gt; b.b
-2
-&gt;&gt;&gt; b.a = 3
-&gt;&gt;&gt; b[‘a’]
-3
-&gt;&gt;&gt; b.c = 6
-&gt;&gt;&gt; b[‘c’]
-6</p>
+and remembers insertion order.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">BunchDict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">b</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">]</span>
+<span class="go">6</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="graphwar.utils.BunchDict.to_tensor">
+<span class="sig-name descname"><span class="pre">to_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#graphwar.utils.BunchDict" title="graphwar.utils.bunchdict.BunchDict"><span class="pre">graphwar.utils.bunchdict.BunchDict</span></a></span></span><a class="reference internal" href="../_modules/graphwar/utils/bunchdict.html#BunchDict.to_tensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.BunchDict.to_tensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert objects in BunchDict to <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.Tensor</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – device of the converted tensors, by default ‘cpu’</p></li>
+<li><p><strong>dtype</strong> (<em>_type_</em><em>, </em><em>optional</em>) – data types of the converted tensors, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>the converted BunchDict</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -286,14 +318,11 @@ the same as <cite>length_as</cite>, by default, it is <cite>hids</cite>.</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@wrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span> <span class="n">acts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
 </pre></div>
 </div>
-<p>&#64;wrapper
-def func(hids=[16], acts=None):</p>
-<blockquote>
-<div><p>print(locals())</p>
-</div></blockquote>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">func</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 <span class="go">{&#39;hids&#39;: [100], &#39;acts&#39;: [None]}</span>
 </pre></div>
@@ -306,11 +335,11 @@ def func(hids=[16], acts=None):</p>
 <span class="go">{&#39;hids&#39;: [100, 64], &#39;acts&#39;: None}</span>
 </pre></div>
 </div>
-<p>&#64;wrapper
-def func(self, hids=[16], acts=None):</p>
-<blockquote>
-<div><p>print(locals())</p>
-</div></blockquote>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@wrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span> <span class="n">acts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+</pre></div>
+</div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">func</span><span class="p">()</span>
 <span class="go">TypeError: The decorated function &#39;func&#39; missing required argument &#39;self&#39;.</span>
 </pre></div>
@@ -323,11 +352,11 @@ def func(self, hids=[16], acts=None):</p>
 <span class="go">{&#39;self&#39;: &#39;class_itself&#39;, &#39;hids&#39;: [], &#39;acts&#39;: []}</span>
 </pre></div>
 </div>
-<p>&#64;wrapper
-def func(self, hids=[16], acts=None, heads=8):</p>
-<blockquote>
-<div><p>print(locals())</p>
-</div></blockquote>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@wrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span> <span class="n">acts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">heads</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+</pre></div>
+</div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">func</span><span class="p">(</span><span class="s1">&#39;class_itself&#39;</span><span class="p">,</span> <span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span>
 <span class="go">{&#39;self&#39;: &#39;class_itself&#39;, &#39;hids&#39;: [100, 200], &#39;acts&#39;: [None, None], &#39;heads&#39;: 8}</span>
 </pre></div>
@@ -658,6 +687,11 @@ it would remove the edges from the graph by:
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="graphwar.utils.scipy_normalize">
+<span class="sig-name descname"><span class="pre">scipy_normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adj_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">scipy.sparse.csr.csr_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_self_loops</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/utils/scipy_sparse.html#scipy_normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.scipy_normalize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="graphwar.utils.overlap">
 <span class="sig-name descname"><span class="pre">overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge_index1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'edge'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../_modules/graphwar/utils/overlap.html#overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.overlap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute graph overlapping according to
@@ -763,12 +797,14 @@ edges: shape [2, M], the edges of the subgraph</p>
 <dd class="field-odd"><p>NamedTuple(nodes, edges)</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>This is a faster implementation of
 <cite>networkx.ego_graph</cite> based on scipy sparse matrix and numba</p>
+</div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">networkx.ego_graph</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">k_hop_subgraph</span></code></p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">networkx.ego_graph</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch_geometric.utils.k_hop_subgraph</span></code></p>
 </div>
 </dd></dl>
 
@@ -778,7 +814,7 @@ edges: shape [2, M], the edges of the subgraph</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="attack.html" class="btn btn-neutral float-left" title="graphwar.attack" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="training.html" class="btn btn-neutral float-left" title="graphwar.training" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

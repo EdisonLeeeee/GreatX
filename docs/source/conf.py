@@ -43,7 +43,7 @@ html_theme_options = {
     'navigation_depth': 4,
 }
 
-html_logo = '../../imgs/graphwar.svg'
+html_logo = '../../imgs/graphwar.png'
 html_static_path = ['_static']
 # html_context = {'css_files': ['_static/css/custom.css']}
 rst_context = {'graphwar': graphwar}

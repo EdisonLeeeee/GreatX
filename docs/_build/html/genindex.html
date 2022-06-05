@@ -25,7 +25,7 @@
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
             <a href="index.html" class="icon icon-home"> graphwar
-            <img src="_static/graphwar.svg" class="logo" alt="Logo"/>
+            <img src="_static/graphwar.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.1.0
@@ -47,11 +47,20 @@
 <li class="toctree-l1"><a class="reference internal" href="modules/dataset.html">graphwar.dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/attack.html">graphwar.attack</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="modules/attack.html#base-classes">Base Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/attack.html#injection-attacks">Injection Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="modules/defense.html">graphwar.defense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/nn.html">graphwar.nn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules/nn.html#graphwar-nn-layers">graphwar.nn.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/nn.html#graphwar-nn-models">graphwar.nn.models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules/functional.html">graphwar.functional</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/training.html">graphwar.training</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/utils.html">graphwar.utils</a></li>
 </ul>
 
@@ -90,6 +99,7 @@
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
@@ -105,6 +115,8 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/nn.html#graphwar.nn.layers.AdaptiveConv">AdaptiveConv (class in graphwar.nn.layers)</a>
+</li>
       <li><a href="modules/utils.html#graphwar.utils.Progbar.add">add() (Progbar method)</a>
 </li>
       <li><a href="modules/attack.html#graphwar.attack.FlipAttacker.add_edge">add_edge() (FlipAttacker method)</a>
@@ -114,12 +126,32 @@
       <li><a href="modules/attack.html#graphwar.attack.FlipAttacker.add_feat">add_feat() (FlipAttacker method)</a>
 </li>
       <li><a href="modules/attack.html#graphwar.attack.FlipAttacker.added_edges">added_edges() (FlipAttacker method)</a>
-</li>
-      <li><a href="modules/attack.html#graphwar.attack.FlipAttacker.added_feats">added_feats() (FlipAttacker method)</a>
-</li>
-      <li><a href="modules/attack.html#graphwar.attack.Attacker.attack">attack() (Attacker method)</a>
 
       <ul>
+        <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker.added_edges">(InjectionAttacker method)</a>
+</li>
+      </ul></li>
+      <li><a href="modules/attack.html#graphwar.attack.FlipAttacker.added_feats">added_feats() (FlipAttacker method)</a>
+
+      <ul>
+        <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker.added_feats">(InjectionAttacker method)</a>
+</li>
+      </ul></li>
+      <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker.added_nodes">added_nodes() (InjectionAttacker method)</a>
+</li>
+      <li><a href="modules/attack.html#graphwar.attack.injection.AdvInjection">AdvInjection (class in graphwar.attack.injection)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.models.AirGNN">AirGNN (class in graphwar.nn.models)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.AdaptiveConv.amp_forward">amp_forward() (AdaptiveConv method)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.models.APPNP">APPNP (class in graphwar.nn.models)</a>
+</li>
+      <li><a href="modules/attack.html#graphwar.attack.injection.AdvInjection.attack">attack() (AdvInjection method)</a>
+
+      <ul>
+        <li><a href="modules/attack.html#graphwar.attack.Attacker.attack">(Attacker method)</a>
+</li>
         <li><a href="modules/attack.html#graphwar.attack.backdoor.BackdoorAttacker.attack">(BackdoorAttacker method)</a>
 </li>
         <li><a href="modules/attack.html#graphwar.attack.targeted.FGAttack.attack">(FGAttack method)</a>, <a href="modules/attack.html#graphwar.attack.untargeted.FGAttack.attack">[1]</a>
@@ -129,6 +161,8 @@
         <li><a href="modules/attack.html#graphwar.attack.targeted.GFAttack.attack">(GFAttack method)</a>
 </li>
         <li><a href="modules/attack.html#graphwar.attack.targeted.IGAttack.attack">(IGAttack method)</a>, <a href="modules/attack.html#graphwar.attack.untargeted.IGAttack.attack">[1]</a>
+</li>
+        <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker.attack">(InjectionAttacker method)</a>
 </li>
         <li><a href="modules/attack.html#graphwar.attack.backdoor.LGCBackdoor.attack">(LGCBackdoor method)</a>
 </li>
@@ -141,6 +175,8 @@
         <li><a href="modules/attack.html#graphwar.attack.untargeted.PGDAttack.attack">(PGDAttack method)</a>
 </li>
         <li><a href="modules/attack.html#graphwar.attack.targeted.RandomAttack.attack">(RandomAttack method)</a>, <a href="modules/attack.html#graphwar.attack.untargeted.RandomAttack.attack">[1]</a>
+</li>
+        <li><a href="modules/attack.html#graphwar.attack.injection.RandomInjection.attack">(RandomInjection method)</a>
 </li>
         <li><a href="modules/attack.html#graphwar.attack.targeted.SGAttack.attack">(SGAttack method)</a>
 </li>
@@ -175,6 +211,30 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/nn.html#graphwar.nn.layers.ElasticConv.cache_clear">cache_clear() (ElasticConv method)</a>
+
+      <ul>
+        <li><a href="modules/nn.html#graphwar.nn.models.ElasticGNN.cache_clear">(ElasticGNN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.RobustGCN.cache_clear">(RobustGCN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SGC.cache_clear">(SGC method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.SGConv.cache_clear">(SGConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SimPGCN.cache_clear">(SimPGCN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.SoftMedianConv.cache_clear">(SoftMedianConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SoftMedianGCN.cache_clear">(SoftMedianGCN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SSGC.cache_clear">(SSGC method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.SSGConv.cache_clear">(SSGConv method)</a>
+</li>
+        <li><a href="modules/training.html#graphwar.training.Trainer.cache_clear">(Trainer method)</a>
+</li>
+      </ul></li>
       <li><a href="modules/utils.html#graphwar.utils.CKA">CKA (class in graphwar.utils)</a>
 </li>
       <li><a href="modules/attack.html#graphwar.attack.untargeted.Metattack.clip">clip() (Metattack method)</a>
@@ -189,11 +249,15 @@
 </li>
       <li><a href="modules/attack.html#graphwar.attack.targeted.Nettack.compute_cooccurrence_constraint">compute_cooccurrence_constraint() (Nettack method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/attack.html#graphwar.attack.targeted.IGAttack.compute_feature_gradients">compute_feature_gradients() (IGAttack method)</a>, <a href="modules/attack.html#graphwar.attack.untargeted.IGAttack.compute_feature_gradients">[1]</a>
 </li>
-      <li><a href="modules/attack.html#graphwar.attack.targeted.FGAttack.compute_gradients">compute_gradients() (FGAttack method)</a>, <a href="modules/attack.html#graphwar.attack.untargeted.FGAttack.compute_gradients">[1]</a>
+      <li><a href="modules/attack.html#graphwar.attack.injection.AdvInjection.compute_gradients">compute_gradients() (AdvInjection method)</a>
 
       <ul>
+        <li><a href="modules/attack.html#graphwar.attack.targeted.FGAttack.compute_gradients">(FGAttack method)</a>, <a href="modules/attack.html#graphwar.attack.untargeted.FGAttack.compute_gradients">[1]</a>
+</li>
         <li><a href="modules/attack.html#graphwar.attack.untargeted.Metattack.compute_gradients">(Metattack method)</a>
 </li>
         <li><a href="modules/attack.html#graphwar.attack.untargeted.PGDAttack.compute_gradients">(PGDAttack method)</a>
@@ -201,13 +265,13 @@
         <li><a href="modules/attack.html#graphwar.attack.targeted.SGAttack.compute_gradients">(SGAttack method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/utils.html#graphwar.utils.LikelihoodFilter.compute_log_likelihood">compute_log_likelihood() (LikelihoodFilter static method)</a>
 </li>
       <li><a href="modules/attack.html#graphwar.attack.targeted.Nettack.compute_logits">compute_logits() (Nettack method)</a>
 </li>
       <li><a href="modules/attack.html#graphwar.attack.untargeted.PGDAttack.compute_loss">compute_loss() (PGDAttack method)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.AdaptiveConv.compute_LX">compute_LX() (AdaptiveConv method)</a>
 </li>
       <li><a href="modules/attack.html#graphwar.attack.targeted.Nettack.compute_new_a_hat_uv">compute_new_a_hat_uv() (Nettack method)</a>
 </li>
@@ -217,12 +281,24 @@
 </li>
       <li><a href="modules/attack.html#graphwar.attack.untargeted.PGDAttack.config_C">config_C() (PGDAttack method)</a>
 </li>
+      <li><a href="modules/training.html#graphwar.training.Trainer.config_callbacks">config_callbacks() (Trainer method)</a>
+</li>
+      <li><a href="modules/training.html#graphwar.training.Trainer.config_optimizer">config_optimizer() (Trainer method)</a>
+</li>
+      <li><a href="modules/training.html#graphwar.training.Trainer.config_scheduler">config_scheduler() (Trainer method)</a>
+</li>
+      <li><a href="modules/defense.html#graphwar.defense.CosinePurification">CosinePurification (class in graphwar.defense)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/nn.html#graphwar.nn.models.DAGNN">DAGNN (class in graphwar.nn.models)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.DAGNNConv">DAGNNConv (class in graphwar.nn.layers)</a>
+</li>
       <li><a href="modules/attack.html#graphwar.attack.Attacker.data">data() (Attacker method)</a>
 
       <ul>
@@ -230,7 +306,11 @@
 </li>
         <li><a href="modules/attack.html#graphwar.attack.FlipAttacker.data">(FlipAttacker method)</a>
 </li>
+        <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker.data">(InjectionAttacker method)</a>
+</li>
       </ul></li>
+      <li><a href="modules/defense.html#graphwar.defense.DegreeGUARD">DegreeGUARD (class in graphwar.defense)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/attack.html#graphwar.attack.targeted.DICEAttack">DICEAttack (class in graphwar.attack.targeted)</a>
@@ -239,7 +319,15 @@
         <li><a href="modules/attack.html#graphwar.attack.untargeted.DICEAttack">(class in graphwar.attack.untargeted)</a>
 </li>
       </ul></li>
-      <li><a href="modules/dataset.html#graphwar.dataset.GraphWarDataset.download">download() (GraphWarDataset method)</a>
+      <li><a href="modules/functional.html#graphwar.functional.drop_edge">drop_edge() (in module graphwar.functional)</a>
+</li>
+      <li><a href="modules/functional.html#graphwar.functional.drop_node">drop_node() (in module graphwar.functional)</a>
+</li>
+      <li><a href="modules/functional.html#graphwar.functional.drop_path">drop_path() (in module graphwar.functional)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.DropEdge">DropEdge (class in graphwar.nn.layers)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.DropPath">DropPath (class in graphwar.nn.layers)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -248,17 +336,37 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/attack.html#graphwar.attack.FlipAttacker.edge_flips">edge_flips() (FlipAttacker method)</a>
+
+      <ul>
+        <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker.edge_flips">(InjectionAttacker method)</a>
 </li>
+      </ul></li>
       <li><a href="modules/attack.html#graphwar.attack.Attacker.edge_index">edge_index (Attacker property)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/attack.html#graphwar.attack.Attacker.edge_weight">edge_weight (Attacker property)</a>
 </li>
       <li><a href="modules/utils.html#graphwar.utils.ego_graph">ego_graph() (in module graphwar.utils)</a>
 </li>
+      <li><a href="modules/defense.html#graphwar.defense.EigenDecomposition">EigenDecomposition (class in graphwar.defense)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/nn.html#graphwar.nn.layers.ElasticConv">ElasticConv (class in graphwar.nn.layers)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.models.ElasticGNN">ElasticGNN (class in graphwar.nn.models)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.ElasticConv.emp_forward">emp_forward() (ElasticConv method)</a>
+</li>
+      <li><a href="modules/training.html#graphwar.training.Trainer.evaluate">evaluate() (Trainer method)</a>
+</li>
       <li><a href="modules/utils.html#graphwar.utils.CKA.export">export() (CKA method)</a>
 </li>
+      <li><a href="modules/defense.html#graphwar.defense.GNNGUARD.extra_repr">extra_repr() (GNNGUARD method)</a>
+
+      <ul>
+        <li><a href="modules/training.html#graphwar.training.Trainer.extra_repr">(Trainer method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -279,8 +387,6 @@
       </ul></li>
       <li><a href="modules/attack.html#graphwar.attack.targeted.Nettack.feature_scores">feature_scores() (Nettack method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/attack.html#graphwar.attack.targeted.FGAttack">FGAttack (class in graphwar.attack.targeted)</a>
 
       <ul>
@@ -291,18 +397,88 @@
 </li>
       <li><a href="modules/utils.html#graphwar.utils.LikelihoodFilter.filter_chisquare">filter_chisquare() (LikelihoodFilter static method)</a>
 </li>
+      <li><a href="modules/training.html#graphwar.training.Trainer.fit">fit() (Trainer method)</a>
+</li>
       <li><a href="modules/attack.html#graphwar.attack.FlipAttacker">FlipAttacker (class in graphwar.attack)</a>
 </li>
       <li><a href="modules/utils.html#graphwar.utils.Progbar.format_num">format_num() (Progbar static method)</a>
 </li>
-      <li><a href="modules/attack.html#graphwar.attack.untargeted.Metattack.forward">forward() (Metattack method)</a>
+      <li><a href="modules/nn.html#graphwar.nn.layers.AdaptiveConv.forward">forward() (AdaptiveConv method)</a>
+
+      <ul>
+        <li><a href="modules/nn.html#graphwar.nn.models.AirGNN.forward">(AirGNN method)</a>
 </li>
+        <li><a href="modules/nn.html#graphwar.nn.models.APPNP.forward">(APPNP method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.DAGNN.forward">(DAGNN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.DAGNNConv.forward">(DAGNNConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.DropEdge.forward">(DropEdge method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.DropPath.forward">(DropPath method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.ElasticConv.forward">(ElasticConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.ElasticGNN.forward">(ElasticGNN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.GAT.forward">(GAT method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.GCN.forward">(GCN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.GCNConv.forward">(GCNConv method)</a>
+</li>
+        <li><a href="modules/defense.html#graphwar.defense.GNNGUARD.forward">(GNNGUARD method)</a>, <a href="modules/nn.html#graphwar.nn.models.GNNGUARD.forward">[1]</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.JKNet.forward">(JKNet method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.MedianConv.forward">(MedianConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.MedianGCN.forward">(MedianGCN method)</a>
+</li>
+        <li><a href="modules/attack.html#graphwar.attack.untargeted.Metattack.forward">(Metattack method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.RobustConv.forward">(RobustConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.RobustGCN.forward">(RobustGCN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SAT.forward">(SAT method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.SATConv.forward">(SATConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.Sequential.forward">(Sequential method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SGC.forward">(SGC method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.SGConv.forward">(SGConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SimPGCN.forward">(SimPGCN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.SoftMedianConv.forward">(SoftMedianConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SoftMedianGCN.forward">(SoftMedianGCN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SSGC.forward">(SSGC method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.SSGConv.forward">(SSGConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.TAGCN.forward">(TAGCN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.TAGConv.forward">(TAGConv method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/nn.html#graphwar.nn.models.GAT">GAT (class in graphwar.nn.models)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.models.GCN">GCN (class in graphwar.nn.models)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.GCNConv">GCNConv (class in graphwar.nn.layers)</a>
+</li>
       <li><a href="modules/attack.html#graphwar.attack.targeted.DICEAttack.get_added_edge">get_added_edge() (DICEAttack method)</a>, <a href="modules/attack.html#graphwar.attack.untargeted.DICEAttack.get_added_edge">[1]</a>
 
       <ul>
@@ -343,16 +519,24 @@
         <li><a href="modules/attack.html#graphwar.attack.targeted.RandomAttack.get_removed_edge">(RandomAttack method)</a>, <a href="modules/attack.html#graphwar.attack.untargeted.RandomAttack.get_removed_edge">[1]</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/attack.html#graphwar.attack.targeted.SGAttack.get_subgraph">get_subgraph() (SGAttack method)</a>
 </li>
       <li><a href="modules/attack.html#graphwar.attack.targeted.SGAttack.get_top_attackers">get_top_attackers() (SGAttack method)</a>
 </li>
+      <li><a href="modules/training.html#graphwar.training.get_trainer">get_trainer() (in module graphwar.training)</a>
+</li>
       <li><a href="modules/attack.html#graphwar.attack.targeted.GFAttack">GFAttack (class in graphwar.attack.targeted)</a>
 </li>
+      <li><a href="modules/defense.html#graphwar.defense.GNNGUARD">GNNGUARD (class in graphwar.defense)</a>
+
+      <ul>
+        <li><a href="modules/nn.html#graphwar.nn.models.GNNGUARD">(class in graphwar.nn.models)</a>
+</li>
+      </ul></li>
       <li><a href="modules/attack.html#graphwar.attack.targeted.Nettack.gradient_wrt_x">gradient_wrt_x() (Nettack method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     graphwar.attack
 
@@ -365,6 +549,13 @@
 
       <ul>
         <li><a href="modules/attack.html#module-graphwar.attack.backdoor">module</a>
+</li>
+      </ul></li>
+      <li>
+    graphwar.attack.injection
+
+      <ul>
+        <li><a href="modules/attack.html#module-graphwar.attack.injection">module</a>
 </li>
       </ul></li>
       <li>
@@ -389,6 +580,41 @@
 </li>
       </ul></li>
       <li>
+    graphwar.defense
+
+      <ul>
+        <li><a href="modules/defense.html#module-graphwar.defense">module</a>
+</li>
+      </ul></li>
+      <li>
+    graphwar.functional
+
+      <ul>
+        <li><a href="modules/functional.html#module-graphwar.functional">module</a>
+</li>
+      </ul></li>
+      <li>
+    graphwar.nn.layers
+
+      <ul>
+        <li><a href="modules/nn.html#module-graphwar.nn.layers">module</a>
+</li>
+      </ul></li>
+      <li>
+    graphwar.nn.models
+
+      <ul>
+        <li><a href="modules/nn.html#module-graphwar.nn.models">module</a>
+</li>
+      </ul></li>
+      <li>
+    graphwar.training
+
+      <ul>
+        <li><a href="modules/training.html#module-graphwar.training">module</a>
+</li>
+      </ul></li>
+      <li>
     graphwar.utils
 
       <ul>
@@ -396,6 +622,8 @@
 </li>
       </ul></li>
       <li><a href="modules/dataset.html#graphwar.dataset.GraphWarDataset">GraphWarDataset (class in graphwar.dataset)</a>
+</li>
+      <li><a href="modules/defense.html#graphwar.defense.GUARD">GUARD (class in graphwar.defense)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -409,10 +637,26 @@
         <li><a href="modules/attack.html#graphwar.attack.untargeted.IGAttack">(class in graphwar.attack.untargeted)</a>
 </li>
       </ul></li>
-      <li><a href="modules/attack.html#graphwar.attack.untargeted.Metattack.inner_train">inner_train() (Metattack method)</a>
+      <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker.inject_edge">inject_edge() (InjectionAttacker method)</a>
+</li>
+      <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker.inject_edges">inject_edges() (InjectionAttacker method)</a>
+</li>
+      <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker.inject_feat">inject_feat() (InjectionAttacker method)</a>
+</li>
+      <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker.inject_node">inject_node() (InjectionAttacker method)</a>
+</li>
+      <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker.injected_edges">injected_edges() (InjectionAttacker method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker.injected_feats">injected_feats() (InjectionAttacker method)</a>
+</li>
+      <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker.injected_nodes">injected_nodes() (InjectionAttacker method)</a>
+</li>
+      <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker">InjectionAttacker (class in graphwar.attack.injection)</a>
+</li>
+      <li><a href="modules/attack.html#graphwar.attack.untargeted.Metattack.inner_train">inner_train() (Metattack method)</a>
+</li>
       <li><a href="modules/attack.html#graphwar.attack.FlipAttacker.is_legal_edge">is_legal_edge() (FlipAttacker method)</a>
 
       <ul>
@@ -424,13 +668,29 @@
   </ul></td>
 </tr></table>
 
-<h2 id="L">L</h2>
+<h2 id="J">J</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="modules/attack.html#graphwar.attack.Attacker.label">label (Attacker property)</a>
+      <li><a href="modules/defense.html#graphwar.defense.JaccardPurification">JaccardPurification (class in graphwar.defense)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/nn.html#graphwar.nn.models.JKNet">JKNet (class in graphwar.nn.models)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/nn.html#graphwar.nn.layers.ElasticConv.L1_projection">L1_projection() (ElasticConv method)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.ElasticConv.L21_projection">L21_projection() (ElasticConv method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/attack.html#graphwar.attack.Attacker.label">label (Attacker property)</a>
+</li>
       <li><a href="modules/attack.html#graphwar.attack.backdoor.LGCBackdoor">LGCBackdoor (class in graphwar.attack.backdoor)</a>
 </li>
       <li><a href="modules/utils.html#graphwar.utils.LikelihoodFilter">LikelihoodFilter (class in graphwar.utils)</a>
@@ -443,9 +703,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/attack.html#graphwar.attack.Attacker.max_perturbations">max_perturbations (Attacker property)</a>
 </li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.MedianConv">MedianConv (class in graphwar.nn.layers)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.models.MedianGCN">MedianGCN (class in graphwar.nn.models)</a>
+</li>
       <li><a href="modules/attack.html#graphwar.attack.untargeted.Metattack">Metattack (class in graphwar.attack.untargeted)</a>
 </li>
       <li><a href="modules/attack.html#graphwar.attack.untargeted.MinmaxAttack">MinmaxAttack (class in graphwar.attack.untargeted)</a>
+</li>
+      <li><a href="modules/training.html#graphwar.training.Trainer.model">model (Trainer property)</a>
 </li>
       <li>
     module
@@ -455,11 +721,23 @@
 </li>
         <li><a href="modules/attack.html#module-graphwar.attack.backdoor">graphwar.attack.backdoor</a>
 </li>
+        <li><a href="modules/attack.html#module-graphwar.attack.injection">graphwar.attack.injection</a>
+</li>
         <li><a href="modules/attack.html#module-graphwar.attack.targeted">graphwar.attack.targeted</a>
 </li>
         <li><a href="modules/attack.html#module-graphwar.attack.untargeted">graphwar.attack.untargeted</a>
 </li>
         <li><a href="modules/dataset.html#module-graphwar.dataset">graphwar.dataset</a>
+</li>
+        <li><a href="modules/defense.html#module-graphwar.defense">graphwar.defense</a>
+</li>
+        <li><a href="modules/functional.html#module-graphwar.functional">graphwar.functional</a>
+</li>
+        <li><a href="modules/nn.html#module-graphwar.nn.layers">graphwar.nn.layers</a>
+</li>
+        <li><a href="modules/nn.html#module-graphwar.nn.models">graphwar.nn.models</a>
+</li>
+        <li><a href="modules/training.html#module-graphwar.training">graphwar.training</a>
 </li>
         <li><a href="modules/utils.html#module-graphwar.utils">graphwar.utils</a>
 </li>
@@ -494,17 +772,17 @@
 </li>
       <li><a href="modules/utils.html#graphwar.utils.CKA.plot_results">plot_results() (CKA method)</a>
 </li>
-      <li><a href="modules/dataset.html#graphwar.dataset.GraphWarDataset.process">process() (GraphWarDataset method)</a>
+      <li><a href="modules/training.html#graphwar.training.Trainer.predict">predict() (Trainer method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="modules/dataset.html#graphwar.dataset.GraphWarDataset.processed_dir">processed_dir (GraphWarDataset property)</a>
-</li>
-      <li><a href="modules/dataset.html#graphwar.dataset.GraphWarDataset.processed_file_names">processed_file_names (GraphWarDataset property)</a>
+      <li><a href="modules/training.html#graphwar.training.Trainer.predict_step">predict_step() (Trainer method)</a>
 </li>
       <li><a href="modules/utils.html#graphwar.utils.Progbar">Progbar (class in graphwar.utils)</a>
 </li>
       <li><a href="modules/attack.html#graphwar.attack.untargeted.PGDAttack.projection">projection() (PGDAttack method)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.AdaptiveConv.proximal_L21">proximal_L21() (AdaptiveConv method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -518,9 +796,11 @@
         <li><a href="modules/attack.html#graphwar.attack.untargeted.RandomAttack">(class in graphwar.attack.untargeted)</a>
 </li>
       </ul></li>
-      <li><a href="modules/dataset.html#graphwar.dataset.GraphWarDataset.raw_dir">raw_dir (GraphWarDataset property)</a>
+      <li><a href="modules/defense.html#graphwar.defense.RandomGUARD">RandomGUARD (class in graphwar.defense)</a>
 </li>
-      <li><a href="modules/dataset.html#graphwar.dataset.GraphWarDataset.raw_file_names">raw_file_names (GraphWarDataset property)</a>
+      <li><a href="modules/attack.html#graphwar.attack.injection.RandomInjection">RandomInjection (class in graphwar.attack.injection)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.models.SimPGCN.regression_loss">regression_loss() (SimPGCN method)</a>
 </li>
       <li><a href="modules/attack.html#graphwar.attack.FlipAttacker.remove_edge">remove_edge() (FlipAttacker method)</a>
 </li>
@@ -534,8 +814,6 @@
 </li>
       <li><a href="modules/utils.html#graphwar.utils.repeat">repeat() (in module graphwar.utils)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/attack.html#graphwar.attack.Attacker.reset">reset() (Attacker method)</a>
 
       <ul>
@@ -544,6 +822,8 @@
         <li><a href="modules/attack.html#graphwar.attack.targeted.FGAttack.reset">(FGAttack method)</a>, <a href="modules/attack.html#graphwar.attack.untargeted.FGAttack.reset">[1]</a>
 </li>
         <li><a href="modules/attack.html#graphwar.attack.FlipAttacker.reset">(FlipAttacker method)</a>
+</li>
+        <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker.reset">(InjectionAttacker method)</a>
 </li>
         <li><a href="modules/attack.html#graphwar.attack.untargeted.Metattack.reset">(Metattack method)</a>
 </li>
@@ -558,7 +838,73 @@
         <li><a href="modules/attack.html#graphwar.attack.untargeted.UntargetedAttacker.reset">(UntargetedAttacker method)</a>
 </li>
       </ul></li>
-      <li><a href="modules/attack.html#graphwar.attack.untargeted.Metattack.reset_parameters">reset_parameters() (Metattack method)</a>
+      <li><a href="modules/nn.html#graphwar.nn.layers.AdaptiveConv.reset_parameters">reset_parameters() (AdaptiveConv method)</a>
+
+      <ul>
+        <li><a href="modules/nn.html#graphwar.nn.models.AirGNN.reset_parameters">(AirGNN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.APPNP.reset_parameters">(APPNP method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.DAGNN.reset_parameters">(DAGNN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.DAGNNConv.reset_parameters">(DAGNNConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.ElasticConv.reset_parameters">(ElasticConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.ElasticGNN.reset_parameters">(ElasticGNN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.GAT.reset_parameters">(GAT method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.GCN.reset_parameters">(GCN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.GCNConv.reset_parameters">(GCNConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.GNNGUARD.reset_parameters">(GNNGUARD method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.JKNet.reset_parameters">(JKNet method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.MedianConv.reset_parameters">(MedianConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.MedianGCN.reset_parameters">(MedianGCN method)</a>
+</li>
+        <li><a href="modules/attack.html#graphwar.attack.untargeted.Metattack.reset_parameters">(Metattack method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.RobustConv.reset_parameters">(RobustConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.RobustGCN.reset_parameters">(RobustGCN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SAT.reset_parameters">(SAT method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.SATConv.reset_parameters">(SATConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.Sequential.reset_parameters">(Sequential method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SGC.reset_parameters">(SGC method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.SGConv.reset_parameters">(SGConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SimPGCN.reset_parameters">(SimPGCN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.SoftMedianConv.reset_parameters">(SoftMedianConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SoftMedianGCN.reset_parameters">(SoftMedianGCN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SSGC.reset_parameters">(SSGC method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.SSGConv.reset_parameters">(SSGConv method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.TAGCN.reset_parameters">(TAGCN method)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.TAGConv.reset_parameters">(TAGConv method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/nn.html#graphwar.nn.layers.RobustConv">RobustConv (class in graphwar.nn.layers)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.models.RobustGCN">RobustGCN (class in graphwar.nn.models)</a>
+</li>
+      <li><a href="modules/training.html#graphwar.training.RobustGCNTrainer">RobustGCNTrainer (class in graphwar.training)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -566,6 +912,16 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/nn.html#graphwar.nn.models.SAT">SAT (class in graphwar.nn.models)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.SATConv">SATConv (class in graphwar.nn.layers)</a>
+</li>
+      <li><a href="modules/training.html#graphwar.training.SATTrainer">SATTrainer (class in graphwar.training)</a>
+</li>
+      <li><a href="modules/utils.html#graphwar.utils.scipy_normalize">scipy_normalize() (in module graphwar.utils)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.Sequential">Sequential (class in graphwar.nn.layers)</a>
+</li>
       <li><a href="modules/attack.html#graphwar.attack.FlipAttacker.set_allow_feature_attack">set_allow_feature_attack() (FlipAttacker method)</a>
 </li>
       <li><a href="modules/attack.html#graphwar.attack.FlipAttacker.set_allow_singleton">set_allow_singleton() (FlipAttacker method)</a>
@@ -583,6 +939,8 @@
       <ul>
         <li><a href="modules/attack.html#graphwar.attack.backdoor.FGBackdoor.setup_surrogate">(FGBackdoor method)</a>
 </li>
+        <li><a href="modules/defense.html#graphwar.defense.GUARD.setup_surrogate">(GUARD method)</a>
+</li>
         <li><a href="modules/attack.html#graphwar.attack.untargeted.IGAttack.setup_surrogate">(IGAttack method)</a>
 </li>
         <li><a href="modules/attack.html#graphwar.attack.backdoor.LGCBackdoor.setup_surrogate">(LGCBackdoor method)</a>
@@ -598,9 +956,17 @@
         <li><a href="modules/attack.html#graphwar.attack.targeted.SGAttack.setup_surrogate">(SGAttack method)</a>
 </li>
       </ul></li>
+      <li><a href="modules/attack.html#graphwar.attack.targeted.SGAttack">SGAttack (class in graphwar.attack.targeted)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="modules/attack.html#graphwar.attack.targeted.SGAttack">SGAttack (class in graphwar.attack.targeted)</a>
+      <li><a href="modules/nn.html#graphwar.nn.models.SGC">SGC (class in graphwar.nn.models)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.SGConv">SGConv (class in graphwar.nn.layers)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.models.SimPGCN">SimPGCN (class in graphwar.nn.models)</a>
+</li>
+      <li><a href="modules/training.html#graphwar.training.SimPGCNTrainer">SimPGCNTrainer (class in graphwar.training)</a>
 </li>
       <li><a href="modules/utils.html#graphwar.utils.singleton_filter">singleton_filter() (in module graphwar.utils)</a>
 </li>
@@ -608,9 +974,17 @@
 </li>
       <li><a href="modules/utils.html#graphwar.utils.SingletonFilter">SingletonFilter (class in graphwar.utils)</a>
 </li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.SoftMedianConv">SoftMedianConv (class in graphwar.nn.layers)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.models.SoftMedianGCN">SoftMedianGCN (class in graphwar.nn.models)</a>
+</li>
       <li><a href="modules/utils.html#graphwar.utils.split_nodes">split_nodes() (in module graphwar.utils)</a>
 </li>
       <li><a href="modules/utils.html#graphwar.utils.split_nodes_by_classes">split_nodes_by_classes() (in module graphwar.utils)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.models.SSGC">SSGC (class in graphwar.nn.models)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.SSGConv">SSGConv (class in graphwar.nn.layers)</a>
 </li>
       <li><a href="modules/attack.html#graphwar.attack.targeted.Nettack.strongest_wrong_class">strongest_wrong_class() (Nettack method)</a>
 
@@ -632,18 +1006,102 @@
       </ul></li>
       <li><a href="modules/attack.html#graphwar.attack.targeted.SGAttack.subgraph_processing">subgraph_processing() (SGAttack method)</a>
 </li>
+      <li><a href="modules/defense.html#graphwar.defense.SVDPurification">SVDPurification (class in graphwar.defense)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/nn.html#graphwar.nn.models.TAGCN">TAGCN (class in graphwar.nn.models)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.TAGConv">TAGConv (class in graphwar.nn.layers)</a>
+</li>
       <li><a href="modules/attack.html#graphwar.attack.targeted.TargetedAttacker">TargetedAttacker (class in graphwar.attack.targeted)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/training.html#graphwar.training.Trainer.test_step">test_step() (Trainer method)</a>
+</li>
+      <li><a href="modules/functional.html#graphwar.functional.to_dense_adj">to_dense_adj() (in module graphwar.functional)</a>
+</li>
+      <li><a href="modules/functional.html#graphwar.functional.to_sparse_tensor">to_sparse_tensor() (in module graphwar.functional)</a>
+</li>
+      <li><a href="modules/utils.html#graphwar.utils.BunchDict.to_tensor">to_tensor() (BunchDict method)</a>
+</li>
       <li><a href="modules/utils.html#graphwar.utils.topk">topk() (in module graphwar.utils)</a>
 </li>
+      <li><a href="modules/training.html#graphwar.training.RobustGCNTrainer.train_step">train_step() (RobustGCNTrainer method)</a>
+
+      <ul>
+        <li><a href="modules/training.html#graphwar.training.SATTrainer.train_step">(SATTrainer method)</a>
+</li>
+        <li><a href="modules/training.html#graphwar.training.SimPGCNTrainer.train_step">(SimPGCNTrainer method)</a>
+</li>
+        <li><a href="modules/training.html#graphwar.training.Trainer.train_step">(Trainer method)</a>
+</li>
+      </ul></li>
+      <li><a href="modules/training.html#graphwar.training.Trainer">Trainer (class in graphwar.training)</a>
+</li>
+      <li><a href="modules/nn.html#graphwar.nn.layers.AdaptiveConv.training">training (AdaptiveConv attribute)</a>
+
+      <ul>
+        <li><a href="modules/nn.html#graphwar.nn.models.AirGNN.training">(AirGNN attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.APPNP.training">(APPNP attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.DAGNN.training">(DAGNN attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.DAGNNConv.training">(DAGNNConv attribute)</a>
+</li>
+        <li><a href="modules/defense.html#graphwar.defense.DegreeGUARD.training">(DegreeGUARD attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.DropEdge.training">(DropEdge attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.DropPath.training">(DropPath attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.ElasticGNN.training">(ElasticGNN attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.GAT.training">(GAT attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.GCN.training">(GCN attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.GCNConv.training">(GCNConv attribute)</a>
+</li>
+        <li><a href="modules/defense.html#graphwar.defense.GNNGUARD.training">(GNNGUARD attribute)</a>, <a href="modules/nn.html#graphwar.nn.models.GNNGUARD.training">[1]</a>
+</li>
+        <li><a href="modules/defense.html#graphwar.defense.GUARD.training">(GUARD attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.JKNet.training">(JKNet attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.MedianConv.training">(MedianConv attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.MedianGCN.training">(MedianGCN attribute)</a>
+</li>
+        <li><a href="modules/defense.html#graphwar.defense.RandomGUARD.training">(RandomGUARD attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.RobustConv.training">(RobustConv attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.RobustGCN.training">(RobustGCN attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SAT.training">(SAT attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.SATConv.training">(SATConv attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SGC.training">(SGC attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SimPGCN.training">(SimPGCN attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SoftMedianGCN.training">(SoftMedianGCN attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.SSGC.training">(SSGC attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.models.TAGCN.training">(TAGCN attribute)</a>
+</li>
+        <li><a href="modules/nn.html#graphwar.nn.layers.TAGConv.training">(TAGConv attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/attack.html#graphwar.attack.backdoor.BackdoorAttacker.trigger">trigger() (BackdoorAttacker method)</a>
 </li>
   </ul></td>
@@ -665,8 +1123,6 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/utils.html#graphwar.utils.LikelihoodFilter.update_Sx">update_Sx() (LikelihoodFilter static method)</a>
-</li>
-      <li><a href="modules/dataset.html#graphwar.dataset.GraphWarDataset.url">url (GraphWarDataset attribute)</a>
 </li>
   </ul></td>
 </tr></table>

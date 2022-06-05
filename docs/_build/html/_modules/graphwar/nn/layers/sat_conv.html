@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>graphwar.nn.layers.sat_conv &mdash; graphwar 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> graphwar
+            <img src="../../../../_static/graphwar.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../notes/installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/dataset.html">graphwar.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/attack.html">graphwar.attack</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#base-classes">Base Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#injection-attacks">Injection Attacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">graphwar.defense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.html">graphwar.nn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#graphwar-nn-layers">graphwar.nn.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#graphwar-nn-models">graphwar.nn.models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/functional.html">graphwar.functional</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/training.html">graphwar.training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/utils.html">graphwar.utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">graphwar</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>graphwar.nn.layers.sat_conv</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for graphwar.nn.layers.sat_conv</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+
+<span class="kn">from</span> <span class="nn">torch_geometric.nn.dense.linear</span> <span class="kn">import</span> <span class="n">Linear</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.nn.conv.gcn_conv</span> <span class="kn">import</span> <span class="n">gcn_norm</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="n">add_self_loops</span>
+
+
+<span class="kn">from</span> <span class="nn">graphwar</span> <span class="kn">import</span> <span class="n">is_edge_index</span>
+<span class="kn">from</span> <span class="nn">graphwar.functional</span> <span class="kn">import</span> <span class="n">spmm</span>
+<span class="kn">from</span> <span class="nn">graphwar.nn.layers.gcn_conv</span> <span class="kn">import</span> <span class="n">dense_gcn_norm</span>
+
+
+<div class="viewcode-block" id="SATConv"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.SATConv">[docs]</a><span class="k">class</span> <span class="nc">SATConv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">add_self_loops</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">=</span> <span class="n">in_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span> <span class="o">=</span> <span class="n">out_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_self_loops</span> <span class="o">=</span> <span class="n">add_self_loops</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span> <span class="o">=</span> <span class="n">normalize</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lin</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">in_channels</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                          <span class="n">weight_initializer</span><span class="o">=</span><span class="s1">&#39;glorot&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">bias</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">out_channels</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">register_parameter</span><span class="p">(</span><span class="s1">&#39;bias&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SATConv.reset_parameters"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.SATConv.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lin</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SATConv.forward"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.SATConv.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">U</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">V</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># NOTE: torch_sparse.SparseTensor is not supported</span>
+        <span class="n">is_edge_like</span> <span class="o">=</span> <span class="n">is_edge_index</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_edge_like</span><span class="p">:</span>
+            <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">U</span><span class="p">,</span> <span class="n">V</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_self_loops</span><span class="p">:</span>
+                <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">add_self_loops</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> 
+                                                         <span class="n">num_nodes</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">:</span>
+                <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">gcn_norm</span><span class="p">(</span>  <span class="c1"># yapf: disable</span>
+                    <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="kc">False</span><span class="p">,</span>
+                    <span class="n">add_self_loops</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+            <span class="n">x</span> <span class="o">=</span> <span class="n">spmm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">V</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">adj</span> <span class="o">=</span> <span class="n">U</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">:</span>
+                <span class="n">adj</span> <span class="o">=</span> <span class="n">dense_gcn_norm</span><span class="p">(</span><span class="n">adj</span><span class="p">,</span> <span class="n">add_self_loops</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">add_self_loops</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">adj</span> <span class="o">@</span> <span class="n">x</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">U</span> <span class="o">*</span> <span class="n">V</span><span class="p">)</span> <span class="o">@</span> <span class="p">(</span><span class="n">U</span><span class="o">.</span><span class="n">t</span><span class="p">()</span> <span class="o">@</span> <span class="n">x</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span>
+        <span class="k">return</span> <span class="n">x</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="si">}</span><span class="s1">, &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span></div>
+
+
+<span class="c1"># class SATConv(nn.Module):</span>
+<span class="c1">#     def __init__(self, in_channels: int, out_channels: int,</span>
+<span class="c1">#                  K: int = 5,</span>
+<span class="c1">#                  alpha: float = 0.1,</span>
+<span class="c1">#                  add_self_loops: bool = True,</span>
+<span class="c1">#                  normalize: bool = True,</span>
+<span class="c1">#                  bias: bool = False):</span>
+<span class="c1">#         super().__init__()</span>
+
+<span class="c1">#         self.in_channels = in_channels</span>
+<span class="c1">#         self.out_channels = out_channels</span>
+<span class="c1">#         self.K = K</span>
+<span class="c1">#         self.alpha = alpha</span>
+<span class="c1">#         self.add_self_loops = add_self_loops</span>
+<span class="c1">#         self.normalize = normalize</span>
+
+<span class="c1">#         self.lin = Linear(in_channels, out_channels, bias=False,</span>
+<span class="c1">#                           weight_initializer=&#39;glorot&#39;)</span>
+<span class="c1">#         if bias:</span>
+<span class="c1">#             self.bias = nn.Parameter(torch.Tensor(out_channels))</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             self.register_parameter(&#39;bias&#39;, None)</span>
+<span class="c1">#         self.reset_parameters()</span>
+
+<span class="c1">#     def reset_parameters(self):</span>
+<span class="c1">#         self.lin.reset_parameters()</span>
+
+<span class="c1">#     def forward(self, x: Tensor, U: Tensor, V: Optional[Tensor] = None):</span>
+<span class="c1">#         is_edge_like = is_edge_index(U)</span>
+<span class="c1">#         x = self.lin(x)</span>
+
+<span class="c1">#         if is_edge_like:</span>
+<span class="c1">#             edge_index, edge_weight = U, V</span>
+<span class="c1">#             if self.normalize:</span>
+<span class="c1">#                 edge_index, edge_weight = gcn_norm(  # yapf: disable</span>
+<span class="c1">#                     edge_index, edge_weight, x.size(0), False,</span>
+<span class="c1">#                     self.add_self_loops, dtype=x.dtype)</span>
+
+<span class="c1">#             x_out = self.alpha*x</span>
+<span class="c1">#             for _ in range(self.K):</span>
+<span class="c1">#                 x = spmm(x, edge_index, edge_weight)</span>
+<span class="c1">#                 x_out = x_out + (1 - self.alpha)/self.K * x</span>
+<span class="c1">#         elif V is None:</span>
+<span class="c1">#             adj = U</span>
+<span class="c1">#             if self.normalize:</span>
+<span class="c1">#                 adj = dense_gcn_norm(adj, add_self_loops=self.add_self_loops)</span>
+<span class="c1">#             x_in = x</span>
+<span class="c1">#             x_out = torch.zeros_like(x)</span>
+<span class="c1">#             for _ in range(self.K):</span>
+<span class="c1">#                 x = adj @ x</span>
+<span class="c1">#                 x_out += (1 - self.alpha) * x</span>
+<span class="c1">#             x_out /= self.K</span>
+<span class="c1">#             x_out += self.alpha * x_in</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             V_out = 0.</span>
+<span class="c1">#             V_pow = 1.</span>
+<span class="c1">#             for _ in range(self.K):</span>
+<span class="c1">#                 V_pow = V_pow * V</span>
+<span class="c1">#                 V_out = V_out + (1 - self.alpha) / self.K * V_pow</span>
+<span class="c1">#             x_out = (U * V_out) @ (U.t() @ x) + self.alpha * x</span>
+
+<span class="c1">#         if self.bias is not None:</span>
+<span class="c1">#             x_out += self.bias</span>
+<span class="c1">#         return x_out</span>
+
+<span class="c1">#     def __repr__(self) -&gt; str:</span>
+<span class="c1">#         return (f&#39;{self.__class__.__name__}({self.in_channels}, &#39;</span>
+<span class="c1">#                 f&#39;{self.out_channels}, K={self.K}, alpha={self.alpha})&#39;)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Jintang Li.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

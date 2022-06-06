@@ -212,23 +212,27 @@ The subclass must override this method to implement specific attack for itself.<
 <dt class="sig sig-object py" id="graphwar.attack.FlipAttacker">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FlipAttacker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/flip_attacker.html#FlipAttacker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.FlipAttacker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adversarial attacker for graph data by flipping edge.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><cite>FlipAttacker</cite> is a base class for graph modification attacks (GMA).</p>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.FlipAttacker.reset">
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#graphwar.attack.FlipAttacker" title="graphwar.attack.flip_attacker.FlipAttacker"><span class="pre">graphwar.attack.flip_attacker.FlipAttacker</span></a></span></span><a class="reference internal" href="../_modules/graphwar/attack/flip_attacker.html#FlipAttacker.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.FlipAttacker.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reset attacker by recovering the flipped edges and features.</p>
+<dd><p>Reset attacker. This method must be called before attack.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.FlipAttacker.remove_edge">
 <span class="sig-name descname"><span class="pre">remove_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">it</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/flip_attacker.html#FlipAttacker.remove_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.FlipAttacker.remove_edge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove one edge from the graph.</p>
+<dd><p>Remove an edge from the graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>int</strong><strong>)</strong> (<em>v</em>) – </p></li>
-<li><p><strong>(</strong><strong>int</strong><strong>)</strong> – </p></li>
-<li><p><strong>(</strong><strong>Optional</strong><strong>[</strong><strong>int</strong><strong>]</strong> (<em>it</em>) – The iteration that indicates the order of the edge being removed. Default: <cite>None</cite>.</p></li>
-<li><p><strong>optional</strong><strong>)</strong> – The iteration that indicates the order of the edge being removed. Default: <cite>None</cite>.</p></li>
+<li><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The source node of the edge</p></li>
+<li><p><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The destination node of the edge</p></li>
+<li><p><strong>it</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – The iteration that indicates the order of
+the edge being removed, by default None</p></li>
 </ul>
 </dd>
 </dl>
@@ -241,10 +245,10 @@ The subclass must override this method to implement specific attack for itself.<
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>int</strong><strong>)</strong> (<em>v</em>) – </p></li>
-<li><p><strong>(</strong><strong>int</strong><strong>)</strong> – </p></li>
-<li><p><strong>(</strong><strong>Optional</strong><strong>[</strong><strong>int</strong><strong>]</strong> (<em>it</em>) – The iteration that indicates the order of the edge being added. Default: <cite>None</cite>.</p></li>
-<li><p><strong>optional</strong><strong>)</strong> – The iteration that indicates the order of the edge being added. Default: <cite>None</cite>.</p></li>
+<li><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The source node of the edge</p></li>
+<li><p><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The destination node of the edge</p></li>
+<li><p><strong>it</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – The iteration that indicates the order of
+the edge being added, by default None</p></li>
 </ul>
 </dd>
 </dl>
@@ -271,14 +275,15 @@ The subclass must override this method to implement specific attack for itself.<
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.FlipAttacker.remove_feat">
 <span class="sig-name descname"><span class="pre">remove_feat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">it</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/flip_attacker.html#FlipAttacker.remove_feat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.FlipAttacker.remove_feat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a dimension of the specific node to zero.</p>
+<dd><p>Remove the feature in a dimension <cite>v</cite> form a node <cite>u</cite>.
+That is, set a dimension of the specific node to zero.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>int</strong><strong>)</strong> (<em>v</em>) – </p></li>
-<li><p><strong>(</strong><strong>int</strong><strong>)</strong> – </p></li>
-<li><p><strong>(</strong><strong>Optional</strong><strong>[</strong><strong>int</strong><strong>]</strong> (<em>it</em>) – The iteration that indicates the order of the features being removed. Default: <cite>None</cite>.</p></li>
-<li><p><strong>optional</strong><strong>)</strong> – The iteration that indicates the order of the features being removed. Default: <cite>None</cite>.</p></li>
+<li><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – the node whose features are to be removed</p></li>
+<li><p><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – the dimension of the feature to be removed</p></li>
+<li><p><strong>it</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – The iteration that indicates the order
+of the features being removed, by default None</p></li>
 </ul>
 </dd>
 </dl>
@@ -287,14 +292,15 @@ The subclass must override this method to implement specific attack for itself.<
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.FlipAttacker.add_feat">
 <span class="sig-name descname"><span class="pre">add_feat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">it</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/flip_attacker.html#FlipAttacker.add_feat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.FlipAttacker.add_feat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a dimension of the specific node to one.</p>
+<dd><p>Remove the feature in a dimension <cite>v</cite> form a node <cite>u</cite>.
+That is, set a dimension of the specific node to one.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>int</strong><strong>)</strong> (<em>v</em>) – </p></li>
-<li><p><strong>(</strong><strong>int</strong><strong>)</strong> – </p></li>
-<li><p><strong>(</strong><strong>Optional</strong><strong>[</strong><strong>int</strong><strong>]</strong> (<em>it</em>) – The iteration that indicates the order of the features being added. Default: <cite>None</cite>.</p></li>
-<li><p><strong>optional</strong><strong>)</strong> – The iteration that indicates the order of the features being added. Default: <cite>None</cite>.</p></li>
+<li><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – the node whose features are to be added</p></li>
+<li><p><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – the dimension of the feature to be added</p></li>
+<li><p><strong>it</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – The iteration that indicates the order
+of the features being added, by default None</p></li>
 </ul>
 </dd>
 </dl>
@@ -321,13 +327,14 @@ The subclass must override this method to implement specific attack for itself.<
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.FlipAttacker.data">
 <span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symmetric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch_geometric.data.data.Data</span></span></span><a class="reference internal" href="../_modules/graphwar/attack/flip_attacker.html#FlipAttacker.data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.FlipAttacker.data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the attacked graph.</p>
+<dd><p>Get the attacked graph denoted by
+PyG-like data instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>(</strong><strong>bool</strong><strong>)</strong> (<em>symmetric</em>) – Determine whether the resulting graph is forcibly symmetric. Default: <cite>True</cite>.</p>
+<dd class="field-odd"><p><strong>symmetric</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether the output graph is symmetric, by default True</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The attacked graph denoted as PyG-like Data.</p>
+<dd class="field-even"><p>the attacked graph denoted by PyG-like data instance</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Data</p>
@@ -338,12 +345,17 @@ The subclass must override this method to implement specific attack for itself.<
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.FlipAttacker.set_allow_singleton">
 <span class="sig-name descname"><span class="pre">set_allow_singleton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/flip_attacker.html#FlipAttacker.set_allow_singleton"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.FlipAttacker.set_allow_singleton" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set whether the attacked graph allow singleton node with degree lower than or equal to one.</p>
+<dd><p>Set whether the attacked graph allow singleton node, i.e.,
+zero degree nodes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>(</strong><strong>bool</strong><strong>)</strong> (<em>state</em>) – By <cite>True</cite>, the attacked graph allow singleton node with degree lower than or equal to one.</p>
+<dd class="field-odd"><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – the flag to set</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">attacker</span><span class="o">.</span><span class="n">set_allow_singleton</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -352,9 +364,13 @@ The subclass must override this method to implement specific attack for itself.<
 <dd><p>Set whether the attacker allow attacks on the topology of the graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>(</strong><strong>bool</strong><strong>)</strong> (<em>state</em>) – By <cite>True</cite>, the attacker allow attacks on the topology of the graph.</p>
+<dd class="field-odd"><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – the flag to set</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">attacker</span><span class="o">.</span><span class="n">set_allow_structure_attack</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -363,34 +379,38 @@ The subclass must override this method to implement specific attack for itself.<
 <dd><p>Set whether the attacker allow attacks on the features of nodes in the graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>(</strong><strong>bool</strong><strong>)</strong> (<em>state</em>) – By <cite>True</cite>, the attacker allow attacks on the features of nodes in the graph.</p>
+<dd class="field-odd"><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – the flag to set</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">attacker</span><span class="o">.</span><span class="n">set_allow_feature_attack</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.FlipAttacker.is_singleton_edge">
 <span class="sig-name descname"><span class="pre">is_singleton_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/graphwar/attack/flip_attacker.html#FlipAttacker.is_singleton_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.FlipAttacker.is_singleton_edge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the edge is an sigleton edge that, if removed,
-would result in a sigleton node in the graph.</p>
+<dd><p>Check if the edge is an singleton edge that, if removed,
+would result in a singleton node in the graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The source node of the edge</p></li>
+<li><p><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The destination node of the edge</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>bool</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><cite>True</cite> if the edge is an singleton edge, otherwise <cite>False</cite>.</p>
+</dd>
+</dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Please make sure the edge is the one being removed.</p>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>int</strong><strong>)</strong> (<em>v</em>) – </p></li>
-<li><p><strong>(</strong><strong>int</strong><strong>)</strong> – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><cite>True</cite> if the edge is an singleton edge, otherwise <cite>False</cite>.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -401,15 +421,15 @@ would result in a sigleton node in the graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>int</strong><strong>)</strong> (<em>v</em>) – </p></li>
-<li><p><strong>(</strong><strong>int</strong><strong>)</strong> – </p></li>
+<li><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The source node of the edge</p></li>
+<li><p><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The destination node of the edge</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><cite>True</cite> if the u!=v and edge (u,v) is not selected, otherwise <cite>False</cite>.</p>
+<dd class="field-even"><p><strong>bool</strong></p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
+<dd class="field-odd"><p><cite>True</cite> if the u!=v and edge (u,v), (v,u) is not selected, otherwise <cite>False</cite>.</p>
 </dd>
 </dl>
 </dd></dl>

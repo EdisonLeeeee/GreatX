@@ -44,6 +44,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/root.html">graphwar</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/dataset.html">graphwar.dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#base-classes">Base Classes</a></li>
@@ -109,6 +110,7 @@
 <span class="sd">    --------</span>
 <span class="sd">    For example, the attacker model should be defined as follows:</span>
 
+<span class="sd">    &gt;&gt;&gt; from graphwar.attacker import Attacker</span>
 <span class="sd">    &gt;&gt;&gt; attacker = Attacker(data, device=&#39;cuda&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; attacker.reset() # reset states</span>
 <span class="sd">    &gt;&gt;&gt; attacker.attack(attack_arguments) # attack</span>
@@ -122,21 +124,27 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
                  <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Initialization of an attacker model.</span>
+        <span class="sd">&quot;&quot;&quot;Initialization of an attacker model.</span>
 
-<span class="s2">        Args:</span>
-<span class="s2">            data (Data): PyG-like Data tuple.</span>
-<span class="s2">            device (str, optional):</span>
-<span class="s2">                the device of the attack running on, by default &quot;cpu&quot;</span>
-<span class="s2">            seed (Optional[int], optional): </span>
-<span class="s2">                the random seed of reproduce the attack, by default None</span>
-<span class="s2">            name (Optional[str], optional): </span>
-<span class="s2">                name of the attacker, if None, it would be `__class__.__name__`, </span>
-<span class="s2">                by default None</span>
-<span class="s2">            kwargs (optional): </span>
-<span class="s2">                additional arguments of :class:`graphwar.attack.Attacker`,</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data : Data</span>
+<span class="sd">            PyG-like input data</span>
+<span class="sd">        device : str, optional</span>
+<span class="sd">            the device of the attack running on, by default &quot;cpu&quot;</span>
+<span class="sd">        seed : Optional[int], optional</span>
+<span class="sd">            the random seed for reproducing the attack, by default None</span>
+<span class="sd">        name : Optional[str], optional</span>
+<span class="sd">            name of the attacker, if None, it would be `__class__.__name__`, </span>
+<span class="sd">            by default None</span>
+<span class="sd">        kwargs : additional arguments of :class:`graphwar.attack.Attacker`,</span>
 
-<span class="s2">        &quot;&quot;&quot;</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            unexpected keyword argument in `kwargs`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
@@ -179,8 +187,10 @@
     <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Get the attacked graph denoted as PyG-like Data. </span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            NotImplementedError: The subclass does not implement this interface.</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            The subclass does not implement this interface.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
@@ -189,8 +199,10 @@
         <span class="sd">&quot;&quot;&quot;Abstract method. </span>
 <span class="sd">        The subclass must override this method to implement specific attack for itself.</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            NotImplementedError: The subclass does not implement this interface.</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            The subclass does not implement this interface.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
@@ -218,17 +230,26 @@
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_budgets</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Attacker.set_max_perturbations"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.Attacker.set_max_perturbations">[docs]</a>    <span class="k">def</span> <span class="nf">set_max_perturbations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_perturbations</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
-                              <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the maximum allowable perturbation size for the attacker.</span>
+                              <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Attacker&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Set the maximum number of allowed perturbations</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            max_perturbations (float or int): the maximum allowable perturbation size. Default: `np.inf`.</span>
-<span class="sd">            verbose (bool): Whether to print information about this method. Default: `True`.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        max_perturbations : Union[float, int], optional</span>
+<span class="sd">            the maximum number of allowed perturbations, by default np.inf</span>
+<span class="sd">        verbose : bool, optional</span>
+<span class="sd">            whether to verbose the operation, by default True</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        &gt;&gt;&gt; attacker.set_max_perturbations(10)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">max_perturbations</span><span class="p">,</span> <span class="n">Number</span><span class="p">),</span> <span class="n">max_perturbations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_perturbations</span> <span class="o">=</span> <span class="n">max_perturbations</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Set maximum perturbations: </span><span class="si">{</span><span class="n">max_perturbations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Set maximum perturbations: </span><span class="si">{</span><span class="n">max_perturbations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">max_perturbations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
@@ -256,6 +277,13 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ori_data</span><span class="o">.</span><span class="n">edge_weight</span>
 
     <span class="k">def</span> <span class="nf">_check_feature_matrix_binary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if the feature matrix is binary.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        RuntimeError</span>
+<span class="sd">            if the feature matrix is not binary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat</span>
         <span class="c1"># FIXME: (Jintang Li) this is quite time-consuming in large matrix</span>
         <span class="c1"># so I only check `10` rows of the matrix randomly.</span>

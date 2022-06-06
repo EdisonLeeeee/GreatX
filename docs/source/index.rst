@@ -1,6 +1,6 @@
-:github_url: https://github.com/EdisonLeeeee/GraphGallery
+:github_url: https://github.com/EdisonLeeeee/GraphWar
 
-Welcome to GraphGallery's documentation!
+Welcome to GraphWar's documentation!
 =========================================
 .. image:: ../../imgs/graphwar.png
 
@@ -19,6 +19,7 @@ Package API
    :maxdepth: 4
    :caption: Package Reference
    
+   modules/root
    modules/dataset
    modules/attack
    modules/defense

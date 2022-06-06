@@ -47,6 +47,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="root.html">graphwar</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataset.html">graphwar.dataset</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">graphwar.attack</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#base-classes">Base Classes</a></li>
@@ -115,7 +116,8 @@
 <dd><p>Adversarial attacker for graph data. Note that this is an abstract class.</p>
 <p class="rubric">Examples</p>
 <p>For example, the attacker model should be defined as follows:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">attacker</span> <span class="o">=</span> <span class="n">Attacker</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.attacker</span> <span class="kn">import</span> <span class="n">Attacker</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attacker</span> <span class="o">=</span> <span class="n">Attacker</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">attacker</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span> <span class="c1"># reset states</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">attacker</span><span class="o">.</span><span class="n">attack</span><span class="p">(</span><span class="n">attack_arguments</span><span class="p">)</span> <span class="c1"># attack</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">attacker</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="c1"># get the attacked graph denoted as PyG-like Data</span>
@@ -153,16 +155,20 @@ The subclass must override this method to implement specific attack for itself.<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.Attacker.set_max_perturbations">
-<span class="sig-name descname"><span class="pre">set_max_perturbations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_perturbations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/attacker.html#Attacker.set_max_perturbations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.Attacker.set_max_perturbations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the maximum allowable perturbation size for the attacker.</p>
+<span class="sig-name descname"><span class="pre">set_max_perturbations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_perturbations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.attacker.Attacker"><span class="pre">graphwar.attack.attacker.Attacker</span></a></span></span><a class="reference internal" href="../_modules/graphwar/attack/attacker.html#Attacker.set_max_perturbations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.Attacker.set_max_perturbations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the maximum number of allowed perturbations</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>max_perturbations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – the maximum allowable perturbation size. Default: <cite>np.inf</cite>.</p></li>
-<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to print information about this method. Default: <cite>True</cite>.</p></li>
+<li><p><strong>max_perturbations</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the maximum number of allowed perturbations, by default np.inf</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to verbose the operation, by default True</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">attacker</span><span class="o">.</span><span class="n">set_max_perturbations</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
@@ -662,7 +668,30 @@ published at SIGKDD’18, August 2018, London, UK</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.targeted.Nettack.setup_surrogate">
 <span class="sig-name descname"><span class="pre">setup_surrogate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surrogate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/targeted/nettack.html#Nettack.setup_surrogate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.targeted.Nettack.setup_surrogate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Method used to initialize the (trained) surrogate model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surrogate</strong> (<em>Module</em>) – the input surrogate module</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – temperature used for softmax activation, by default 1.0</p></li>
+<li><p><strong>freeze</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to freeze the model’s parameters to save time, by default True</p></li>
+<li><p><strong>required</strong> (<em>Union</em><em>[</em><em>Module</em><em>, </em><em>Tuple</em><em>[</em><em>Module</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – which class(es) of the surrogate model are required, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the class itself</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="root.html#graphwar.surrogate.Surrogate" title="graphwar.surrogate.Surrogate">Surrogate</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>torch.nn.Module</cite></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>required</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.targeted.Nettack.reset">
@@ -802,7 +831,30 @@ the ratio of :attr:max_perturbations</p>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.targeted.SGAttack.setup_surrogate">
 <span class="sig-name descname"><span class="pre">setup_surrogate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surrogate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freeze</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/targeted/sg_attack.html#SGAttack.setup_surrogate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.targeted.SGAttack.setup_surrogate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Method used to initialize the (trained) surrogate model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surrogate</strong> (<em>Module</em>) – the input surrogate module</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – temperature used for softmax activation, by default 1.0</p></li>
+<li><p><strong>freeze</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to freeze the model’s parameters to save time, by default True</p></li>
+<li><p><strong>required</strong> (<em>Union</em><em>[</em><em>Module</em><em>, </em><em>Tuple</em><em>[</em><em>Module</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – which class(es) of the surrogate model are required, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the class itself</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="root.html#graphwar.surrogate.Surrogate" title="graphwar.surrogate.Surrogate">Surrogate</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>torch.nn.Module</cite></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>required</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.targeted.SGAttack.set_normalize">
@@ -993,7 +1045,30 @@ Nature Human Behaviour, vol. 2, no. 2, pp. 139–147, 2018.</p>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.untargeted.FGAttack.setup_surrogate">
 <span class="sig-name descname"><span class="pre">setup_surrogate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surrogate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">victim_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">victim_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/untargeted/fg_attack.html#FGAttack.setup_surrogate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.untargeted.FGAttack.setup_surrogate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Method used to initialize the (trained) surrogate model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surrogate</strong> (<em>Module</em>) – the input surrogate module</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – temperature used for softmax activation, by default 1.0</p></li>
+<li><p><strong>freeze</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to freeze the model’s parameters to save time, by default True</p></li>
+<li><p><strong>required</strong> (<em>Union</em><em>[</em><em>Module</em><em>, </em><em>Tuple</em><em>[</em><em>Module</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – which class(es) of the surrogate model are required, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the class itself</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="root.html#graphwar.surrogate.Surrogate" title="graphwar.surrogate.Surrogate">Surrogate</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>torch.nn.Module</cite></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>required</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.untargeted.FGAttack.reset">
@@ -1054,7 +1129,30 @@ the ratio of :attr:max_perturbations</p>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.untargeted.IGAttack.setup_surrogate">
 <span class="sig-name descname"><span class="pre">setup_surrogate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surrogate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">victim_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">victim_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/untargeted/ig_attack.html#IGAttack.setup_surrogate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.untargeted.IGAttack.setup_surrogate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Method used to initialize the (trained) surrogate model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surrogate</strong> (<em>Module</em>) – the input surrogate module</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – temperature used for softmax activation, by default 1.0</p></li>
+<li><p><strong>freeze</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to freeze the model’s parameters to save time, by default True</p></li>
+<li><p><strong>required</strong> (<em>Union</em><em>[</em><em>Module</em><em>, </em><em>Tuple</em><em>[</em><em>Module</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – which class(es) of the surrogate model are required, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the class itself</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="root.html#graphwar.surrogate.Surrogate" title="graphwar.surrogate.Surrogate">Surrogate</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>torch.nn.Module</cite></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>required</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.untargeted.IGAttack.attack">
@@ -1116,7 +1214,30 @@ the ratio of :attr:max_perturbations</p>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.untargeted.Metattack.setup_surrogate">
 <span class="sig-name descname"><span class="pre">setup_surrogate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surrogate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labeled_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unlabeled_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">momentum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/untargeted/metattack.html#Metattack.setup_surrogate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.untargeted.Metattack.setup_surrogate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Method used to initialize the (trained) surrogate model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surrogate</strong> (<em>Module</em>) – the input surrogate module</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – temperature used for softmax activation, by default 1.0</p></li>
+<li><p><strong>freeze</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to freeze the model’s parameters to save time, by default True</p></li>
+<li><p><strong>required</strong> (<em>Union</em><em>[</em><em>Module</em><em>, </em><em>Tuple</em><em>[</em><em>Module</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – which class(es) of the surrogate model are required, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the class itself</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="root.html#graphwar.surrogate.Surrogate" title="graphwar.surrogate.Surrogate">Surrogate</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>torch.nn.Module</cite></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>required</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.untargeted.Metattack.reset">
@@ -1216,7 +1337,30 @@ the ratio of :attr:max_perturbations</p>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.untargeted.MinmaxAttack.setup_surrogate">
 <span class="sig-name descname"><span class="pre">setup_surrogate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surrogate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labeled_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unlabeled_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/untargeted/pgd_attack.html#MinmaxAttack.setup_surrogate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.untargeted.MinmaxAttack.setup_surrogate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Method used to initialize the (trained) surrogate model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surrogate</strong> (<em>Module</em>) – the input surrogate module</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – temperature used for softmax activation, by default 1.0</p></li>
+<li><p><strong>freeze</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to freeze the model’s parameters to save time, by default True</p></li>
+<li><p><strong>required</strong> (<em>Union</em><em>[</em><em>Module</em><em>, </em><em>Tuple</em><em>[</em><em>Module</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – which class(es) of the surrogate model are required, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the class itself</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="root.html#graphwar.surrogate.Surrogate" title="graphwar.surrogate.Surrogate">Surrogate</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>torch.nn.Module</cite></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>required</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.untargeted.MinmaxAttack.reset">
@@ -1262,7 +1406,30 @@ the ratio of :attr:max_perturbations</p>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.untargeted.PGDAttack.setup_surrogate">
 <span class="sig-name descname"><span class="pre">setup_surrogate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surrogate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labeled_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unlabeled_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freeze</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/untargeted/pgd_attack.html#PGDAttack.setup_surrogate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.untargeted.PGDAttack.setup_surrogate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Method used to initialize the (trained) surrogate model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surrogate</strong> (<em>Module</em>) – the input surrogate module</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – temperature used for softmax activation, by default 1.0</p></li>
+<li><p><strong>freeze</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to freeze the model’s parameters to save time, by default True</p></li>
+<li><p><strong>required</strong> (<em>Union</em><em>[</em><em>Module</em><em>, </em><em>Tuple</em><em>[</em><em>Module</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – which class(es) of the surrogate model are required, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the class itself</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="root.html#graphwar.surrogate.Surrogate" title="graphwar.surrogate.Surrogate">Surrogate</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>torch.nn.Module</cite></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>required</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.untargeted.PGDAttack.reset">
@@ -1814,7 +1981,30 @@ by default True</p></li>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.backdoor.FGBackdoor.setup_surrogate">
 <span class="sig-name descname"><span class="pre">setup_surrogate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surrogate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#graphwar.attack.backdoor.FGBackdoor" title="graphwar.attack.backdoor.lgc_backdoor.FGBackdoor"><span class="pre">graphwar.attack.backdoor.lgc_backdoor.FGBackdoor</span></a></span></span><a class="reference internal" href="../_modules/graphwar/attack/backdoor/lgc_backdoor.html#FGBackdoor.setup_surrogate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.backdoor.FGBackdoor.setup_surrogate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Method used to initialize the (trained) surrogate model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surrogate</strong> (<em>Module</em>) – the input surrogate module</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – temperature used for softmax activation, by default 1.0</p></li>
+<li><p><strong>freeze</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to freeze the model’s parameters to save time, by default True</p></li>
+<li><p><strong>required</strong> (<em>Union</em><em>[</em><em>Module</em><em>, </em><em>Tuple</em><em>[</em><em>Module</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – which class(es) of the surrogate model are required, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the class itself</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="root.html#graphwar.surrogate.Surrogate" title="graphwar.surrogate.Surrogate">Surrogate</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>torch.nn.Module</cite></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>required</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.backdoor.FGBackdoor.attack">

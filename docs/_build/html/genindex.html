@@ -44,6 +44,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="modules/root.html">graphwar</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/dataset.html">graphwar.dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/attack.html">graphwar.attack</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="modules/attack.html#base-classes">Base Classes</a></li>
@@ -309,10 +310,12 @@
         <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker.data">(InjectionAttacker method)</a>
 </li>
       </ul></li>
-      <li><a href="modules/defense.html#graphwar.defense.DegreeGUARD">DegreeGUARD (class in graphwar.defense)</a>
+      <li><a href="modules/root.html#graphwar.surrogate.Surrogate.defrozen_surrogate">defrozen_surrogate() (Surrogate method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/defense.html#graphwar.defense.DegreeGUARD">DegreeGUARD (class in graphwar.defense)</a>
+</li>
       <li><a href="modules/attack.html#graphwar.attack.targeted.DICEAttack">DICEAttack (class in graphwar.attack.targeted)</a>
 
       <ul>
@@ -349,13 +352,15 @@
 </li>
       <li><a href="modules/defense.html#graphwar.defense.EigenDecomposition">EigenDecomposition (class in graphwar.defense)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/nn.html#graphwar.nn.layers.ElasticConv">ElasticConv (class in graphwar.nn.layers)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/nn.html#graphwar.nn.models.ElasticGNN">ElasticGNN (class in graphwar.nn.models)</a>
 </li>
       <li><a href="modules/nn.html#graphwar.nn.layers.ElasticConv.emp_forward">emp_forward() (ElasticConv method)</a>
+</li>
+      <li><a href="modules/root.html#graphwar.surrogate.Surrogate.estimate_self_training_labels">estimate_self_training_labels() (Surrogate method)</a>
 </li>
       <li><a href="modules/training.html#graphwar.training.Trainer.evaluate">evaluate() (Trainer method)</a>
 </li>
@@ -468,6 +473,10 @@
 </li>
       </ul></li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/root.html#graphwar.surrogate.Surrogate.freeze_surrogate">freeze_surrogate() (Surrogate method)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="G">G</h2>
@@ -535,8 +544,6 @@
       </ul></li>
       <li><a href="modules/attack.html#graphwar.attack.targeted.Nettack.gradient_wrt_x">gradient_wrt_x() (Nettack method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     graphwar.attack
 
@@ -551,6 +558,8 @@
         <li><a href="modules/attack.html#module-graphwar.attack.backdoor">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     graphwar.attack.injection
 
@@ -608,6 +617,13 @@
 </li>
       </ul></li>
       <li>
+    graphwar.surrogate
+
+      <ul>
+        <li><a href="modules/root.html#module-graphwar.surrogate">module</a>
+</li>
+      </ul></li>
+      <li>
     graphwar.training
 
       <ul>
@@ -619,6 +635,20 @@
 
       <ul>
         <li><a href="modules/utils.html#module-graphwar.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    graphwar.utils.check
+
+      <ul>
+        <li><a href="modules/root.html#module-graphwar.utils.check">module</a>
+</li>
+      </ul></li>
+      <li>
+    graphwar.utils.seed
+
+      <ul>
+        <li><a href="modules/root.html#module-graphwar.utils.seed">module</a>
 </li>
       </ul></li>
       <li><a href="modules/dataset.html#graphwar.dataset.GraphWarDataset">GraphWarDataset (class in graphwar.dataset)</a>
@@ -656,6 +686,8 @@
       <li><a href="modules/attack.html#graphwar.attack.injection.InjectionAttacker">InjectionAttacker (class in graphwar.attack.injection)</a>
 </li>
       <li><a href="modules/attack.html#graphwar.attack.untargeted.Metattack.inner_train">inner_train() (Metattack method)</a>
+</li>
+      <li><a href="modules/root.html#graphwar.utils.check.is_edge_index">is_edge_index() (in module graphwar.utils.check)</a>
 </li>
       <li><a href="modules/attack.html#graphwar.attack.FlipAttacker.is_legal_edge">is_legal_edge() (FlipAttacker method)</a>
 
@@ -737,9 +769,15 @@
 </li>
         <li><a href="modules/nn.html#module-graphwar.nn.models">graphwar.nn.models</a>
 </li>
+        <li><a href="modules/root.html#module-graphwar.surrogate">graphwar.surrogate</a>
+</li>
         <li><a href="modules/training.html#module-graphwar.training">graphwar.training</a>
 </li>
         <li><a href="modules/utils.html#module-graphwar.utils">graphwar.utils</a>
+</li>
+        <li><a href="modules/root.html#module-graphwar.utils.check">graphwar.utils.check</a>
+</li>
+        <li><a href="modules/root.html#module-graphwar.utils.seed">graphwar.utils.seed</a>
 </li>
       </ul></li>
   </ul></td>
@@ -932,6 +970,8 @@
 </li>
       <li><a href="modules/attack.html#graphwar.attack.targeted.SGAttack.set_normalize">set_normalize() (SGAttack method)</a>
 </li>
+      <li><a href="modules/root.html#graphwar.utils.seed.set_seed">set_seed() (in module graphwar.utils.seed)</a>
+</li>
       <li><a href="modules/utils.html#graphwar.utils.setup_logger">setup_logger() (in module graphwar.utils)</a>
 </li>
       <li><a href="modules/attack.html#graphwar.attack.untargeted.FGAttack.setup_surrogate">setup_surrogate() (FGAttack method)</a>
@@ -955,11 +995,13 @@
 </li>
         <li><a href="modules/attack.html#graphwar.attack.targeted.SGAttack.setup_surrogate">(SGAttack method)</a>
 </li>
-      </ul></li>
-      <li><a href="modules/attack.html#graphwar.attack.targeted.SGAttack">SGAttack (class in graphwar.attack.targeted)</a>
+        <li><a href="modules/root.html#graphwar.surrogate.Surrogate.setup_surrogate">(Surrogate method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="modules/attack.html#graphwar.attack.targeted.SGAttack">SGAttack (class in graphwar.attack.targeted)</a>
+</li>
       <li><a href="modules/nn.html#graphwar.nn.models.SGC">SGC (class in graphwar.nn.models)</a>
 </li>
       <li><a href="modules/nn.html#graphwar.nn.layers.SGConv">SGConv (class in graphwar.nn.layers)</a>
@@ -1005,6 +1047,8 @@
 </li>
       </ul></li>
       <li><a href="modules/attack.html#graphwar.attack.targeted.SGAttack.subgraph_processing">subgraph_processing() (SGAttack method)</a>
+</li>
+      <li><a href="modules/root.html#graphwar.surrogate.Surrogate">Surrogate (class in graphwar.surrogate)</a>
 </li>
       <li><a href="modules/defense.html#graphwar.defense.SVDPurification">SVDPurification (class in graphwar.defense)</a>
 </li>

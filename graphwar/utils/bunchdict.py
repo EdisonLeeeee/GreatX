@@ -11,6 +11,15 @@ class BunchDict(OrderedDict):
     Examples
     --------
     >>> b = BunchDict(a=1, b=2)
+    >>> b
+    Objects in BunchDict:
+    ╒═════════╤═══════════╕
+    │ Names   │   Objects │
+    ╞═════════╪═══════════╡
+    │ a       │         1 │
+    ├─────────┼───────────┤
+    │ b       │         2 │
+    ╘═════════╧═══════════╛
     >>> b['b']
     2
     >>> b.b
@@ -21,6 +30,18 @@ class BunchDict(OrderedDict):
     >>> b.c = 6
     >>> b['c']
     6
+    # Converting objects in BunchDict to `torch.Tensor` if possible.
+    >>> b = BunchDict(a=[1,2,3])
+    >>> b.to_tensor()
+    Objects in BunchDict:
+    ╒═════════╤═══════════════════════════════╕
+    │ Names   │ Objects                       │
+    ╞═════════╪═══════════════════════════════╡
+    │ a       │ Tensor, shape=torch.Size([3]) │
+    │         │ tensor([1, 2, 3])             │
+    ╘═════════╧═══════════════════════════════╛
+    >>> b.a
+    tensor([1, 2, 3])
     """
 
     def __init__(self, *args, **kwargs):

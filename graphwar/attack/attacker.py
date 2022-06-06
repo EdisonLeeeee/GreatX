@@ -18,6 +18,7 @@ class Attacker(torch.nn.Module):
     --------
     For example, the attacker model should be defined as follows:
 
+    >>> from graphwar.attacker import Attacker
     >>> attacker = Attacker(data, device='cuda')
     >>> attacker.reset() # reset states
     >>> attacker.attack(attack_arguments) # attack
@@ -31,21 +32,27 @@ class Attacker(torch.nn.Module):
 
     def __init__(self, data: Data, device: str = "cpu",
                  seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
-        f"""Initialization of an attacker model.
+        """Initialization of an attacker model.
 
-        Args:
-            data (Data): PyG-like Data tuple.
-            device (str, optional):
-                the device of the attack running on, by default "cpu"
-            seed (Optional[int], optional): 
-                the random seed of reproduce the attack, by default None
-            name (Optional[str], optional): 
-                name of the attacker, if None, it would be `__class__.__name__`, 
-                by default None
-            kwargs (optional): 
-                additional arguments of :class:`graphwar.attack.Attacker`,
+        Parameters
+        ----------
+        data : Data
+            PyG-like input data
+        device : str, optional
+            the device of the attack running on, by default "cpu"
+        seed : Optional[int], optional
+            the random seed for reproducing the attack, by default None
+        name : Optional[str], optional
+            name of the attacker, if None, it would be `__class__.__name__`, 
+            by default None
+        kwargs : additional arguments of :class:`graphwar.attack.Attacker`,
 
+        Raises
+        ------
+        TypeError
+            unexpected keyword argument in `kwargs`
         """
+
         super().__init__()
 
         if kwargs:
@@ -88,8 +95,10 @@ class Attacker(torch.nn.Module):
     def data(self) -> Data:
         """Get the attacked graph denoted as PyG-like Data. 
 
-        Raises:
-            NotImplementedError: The subclass does not implement this interface.
+        Raises
+        ------
+        NotImplementedError
+            The subclass does not implement this interface.
         """
         raise NotImplementedError
 
@@ -98,8 +107,10 @@ class Attacker(torch.nn.Module):
         """Abstract method. 
         The subclass must override this method to implement specific attack for itself.
 
-        Raises:
-            NotImplementedError: The subclass does not implement this interface.
+        Raises
+        ------
+        NotImplementedError
+            The subclass does not implement this interface.
         """
         raise NotImplementedError
 
@@ -127,17 +138,26 @@ class Attacker(torch.nn.Module):
         return int(num_budgets)
 
     def set_max_perturbations(self, max_perturbations: Union[float, int] = np.inf,
-                              verbose: bool = True):
-        """Set the maximum allowable perturbation size for the attacker.
+                              verbose: bool = True) -> "Attacker":
+        """Set the maximum number of allowed perturbations
 
-        Args:
-            max_perturbations (float or int): the maximum allowable perturbation size. Default: `np.inf`.
-            verbose (bool): Whether to print information about this method. Default: `True`.
+        Parameters
+        ----------
+        max_perturbations : Union[float, int], optional
+            the maximum number of allowed perturbations, by default np.inf
+        verbose : bool, optional
+            whether to verbose the operation, by default True
+
+        Example
+        -------
+        >>> attacker.set_max_perturbations(10)
         """
+
         assert isinstance(max_perturbations, Number), max_perturbations
         self._max_perturbations = max_perturbations
         if verbose:
             print(f"Set maximum perturbations: {max_perturbations}")
+        return self
 
     @property
     def max_perturbations(self) -> Union[float, int]:
@@ -165,6 +185,13 @@ class Attacker(torch.nn.Module):
         return self.ori_data.edge_weight
 
     def _check_feature_matrix_binary(self):
+        """Check if the feature matrix is binary.
+
+        Raises
+        ------
+        RuntimeError
+            if the feature matrix is not binary
+        """
         feat = self.feat
         # FIXME: (Jintang Li) this is quite time-consuming in large matrix
         # so I only check `10` rows of the matrix randomly.

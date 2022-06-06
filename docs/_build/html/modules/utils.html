@@ -46,6 +46,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="root.html">graphwar</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataset.html">graphwar.dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attack.html">graphwar.attack</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="attack.html#base-classes">Base Classes</a></li>
@@ -223,6 +224,15 @@ Dictionary-like object that exposes its keys as attributes
 and remembers insertion order.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">BunchDict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span>
+<span class="go">Objects in BunchDict:</span>
+<span class="go">╒═════════╤═══════════╕</span>
+<span class="go">│ Names   │   Objects │</span>
+<span class="go">╞═════════╪═══════════╡</span>
+<span class="go">│ a       │         1 │</span>
+<span class="go">├─────────┼───────────┤</span>
+<span class="go">│ b       │         2 │</span>
+<span class="go">╘═════════╧═══════════╛</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">]</span>
 <span class="go">2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">b</span>
@@ -233,6 +243,18 @@ and remembers insertion order.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="mi">6</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">]</span>
 <span class="go">6</span>
+<span class="go"># Converting objects in BunchDict to `torch.Tensor` if possible.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">BunchDict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">to_tensor</span><span class="p">()</span>
+<span class="go">Objects in BunchDict:</span>
+<span class="go">╒═════════╤═══════════════════════════════╕</span>
+<span class="go">│ Names   │ Objects                       │</span>
+<span class="go">╞═════════╪═══════════════════════════════╡</span>
+<span class="go">│ a       │ Tensor, shape=torch.Size([3]) │</span>
+<span class="go">│         │ tensor([1, 2, 3])             │</span>
+<span class="go">╘═════════╧═══════════════════════════════╛</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="o">.</span><span class="n">a</span>
+<span class="go">tensor([1, 2, 3])</span>
 </pre></div>
 </div>
 <dl class="py method">

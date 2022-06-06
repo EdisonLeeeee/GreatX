@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphwar.utils.scipy_sparse &mdash; graphwar 0.1.0 documentation</title>
+  <title>graphwar.utils.seed &mdash; graphwar 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -80,7 +80,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>graphwar.utils.scipy_sparse</li>
+      <li>graphwar.utils.seed</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -89,20 +89,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for graphwar.utils.scipy_sparse</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
+  <h1>Source code for graphwar.utils.seed</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;set_seed&quot;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="scipy_normalize"><a class="viewcode-back" href="../../../modules/utils.html#graphwar.utils.scipy_normalize">[docs]</a><span class="k">def</span> <span class="nf">scipy_normalize</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">,</span> <span class="n">add_self_loops</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">add_self_loops</span><span class="p">:</span>
-        <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">adj_matrix</span> <span class="o">+</span> <span class="n">sp</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">adj_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                                         <span class="n">dtype</span><span class="o">=</span><span class="n">adj_matrix</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
-                                         <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;csr&#39;</span><span class="p">)</span>
-    <span class="n">degree</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">adj_matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">A1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">norm</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">diags</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">))</span>
-    <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">norm</span> <span class="o">@</span> <span class="n">adj_matrix</span> <span class="o">@</span> <span class="n">norm</span>
-    <span class="k">return</span> <span class="n">adj_matrix</span></div>
+<div class="viewcode-block" id="set_seed"><a class="viewcode-back" href="../../../modules/root.html#graphwar.utils.seed.set_seed">[docs]</a><span class="k">def</span> <span class="nf">set_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Set random seed for reproduction.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    seed : Optional[int], optional</span>
+<span class="sd">        random seed, by default None</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Optional[int]</span>
+<span class="sd">        the random seed.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from graphwar import set_seed</span>
+<span class="sd">    &gt;&gt;&gt; set_seed(42)</span>
+<span class="sd">    42</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">Number</span><span class="p">),</span> <span class="n">seed</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="c1"># torch.cuda.manual_seed_all(seed)</span>
+    <span class="k">return</span> <span class="n">seed</span></div>
 </pre></div>
 
            </div>

@@ -13,10 +13,16 @@ from graphwar.utils import BunchDict, remove_edges, add_edges
 
 
 class FlipAttacker(Attacker):
-    """Adversarial attacker for graph data by flipping edge."""
+    """Adversarial attacker for graph data by flipping edge.
+
+
+    Note
+    ----
+    `FlipAttacker` is a base class for graph modification attacks (GMA).
+    """
 
     def reset(self) -> "FlipAttacker":
-        """Reset attacker by recovering the flipped edges and features."""
+        """Reset attacker. This method must be called before attack."""
         super().reset()
         self.data.cache_clear()
         self._removed_edges = {}
@@ -27,15 +33,19 @@ class FlipAttacker(Attacker):
         return self
 
     def remove_edge(self, u: int, v: int, it: Optional[int] = None):
-        """Remove one edge from the graph.
+        """Remove an edge from the graph.
 
         Parameters
-        -----------
-        u (int): The source node of the edge.
-        v (int): The destination node of the edge.
-        it (Optional[int], optional): 
-            The iteration that indicates the order of the edge being removed. Default: `None`.
+        ----------
+        u : int
+            The source node of the edge
+        v : int
+            The destination node of the edge
+        it : Optional[int], optional
+             The iteration that indicates the order of 
+             the edge being removed, by default None
         """
+
         if not self._allow_singleton:
             is_singleton_u = self.degree[u] <= 1
             is_singleton_v = self.degree[v] <= 1
@@ -52,11 +62,14 @@ class FlipAttacker(Attacker):
         """Add one edge to the graph.
 
         Parameters
-        -----------
-        u (int): The source node of the edge.
-        v (int): The destination node of the edge.
-        it (Optional[int], optional):
-            The iteration that indicates the order of the edge being added. Default: `None`.
+        ----------
+        u : int
+            The source node of the edge
+        v : int
+            The destination node of the edge
+        it : Optional[int], optional
+             The iteration that indicates the order of 
+             the edge being added, by default None
         """
         self._added_edges[(u, v)] = it
         self.degree[u] += 1
@@ -101,26 +114,35 @@ class FlipAttacker(Attacker):
         return BunchDict(added=added, removed=removed, all=_all)
 
     def remove_feat(self, u: int, v: int, it: Optional[int] = None):
-        """Set a dimension of the specific node to zero.
+        """Remove the feature in a dimension `v` form a node `u`.
+        That is, set a dimension of the specific node to zero.
 
         Parameters
-        -----------
-        u (int): The node to be changed feature.
-        v (int): The dimension to be changed.
-        it (Optional[int], optional):
-            The iteration that indicates the order of the features being removed. Default: `None`.
+        ----------
+        u : int
+            the node whose features are to be removed
+        v : int
+            the dimension of the feature to be removed
+        it : Optional[int], optional
+            The iteration that indicates the order 
+            of the features being removed, by default None
         """
+
         self._removed_feats[(u, v)] = it
 
     def add_feat(self, u: int, v: int, it: Optional[int] = None):
-        """Set a dimension of the specific node to one.
+        """Remove the feature in a dimension `v` form a node `u`.
+        That is, set a dimension of the specific node to one.
 
         Parameters
-        -----------
-            u (int): The node to be changed feature.
-            v (int): The dimension to be changed.
-            it (Optional[int], optional):
-                The iteration that indicates the order of the features being added. Default: `None`.
+        ----------
+        u : int
+            the node whose features are to be added
+        v : int
+            the dimension of the feature to be added
+        it : Optional[int], optional
+            The iteration that indicates the order 
+            of the features being added, by default None
         """
         self._added_feats[(u, v)] = it
 
@@ -161,21 +183,24 @@ class FlipAttacker(Attacker):
 
     @lru_cache(maxsize=1)
     def data(self, symmetric: bool = True) -> Data:
-        """Get the attacked graph.
+        """Get the attacked graph denoted by
+        PyG-like data instance.
 
         Parameters
-        -----------
-            symmetric (bool): 
-                Determine whether the resulting graph is forcibly symmetric. Default: `True`.
+        ----------
+        symmetric : bool, optional
+            whether the output graph is symmetric, by default True
 
-        Returns:
-            Data: The attacked graph denoted as PyG-like Data.
+        Returns
+        -------
+        Data
+            the attacked graph denoted by PyG-like data instance
         """
+
         data = copy(self.ori_data)
         edge_index = data.edge_index
         edge_weight = data.edge_weight
         assert edge_weight is None, 'weighted graph is not supported now.'
-        device = self.device
 
         edge_flips = self.edge_flips()
         removed = edge_flips['removed']
@@ -207,22 +232,32 @@ class FlipAttacker(Attacker):
         return data
 
     def set_allow_singleton(self, state: bool):
-        """Set whether the attacked graph allow singleton node with degree lower than or equal to one.
+        """Set whether the attacked graph allow singleton node, i.e., 
+        zero degree nodes.
 
         Parameters
-        -----------
-            state (bool): 
-                By `True`, the attacked graph allow singleton node with degree lower than or equal to one.
+        ----------
+        state : bool
+            the flag to set
+
+        Example
+        -------
+        >>> attacker.set_allow_singleton(True)            
         """
+
         self._allow_singleton = state
 
     def set_allow_structure_attack(self, state: bool):
         """Set whether the attacker allow attacks on the topology of the graph.
 
         Parameters
-        ----------- 
-            state (bool):
-                By `True`, the attacker allow attacks on the topology of the graph.
+        ----------
+        state : bool
+            the flag to set
+
+        Example
+        -------
+        >>> attacker.set_allow_structure_attack(True)                  
         """
         self._allow_structure_attack = state
 
@@ -230,26 +265,34 @@ class FlipAttacker(Attacker):
         """Set whether the attacker allow attacks on the features of nodes in the graph. 
 
         Parameters
-        ----------- 
-        state (bool):
-            By `True`, the attacker allow attacks on the features of nodes in the graph.
+        ----------
+        state : bool
+            the flag to set
+
+        Example
+        -------
+        >>> attacker.set_allow_feature_attack(True)                
         """
         self._allow_feature_attack = state
 
     def is_singleton_edge(self, u: int, v: int) -> bool:
-        """Check if the edge is an sigleton edge that, if removed,
-        would result in a sigleton node in the graph.
-
-        Note:
-            Please make sure the edge is the one being removed.
+        """Check if the edge is an singleton edge that, if removed,
+        would result in a singleton node in the graph.
 
         Parameters
         -----------
-            u (int): The source node of the edge.
-            v (int): The destination node of the edge.
+        u : int
+            The source node of the edge
+        v : int
+            The destination node of the edge
 
-        Returns:
-            bool: `True` if the edge is an singleton edge, otherwise `False`.
+        Return
+        ------
+        bool: `True` if the edge is an singleton edge, otherwise `False`.
+
+        Note
+        ----
+        Please make sure the edge is the one being removed.        
         """
         threshold = 1
         # threshold = 2 if the graph has selfloop before otherwise threshold = 1
@@ -264,11 +307,14 @@ class FlipAttacker(Attacker):
 
         Parameters
         -----------
-            u (int): The source node of the edge.
-            v (int): The destination node of the edge.
+        u : int
+            The source node of the edge
+        v : int
+            The destination node of the edge
 
-        Returns:
-            bool: `True` if the u!=v and edge (u,v) is not selected, otherwise `False`.
+        Returns
+        -------
+        bool: `True` if the u!=v and edge (u,v), (v,u) is not selected, otherwise `False`.
         """
         _removed_edges = self._removed_edges
         _added_edges = self._added_edges

@@ -10,7 +10,7 @@ from torch_geometric.data import Data
 
 from graphwar import Surrogate
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
-from graphwar.utils import singleton_filter, scipy_normalize
+from graphwar.utils import singleton_filter, scipy_normalize, LikelihoodFilter
 
 
 class Nettack(TargetedAttacker, Surrogate):
@@ -261,8 +261,12 @@ class Nettack(TargetedAttacker, Surrogate):
         candidate_edges = self.get_candidate_edges(
             n_influencers).astype("int32")
 
+        if ll_constraint:
+            likelihood_filter = LikelihoodFilter(self.degree.cpu().numpy(),
+                                                 ll_cutoff=ll_cutoff)
+
         for it in tqdm(range(self.num_budgets),
-                       desc='Peturbing graph...',
+                       desc='Perturbing graph...',
                        disable=disable):
 
             best_edge_score = best_feature_score = 0
@@ -271,6 +275,12 @@ class Nettack(TargetedAttacker, Surrogate):
                 if not self._allow_singleton:
                     candidate_edges = singleton_filter(
                         candidate_edges, self.modified_adj)
+
+                if ll_constraint:
+                    # Do not consider edges that, if removed, result in singleton edges in the graph.
+                    candidate_edges = likelihood_filter(candidate_edges,
+                                                        edge_weights=self.modified_adj[candidate_edges[:, 0],
+                                                                                       candidate_edges[:, 1]].A1)
 
                 # Compute new entries in A_hat_square_uv
                 a_hat_uv_new = self.compute_new_a_hat_uv(candidate_edges)
@@ -313,6 +323,10 @@ class Nettack(TargetedAttacker, Surrogate):
                 else:
                     self.add_edge(u, v, it)
                 np.delete(candidate_edges, best_edge_ix, axis=0)
+
+                if ll_constraint:
+                    # Update likelihood ratio test values
+                    likelihood_filter.update(u, v, edge_weight, best_edge_ix)
             else:
                 u, v = best_feat
                 feat_weight = self.modified_feat[(u, v)]

@@ -84,36 +84,32 @@ class SingletonFilter:
 
 
 class LikelihoodFilter:
-    def __init__(self, degree: np.ndarray, ll_constraint: bool = True, ll_cutoff: float = 0.004):
+    def __init__(self, degree: np.ndarray, ll_cutoff: float = 0.004):
 
-        self.ll_constraint = ll_constraint
         self.ll_cutoff = ll_cutoff
 
-        if ll_constraint:
-            # Setup starting values of the likelihood ratio test.
-            degree_sequence_start = degree
+        # Setup starting values of the likelihood ratio test.
+        degree_sequence_start = degree
 
-            d_min = 2  # denotes the minimum degree a node needs to have to be considered in the power-law test
-            S_d_start = np.sum(
-                np.log(degree_sequence_start[degree_sequence_start >= d_min]))
-            n_start = np.sum(degree_sequence_start >= d_min)
-            alpha_start = self.compute_alpha(n_start, S_d_start, d_min)
+        d_min = 2  # denotes the minimum degree a node needs to have to be considered in the power-law test
+        S_d_start = np.sum(
+            np.log(degree_sequence_start[degree_sequence_start >= d_min]))
+        n_start = np.sum(degree_sequence_start >= d_min)
+        alpha_start = self.compute_alpha(n_start, S_d_start, d_min)
 
-            self.log_likelihood_start = self.compute_log_likelihood(
-                n_start, alpha_start, S_d_start, d_min)
-            self.S_d_start = S_d_start
-            self.current_S_d = S_d_start.copy()
-            self.S_d_start = n_start
-            self.current_n = n_start.copy()
-            self.current_degree_sequence = degree_sequence_start.copy()
-            self.d_min = d_min
+        self.log_likelihood_start = self.compute_log_likelihood(
+            n_start, alpha_start, S_d_start, d_min)
+        self.S_d_start = S_d_start
+        self.current_S_d = S_d_start.copy()
+        self.n_start = n_start
+        self.current_n = n_start.copy()
+        self.current_degree_sequence = degree_sequence_start.copy()
+        self.d_min = d_min
 
-    def __call__(self, edges, edge_weights):
+    def __call__(self, edges: np.ndarray, edge_weights: np.ndarray) -> np.ndarray:
         """Do not consider edges that, if added/removed, would lead to a violation of the
             likelihood ration Chi_square cutoff value.
         """
-        if not self.self.ll_constraint:
-            return edges
         n_start = self.n_start
         S_d_start = self.S_d_start
         current_S_d = self.current_S_d
@@ -140,12 +136,9 @@ class LikelihoodFilter:
         self.new_n = new_n[mask]
         return edges[mask]
 
-    def update(self, u, v, edge_weight, idx):
+    def update(self, u: int, v: int, edge_weight: float, idx: int):
         """Update likelihood ratio test values
         """
-        if not self.ll_constraint:
-            return
-        # Update likelihood ratio test values
         delta = 1 - 2 * edge_weight
         self.current_S_d = self.new_S_d[idx]
         self.current_n = self.new_n[idx]
@@ -235,38 +228,34 @@ class LikelihoodFilter:
         return ll_ratios < cutoff
 
 
-class LikelihoodFilterTorch:
-    def __init__(self, degree: torch.Tensor, ll_constraint: bool = True, ll_cutoff: float = 0.004):
+class LikelihoodFilterTensor:
+    def __init__(self, degree: torch.Tensor, ll_cutoff: float = 0.004):
 
-        self.ll_constraint = ll_constraint
         self.ll_cutoff = ll_cutoff
 
-        if ll_constraint:
-            # Setup starting values of the likelihood ratio test.
-            degree_sequence_start = degree
+        # Setup starting values of the likelihood ratio test.
+        degree_sequence_start = degree
 
-            # denotes the minimum degree a node needs to have to be considered in the power-law test
-            d_min = torch.as_tensor(2.0).to(degree)
-            S_d_start = torch.sum(
-                torch.log(degree_sequence_start[degree_sequence_start >= d_min]))
-            n_start = torch.sum(degree_sequence_start >= d_min)
-            alpha_start = self.compute_alpha(n_start, S_d_start, d_min)
+        # denotes the minimum degree a node needs to have to be considered in the power-law test
+        d_min = torch.as_tensor(2.0).to(degree)
+        S_d_start = torch.sum(
+            torch.log(degree_sequence_start[degree_sequence_start >= d_min]))
+        n_start = torch.sum(degree_sequence_start >= d_min)
+        alpha_start = self.compute_alpha(n_start, S_d_start, d_min)
 
-            self.log_likelihood_start = self.compute_log_likelihood(
-                n_start, alpha_start, S_d_start, d_min)
-            self.S_d_start = S_d_start
-            self.current_S_d = S_d_start.clone()
-            self.S_d_start = n_start
-            self.current_n = n_start.clone()
-            self.current_degree_sequence = degree_sequence_start.clone()
-            self.d_min = d_min
+        self.log_likelihood_start = self.compute_log_likelihood(
+            n_start, alpha_start, S_d_start, d_min)
+        self.S_d_start = S_d_start
+        self.current_S_d = S_d_start.clone()
+        self.n_start = n_start
+        self.current_n = n_start.clone()
+        self.current_degree_sequence = degree_sequence_start.clone()
+        self.d_min = d_min
 
     def __call__(self, edges, edge_weights):
         """Do not consider edges that, if added/removed, would lead to a violation of the
             likelihood ration Chi_square cutoff value.
         """
-        if not self.self.ll_constraint:
-            return edges
         n_start = self.n_start
         S_d_start = self.S_d_start
         current_S_d = self.current_S_d
@@ -296,9 +285,6 @@ class LikelihoodFilterTorch:
     def update(self, u, v, edge_weight, idx):
         """Update likelihood ratio test values
         """
-        if not self.ll_constraint:
-            return
-        # Update likelihood ratio test values
         delta = 1 - 2 * edge_weight
         self.current_S_d = self.new_S_d[idx]
         self.current_n = self.new_n[idx]

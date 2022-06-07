@@ -9,7 +9,6 @@ from tqdm import tqdm
 
 from graphwar.attack.targeted.targeted_attacker import TargetedAttacker
 from graphwar.utils import ego_graph
-from graphwar.nn.models import SGC
 from graphwar.surrogate import Surrogate
 
 SubGraph = namedtuple('SubGraph', ['edge_index', 'sub_edges', 'non_edges',

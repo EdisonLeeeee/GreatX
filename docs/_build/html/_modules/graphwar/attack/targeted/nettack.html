@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphwar.attack.targeted.nettack &mdash; graphwar 0.1.0 documentation</title>
+  <title>graphwar.attack.targeted.nettack &mdash; GraphWar 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -24,7 +24,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> graphwar
+            <a href="../../../../index.html" class="icon icon-home"> GraphWar
             <img src="../../../../_static/graphwar.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
@@ -71,7 +71,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../../index.html">graphwar</a>
+          <a href="../../../../index.html">GraphWar</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -102,7 +102,7 @@
 
 <span class="kn">from</span> <span class="nn">graphwar</span> <span class="kn">import</span> <span class="n">Surrogate</span>
 <span class="kn">from</span> <span class="nn">graphwar.attack.targeted.targeted_attacker</span> <span class="kn">import</span> <span class="n">TargetedAttacker</span>
-<span class="kn">from</span> <span class="nn">graphwar.utils</span> <span class="kn">import</span> <span class="n">singleton_filter</span><span class="p">,</span> <span class="n">scipy_normalize</span>
+<span class="kn">from</span> <span class="nn">graphwar.utils</span> <span class="kn">import</span> <span class="n">singleton_filter</span><span class="p">,</span> <span class="n">scipy_normalize</span><span class="p">,</span> <span class="n">LikelihoodFilter</span>
 
 
 <div class="viewcode-block" id="Nettack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.targeted.Nettack">[docs]</a><span class="k">class</span> <span class="nc">Nettack</span><span class="p">(</span><span class="n">TargetedAttacker</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>
@@ -353,8 +353,12 @@
         <span class="n">candidate_edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_candidate_edges</span><span class="p">(</span>
             <span class="n">n_influencers</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int32&quot;</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">ll_constraint</span><span class="p">:</span>
+            <span class="n">likelihood_filter</span> <span class="o">=</span> <span class="n">LikelihoodFilter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">degree</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span>
+                                                 <span class="n">ll_cutoff</span><span class="o">=</span><span class="n">ll_cutoff</span><span class="p">)</span>
+
         <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_budgets</span><span class="p">),</span>
-                       <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Peturbing graph...&#39;</span><span class="p">,</span>
+                       <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Perturbing graph...&#39;</span><span class="p">,</span>
                        <span class="n">disable</span><span class="o">=</span><span class="n">disable</span><span class="p">):</span>
 
             <span class="n">best_edge_score</span> <span class="o">=</span> <span class="n">best_feature_score</span> <span class="o">=</span> <span class="mi">0</span>
@@ -363,6 +367,12 @@
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allow_singleton</span><span class="p">:</span>
                     <span class="n">candidate_edges</span> <span class="o">=</span> <span class="n">singleton_filter</span><span class="p">(</span>
                         <span class="n">candidate_edges</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">modified_adj</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">ll_constraint</span><span class="p">:</span>
+                    <span class="c1"># Do not consider edges that, if removed, result in singleton edges in the graph.</span>
+                    <span class="n">candidate_edges</span> <span class="o">=</span> <span class="n">likelihood_filter</span><span class="p">(</span><span class="n">candidate_edges</span><span class="p">,</span>
+                                                        <span class="n">edge_weights</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">modified_adj</span><span class="p">[</span><span class="n">candidate_edges</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+                                                                                       <span class="n">candidate_edges</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">A1</span><span class="p">)</span>
 
                 <span class="c1"># Compute new entries in A_hat_square_uv</span>
                 <span class="n">a_hat_uv_new</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_new_a_hat_uv</span><span class="p">(</span><span class="n">candidate_edges</span><span class="p">)</span>
@@ -405,6 +415,10 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">it</span><span class="p">)</span>
                 <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">candidate_edges</span><span class="p">,</span> <span class="n">best_edge_ix</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">ll_constraint</span><span class="p">:</span>
+                    <span class="c1"># Update likelihood ratio test values</span>
+                    <span class="n">likelihood_filter</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="n">best_edge_ix</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">best_feat</span>
                 <span class="n">feat_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modified_feat</span><span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)]</span>

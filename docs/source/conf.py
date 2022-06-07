@@ -23,7 +23,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 author = 'Jintang Li'
-project = 'graphwar'
+project = 'GraphWar'
 copyright = '{}, {}'.format(datetime.datetime.now().year, author)
 
 version = graphwar.__version__

@@ -106,7 +106,7 @@
 <td><p>Adversarial attacker for graph data.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphwar.attack.FlipAttacker" title="graphwar.attack.FlipAttacker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FlipAttacker</span></code></a></p></td>
-<td><p>Adversarial attacker for graph data by flipping edge.</p></td>
+<td><p>Adversarial attacker for graph data by flipping edges.</p></td>
 </tr>
 </tbody>
 </table>
@@ -114,6 +114,21 @@
 <dt class="sig sig-object py" id="graphwar.attack.Attacker">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Attacker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/attacker.html#Attacker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.Attacker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adversarial attacker for graph data. Note that this is an abstract class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
 <p>For example, the attacker model should be defined as follows:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.attacker</span> <span class="kn">import</span> <span class="n">Attacker</span>
@@ -211,10 +226,25 @@ The subclass must override this method to implement specific attack for itself.<
 <dl class="py class">
 <dt class="sig sig-object py" id="graphwar.attack.FlipAttacker">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FlipAttacker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/flip_attacker.html#FlipAttacker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.FlipAttacker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adversarial attacker for graph data by flipping edge.</p>
+<dd><p>Adversarial attacker for graph data by flipping edges.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><cite>FlipAttacker</cite> is a base class for graph modification attacks (GMA).</p>
+<p><a class="reference internal" href="#graphwar.attack.FlipAttacker" title="graphwar.attack.FlipAttacker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">graphwar.attack.FlipAttacker</span></code></a> is a base class for graph modification attacks (GMA).</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.attack.FlipAttacker.reset">
@@ -475,9 +505,25 @@ would result in a singleton node in the graph.</p>
 <dt class="sig sig-object py" id="graphwar.attack.targeted.TargetedAttacker">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TargetedAttacker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/targeted/targeted_attacker.html#TargetedAttacker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.targeted.TargetedAttacker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for adversarial targeted attack.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><cite>TargetedAttacker</cite> is a subclass of <cite>FlipAttacker</cite>.
+<p><a class="reference internal" href="#graphwar.attack.targeted.TargetedAttacker" title="graphwar.attack.targeted.TargetedAttacker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">graphwar.attack.targeted.TargetedAttacker</span></code></a> is a subclass of
+<a class="reference internal" href="#graphwar.attack.FlipAttacker" title="graphwar.attack.FlipAttacker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">graphwar.attack.FlipAttacker</span></code></a>.
 It belongs to graph modification attack (GMA).</p>
 </div>
 <dl class="py method">
@@ -549,6 +595,21 @@ the targeted node is not allowed to be u or v.</p>
 <dt class="sig sig-object py" id="graphwar.attack.targeted.RandomAttack">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RandomAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/targeted/random_attack.html#RandomAttack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.targeted.RandomAttack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Random attacker that randomly chooses edges to flip.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.dataset</span> <span class="kn">import</span> <span class="n">GraphWarDataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch_geometric.transforms</span> <span class="k">as</span> <span class="nn">T</span>
@@ -634,6 +695,21 @@ Network”</a> paper</p>
 “Disconnect Internally, Connect Externally” (DICE),
 which conducts attacks by removing edges between nodes
 with high correlations and connecting edges with low correlations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.dataset</span> <span class="kn">import</span> <span class="n">GraphWarDataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch_geometric.transforms</span> <span class="k">as</span> <span class="nn">T</span>
@@ -689,6 +765,21 @@ with high correlations and connecting edges with low correlations.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FGAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/targeted/fg_attack.html#FGAttack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.targeted.FGAttack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implementation of <cite>FGA</cite> attack from the:
 <a class="reference external" href="https://arxiv.org/abs/1809.02797">“Fast Gradient Attack on Network Embedding”</a> paper (arXiv’18)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.dataset</span> <span class="kn">import</span> <span class="n">GraphWarDataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch_geometric.transforms</span> <span class="k">as</span> <span class="nn">T</span>
@@ -802,6 +893,21 @@ the ratio of :attr:max_perturbations</p>
 <dd><p>Implementation of <cite>IG-FGSM</cite> attack from the:
 <a class="reference external" href="https://arxiv.org/abs/1903.01610">“Adversarial Examples on Graph Data: Deep Insights
 into Attack and Defense”</a> paper (IJCAI’19)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.dataset</span> <span class="kn">import</span> <span class="n">GraphWarDataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch_geometric.transforms</span> <span class="k">as</span> <span class="nn">T</span>
@@ -906,6 +1012,21 @@ the ratio of :attr:max_perturbations</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SGAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/targeted/sg_attack.html#SGAttack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.targeted.SGAttack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implementation of <cite>SGA</cite> attack from the:
 <a class="reference external" href="https://arxiv.org/abs/2009.03488">“Adversarial Attack on Large Scale Graph”</a> paper (TKDE’21)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.dataset</span> <span class="kn">import</span> <span class="n">GraphWarDataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch_geometric.transforms</span> <span class="k">as</span> <span class="nn">T</span>
@@ -1039,6 +1160,21 @@ the ratio of :attr:max_perturbations</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Nettack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/targeted/nettack.html#Nettack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.targeted.Nettack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implementation of <cite>Nettack</cite> attack from the:
 <a class="reference external" href="https://arxiv.org/abs/1805.07984">“Adversarial Attacks on Neural Networks for Graph Data”</a> paper (KDD’18)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.dataset</span> <span class="kn">import</span> <span class="n">GraphWarDataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch_geometric.transforms</span> <span class="k">as</span> <span class="nn">T</span>
@@ -1206,6 +1342,21 @@ the ratio of :attr:max_perturbations</p>
 <dd><p>Implementation of <cite>GFA</cite> attack from the:
 <a class="reference external" href="https://arxiv.org/abs/1908.01297">“A Restricted Black - box Adversarial Framework Towards
 Attacking Graph Embedding Models”</a> paper (AAAI’20)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>K</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – the order of graph filter, by default 2</p></li>
+<li><p><strong>T</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – top-T largest eigen-values/vectors selected, by default 128</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed of reproduce the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <cite>__class__.__name__</cite>, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.dataset</span> <span class="kn">import</span> <span class="n">GraphWarDataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch_geometric.transforms</span> <span class="k">as</span> <span class="nn">T</span>
@@ -1241,6 +1392,7 @@ Attacking Graph Embedding Models”</a> paper (AAAI’20)</p>
 <ul class="simple">
 <li><p>In the paper, the authors mainly consider the single edge perturbations, i.e., <code class="xref py py-obj docutils literal notranslate"><span class="pre">num_budgets=1</span></code>.</p></li>
 <li><p>Please remember to call <code class="xref py py-meth docutils literal notranslate"><span class="pre">reset()</span></code> before each attack.</p></li>
+<li><p>T=128 for citeseer and pubmed, T=num_nodes//2 for cora to reproduce results in paper.</p></li>
 </ul>
 </div>
 <dl class="py method">
@@ -1336,10 +1488,10 @@ by default “nosum”</p></li>
 <td><p>Implementation of <cite>Metattack</cite> attack from the: <a class="reference external" href="https://arxiv.org/abs/1902.08412">&quot;Adversarial Attacks on Graph Neural Networks via Meta Learning&quot;</a> paper (ICLR'19)</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.attack.untargeted.MinmaxAttack" title="graphwar.attack.untargeted.MinmaxAttack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MinmaxAttack</span></code></a></p></td>
-<td><p>Implementation of <cite>MinMax</cite> attack from the: <a class="reference external" href="https://arxiv.org/abs/1906.04214">&quot;Topology Attack and Defense for Graph Neural Networks:  An Optimization Perspective&quot;</a> paper (IJCAI'19)</p></td>
+<td><p>Implementation of <cite>MinMax</cite> attack from the: <a class="reference external" href="https://arxiv.org/abs/1906.04214">&quot;Topology Attack and Defense for Graph Neural Networks: An Optimization Perspective&quot;</a> paper (IJCAI'19)</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphwar.attack.untargeted.PGDAttack" title="graphwar.attack.untargeted.PGDAttack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PGDAttack</span></code></a></p></td>
-<td><p><p>Implementation of <cite>PGD</cite> attack from the: <a class="reference external" href="https://arxiv.org/abs/1906.04214">&quot;Topology Attack and Defense for Graph Neural Networks:  An Optimization Perspective&quot;</a> paper (IJCAI'19)</p>
+<td><p><p>Implementation of <cite>PGD</cite> attack from the: <a class="reference external" href="https://arxiv.org/abs/1906.04214">&quot;Topology Attack and Defense for Graph Neural Networks: An Optimization Perspective&quot;</a> paper (IJCAI'19)</p>
 </p></td>
 </tr>
 </tbody>
@@ -1348,9 +1500,25 @@ by default “nosum”</p></li>
 <dt class="sig sig-object py" id="graphwar.attack.untargeted.UntargetedAttacker">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">UntargetedAttacker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/untargeted/untargeted_attacker.html#UntargetedAttacker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.untargeted.UntargetedAttacker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for adversarial non-targeted attack.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><cite>UntargetedAttacker</cite> is a subclass of <cite>FlipAttacker</cite>.
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">graphwar.attack.targeted.UntargetedAttacker</span></code> is a subclass of
+<a class="reference internal" href="#graphwar.attack.FlipAttacker" title="graphwar.attack.FlipAttacker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">graphwar.attack.FlipAttacker</span></code></a>.
 It belongs to graph modification attack (GMA).</p>
 </div>
 <dl class="py method">
@@ -1395,6 +1563,21 @@ the ratio of :attr:max_perturbations</p>
 <dt class="sig sig-object py" id="graphwar.attack.untargeted.RandomAttack">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RandomAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/untargeted/random_attack.html#RandomAttack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.untargeted.RandomAttack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Random attacker that randomly chooses edges to flip.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.dataset</span> <span class="kn">import</span> <span class="n">GraphWarDataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch_geometric.transforms</span> <span class="k">as</span> <span class="nn">T</span>
@@ -1471,6 +1654,21 @@ Network”</a> paper</p>
 “Disconnect Internally, Connect Externally” (DICE),
 which conducts attacks by removing edges between nodes
 with high correlations and connecting edges with low correlations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.dataset</span> <span class="kn">import</span> <span class="n">GraphWarDataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch_geometric.transforms</span> <span class="k">as</span> <span class="nn">T</span>
@@ -1520,6 +1718,21 @@ with high correlations and connecting edges with low correlations.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FGAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/untargeted/fg_attack.html#FGAttack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.untargeted.FGAttack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implementation of <cite>FGA</cite> attack from the:
 <a class="reference external" href="https://arxiv.org/abs/1809.02797">“Fast Gradient Attack on Network Embedding”</a> paper (arXiv’18)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.dataset</span> <span class="kn">import</span> <span class="n">GraphWarDataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch_geometric.transforms</span> <span class="k">as</span> <span class="nn">T</span>
@@ -1652,6 +1865,21 @@ the ratio of :attr:max_perturbations</p>
 <dd><p>Implementation of <cite>IG-FGSM</cite> attack from the:
 <a class="reference external" href="https://arxiv.org/abs/1903.01610">“Adversarial Examples on Graph Data: Deep Insights
 into Attack and Defense”</a> paper (IJCAI’19)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.dataset</span> <span class="kn">import</span> <span class="n">GraphWarDataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch_geometric.transforms</span> <span class="k">as</span> <span class="nn">T</span>
@@ -1777,6 +2005,21 @@ the ratio of :attr:max_perturbations</p>
 <dd><p>Implementation of <cite>Metattack</cite> attack from the:
 <a class="reference external" href="https://arxiv.org/abs/1902.08412">“Adversarial Attacks on Graph Neural Networks
 via Meta Learning”</a> paper (ICLR’19)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.dataset</span> <span class="kn">import</span> <span class="n">GraphWarDataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch_geometric.transforms</span> <span class="k">as</span> <span class="nn">T</span>
@@ -1937,11 +2180,23 @@ the ratio of :attr:max_perturbations</p>
 <dt class="sig sig-object py" id="graphwar.attack.untargeted.MinmaxAttack">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MinmaxAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/untargeted/pgd_attack.html#MinmaxAttack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.untargeted.MinmaxAttack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implementation of <cite>MinMax</cite> attack from the:
-<a href="#id66"><span class="problematic" id="id67">`</span></a>”Topology Attack and Defense for Graph Neural Networks:</p>
-<blockquote>
-<div><p>An Optimization Perspective”</p>
-</div></blockquote>
-<p>&lt;<a class="reference external" href="https://arxiv.org/abs/1906.04214">https://arxiv.org/abs/1906.04214</a>&gt;`_ paper (IJCAI’19)</p>
+<a class="reference external" href="https://arxiv.org/abs/1906.04214">“Topology Attack and Defense for Graph Neural Networks:
+An Optimization Perspective”</a> paper (IJCAI’19)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.dataset</span> <span class="kn">import</span> <span class="n">GraphWarDataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch_geometric.transforms</span> <span class="k">as</span> <span class="nn">T</span>
@@ -2028,7 +2283,7 @@ the ratio of :attr:max_perturbations</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>num_budgets</strong> (int (0&lt;<a href="#id68"><span class="problematic" id="id69">`</span></a>num_budgets`&lt;=:attr:max_perturbations) or float (0&lt;<a href="#id70"><span class="problematic" id="id71">`</span></a>num_budgets`&lt;=1)) – <p>Case 1:
+<li><p><strong>num_budgets</strong> (int (0&lt;<a href="#id67"><span class="problematic" id="id68">`</span></a>num_budgets`&lt;=:attr:max_perturbations) or float (0&lt;<a href="#id69"><span class="problematic" id="id70">`</span></a>num_budgets`&lt;=1)) – <p>Case 1:
 <cite>int</cite> : the number of attack budgets,
 i.e., how many edges can be perturbed.</p>
 <p>Case 2:
@@ -2049,11 +2304,23 @@ the ratio of :attr:max_perturbations</p>
 <dt class="sig sig-object py" id="graphwar.attack.untargeted.PGDAttack">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PGDAttack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/attack/untargeted/pgd_attack.html#PGDAttack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.attack.untargeted.PGDAttack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implementation of <cite>PGD</cite> attack from the:
-<a href="#id72"><span class="problematic" id="id73">`</span></a>”Topology Attack and Defense for Graph Neural Networks:</p>
-<blockquote>
-<div><p>An Optimization Perspective”</p>
-</div></blockquote>
-<p>&lt;<a class="reference external" href="https://arxiv.org/abs/1906.04214">https://arxiv.org/abs/1906.04214</a>&gt;`_ paper (IJCAI’19)</p>
+<a class="reference external" href="https://arxiv.org/abs/1906.04214">“Topology Attack and Defense for Graph Neural Networks:
+An Optimization Perspective”</a> paper (IJCAI’19)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – PyG-like data denoting the input graph</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of the attack running on, by default “cpu”</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – the random seed for reproducing the attack, by default None</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – name of the attacker, if None, it would be <code class="xref py py-obj docutils literal notranslate"><span class="pre">__class__.__name__</span></code>,
+by default None</p></li>
+<li><p><strong>kwargs</strong> (additional arguments of <a class="reference internal" href="#graphwar.attack.Attacker" title="graphwar.attack.Attacker"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.Attacker</span></code></a>,) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.10)"><strong>TypeError</strong></a> – unexpected keyword argument in <cite>kwargs</cite></p>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.dataset</span> <span class="kn">import</span> <span class="n">GraphWarDataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch_geometric.transforms</span> <span class="k">as</span> <span class="nn">T</span>
@@ -2086,12 +2353,8 @@ the ratio of :attr:max_perturbations</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>MinMax attack is a variant of
-<a class="reference internal" href="#graphwar.attack.untargeted.PGDAttack" title="graphwar.attack.untargeted.PGDAttack"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.untargeted.PGDAttack</span></code></a> attack.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
 <ul class="simple">
+<li><p>MinMax attack is a variant of <a class="reference internal" href="#graphwar.attack.untargeted.PGDAttack" title="graphwar.attack.untargeted.PGDAttack"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.attack.untargeted.PGDAttack</span></code></a> attack.</p></li>
 <li><p>Please remember to call <a class="reference internal" href="#graphwar.attack.untargeted.PGDAttack.reset" title="graphwar.attack.untargeted.PGDAttack.reset"><code class="xref py py-meth docutils literal notranslate"><span class="pre">reset()</span></code></a> before each attack.</p></li>
 </ul>
 </div>
@@ -2144,7 +2407,7 @@ the ratio of :attr:max_perturbations</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>num_budgets</strong> (int (0&lt;<a href="#id74"><span class="problematic" id="id75">`</span></a>num_budgets`&lt;=:attr:max_perturbations) or float (0&lt;<a href="#id76"><span class="problematic" id="id77">`</span></a>num_budgets`&lt;=1)) – <p>Case 1:
+<li><p><strong>num_budgets</strong> (int (0&lt;<a href="#id72"><span class="problematic" id="id73">`</span></a>num_budgets`&lt;=:attr:max_perturbations) or float (0&lt;<a href="#id74"><span class="problematic" id="id75">`</span></a>num_budgets`&lt;=1)) – <p>Case 1:
 <cite>int</cite> : the number of attack budgets,
 i.e., how many edges can be perturbed.</p>
 <p>Case 2:

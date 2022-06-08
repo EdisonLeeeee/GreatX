@@ -108,6 +108,14 @@
 <div class="viewcode-block" id="Trainer"><a class="viewcode-back" href="../../../modules/training.html#graphwar.training.Trainer">[docs]</a><span class="k">class</span> <span class="nc">Trainer</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;A simple trainer to train graph neural network models conveniently.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : nn.Module</span>
+<span class="sd">        the model used for training</span>
+<span class="sd">    device : Union[str, torch.device], optional</span>
+<span class="sd">        the device used for training, by default &#39;cpu&#39;</span>
+<span class="sd">    cfg : other keyword arguments, such as `lr` and `weight_decay`.    </span>
+
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; from graphwar.training import Trainer</span>
@@ -135,16 +143,6 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;cpu&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">cfg</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initialize a Trainer object.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        model : nn.Module</span>
-<span class="sd">            the model used for training</span>
-<span class="sd">        device : Union[str, torch.device], optional</span>
-<span class="sd">            the device used for training, by default &#39;cpu&#39;</span>
-<span class="sd">        cfg : other keyword arguments, such as `lr` and `weight_decay`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
@@ -162,7 +160,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        train_inputs : dict like inputs</span>
+<span class="sd">        train_inputs : dict like or custom inputs</span>
 <span class="sd">            training data. It is used for `train_step`.</span>
 <span class="sd">        val_inputs : Optional[dict]</span>
 <span class="sd">            used for validation.</span>
@@ -171,7 +169,7 @@
 <span class="sd">            see `graphwar.training.callbacks`, by default None</span>
 <span class="sd">        verbose : Optional[int], optional</span>
 <span class="sd">            verbosity during training, can be:</span>
-<span class="sd">            None, 1, 2, 3, 4, by default 1</span>
+<span class="sd">            :obj:`None, 1, 2, 3, 4`, by default 1</span>
 <span class="sd">        epochs : int, optional</span>
 <span class="sd">            training epochs, by default 100</span>
 
@@ -224,17 +222,17 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="Trainer.train_step"><a class="viewcode-back" href="../../../modules/training.html#graphwar.training.Trainer.train_step">[docs]</a>    <span class="k">def</span> <span class="nf">train_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;One-step training on the input dataloader.</span>
+        <span class="sd">&quot;&quot;&quot;One-step training on the inputs.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        inputs : dict like inputs</span>
+<span class="sd">        inputs : dict like or custom inputs</span>
 <span class="sd">            the training data.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        dict</span>
-<span class="sd">            the output logs, including `loss` and `val_acc`, etc.</span>
+<span class="sd">            the output logs, including `loss` and `acc`, etc.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">on_train_batch_begin</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -265,7 +263,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        inputs : dict like inputs</span>
+<span class="sd">        inputs : dict like or custom inputs</span>
 <span class="sd">            test data, it is used for `test_step`.</span>
 <span class="sd">        verbose : Optional[int], optional</span>
 <span class="sd">            verbosity during evaluation, by default 1</span>
@@ -292,6 +290,18 @@
 
 <div class="viewcode-block" id="Trainer.test_step"><a class="viewcode-back" href="../../../modules/training.html#graphwar.training.Trainer.test_step">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">test_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;One-step evaluation on the inputs.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        inputs : dict like or custom inputs</span>
+<span class="sd">            the testing data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            the output logs, including `loss` and `acc`, etc.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
         <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
@@ -314,6 +324,18 @@
 
 <div class="viewcode-block" id="Trainer.predict_step"><a class="viewcode-back" href="../../../modules/training.html#graphwar.training.Trainer.predict_step">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">predict_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;One-step prediction on the inputs.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        inputs : dict like or custom inputs</span>
+<span class="sd">            the prediction data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tensor</span>
+<span class="sd">            the output prediction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
         <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
         <span class="n">callbacks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span>
@@ -335,7 +357,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        inputs : dict like inputs</span>
+<span class="sd">        inputs : dict like or custom inputs</span>
 <span class="sd">            predict data, it is used for `predict_step`</span>
 <span class="sd">        transform : Callable</span>
 <span class="sd">            Callable function applied on output predictions.</span>

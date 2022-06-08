@@ -94,7 +94,22 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-<div class="viewcode-block" id="scipy_normalize"><a class="viewcode-back" href="../../../modules/utils.html#graphwar.utils.scipy_normalize">[docs]</a><span class="k">def</span> <span class="nf">scipy_normalize</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">,</span> <span class="n">add_self_loops</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="scipy_normalize"><a class="viewcode-back" href="../../../modules/utils.html#graphwar.utils.scipy_normalize">[docs]</a><span class="k">def</span> <span class="nf">scipy_normalize</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">,</span>
+                    <span class="n">add_self_loops</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Normalize a sparse matrix according to :obj:`GCN`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adj_matrix : sp.csr_matrix</span>
+<span class="sd">        the input sparse matrix denoting a graph.</span>
+<span class="sd">    add_self_loops : bool, optional</span>
+<span class="sd">        whether to add self-loops, by default True</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    sp.csr_matrix</span>
+<span class="sd">        the normalized adjacency matrix.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">add_self_loops</span><span class="p">:</span>
         <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">adj_matrix</span> <span class="o">+</span> <span class="n">sp</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">adj_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                                          <span class="n">dtype</span><span class="o">=</span><span class="n">adj_matrix</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>

@@ -1,8 +1,11 @@
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 import torch
-import torch_cluster
 from torch import Tensor
+try:
+    import torch_cluster
+except ImportError:
+    torch_cluster = None
 
 from torch_geometric.utils import subgraph, degree
 from torch_geometric.utils.num_nodes import maybe_num_nodes
@@ -12,6 +15,34 @@ def drop_edge(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
               p: float = 0.5, training: bool = True) -> Tuple[Tensor, Tensor]:
     """
     DropEdge: Sampling edge using a uniform distribution.
+
+    Parameters
+    ----------
+    edge_index : Tensor
+        the input edge index
+    edge_weight : Optional[Tensor], optional
+        the input edge weight, by default None
+    p : float, optional
+        the probability of dropping out on each edge, by default 0.5
+    training : bool, optional
+        whether the model is during training,
+        do nothing if :obj:`training=True`,, by default True
+
+    Returns
+    -------
+    Tuple[Tensor, Tensor]
+        the output edge index and edge weight
+
+    Raises
+    ------
+    ValueError
+        p is out of range [0,1]
+
+    Example
+    -------
+    >>> from graphwar.functional import drop_edge
+    >>> edge_index = torch.LongTensor([[1, 2], [3,4]])
+    >>> drop_edge(edge_index, p=0.5)        
     """
 
     if p < 0. or p > 1.:
@@ -36,6 +67,35 @@ def drop_node(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
               num_nodes: Optional[int] = None) -> Tuple[Tensor, Tensor]:
     """
     DropNode: Sampling node using a uniform distribution.
+
+    Parameters
+    ----------
+    edge_index : Tensor
+        the input edge index
+    edge_weight : Optional[Tensor], optional
+        the input edge weight, by default None
+    p : float, optional
+        the probability of dropping out on each node, by default 0.5
+    training : bool, optional
+        whether the model is during training,
+        do nothing if :obj:`training=True`,, by default True
+
+    Returns
+    -------
+    Tuple[Tensor, Tensor]
+        the output edge index and edge weight
+
+    Raises
+    ------
+    ValueError
+        p is out of range [0,1]
+
+    Example
+    -------
+    >>> from graphwar.functional import drop_node
+    >>> edge_index = torch.LongTensor([[1, 2], [3,4]])
+    >>> drop_node(edge_index, p=0.5)
+
     """
 
     if p < 0. or p > 1.:
@@ -53,20 +113,69 @@ def drop_node(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
     return subgraph(subset, edge_index, edge_weight)
 
 
-def drop_path(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
-              r: float = 0.5,
+def drop_path(edge_index: Tensor,
+              edge_weight: Optional[Tensor] = None,
+              r: Optional[Union[float, Tensor]] = 0.5,
               walks_per_node: int = 2,
               walk_length: int = 4,
               p: float = 1, q: float = 1,
               training: bool = True,
               num_nodes: int = None,
               by: str = 'degree') -> Tuple[Tensor, Tensor]:
+    """DropPath: a structured form of :class:`graphwar.functional.drop_edge`.
 
-    if r < 0. or r > 1.:
-        raise ValueError(f'Root node sampling ratio `r` has to be between 0 and 1 '
-                         f'(got {r}')
+    Parameters
+    ----------
+    edge_index : Tensor
+        the input edge index
+    edge_weight : Optional[Tensor], optional
+        the input edge weight, by default None
+    r : Optional[Union[float, Tensor]], optional
+        if :obj:`r` is integer value: the percentage of nodes in the graph that
+        chosen as root nodes to perform random walks, by default 0.5
+        if :obj:`r` is :class:`torch.Tensor`: a set of custom root nodes
+    walks_per_node : int, optional
+        number of walks per node, by default 2
+    walk_length : int, optional
+        number of walk length per node, by default 4
+    p : float, optional
+        :obj:`p` in random walks, by default 1
+    q : float, optional
+        :obj:`q` in random walks, by default 1
+    training : bool, optional
+        whether the model is during training,
+        do nothing if :obj:`training=True`, by default True
+    num_nodes : int, optional
+        number of total nodes in the graph, by default None
+    by : str, optional
+        sampling root nodes uniformly :obj:`uniform` or 
+        by degree distribution :obj:`degree`, by default 'degree'
 
-    if not training or not r:
+    Returns
+    -------
+    Tuple[Tensor, Tensor]
+        the output edge index and edge weight
+
+    Raises
+    ------
+    ImportError
+        if :class:`torch_cluster` is not installed.
+    ValueError
+        :obj:`r` is out of scope [0,1]
+    ValueError
+        :obj:`r` is not integer value or a Tensor
+
+    Example
+    -------
+    >>> from graphwar.functional import drop_path
+    >>> edge_index = torch.LongTensor([[1, 2], [3,4]])
+    >>> drop_path(edge_index, p=0.5)         
+    """
+
+    if torch_cluster is None:
+        raise ImportError("`torch_cluster` is not installed.")
+
+    if not training:
         return edge_index, edge_weight
 
     assert by in {'degree', 'uniform'}
@@ -76,6 +185,12 @@ def drop_path(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
     deg = degree(row, num_nodes=num_nodes, dtype=torch.float)
 
     if isinstance(r, (int, float)):
+        if r < 0. or r > 1.:
+            raise ValueError(f'Root node sampling ratio `r` has to be between 0 and 1 '
+                             f'(got {r}')
+        if r == 0.:
+            return edge_index, edge_weight
+
         num_starts = int(r * num_nodes)
         if by == 'degree':
             prob = deg / deg.sum()

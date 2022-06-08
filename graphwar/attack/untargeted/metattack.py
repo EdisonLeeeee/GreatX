@@ -18,6 +18,24 @@ class Metattack(UntargetedAttacker, Surrogate):
     via Meta Learning" 
     <https://arxiv.org/abs/1902.08412>`_ paper (ICLR'19)
 
+    Parameters
+    ----------
+    data : Data
+        PyG-like data denoting the input graph
+    device : str, optional
+        the device of the attack running on, by default "cpu"
+    seed : Optional[int], optional
+        the random seed for reproducing the attack, by default None
+    name : Optional[str], optional
+        name of the attacker, if None, it would be :obj:`__class__.__name__`, 
+        by default None
+    kwargs : additional arguments of :class:`graphwar.attack.Attacker`,
+
+    Raises
+    ------
+    TypeError
+        unexpected keyword argument in `kwargs`       
+
     Example
     -------
     >>> from graphwar.dataset import GraphWarDataset

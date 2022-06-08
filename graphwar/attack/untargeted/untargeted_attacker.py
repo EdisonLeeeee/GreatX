@@ -4,9 +4,28 @@ from graphwar.attack.flip_attacker import FlipAttacker
 class UntargetedAttacker(FlipAttacker):
     r"""Base class for adversarial non-targeted attack.
 
+    Parameters
+    ----------
+    data : Data
+        PyG-like data denoting the input graph
+    device : str, optional
+        the device of the attack running on, by default "cpu"
+    seed : Optional[int], optional
+        the random seed for reproducing the attack, by default None
+    name : Optional[str], optional
+        name of the attacker, if None, it would be :obj:`__class__.__name__`, 
+        by default None
+    kwargs : additional arguments of :class:`graphwar.attack.Attacker`,
+
+    Raises
+    ------
+    TypeError
+        unexpected keyword argument in `kwargs`       
+
     Note
     ----
-    `UntargetedAttacker` is a subclass of `FlipAttacker`.
+    :obj:`graphwar.attack.targeted.UntargetedAttacker` is a subclass of 
+    :obj:`graphwar.attack.FlipAttacker`.
     It belongs to graph modification attack (GMA).
     """
 

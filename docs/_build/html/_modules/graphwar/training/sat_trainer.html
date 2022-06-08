@@ -97,6 +97,27 @@
 
 
 <div class="viewcode-block" id="SATTrainer"><a class="viewcode-back" href="../../../modules/training.html#graphwar.training.SATTrainer">[docs]</a><span class="k">class</span> <span class="nc">SATTrainer</span><span class="p">(</span><span class="n">Trainer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Custom trainer for :class:`graphwar.nn.models.SAT`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : nn.Module</span>
+<span class="sd">        the model used for training</span>
+<span class="sd">    device : Union[str, torch.device], optional</span>
+<span class="sd">        the device used for training, by default &#39;cpu&#39;</span>
+<span class="sd">    cfg : other keyword arguments, such as `lr` and `weight_decay`.   </span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    :class:`graphwar.training.SATTrainer` accepts the following additional arguments:   </span>
+
+<span class="sd">    * :obj:`eps_U`: scale of perturbation on eigenvectors</span>
+<span class="sd">    * :obj:`eps_V`: scale of perturbation on eigenvalues</span>
+<span class="sd">    * :obj:`lambda_U`: trade-off parameters for eigenvectors-specific loss</span>
+<span class="sd">    * :obj:`lambda_V`: trade-off parameters for eigenvalues-specific loss</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="SATTrainer.train_step"><a class="viewcode-back" href="../../../modules/training.html#graphwar.training.SATTrainer.train_step">[docs]</a>    <span class="k">def</span> <span class="nf">train_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;One-step training on the input dataloader.</span>
 
@@ -156,7 +177,6 @@
         <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">on_train_batch_end</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">acc</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span></div></div>
-
 </pre></div>
 
            </div>

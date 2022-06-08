@@ -115,6 +115,32 @@
 <div class="viewcode-block" id="CKA"><a class="viewcode-back" href="../../../modules/utils.html#graphwar.utils.CKA">[docs]</a><span class="k">class</span> <span class="nc">CKA</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Centered Kernel Alignment (CKA) metric, where the features of the networks are compared.</span>
 <span class="sd">    See https://github.com/AntixK/PyTorch-Model-Compare</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model1 : nn.Module</span>
+<span class="sd">        model 1</span>
+<span class="sd">    model2 : nn.Module</span>
+<span class="sd">        model 2</span>
+<span class="sd">    model1_name : str, optional</span>
+<span class="sd">        name of model 1, by default None</span>
+<span class="sd">    model2_name : str, optional</span>
+<span class="sd">        name of model 2, by default None</span>
+<span class="sd">    model1_layers : List[str], optional</span>
+<span class="sd">        List of layers to extract features from, by default None</span>
+<span class="sd">    model2_layers : List[str], optional</span>
+<span class="sd">        List of layers to extract features from, by default None</span>
+<span class="sd">    device : str, optional</span>
+<span class="sd">        device to run the models, by default &#39;cpu&#39;</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; data = ... # get your graph</span>
+<span class="sd">    &gt;&gt;&gt; m1 = ... # get your model1</span>
+<span class="sd">    &gt;&gt;&gt; m2 = ... # get your model2</span>
+<span class="sd">    &gt;&gt;&gt; cka = CKA(m1, m2)</span>
+<span class="sd">    &gt;&gt;&gt; cka.compare(data)</span>
+<span class="sd">    &gt;&gt;&gt; cka.plot_results()    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -125,35 +151,6 @@
                  <span class="n">model1_layers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">model2_layers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;cpu&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        model1 : nn.Module</span>
-<span class="sd">            model 1</span>
-<span class="sd">        model2 : nn.Module</span>
-<span class="sd">            model 2</span>
-<span class="sd">        model1_name : str, optional</span>
-<span class="sd">            name of model 1, by default None</span>
-<span class="sd">        model2_name : str, optional</span>
-<span class="sd">            name of model 2, by default None</span>
-<span class="sd">        model1_layers : List[str], optional</span>
-<span class="sd">            List of layers to extract features from, by default None</span>
-<span class="sd">        model2_layers : List[str], optional</span>
-<span class="sd">            List of layers to extract features from, by default None</span>
-<span class="sd">        device : str, optional</span>
-<span class="sd">            device to run the models, by default &#39;cpu&#39;</span>
-
-<span class="sd">        Example</span>
-<span class="sd">        -------</span>
-<span class="sd">        &gt;&gt;&gt; data = ... # get your graph</span>
-<span class="sd">        &gt;&gt;&gt; m1 = ... # get your model1</span>
-<span class="sd">        &gt;&gt;&gt; m2 = ... # get your model2</span>
-<span class="sd">        &gt;&gt;&gt; cka = CKA(m1, m2)</span>
-<span class="sd">        &gt;&gt;&gt; cka.compare(data)</span>
-<span class="sd">        &gt;&gt;&gt; cka.plot_results()</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model1</span> <span class="o">=</span> <span class="n">model1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model2</span> <span class="o">=</span> <span class="n">model2</span>
 
@@ -294,7 +291,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">model2_features</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model1</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model2</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">model1</span><span class="p">(</span><span class="n">data1</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">data1</span><span class="o">.</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">data1</span><span class="o">.</span><span class="n">edge_weight</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model2</span><span class="p">(</span><span class="n">data2</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">data2</span><span class="o">.</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">data2</span><span class="o">.</span><span class="n">edge_weight</span><span class="p">)</span>
 

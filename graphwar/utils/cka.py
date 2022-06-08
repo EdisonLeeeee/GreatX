@@ -23,6 +23,32 @@ def add_colorbar(im, aspect=10, pad_fraction=0.5, **kwargs):
 class CKA:
     """Centered Kernel Alignment (CKA) metric, where the features of the networks are compared.
     See https://github.com/AntixK/PyTorch-Model-Compare
+
+    Parameters
+    ----------
+    model1 : nn.Module
+        model 1
+    model2 : nn.Module
+        model 2
+    model1_name : str, optional
+        name of model 1, by default None
+    model2_name : str, optional
+        name of model 2, by default None
+    model1_layers : List[str], optional
+        List of layers to extract features from, by default None
+    model2_layers : List[str], optional
+        List of layers to extract features from, by default None
+    device : str, optional
+        device to run the models, by default 'cpu'
+
+    Example
+    -------
+    >>> data = ... # get your graph
+    >>> m1 = ... # get your model1
+    >>> m2 = ... # get your model2
+    >>> cka = CKA(m1, m2)
+    >>> cka.compare(data)
+    >>> cka.plot_results()    
     """
 
     def __init__(self,
@@ -33,35 +59,6 @@ class CKA:
                  model1_layers: List[str] = None,
                  model2_layers: List[str] = None,
                  device: str = 'cpu'):
-        """
-
-        Parameters
-        ----------
-        model1 : nn.Module
-            model 1
-        model2 : nn.Module
-            model 2
-        model1_name : str, optional
-            name of model 1, by default None
-        model2_name : str, optional
-            name of model 2, by default None
-        model1_layers : List[str], optional
-            List of layers to extract features from, by default None
-        model2_layers : List[str], optional
-            List of layers to extract features from, by default None
-        device : str, optional
-            device to run the models, by default 'cpu'
-
-        Example
-        -------
-        >>> data = ... # get your graph
-        >>> m1 = ... # get your model1
-        >>> m2 = ... # get your model2
-        >>> cka = CKA(m1, m2)
-        >>> cka.compare(data)
-        >>> cka.plot_results()
-
-        """
         self.model1 = model1
         self.model2 = model2
 
@@ -202,7 +199,7 @@ class CKA:
         self.model2_features = {}
         self.model1.eval()
         self.model2.eval()
-        
+
         self.model1(data1.x, data1.edge_index, data1.edge_weight)
         self.model2(data2.x, data2.edge_index, data2.edge_weight)
 

@@ -112,7 +112,7 @@
 <span class="sd">    num_nodes : Optional[int], optional</span>
 <span class="sd">        the number of nodes in the graph, by default None</span>
 <span class="sd">    is_sorted : bool, optional</span>
-<span class="sd">        whether the edge_index is sorted, by default False</span>
+<span class="sd">        whether the :obj:`edge_index` is sorted, by default False</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -128,7 +128,7 @@
 
 
 <div class="viewcode-block" id="to_dense_adj"><a class="viewcode-back" href="../../../modules/functional.html#graphwar.functional.to_dense_adj">[docs]</a><span class="k">def</span> <span class="nf">to_dense_adj</span><span class="p">(</span><span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">num_nodes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+                 <span class="n">num_nodes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">fill_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Convert edge index to dense adjacency matrix</span>
 
 <span class="sd">    Parameters</span>
@@ -139,16 +139,19 @@
 <span class="sd">        edge weight with shape [M], by default None</span>
 <span class="sd">    num_nodes : Optional[int], optional</span>
 <span class="sd">        the number of nodes in the graph, by default None</span>
+<span class="sd">    fill_value : float</span>
+<span class="sd">        filling value for elements in the adjacency matrix </span>
+<span class="sd">        where edges existed, by default 1.0</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    Tensor</span>
-<span class="sd">        output dense adjacency matrix with shape [num_nodes, num_nodes]</span>
+<span class="sd">        output dense adjacency matrix with shape :obj:`[num_nodes, num_nodes]`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">num_nodes</span> <span class="o">=</span> <span class="n">maybe_num_nodes</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">num_nodes</span><span class="p">)</span>
     <span class="n">adj</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">num_nodes</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">edge_index</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">edge_weight</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">adj</span><span class="p">[</span><span class="n">edge_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">adj</span><span class="p">[</span><span class="n">edge_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">fill_value</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">adj</span><span class="p">[</span><span class="n">edge_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">edge_weight</span>
     <span class="k">return</span> <span class="n">adj</span></div>

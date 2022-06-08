@@ -10,17 +10,15 @@ class Surrogate(Module):
     a surrogate model for estimating labels or computing
     gradient information.
 
+    Parameters
+    ----------
+    device : str, optional
+        the device of a model to use for, by default "cpu"    
+
     """
     _is_setup = False  # flags to denote the surrogate model is properly set
 
     def __init__(self, device: str = "cpu"):
-        """Initialize a surrogate model
-
-        Parameters
-        ----------
-        device : str, optional
-            the device of a model to use for, by default "cpu"
-        """
         super().__init__()
         self.device = torch.device(device)
 

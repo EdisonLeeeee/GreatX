@@ -21,10 +21,8 @@ def ego_graph(adj_matrix: sp.csr_matrix,
     ----------
     adj_matrix : sp.csr_matrix,
         a Scipy CSR sparse adjacency matrix representing a graph
-
     targets : Union[int, list]
         center nodes, a single node or a list of nodes
-
     hops : int number, optional
         Include all neighbors of distance<=hops from nodes.
 
@@ -37,13 +35,13 @@ def ego_graph(adj_matrix: sp.csr_matrix,
     Note
     ----
     This is a faster implementation of 
-    `networkx.ego_graph` based on scipy sparse matrix and numba
+    :class:`networkx.ego_graph` based on scipy sparse matrix and numba
 
 
     See Also
     --------
-    networkx.ego_graph
-    torch_geometric.utils.k_hop_subgraph
+    :class:`networkx.ego_graph`
+    :class:`torch_geometric.utils.k_hop_subgraph`
 
     """
     assert sp.issparse(adj_matrix)

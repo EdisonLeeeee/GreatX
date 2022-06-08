@@ -19,6 +19,24 @@ class IGAttack(TargetedAttacker, Surrogate):
     into Attack and Defense" 
     <https://arxiv.org/abs/1903.01610>`_ paper (IJCAI'19)
 
+    Parameters
+    ----------
+    data : Data
+        PyG-like data denoting the input graph
+    device : str, optional
+        the device of the attack running on, by default "cpu"
+    seed : Optional[int], optional
+        the random seed for reproducing the attack, by default None
+    name : Optional[str], optional
+        name of the attacker, if None, it would be :obj:`__class__.__name__`, 
+        by default None
+    kwargs : additional arguments of :class:`graphwar.attack.Attacker`,
+
+    Raises
+    ------
+    TypeError
+        unexpected keyword argument in `kwargs`       
+
     Example
     -------
     >>> from graphwar.dataset import GraphWarDataset

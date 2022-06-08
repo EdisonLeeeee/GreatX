@@ -104,6 +104,7 @@
 <span class="kn">from</span> <span class="nn">graphwar.functional</span> <span class="kn">import</span> <span class="n">spmm</span>
 <span class="kn">from</span> <span class="nn">graphwar.nn.layers.gcn_conv</span> <span class="kn">import</span> <span class="n">dense_gcn_norm</span>
 
+
 <div class="viewcode-block" id="DAGNNConv"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.DAGNNConv">[docs]</a><span class="k">class</span> <span class="nc">DAGNNConv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Deep Adaptive Graph Neural Network in</span>
@@ -127,12 +128,12 @@
 
 <div class="viewcode-block" id="DAGNNConv.reset_parameters"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.DAGNNConv.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lin</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span></div>
-        
+
 <div class="viewcode-block" id="DAGNNConv.forward"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.DAGNNConv.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Adj</span><span class="p">,</span>
                 <span class="n">edge_weight</span><span class="p">:</span> <span class="n">OptTensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-        
+
         <span class="n">is_edge_like</span> <span class="o">=</span> <span class="n">is_edge_index</span><span class="p">(</span><span class="n">edge_index</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="n">is_edge_like</span><span class="p">:</span>
             <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">gcn_norm</span><span class="p">(</span>  <span class="c1"># yapf: disable</span>
                 <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="kc">False</span><span class="p">,</span>
@@ -143,14 +144,15 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_self_loops</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># N by N dense adjacency matrix</span>
-            <span class="n">adj</span> <span class="o">=</span> <span class="n">dense_gcn_norm</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">add_self_loops</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">add_self_loops</span><span class="p">)</span>                
+            <span class="n">adj</span> <span class="o">=</span> <span class="n">dense_gcn_norm</span><span class="p">(</span>
+                <span class="n">edge_index</span><span class="p">,</span> <span class="n">add_self_loops</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">add_self_loops</span><span class="p">)</span>
 
         <span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">is_edge_like</span><span class="p">:</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">spmm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">x</span> <span class="o">=</span> <span class="n">adj</span> <span class="o">@</span> <span class="n">x</span>      
+                <span class="n">x</span> <span class="o">=</span> <span class="n">adj</span> <span class="o">@</span> <span class="n">x</span>
             <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
         <span class="n">H</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -158,14 +160,11 @@
         <span class="n">S</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">H</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="n">out</span>                </div>
+        <span class="k">return</span> <span class="n">out</span></div>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="si">}</span><span class="s1">, &#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="si">}</span><span class="s1">, K=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span></div>
-
-    
-
 </pre></div>
 
            </div>

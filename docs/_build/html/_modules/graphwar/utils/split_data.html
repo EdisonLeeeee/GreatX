@@ -99,37 +99,36 @@
 <span class="kn">from</span> <span class="nn">graphwar.utils</span> <span class="kn">import</span> <span class="n">BunchDict</span>
 
 
-<span class="k">def</span> <span class="nf">train_val_test_split_tabular</span><span class="p">(</span><span class="n">N</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
-                                 <span class="n">train</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
-                                 <span class="n">test</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
-                                 <span class="n">val</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
-                                 <span class="n">stratify</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                                 <span class="n">random_state</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
-
-    <span class="n">idx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-    <span class="n">idx_train</span><span class="p">,</span> <span class="n">idx_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span>
-                                           <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
-                                           <span class="n">train_size</span><span class="o">=</span><span class="n">train</span> <span class="o">+</span> <span class="n">val</span><span class="p">,</span>
-                                           <span class="n">test_size</span><span class="o">=</span><span class="n">test</span><span class="p">,</span>
-                                           <span class="n">stratify</span><span class="o">=</span><span class="n">stratify</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">val</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">stratify</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">stratify</span> <span class="o">=</span> <span class="n">stratify</span><span class="p">[</span><span class="n">idx_train</span><span class="p">]</span>
-        <span class="n">idx_train</span><span class="p">,</span> <span class="n">idx_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">idx_train</span><span class="p">,</span>
-                                              <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
-                                              <span class="n">train_size</span><span class="o">=</span><span class="n">train</span> <span class="o">/</span> <span class="p">(</span><span class="n">train</span> <span class="o">+</span> <span class="n">val</span><span class="p">),</span>
-                                              <span class="n">stratify</span><span class="o">=</span><span class="n">stratify</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">idx_val</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">return</span> <span class="n">idx_train</span><span class="p">,</span> <span class="n">idx_val</span><span class="p">,</span> <span class="n">idx_test</span>
-
-
 <div class="viewcode-block" id="split_nodes"><a class="viewcode-back" href="../../../modules/utils.html#graphwar.utils.split_nodes">[docs]</a><span class="k">def</span> <span class="nf">split_nodes</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
                 <span class="n">train</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
                 <span class="n">test</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
                 <span class="n">val</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
                 <span class="n">random_state</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BunchDict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Randomly split a set of nodes labeled with :obj:`labels`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    labels : Tensor</span>
+<span class="sd">        the labels of the nodes.</span>
+<span class="sd">    train : float, optional</span>
+<span class="sd">        the percentage of the training set, by default 0.1</span>
+<span class="sd">    test : float, optional</span>
+<span class="sd">        the percentage of the test set, by default 0.8</span>
+<span class="sd">    val : float, optional</span>
+<span class="sd">        the percentage of the validation set, by default 0.1</span>
+<span class="sd">    random_state : Optional[int], optional</span>
+<span class="sd">        random seed for the random number generator, by default None</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    BunchDict with the following items:</span>
+<span class="sd">        * train_nodes: torch.Tensor with Size [train * num_nodes]</span>
+<span class="sd">            The indices of the training nodes</span>
+<span class="sd">        * val_nodes: torch.Tensor with Size [val * num_nodes]</span>
+<span class="sd">            The indices of the validation nodes</span>
+<span class="sd">        * test_nodes torch.Tensor with Size [test * num_nodes]</span>
+<span class="sd">            The indices of the test nodes        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">val</span> <span class="o">=</span> <span class="mf">0.</span> <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">val</span>
     <span class="k">assert</span> <span class="n">train</span> <span class="o">+</span> <span class="n">val</span> <span class="o">+</span> <span class="n">test</span> <span class="o">&lt;=</span> <span class="mf">1.0</span>
@@ -151,8 +150,7 @@
 <div class="viewcode-block" id="split_nodes_by_classes"><a class="viewcode-back" href="../../../modules/utils.html#graphwar.utils.split_nodes_by_classes">[docs]</a><span class="k">def</span> <span class="nf">split_nodes_by_classes</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span>
                            <span class="n">n_per_class</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
                            <span class="n">random_state</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BunchDict</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Randomly split the training data by the number of nodes per classes.</span>
+    <span class="sd">&quot;&quot;&quot;Randomly split the training data by the number of nodes per classes.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -166,11 +164,11 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    BunchDict with the following items:</span>
-<span class="sd">        * train_nodes: torch.Tensor [n_per_class * num_classes]</span>
+<span class="sd">        * train_nodes: torch.Tensor with Size [n_per_class * num_classes]</span>
 <span class="sd">            The indices of the training nodes</span>
-<span class="sd">        * val_nodes: torch.Tensor [n_per_class * num_classes]</span>
+<span class="sd">        * val_nodes: torch.Tensor with Size [n_per_class * num_classes]</span>
 <span class="sd">            The indices of the validation nodes</span>
-<span class="sd">        * test_nodes torch.Tensor [num_nodes - 2*n_per_class * num_classes]</span>
+<span class="sd">        * test_nodes torch.Tensor with Size [num_nodes - 2*n_per_class * num_classes]</span>
 <span class="sd">            The indices of the test nodes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">random_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -203,6 +201,32 @@
         <span class="nb">dict</span><span class="p">(</span><span class="n">train_nodes</span><span class="o">=</span><span class="n">split_train</span><span class="p">,</span>
              <span class="n">val_nodes</span><span class="o">=</span><span class="n">split_val</span><span class="p">,</span>
              <span class="n">test_nodes</span><span class="o">=</span><span class="n">split_test</span><span class="p">))</span></div>
+
+
+<span class="k">def</span> <span class="nf">train_val_test_split_tabular</span><span class="p">(</span><span class="n">N</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                                 <span class="n">train</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+                                 <span class="n">test</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
+                                 <span class="n">val</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+                                 <span class="n">stratify</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">random_state</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">:</span>
+
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+    <span class="n">idx_train</span><span class="p">,</span> <span class="n">idx_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span>
+                                           <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+                                           <span class="n">train_size</span><span class="o">=</span><span class="n">train</span> <span class="o">+</span> <span class="n">val</span><span class="p">,</span>
+                                           <span class="n">test_size</span><span class="o">=</span><span class="n">test</span><span class="p">,</span>
+                                           <span class="n">stratify</span><span class="o">=</span><span class="n">stratify</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">val</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">stratify</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">stratify</span> <span class="o">=</span> <span class="n">stratify</span><span class="p">[</span><span class="n">idx_train</span><span class="p">]</span>
+        <span class="n">idx_train</span><span class="p">,</span> <span class="n">idx_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">idx_train</span><span class="p">,</span>
+                                              <span class="n">random_state</span><span class="o">=</span><span class="n">random_state</span><span class="p">,</span>
+                                              <span class="n">train_size</span><span class="o">=</span><span class="n">train</span> <span class="o">/</span> <span class="p">(</span><span class="n">train</span> <span class="o">+</span> <span class="n">val</span><span class="p">),</span>
+                                              <span class="n">stratify</span><span class="o">=</span><span class="n">stratify</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">idx_val</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">idx_train</span><span class="p">,</span> <span class="n">idx_val</span><span class="p">,</span> <span class="n">idx_test</span>
 </pre></div>
 
            </div>

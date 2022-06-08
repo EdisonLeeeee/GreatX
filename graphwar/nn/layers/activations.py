@@ -20,14 +20,6 @@ act_dict = dict(relu="ReLU",
 def get(act: Optional[str] = None, inplace: bool = False) -> nn.Module:
     """Get activation functions by input `string`
 
-    Example
-    -------
-    >>> from graphwar.nn.layers import activations
-    >>> activations.get('relu')
-    ReLU()
-    >>> activations.get(None)
-    Identity()
-
     Parameters
     ----------
     act : string or None
@@ -38,10 +30,18 @@ def get(act: Optional[str] = None, inplace: bool = False) -> nn.Module:
         currently it is not work since not all the functions 
         take this argument, by default False
 
+    Example
+    -------
+    >>> from graphwar.nn.layers import activations
+    >>> activations.get('relu')
+    ReLU()
+    >>> activations.get(None)
+    Identity()
+
     NOTE
     ----
-    We currently do not support `inplace=True` since
-    not all activation functions in PyTorch support argument `inplace=True`.
+    We currently do not support :obj:`inplace=True` since
+    not all activation functions in PyTorch support argument :obj:`inplace=True`.
 
     Returns
     -------

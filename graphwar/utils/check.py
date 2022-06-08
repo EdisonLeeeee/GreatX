@@ -3,8 +3,8 @@ import torch
 
 
 def is_edge_index(x: Any) -> bool:
-    """Check if the input `x` is PyG-like 
-    `edge_index` with shape [2, M], 
+    """Check if the input :obj:`x` is PyG-like 
+    :obj:`edge_index` with shape [2, M], 
     where M is the number of edges.
 
     Example

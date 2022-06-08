@@ -6,7 +6,7 @@ from graphwar import training
 
 
 def get_trainer(model: Union[str, torch.nn.Module]) -> training.trainer.Trainer:
-    """get the default trainer using str or model
+    """Get the default trainer using str or a model in :class:`graphwar.nn.models`
 
     Parameters
     ----------
@@ -15,8 +15,7 @@ def get_trainer(model: Union[str, torch.nn.Module]) -> training.trainer.Trainer:
 
     Returns
     -------
-    graphwar.training.trainer.Trainer
-        the default trainer for the model.
+    Custom trainer or default trainer :class:`graphwar.training.Trainer` for the model.
 
     Examples
     --------

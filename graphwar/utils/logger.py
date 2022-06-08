@@ -112,7 +112,18 @@ def setup_logger(
     return logger
 
 
-def get_logger(name="GraphWar"):
+def get_logger(name: str = "GraphWar"):
+    """Get a logger for a given name.
+
+    Parameters
+    ----------
+    name : str, optional
+        name of the logger, by default "GraphWar"
+
+    Returns
+    -------
+    a logger for the given name
+    """
     return logging.getLogger(name)
 
 

@@ -106,6 +106,24 @@
 <div class="viewcode-block" id="Attacker"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.Attacker">[docs]</a><span class="k">class</span> <span class="nc">Attacker</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Adversarial attacker for graph data. Note that this is an abstract class.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : Data</span>
+<span class="sd">        PyG-like data denoting the input graph</span>
+<span class="sd">    device : str, optional</span>
+<span class="sd">        the device of the attack running on, by default &quot;cpu&quot;</span>
+<span class="sd">    seed : Optional[int], optional</span>
+<span class="sd">        the random seed for reproducing the attack, by default None</span>
+<span class="sd">    name : Optional[str], optional</span>
+<span class="sd">        name of the attacker, if None, it would be :obj:`__class__.__name__`, </span>
+<span class="sd">        by default None</span>
+<span class="sd">    kwargs : additional arguments of :class:`graphwar.attack.Attacker`,</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        unexpected keyword argument in `kwargs`    </span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    For example, the attacker model should be defined as follows:</span>
@@ -125,24 +143,6 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
                  <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialization of an attacker model.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        data : Data</span>
-<span class="sd">            PyG-like input data</span>
-<span class="sd">        device : str, optional</span>
-<span class="sd">            the device of the attack running on, by default &quot;cpu&quot;</span>
-<span class="sd">        seed : Optional[int], optional</span>
-<span class="sd">            the random seed for reproducing the attack, by default None</span>
-<span class="sd">        name : Optional[str], optional</span>
-<span class="sd">            name of the attacker, if None, it would be `__class__.__name__`, </span>
-<span class="sd">            by default None</span>
-<span class="sd">        kwargs : additional arguments of :class:`graphwar.attack.Attacker`,</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        TypeError</span>
-<span class="sd">            unexpected keyword argument in `kwargs`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>

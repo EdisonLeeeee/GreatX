@@ -8,7 +8,7 @@ from torch_geometric.utils import sort_edge_index, to_scipy_sparse_matrix, from_
 
 def add_edges(edge_index: Tensor, edges_to_add: Tensor,
               symmetric: bool = True, sort_edges: bool = True) -> Tensor:
-    """add edges to the graph `edge_index`.
+    """Add edges to the graph denoted as :obj:`edge_index`.
 
     Parameters
     ----------
@@ -17,14 +17,14 @@ def add_edges(edge_index: Tensor, edges_to_add: Tensor,
     edges_to_add : torch.Tensor
         shape [2, M], the edges to be added into the graph.
     symmetric : bool
-        whether the graph is symmetric, if True,
+        whether the output graph is symmetric, if True,
         it would add the edges into the graph by:
-        `edges_to_add = torch.cat([edges_to_add, edges_to_add.flip(0)], dim=1)`
+        :obj:`edges_to_add = torch.cat([edges_to_add, edges_to_add.flip(0)], dim=1)`
 
     Returns
     -------
     Tensor
-        the graph instance `edge_index` with edges added.
+        the graph instance :obj:`edge_index` with edges added.
     """
     if symmetric:
         edges_to_add = torch.cat([edges_to_add, edges_to_add.flip(0)], dim=1)
@@ -36,7 +36,7 @@ def add_edges(edge_index: Tensor, edges_to_add: Tensor,
 
 
 def remove_edges(edge_index: Tensor, edges_to_remove: Tensor, symmetric: bool = True) -> Tensor:
-    """remove edges from the graph `edge_index`. 
+    """Remove edges from the graph denoted as :obj:`edge_index`. 
 
     Parameters
     ----------
@@ -45,14 +45,14 @@ def remove_edges(edge_index: Tensor, edges_to_remove: Tensor, symmetric: bool = 
     edges_to_remove : torch.Tensor
         shape [2, M], the edges to be removed in the graph.
     symmetric : bool
-        whether the graph is symmetric, if True,
+        whether the output graph is symmetric, if True,
         it would remove the edges from the graph by:
-        `edges_to_remove = torch.cat([edges_to_remove, edges_to_remove.flip(0)], dim=1)`
+        :obj:`edges_to_remove = torch.cat([edges_to_remove, edges_to_remove.flip(0)], dim=1)`
 
     Returns
     -------
     Tensor
-        the graph instance `edge_index` with edges removed.
+        the graph instance :obj:`edge_index` with edges removed.
     """
     device = edge_index.device
     if symmetric:
@@ -71,3 +71,26 @@ def remove_edges(edge_index: Tensor, edges_to_remove: Tensor, symmetric: bool = 
     adj_matrix.eliminate_zeros()
     edge_index, _ = from_scipy_sparse_matrix(adj_matrix)
     return edge_index.to(device)
+
+
+def flip_edges(edge_index: Tensor, edges_to_flip: Tensor, symmetric: bool = True) -> Tensor:
+    """Flip edges from the graph denoted as :obj:`edge_index`. 
+
+    Parameters
+    ----------
+    edge_index : Tensor
+        the graph instance where edges will be flipped from.
+    edges_to_flip : torch.Tensor
+        shape [2, M], the edges to be flipped in the graph.
+    symmetric : bool
+        whether the output graph is symmetric, if True,
+        it would flip the edges from the graph by:
+        :obj:`edges_to_flip = torch.cat([edges_to_flip, edges_to_flip.flip(0)], dim=1)`
+
+    Returns
+    -------
+    Tensor
+        the graph instance :obj:`edge_index` with edges flipped.
+    """
+    # TODO
+    raise NotImplementedError

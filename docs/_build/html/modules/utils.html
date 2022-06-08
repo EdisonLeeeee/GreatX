@@ -100,106 +100,135 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.Progbar" title="graphwar.utils.Progbar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Progbar</span></code></a></p></td>
-<td><p>Displays a progress bar.</p></td>
+<td><p>A progress bar for display.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.BunchDict" title="graphwar.utils.BunchDict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BunchDict</span></code></a></p></td>
 <td><p>Container object for datasets Dictionary-like object that exposes its keys as attributes and remembers insertion order.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.topk" title="graphwar.utils.topk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">topk</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.CKA" title="graphwar.utils.CKA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CKA</span></code></a></p></td>
+<td><p>Centered Kernel Alignment (CKA) metric, where the features of the networks are compared.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.topk" title="graphwar.utils.topk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">topk</span></code></a></p></td>
 <td><p>Returns the k largest/smallest elements and corresponding indices from an array-like input.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.wrapper" title="graphwar.utils.wrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wrapper</span></code></a></p></td>
-<td><p>wrap a function to make some arguments have the same length.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.wrapper" title="graphwar.utils.wrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wrapper</span></code></a></p></td>
+<td><p>Wrap a function to make some arguments have the same length.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.repeat" title="graphwar.utils.repeat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">repeat</span></code></a></p></td>
-<td><p>repeat any objects and return iterable ones.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.repeat" title="graphwar.utils.repeat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">repeat</span></code></a></p></td>
+<td><p>Repeat any objects and return iterable ones.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.split_nodes" title="graphwar.utils.split_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_nodes</span></code></a></p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.split_nodes" title="graphwar.utils.split_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_nodes</span></code></a></p></td>
+<td><p>Randomly split a set of nodes labeled with <code class="xref py py-obj docutils literal notranslate"><span class="pre">labels</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.split_nodes_by_classes" title="graphwar.utils.split_nodes_by_classes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_nodes_by_classes</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.split_nodes_by_classes" title="graphwar.utils.split_nodes_by_classes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_nodes_by_classes</span></code></a></p></td>
 <td><p>Randomly split the training data by the number of nodes per classes.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.setup_logger" title="graphwar.utils.setup_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_logger</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.setup_logger" title="graphwar.utils.setup_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_logger</span></code></a></p></td>
 <td><p>Initialize the graphwar logger and set its verbosity level to &quot;DEBUG&quot;.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.get_logger" title="graphwar.utils.get_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_logger</span></code></a></p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.get_logger" title="graphwar.utils.get_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_logger</span></code></a></p></td>
+<td><p>Get a logger for a given name.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.singleton_filter" title="graphwar.utils.singleton_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">singleton_filter</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.singleton_filter" title="graphwar.utils.singleton_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">singleton_filter</span></code></a></p></td>
 <td><p>Filter edges that, if removed, would turn one or more nodes into singleton nodes.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.SingletonFilter" title="graphwar.utils.SingletonFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SingletonFilter</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.SingletonFilter" title="graphwar.utils.SingletonFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SingletonFilter</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.LikelihoodFilter" title="graphwar.utils.LikelihoodFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LikelihoodFilter</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.LikelihoodFilter" title="graphwar.utils.LikelihoodFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LikelihoodFilter</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.singleton_mask" title="graphwar.utils.singleton_mask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">singleton_mask</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.singleton_mask" title="graphwar.utils.singleton_mask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">singleton_mask</span></code></a></p></td>
 <td><p>Computes a mask for entries potentially leading to singleton nodes, i.e. one of the two nodes corresponding to the entry have degree 1 and there is an edge between the two nodes.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.add_edges" title="graphwar.utils.add_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_edges</span></code></a></p></td>
-<td><p>add edges to the graph <cite>edge_index</cite>.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.add_edges" title="graphwar.utils.add_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_edges</span></code></a></p></td>
+<td><p>Add edges to the graph denoted as <code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_index</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.remove_edges" title="graphwar.utils.remove_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edges</span></code></a></p></td>
-<td><p>remove edges from the graph <cite>edge_index</cite>.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.remove_edges" title="graphwar.utils.remove_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_edges</span></code></a></p></td>
+<td><p>Remove edges from the graph denoted as <code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_index</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.flip_edges" title="graphwar.utils.flip_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flip_edges</span></code></a></p></td>
+<td><p>Flip edges from the graph denoted as <code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_index</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.scipy_normalize" title="graphwar.utils.scipy_normalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy_normalize</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.overlap" title="graphwar.utils.overlap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">overlap</span></code></a></p></td>
-<td><p>Compute graph overlapping according to Node Similarity Preserving Graph Convolutional Networks</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.CKA" title="graphwar.utils.CKA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CKA</span></code></a></p></td>
-<td><p>Centered Kernel Alignment (CKA) metric, where the features of the networks are compared.</p></td>
+<td><p>Normalize a sparse matrix according to <code class="xref py py-obj docutils literal notranslate"><span class="pre">GCN</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.normalize" title="graphwar.utils.normalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize</span></code></a></p></td>
 <td><p>Feature normalization function.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.ego_graph" title="graphwar.utils.ego_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ego_graph</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.utils.overlap" title="graphwar.utils.overlap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">overlap</span></code></a></p></td>
+<td><p>Compute graph overlapping according to Node Similarity Preserving Graph Convolutional Networks</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.utils.ego_graph" title="graphwar.utils.ego_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ego_graph</span></code></a></p></td>
 <td><p>Returns induced subgraph of neighbors centered at node n within a given radius.</p></td>
 </tr>
 </tbody>
 </table>
 <span class="target" id="module-graphwar.utils"></span><dl class="py class">
 <dt class="sig sig-object py" id="graphwar.utils.Progbar">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Progbar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'step'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/utils/progbar.html#Progbar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.Progbar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Displays a progress bar.</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Progbar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'step'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/utils/progbar.html#Progbar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.Progbar" title="Permalink to this definition">¶</a></dt>
+<dd><p>A progress bar for display.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>target</strong> – Total number of steps expected, None if unknown.</p></li>
-<li><p><strong>width</strong> – Progress bar width on screen.</p></li>
-<li><p><strong>verbose</strong> – Verbosity mode, 0 (silent), 1 (verbose), 2 (semi-verbose)</p></li>
-<li><p><strong>interval</strong> – Minimum visual progress update interval (in seconds).</p></li>
-<li><p><strong>unit_name</strong> – Display name for step counts (usually “step” or “sample”).</p></li>
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Total number of steps expected.</p></li>
+<li><p><strong>width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – Progress bar width on screen, by default 30</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – Verbosity mode, 0 (silent), 1 (verbose), 2 (semi-verbose), by default 1</p></li>
+<li><p><strong>interval</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – Minimum visual progress update interval (in seconds), by default 0.05</p></li>
+<li><p><strong>unit_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – Display name for step counts (usually “step” or “sample”), by default ‘step’</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.utils</span> <span class="kn">import</span> <span class="n">Progbar</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pbar</span> <span class="o">=</span> <span class="n">Progbar</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">pbar</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;current number </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="go">5/5 [==============================] - Total: 3.22ms - 643us/step- current number 4</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pbar</span> <span class="o">=</span> <span class="n">Progbar</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;current number </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="go">5/5 [==============================] - Total: 3.22ms - 643us/step- current number 4</span>
+</pre></div>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.utils.Progbar.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/utils/progbar.html#Progbar.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.Progbar.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the progress bar.</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/utils/progbar.html#Progbar.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.Progbar.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the progress bar using current value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>current</strong> – Index of current step.</p></li>
-<li><p><strong>msg</strong> – List of tuples: <cite>(name, value_for_last_step)</cite> or string messages.</p></li>
-<li><p><strong>finalize</strong> – Whether this is the last update for the progress bar. If
-<cite>None</cite>, defaults to <cite>current &gt;= self.target</cite>.</p></li>
+<li><p><strong>current</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of current step.</p></li>
+<li><p><strong>msg</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>List</em><em>, </em><em>Tuple</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – <code class="xref py py-obj docutils literal notranslate"><span class="pre">(name,</span> <span class="pre">value_for_last_step)</span></code> or string messages, by default None</p></li>
+<li><p><strong>finalize</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>]</em><em>, </em><em>optional</em>) – Whether this is the last update for the progress bar. If
+<a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>, defaults to <code class="xref py py-obj docutils literal notranslate"><span class="pre">current</span> <span class="pre">&gt;=</span> <span class="pre">self.target</span></code>, by default None</p></li>
 </ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – invalid message <code class="xref py py-obj docutils literal notranslate"><span class="pre">msg</span></code> for progress bar.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.utils.Progbar.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/utils/progbar.html#Progbar.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.Progbar.add" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/utils/progbar.html#Progbar.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.Progbar.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add <code class="xref py py-obj docutils literal notranslate"><span class="pre">n</span></code> steps to the progress bar.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – number of steps to add to the progress bar.</p></li>
+<li><p><strong>msg</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>List</em><em>, </em><em>Tuple</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – <code class="xref py py-obj docutils literal notranslate"><span class="pre">(name,</span> <span class="pre">value_for_last_step)</span></code> or string messages, by default None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.utils.Progbar.format_num">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">format_num</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/utils/progbar.html#Progbar.format_num"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.Progbar.format_num" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">format_num</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../_modules/graphwar/utils/progbar.html#Progbar.format_num"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.Progbar.format_num" title="Permalink to this definition">¶</a></dt>
 <dd><p>Intelligent scientific notation (.3g).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -276,6 +305,62 @@ and remembers insertion order.</p>
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="graphwar.utils.CKA">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CKA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model1_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model2_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model1_layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model2_layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/utils/cka.html#CKA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.CKA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Centered Kernel Alignment (CKA) metric, where the features of the networks are compared.
+See <a class="reference external" href="https://github.com/AntixK/PyTorch-Model-Compare">https://github.com/AntixK/PyTorch-Model-Compare</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model1</strong> (<em>nn.Module</em>) – model 1</p></li>
+<li><p><strong>model2</strong> (<em>nn.Module</em>) – model 2</p></li>
+<li><p><strong>model1_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – name of model 1, by default None</p></li>
+<li><p><strong>model2_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – name of model 2, by default None</p></li>
+<li><p><strong>model1_layers</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – List of layers to extract features from, by default None</p></li>
+<li><p><strong>model2_layers</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – List of layers to extract features from, by default None</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – device to run the models, by default ‘cpu’</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># get your graph</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m1</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># get your model1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m2</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># get your model2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cka</span> <span class="o">=</span> <span class="n">CKA</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cka</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cka</span><span class="o">.</span><span class="n">plot_results</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="graphwar.utils.CKA.compare">
+<span class="sig-name descname"><span class="pre">compare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/graphwar/utils/cka.html#CKA.compare"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.CKA.compare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the feature similarity between the models on the
+given datasets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data1</strong> (<em>Data</em>) – the dataset where model 1 run on.</p></li>
+<li><p><strong>data2</strong> (<em>Data</em><em>, </em><em>optional</em>) – If given, model 2 will run on this dataset. by default None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="graphwar.utils.CKA.export">
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="../_modules/graphwar/utils/cka.html#CKA.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.CKA.export" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports the CKA data along with the respective model layer names.
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="graphwar.utils.CKA.plot_results">
+<span class="sig-name descname"><span class="pre">plot_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/utils/cka.html#CKA.plot_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.CKA.plot_results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="graphwar.utils.topk">
 <span class="sig-name descname"><span class="pre">topk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">largest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">graphwar.utils.functions.topk_values_indices</span></span></span><a class="reference internal" href="../_modules/graphwar/utils/functions.html#topk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.topk" title="Permalink to this definition">¶</a></dt>
@@ -317,7 +402,7 @@ of the given <code class="xref py py-attr docutils literal notranslate"><span cl
 <dl class="py function">
 <dt class="sig sig-object py" id="graphwar.utils.wrapper">
 <span class="sig-name descname"><span class="pre">wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a></span></span><a class="reference internal" href="../_modules/graphwar/utils/functions.html#wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.wrapper" title="Permalink to this definition">¶</a></dt>
-<dd><p>wrap a function to make some arguments
+<dd><p>Wrap a function to make some arguments
 have the same length. By default, the arguments
 to be modified are <cite>hids</cite> and <cite>acts</cite>.</p>
 <p>Uses can custom these arguments by setting argument
@@ -341,8 +426,8 @@ the same as <cite>length_as</cite>, by default, it is <cite>hids</cite>.</p>
 </dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@wrapper</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span> <span class="n">acts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span> <span class="n">acts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">func</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
@@ -358,8 +443,8 @@ the same as <cite>length_as</cite>, by default, it is <cite>hids</cite>.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@wrapper</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span> <span class="n">acts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span> <span class="n">acts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">func</span><span class="p">()</span>
@@ -375,8 +460,8 @@ the same as <cite>length_as</cite>, by default, it is <cite>hids</cite>.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@wrapper</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span> <span class="n">acts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">heads</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">],</span> <span class="n">acts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">heads</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="nb">locals</span><span class="p">())</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">func</span><span class="p">(</span><span class="s1">&#39;class_itself&#39;</span><span class="p">,</span> <span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span>
@@ -392,7 +477,7 @@ the same as <cite>length_as</cite>, by default, it is <cite>hids</cite>.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="graphwar.utils.repeat">
 <span class="sig-name descname"><span class="pre">repeat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../_modules/graphwar/utils/functions.html#repeat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.repeat" title="Permalink to this definition">¶</a></dt>
-<dd><p>repeat any objects and return iterable ones.</p>
+<dd><p>Repeat any objects and return iterable ones.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -431,7 +516,42 @@ it would return the iterable object itself, by default None</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="graphwar.utils.split_nodes">
 <span class="sig-name descname"><span class="pre">split_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#graphwar.utils.BunchDict" title="graphwar.utils.bunchdict.BunchDict"><span class="pre">graphwar.utils.bunchdict.BunchDict</span></a></span></span><a class="reference internal" href="../_modules/graphwar/utils/split_data.html#split_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.split_nodes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Randomly split a set of nodes labeled with <code class="xref py py-obj docutils literal notranslate"><span class="pre">labels</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels</strong> (<em>Tensor</em>) – the labels of the nodes.</p></li>
+<li><p><strong>train</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – the percentage of the training set, by default 0.1</p></li>
+<li><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – the percentage of the test set, by default 0.8</p></li>
+<li><p><strong>val</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – the percentage of the validation set, by default 0.1</p></li>
+<li><p><strong>random_state</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – random seed for the random number generator, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><dl class="simple">
+<dt>train_nodes: torch.Tensor with Size [train * num_nodes]</dt><dd><p>The indices of the training nodes</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>val_nodes: torch.Tensor with Size [val * num_nodes]</dt><dd><p>The indices of the validation nodes</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>test_nodes torch.Tensor with Size [test * num_nodes]</dt><dd><p>The indices of the test nodes</p>
+</dd>
+</dl>
+</li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>BunchDict with the following items</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="graphwar.utils.split_nodes_by_classes">
@@ -448,17 +568,17 @@ it would return the iterable object itself, by default None</p></li>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><dl class="simple">
-<dt>train_nodes: torch.Tensor [n_per_class * num_classes]</dt><dd><p>The indices of the training nodes</p>
+<dt>train_nodes: torch.Tensor with Size [n_per_class * num_classes]</dt><dd><p>The indices of the training nodes</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>val_nodes: torch.Tensor [n_per_class * num_classes]</dt><dd><p>The indices of the validation nodes</p>
+<dt>val_nodes: torch.Tensor with Size [n_per_class * num_classes]</dt><dd><p>The indices of the validation nodes</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>test_nodes torch.Tensor [num_nodes - 2*n_per_class * num_classes]</dt><dd><p>The indices of the test nodes</p>
+<dt>test_nodes torch.Tensor with Size [num_nodes - 2*n_per_class * num_classes]</dt><dd><p>The indices of the test nodes</p>
 </dd>
 </dl>
 </li>
@@ -523,8 +643,17 @@ By default, None.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="graphwar.utils.get_logger">
-<span class="sig-name descname"><span class="pre">get_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GraphWar'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/utils/logger.html#get_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.get_logger" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">get_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'GraphWar'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/utils/logger.html#get_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.get_logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a logger for a given name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – name of the logger, by default “GraphWar”</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>a logger for the given name</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="graphwar.utils.singleton_filter">
@@ -654,7 +783,7 @@ degree 1 and there is an edge between the two nodes.</p>
 the input adjacency matrix to compte the mask</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>mask</strong> – a boolean mask with shape as <cite>adj_matrix</cite>.</p>
+<dd class="field-even"><p><strong>mask</strong> – a boolean mask with shape as <code class="xref py py-obj docutils literal notranslate"><span class="pre">adj_matrix</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>bool Tensor</p>
@@ -665,19 +794,19 @@ the input adjacency matrix to compte the mask</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="graphwar.utils.add_edges">
 <span class="sig-name descname"><span class="pre">add_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges_to_add</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_edges</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/graphwar/utils/modification.html#add_edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.add_edges" title="Permalink to this definition">¶</a></dt>
-<dd><p>add edges to the graph <cite>edge_index</cite>.</p>
+<dd><p>Add edges to the graph denoted as <code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_index</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>edge_index</strong> (<em>Tensor</em>) – the graph instance where edges will be removed from.</p></li>
 <li><p><strong>edges_to_add</strong> (<em>torch.Tensor</em>) – shape [2, M], the edges to be added into the graph.</p></li>
-<li><p><strong>symmetric</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – whether the graph is symmetric, if True,
+<li><p><strong>symmetric</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – whether the output graph is symmetric, if True,
 it would add the edges into the graph by:
-<cite>edges_to_add = torch.cat([edges_to_add, edges_to_add.flip(0)], dim=1)</cite></p></li>
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">edges_to_add</span> <span class="pre">=</span> <span class="pre">torch.cat([edges_to_add,</span> <span class="pre">edges_to_add.flip(0)],</span> <span class="pre">dim=1)</span></code></p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the graph instance <cite>edge_index</cite> with edges added.</p>
+<dd class="field-even"><p>the graph instance <code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_index</span></code> with edges added.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Tensor</p>
@@ -688,19 +817,42 @@ it would add the edges into the graph by:
 <dl class="py function">
 <dt class="sig sig-object py" id="graphwar.utils.remove_edges">
 <span class="sig-name descname"><span class="pre">remove_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges_to_remove</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/graphwar/utils/modification.html#remove_edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.remove_edges" title="Permalink to this definition">¶</a></dt>
-<dd><p>remove edges from the graph <cite>edge_index</cite>.</p>
+<dd><p>Remove edges from the graph denoted as <code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_index</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>edge_index</strong> (<em>Tensor</em>) – the graph instance where edges will be removed from.</p></li>
 <li><p><strong>edges_to_remove</strong> (<em>torch.Tensor</em>) – shape [2, M], the edges to be removed in the graph.</p></li>
-<li><p><strong>symmetric</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – whether the graph is symmetric, if True,
+<li><p><strong>symmetric</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – whether the output graph is symmetric, if True,
 it would remove the edges from the graph by:
-<cite>edges_to_remove = torch.cat([edges_to_remove, edges_to_remove.flip(0)], dim=1)</cite></p></li>
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">edges_to_remove</span> <span class="pre">=</span> <span class="pre">torch.cat([edges_to_remove,</span> <span class="pre">edges_to_remove.flip(0)],</span> <span class="pre">dim=1)</span></code></p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the graph instance <cite>edge_index</cite> with edges removed.</p>
+<dd class="field-even"><p>the graph instance <code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_index</span></code> with edges removed.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="graphwar.utils.flip_edges">
+<span class="sig-name descname"><span class="pre">flip_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges_to_flip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/graphwar/utils/modification.html#flip_edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.flip_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flip edges from the graph denoted as <code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_index</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>edge_index</strong> (<em>Tensor</em>) – the graph instance where edges will be flipped from.</p></li>
+<li><p><strong>edges_to_flip</strong> (<em>torch.Tensor</em>) – shape [2, M], the edges to be flipped in the graph.</p></li>
+<li><p><strong>symmetric</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – whether the output graph is symmetric, if True,
+it would flip the edges from the graph by:
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">edges_to_flip</span> <span class="pre">=</span> <span class="pre">torch.cat([edges_to_flip,</span> <span class="pre">edges_to_flip.flip(0)],</span> <span class="pre">dim=1)</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the graph instance <code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_index</span></code> with edges flipped.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Tensor</p>
@@ -710,71 +862,30 @@ it would remove the edges from the graph by:
 
 <dl class="py function">
 <dt class="sig sig-object py" id="graphwar.utils.scipy_normalize">
-<span class="sig-name descname"><span class="pre">scipy_normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adj_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">scipy.sparse.csr.csr_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_self_loops</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/utils/scipy_sparse.html#scipy_normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.scipy_normalize" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="graphwar.utils.overlap">
-<span class="sig-name descname"><span class="pre">overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge_index1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'edge'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../_modules/graphwar/utils/overlap.html#overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.overlap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute graph overlapping according to
-Node Similarity Preserving Graph Convolutional Networks</p>
+<span class="sig-name descname"><span class="pre">scipy_normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adj_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">scipy.sparse.csr.csr_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_self_loops</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">scipy.sparse.csr.csr_matrix</span></span></span><a class="reference internal" href="../_modules/graphwar/utils/scipy_sparse.html#scipy_normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.scipy_normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize a sparse matrix according to <code class="xref py py-obj docutils literal notranslate"><span class="pre">GCN</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>Tensor</strong><strong>)</strong> (<em>edge_index2</em>) – a graph</p></li>
-<li><p><strong>(</strong><strong>Tensor</strong><strong>)</strong> – another graph</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>on</em>) – </p></li>
+<li><p><strong>adj_matrix</strong> (<em>sp.csr_matrix</em>) – the input sparse matrix denoting a graph.</p></li>
+<li><p><strong>add_self_loops</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to add self-loops, by default True</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>overlapping of the two graphs on edge or node</p>
+<dd class="field-even"><p>the normalized adjacency matrix.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)">float</a></p>
+<dd class="field-odd"><p>sp.csr_matrix</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="graphwar.utils.CKA">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CKA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.nn.modules.module.Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model1_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model2_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model1_layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model2_layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/utils/cka.html#CKA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.CKA" title="Permalink to this definition">¶</a></dt>
-<dd><p>Centered Kernel Alignment (CKA) metric, where the features of the networks are compared.
-See <a class="reference external" href="https://github.com/AntixK/PyTorch-Model-Compare">https://github.com/AntixK/PyTorch-Model-Compare</a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="graphwar.utils.CKA.compare">
-<span class="sig-name descname"><span class="pre">compare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/graphwar/utils/cka.html#CKA.compare"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.CKA.compare" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the feature similarity between the models on the
-given datasets.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data1</strong> (<em>Data</em>) – the dataset where model 1 run on.</p></li>
-<li><p><strong>data2</strong> (<em>Data</em><em>, </em><em>optional</em>) – If given, model 2 will run on this dataset. by default None</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphwar.utils.CKA.export">
-<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="../_modules/graphwar/utils/cka.html#CKA.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.CKA.export" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exports the CKA data along with the respective model layer names.
-:return:</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="graphwar.utils.CKA.plot_results">
-<span class="sig-name descname"><span class="pre">plot_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/utils/cka.html#CKA.plot_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.CKA.plot_results" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="graphwar.utils.normalize">
 <span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'standardize'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lim_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lim_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/graphwar/utils/normalize.html#normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.normalize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Feature normalization function.
-Adapted from GRB:
-<cite>https://github.com/THUDM/grb/blob/2f438ccc9e62ffb33a26ca98a95e504985443055/grb/dataset/dataset.py#L638</cite></p>
+<dd><p>Feature normalization function.</p>
+<p>Adapted from GRB:
+<a class="reference external" href="https://github.com/THUDM/grb/blob/master/grb/dataset/dataset.py#L638">https://github.com/THUDM/grb/blob/master/grb/dataset/dataset.py#L638</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -794,6 +905,28 @@ standard deviations of the flattened array, by default None</p></li>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="graphwar.utils.overlap">
+<span class="sig-name descname"><span class="pre">overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge_index1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'edge'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span></span><a class="reference internal" href="../_modules/graphwar/utils/overlap.html#overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.utils.overlap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute graph overlapping according to
+Node Similarity Preserving Graph Convolutional Networks</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>Tensor</strong><strong>)</strong> (<em>edge_index2</em>) – a graph</p></li>
+<li><p><strong>(</strong><strong>Tensor</strong><strong>)</strong> – another graph</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>on</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>overlapping of the two graphs on edge or node</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -822,11 +955,11 @@ edges: shape [2, M], the edges of the subgraph</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This is a faster implementation of
-<cite>networkx.ego_graph</cite> based on scipy sparse matrix and numba</p>
+<code class="xref py py-class docutils literal notranslate"><span class="pre">networkx.ego_graph</span></code> based on scipy sparse matrix and numba</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">networkx.ego_graph</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch_geometric.utils.k_hop_subgraph</span></code></p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">networkx.ego_graph</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">torch_geometric.utils.k_hop_subgraph</span></code></p>
 </div>
 </dd></dl>
 

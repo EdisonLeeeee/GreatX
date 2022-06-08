@@ -57,7 +57,7 @@ def singleton_mask(adj_matrix: Tensor):
     Returns
     -------
     mask : bool Tensor
-        a boolean mask with shape as `adj_matrix`.
+        a boolean mask with shape as :obj:`adj_matrix`.
     """
 
     N = adj_matrix.size(0)

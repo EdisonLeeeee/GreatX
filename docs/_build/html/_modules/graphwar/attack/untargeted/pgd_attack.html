@@ -109,8 +109,26 @@
 <div class="viewcode-block" id="PGDAttack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.PGDAttack">[docs]</a><span class="k">class</span> <span class="nc">PGDAttack</span><span class="p">(</span><span class="n">UntargetedAttacker</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Implementation of `PGD` attack from the: </span>
 <span class="sd">    `&quot;Topology Attack and Defense for Graph Neural Networks:</span>
-<span class="sd">     An Optimization Perspective&quot; </span>
+<span class="sd">    An Optimization Perspective&quot; </span>
 <span class="sd">    &lt;https://arxiv.org/abs/1906.04214&gt;`_ paper (IJCAI&#39;19)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : Data</span>
+<span class="sd">        PyG-like data denoting the input graph</span>
+<span class="sd">    device : str, optional</span>
+<span class="sd">        the device of the attack running on, by default &quot;cpu&quot;</span>
+<span class="sd">    seed : Optional[int], optional</span>
+<span class="sd">        the random seed for reproducing the attack, by default None</span>
+<span class="sd">    name : Optional[str], optional</span>
+<span class="sd">        name of the attacker, if None, it would be :obj:`__class__.__name__`, </span>
+<span class="sd">        by default None</span>
+<span class="sd">    kwargs : additional arguments of :class:`graphwar.attack.Attacker`,</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        unexpected keyword argument in `kwargs`       </span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -138,11 +156,7 @@
 
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
-<span class="sd">    MinMax attack is a variant of </span>
-<span class="sd">    :class:`graphwar.attack.untargeted.PGDAttack` attack.   </span>
-
-<span class="sd">    Note</span>
-<span class="sd">    ----</span>
+<span class="sd">    * MinMax attack is a variant of :class:`graphwar.attack.untargeted.PGDAttack` attack.   </span>
 <span class="sd">    * Please remember to call :meth:`reset` before each attack.      </span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -330,8 +344,26 @@
 <div class="viewcode-block" id="MinmaxAttack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.MinmaxAttack">[docs]</a><span class="k">class</span> <span class="nc">MinmaxAttack</span><span class="p">(</span><span class="n">PGDAttack</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Implementation of `MinMax` attack from the: </span>
 <span class="sd">    `&quot;Topology Attack and Defense for Graph Neural Networks:</span>
-<span class="sd">     An Optimization Perspective&quot; </span>
+<span class="sd">    An Optimization Perspective&quot; </span>
 <span class="sd">    &lt;https://arxiv.org/abs/1906.04214&gt;`_ paper (IJCAI&#39;19)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : Data</span>
+<span class="sd">        PyG-like data denoting the input graph</span>
+<span class="sd">    device : str, optional</span>
+<span class="sd">        the device of the attack running on, by default &quot;cpu&quot;</span>
+<span class="sd">    seed : Optional[int], optional</span>
+<span class="sd">        the random seed for reproducing the attack, by default None</span>
+<span class="sd">    name : Optional[str], optional</span>
+<span class="sd">        name of the attacker, if None, it would be :obj:`__class__.__name__`, </span>
+<span class="sd">        by default None</span>
+<span class="sd">    kwargs : additional arguments of :class:`graphwar.attack.Attacker`,</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        unexpected keyword argument in `kwargs`       </span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>

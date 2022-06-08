@@ -110,6 +110,26 @@
 <span class="sd">    Attacking Graph Embedding Models&quot; </span>
 <span class="sd">    &lt;https://arxiv.org/abs/1908.01297&gt;`_ paper (AAAI&#39;20)</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : Data</span>
+<span class="sd">        PyG-like data denoting the input graph</span>
+<span class="sd">    K : int, optional</span>
+<span class="sd">        the order of graph filter, by default 2</span>
+<span class="sd">    T : int, optional</span>
+<span class="sd">        top-T largest eigen-values/vectors selected, by default 128            </span>
+<span class="sd">    device : str, optional</span>
+<span class="sd">        the device of the attack running on, by default &quot;cpu&quot;</span>
+<span class="sd">    seed : Optional[int], optional</span>
+<span class="sd">        the random seed of reproduce the attack, by default None</span>
+<span class="sd">    name : Optional[str], optional</span>
+<span class="sd">        name of the attacker, if None, it would be `__class__.__name__`, by default None</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        unexpected keyword argument in `kwargs`           </span>
+
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphWarDataset</span>
@@ -137,31 +157,11 @@
 <span class="sd">    ----</span>
 <span class="sd">    * In the paper, the authors mainly consider the single edge perturbations, i.e., :obj:`num_budgets=1`.</span>
 <span class="sd">    * Please remember to call :meth:`reset` before each attack.     </span>
+<span class="sd">    * T=128 for citeseer and pubmed, T=num_nodes//2 for cora to reproduce results in paper.    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
                  <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initialization of GFAttack.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        data : Data</span>
-<span class="sd">            the PyG data</span>
-<span class="sd">        K : int, optional</span>
-<span class="sd">            the order of graph filter, by default 2</span>
-<span class="sd">        T : int, optional</span>
-<span class="sd">            top-T largest eigen-values/vectors selected, by default 128            </span>
-<span class="sd">        device : str, optional</span>
-<span class="sd">            the device of the attack running on, by default &quot;cpu&quot;</span>
-<span class="sd">        seed : Optional[int], optional</span>
-<span class="sd">            the random seed of reproduce the attack, by default None</span>
-<span class="sd">        name : Optional[str], optional</span>
-<span class="sd">            name of the attacker, if None, it would be `__class__.__name__`, by default None</span>
-
-<span class="sd">        NOTE</span>
-<span class="sd">        ----</span>
-<span class="sd">        T=128 for citeseer and pubmed, T=num_nodes//2 for cora to reproduce results in paper.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">adj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adjacency_matrix</span>

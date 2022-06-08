@@ -62,7 +62,7 @@ def topk(array: np.ndarray, k: int, largest: bool = True) -> topk_values_indices
 
 
 def repeat(src: Any, length: Optional[int] = None) -> Any:
-    """repeat any objects and return iterable ones.
+    """Repeat any objects and return iterable ones.
 
     Parameters
     ----------
@@ -119,7 +119,7 @@ def get_length(obj: Any) -> int:
 
 
 def wrapper(func: Callable) -> Callable:
-    """wrap a function to make some arguments 
+    """Wrap a function to make some arguments 
     have the same length. By default, the arguments
     to be modified are `hids` and `acts`. 
 
@@ -149,8 +149,8 @@ def wrapper(func: Callable) -> Callable:
     -------
 
     >>> @wrapper
-    >>> def func(hids=[16], acts=None):
-    >>>     print(locals())
+    ... def func(hids=[16], acts=None):
+    ...     print(locals())
 
     >>> func(100)
     {'hids': [100], 'acts': [None]}
@@ -163,8 +163,8 @@ def wrapper(func: Callable) -> Callable:
 
 
     >>> @wrapper
-    >>> def func(self, hids=[16], acts=None):
-    >>> print(locals())    
+    ... def func(self, hids=[16], acts=None):
+    ...     print(locals())    
 
     >>> func()
     TypeError: The decorated function 'func' missing required argument 'self'.
@@ -177,8 +177,8 @@ def wrapper(func: Callable) -> Callable:
 
 
     >>> @wrapper
-    >>> def func(self, hids=[16], acts=None, heads=8):
-    >>>     print(locals())    
+    ... def func(self, hids=[16], acts=None, heads=8):
+    ...     print(locals())    
 
     >>> func('class_itself', hids=[100, 200])
     {'self': 'class_itself', 'hids': [100, 200], 'acts': [None, None], 'heads': 8}

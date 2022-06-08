@@ -3,6 +3,24 @@ from graphwar.training import Trainer
 
 
 class SimPGCNTrainer(Trainer):
+    """Custom trainer for :class:`graphwar.nn.models.SimPGCN`
+
+    Parameters
+    ----------
+    model : nn.Module
+        the model used for training
+    device : Union[str, torch.device], optional
+        the device used for training, by default 'cpu'
+    cfg : other keyword arguments, such as `lr` and `weight_decay`.    
+
+    Note
+    ----
+    :class:`graphwar.training.SimPGCNTrainer` accepts the following additional arguments:   
+
+    * :obj:`lambda_`: trade-off parameter for regression loss
+
+    """
+
     def train_step(self, inputs: dict) -> dict:
         """One-step training on the input dataloader.
 

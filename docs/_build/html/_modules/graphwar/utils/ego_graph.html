@@ -113,10 +113,8 @@
 <span class="sd">    ----------</span>
 <span class="sd">    adj_matrix : sp.csr_matrix,</span>
 <span class="sd">        a Scipy CSR sparse adjacency matrix representing a graph</span>
-
 <span class="sd">    targets : Union[int, list]</span>
 <span class="sd">        center nodes, a single node or a list of nodes</span>
-
 <span class="sd">    hops : int number, optional</span>
 <span class="sd">        Include all neighbors of distance&lt;=hops from nodes.</span>
 
@@ -129,13 +127,13 @@
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
 <span class="sd">    This is a faster implementation of </span>
-<span class="sd">    `networkx.ego_graph` based on scipy sparse matrix and numba</span>
+<span class="sd">    :class:`networkx.ego_graph` based on scipy sparse matrix and numba</span>
 
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
-<span class="sd">    networkx.ego_graph</span>
-<span class="sd">    torch_geometric.utils.k_hop_subgraph</span>
+<span class="sd">    :class:`networkx.ego_graph`</span>
+<span class="sd">    :class:`torch_geometric.utils.k_hop_subgraph`</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">sp</span><span class="o">.</span><span class="n">issparse</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">)</span>

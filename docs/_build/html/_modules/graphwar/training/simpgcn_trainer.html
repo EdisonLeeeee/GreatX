@@ -95,6 +95,24 @@
 
 
 <div class="viewcode-block" id="SimPGCNTrainer"><a class="viewcode-back" href="../../../modules/training.html#graphwar.training.SimPGCNTrainer">[docs]</a><span class="k">class</span> <span class="nc">SimPGCNTrainer</span><span class="p">(</span><span class="n">Trainer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Custom trainer for :class:`graphwar.nn.models.SimPGCN`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : nn.Module</span>
+<span class="sd">        the model used for training</span>
+<span class="sd">    device : Union[str, torch.device], optional</span>
+<span class="sd">        the device used for training, by default &#39;cpu&#39;</span>
+<span class="sd">    cfg : other keyword arguments, such as `lr` and `weight_decay`.    </span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    :class:`graphwar.training.SimPGCNTrainer` accepts the following additional arguments:   </span>
+
+<span class="sd">    * :obj:`lambda_`: trade-off parameter for regression loss</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="SimPGCNTrainer.train_step"><a class="viewcode-back" href="../../../modules/training.html#graphwar.training.SimPGCNTrainer.train_step">[docs]</a>    <span class="k">def</span> <span class="nf">train_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;One-step training on the input dataloader.</span>
 

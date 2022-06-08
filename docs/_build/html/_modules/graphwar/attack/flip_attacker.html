@@ -105,12 +105,29 @@
 
 
 <div class="viewcode-block" id="FlipAttacker"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker">[docs]</a><span class="k">class</span> <span class="nc">FlipAttacker</span><span class="p">(</span><span class="n">Attacker</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Adversarial attacker for graph data by flipping edge.</span>
+    <span class="sd">&quot;&quot;&quot;Adversarial attacker for graph data by flipping edges.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : Data</span>
+<span class="sd">        PyG-like data denoting the input graph</span>
+<span class="sd">    device : str, optional</span>
+<span class="sd">        the device of the attack running on, by default &quot;cpu&quot;</span>
+<span class="sd">    seed : Optional[int], optional</span>
+<span class="sd">        the random seed for reproducing the attack, by default None</span>
+<span class="sd">    name : Optional[str], optional</span>
+<span class="sd">        name of the attacker, if None, it would be :obj:`__class__.__name__`, </span>
+<span class="sd">        by default None</span>
+<span class="sd">    kwargs : additional arguments of :class:`graphwar.attack.Attacker`,</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        unexpected keyword argument in `kwargs`       </span>
 
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
-<span class="sd">    `FlipAttacker` is a base class for graph modification attacks (GMA).</span>
+<span class="sd">    :obj:`graphwar.attack.FlipAttacker` is a base class for graph modification attacks (GMA).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FlipAttacker.reset"><a class="viewcode-back" href="../../../modules/attack.html#graphwar.attack.FlipAttacker.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;FlipAttacker&quot;</span><span class="p">:</span>

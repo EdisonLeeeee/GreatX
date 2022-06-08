@@ -18,6 +18,26 @@ class GFAttack(TargetedAttacker):
     Attacking Graph Embedding Models" 
     <https://arxiv.org/abs/1908.01297>`_ paper (AAAI'20)
 
+    Parameters
+    ----------
+    data : Data
+        PyG-like data denoting the input graph
+    K : int, optional
+        the order of graph filter, by default 2
+    T : int, optional
+        top-T largest eigen-values/vectors selected, by default 128            
+    device : str, optional
+        the device of the attack running on, by default "cpu"
+    seed : Optional[int], optional
+        the random seed of reproduce the attack, by default None
+    name : Optional[str], optional
+        name of the attacker, if None, it would be `__class__.__name__`, by default None
+
+    Raises
+    ------
+    TypeError
+        unexpected keyword argument in `kwargs`           
+
     Example
     -------
     >>> from graphwar.dataset import GraphWarDataset
@@ -45,31 +65,11 @@ class GFAttack(TargetedAttacker):
     ----
     * In the paper, the authors mainly consider the single edge perturbations, i.e., :obj:`num_budgets=1`.
     * Please remember to call :meth:`reset` before each attack.     
+    * T=128 for citeseer and pubmed, T=num_nodes//2 for cora to reproduce results in paper.    
     """
 
     def __init__(self, data: Data, K: int = 2, T: int = 128, device: str = "cpu",
                  seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
-        """Initialization of GFAttack.
-
-        Parameters
-        ----------
-        data : Data
-            the PyG data
-        K : int, optional
-            the order of graph filter, by default 2
-        T : int, optional
-            top-T largest eigen-values/vectors selected, by default 128            
-        device : str, optional
-            the device of the attack running on, by default "cpu"
-        seed : Optional[int], optional
-            the random seed of reproduce the attack, by default None
-        name : Optional[str], optional
-            name of the attacker, if None, it would be `__class__.__name__`, by default None
-
-        NOTE
-        ----
-        T=128 for citeseer and pubmed, T=num_nodes//2 for cora to reproduce results in paper.
-        """
         super().__init__(data=data, device=device, seed=seed, name=name, **kwargs)
 
         adj = self.adjacency_matrix

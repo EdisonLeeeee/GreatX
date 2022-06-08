@@ -7,37 +7,36 @@ from torch import Tensor
 from graphwar.utils import BunchDict
 
 
-def train_val_test_split_tabular(N: int, *,
-                                 train: float = 0.1,
-                                 test: float = 0.8,
-                                 val: float = 0.1,
-                                 stratify: Optional[bool] = None,
-                                 random_state: Optional[int] = None) -> Tuple:
-
-    idx = torch.arange(N)
-    idx_train, idx_test = train_test_split(idx,
-                                           random_state=random_state,
-                                           train_size=train + val,
-                                           test_size=test,
-                                           stratify=stratify)
-    if val:
-        if stratify is not None:
-            stratify = stratify[idx_train]
-        idx_train, idx_val = train_test_split(idx_train,
-                                              random_state=random_state,
-                                              train_size=train / (train + val),
-                                              stratify=stratify)
-    else:
-        idx_val = None
-
-    return idx_train, idx_val, idx_test
-
-
 def split_nodes(labels: Tensor, *,
                 train: float = 0.1,
                 test: float = 0.8,
                 val: float = 0.1,
                 random_state: Optional[int] = None) -> BunchDict:
+    """Randomly split a set of nodes labeled with :obj:`labels`.
+
+    Parameters
+    ----------
+    labels : Tensor
+        the labels of the nodes.
+    train : float, optional
+        the percentage of the training set, by default 0.1
+    test : float, optional
+        the percentage of the test set, by default 0.8
+    val : float, optional
+        the percentage of the validation set, by default 0.1
+    random_state : Optional[int], optional
+        random seed for the random number generator, by default None
+
+    Returns
+    -------
+    BunchDict with the following items:
+        * train_nodes: torch.Tensor with Size [train * num_nodes]
+            The indices of the training nodes
+        * val_nodes: torch.Tensor with Size [val * num_nodes]
+            The indices of the validation nodes
+        * test_nodes torch.Tensor with Size [test * num_nodes]
+            The indices of the test nodes        
+    """
 
     val = 0. if val is None else val
     assert train + val + test <= 1.0
@@ -59,8 +58,7 @@ def split_nodes(labels: Tensor, *,
 def split_nodes_by_classes(labels: torch.Tensor,
                            n_per_class: int = 20,
                            random_state: Optional[int] = None) -> BunchDict:
-    """
-    Randomly split the training data by the number of nodes per classes.
+    """Randomly split the training data by the number of nodes per classes.
 
     Parameters
     ----------
@@ -74,11 +72,11 @@ def split_nodes_by_classes(labels: torch.Tensor,
     Returns
     -------
     BunchDict with the following items:
-        * train_nodes: torch.Tensor [n_per_class * num_classes]
+        * train_nodes: torch.Tensor with Size [n_per_class * num_classes]
             The indices of the training nodes
-        * val_nodes: torch.Tensor [n_per_class * num_classes]
+        * val_nodes: torch.Tensor with Size [n_per_class * num_classes]
             The indices of the validation nodes
-        * test_nodes torch.Tensor [num_nodes - 2*n_per_class * num_classes]
+        * test_nodes torch.Tensor with Size [num_nodes - 2*n_per_class * num_classes]
             The indices of the test nodes
     """
     if random_state is not None:
@@ -111,3 +109,29 @@ def split_nodes_by_classes(labels: torch.Tensor,
         dict(train_nodes=split_train,
              val_nodes=split_val,
              test_nodes=split_test))
+
+
+def train_val_test_split_tabular(N: int, *,
+                                 train: float = 0.1,
+                                 test: float = 0.8,
+                                 val: float = 0.1,
+                                 stratify: Optional[bool] = None,
+                                 random_state: Optional[int] = None) -> Tuple:
+
+    idx = torch.arange(N)
+    idx_train, idx_test = train_test_split(idx,
+                                           random_state=random_state,
+                                           train_size=train + val,
+                                           test_size=test,
+                                           stratify=stratify)
+    if val:
+        if stratify is not None:
+            stratify = stratify[idx_train]
+        idx_train, idx_val = train_test_split(idx_train,
+                                              random_state=random_state,
+                                              train_size=train / (train + val),
+                                              stratify=stratify)
+    else:
+        idx_val = None
+
+    return idx_train, idx_val, idx_test

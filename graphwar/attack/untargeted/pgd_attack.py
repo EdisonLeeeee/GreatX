@@ -17,8 +17,26 @@ from graphwar.functional import to_dense_adj
 class PGDAttack(UntargetedAttacker, Surrogate):
     r"""Implementation of `PGD` attack from the: 
     `"Topology Attack and Defense for Graph Neural Networks:
-     An Optimization Perspective" 
+    An Optimization Perspective" 
     <https://arxiv.org/abs/1906.04214>`_ paper (IJCAI'19)
+
+    Parameters
+    ----------
+    data : Data
+        PyG-like data denoting the input graph
+    device : str, optional
+        the device of the attack running on, by default "cpu"
+    seed : Optional[int], optional
+        the random seed for reproducing the attack, by default None
+    name : Optional[str], optional
+        name of the attacker, if None, it would be :obj:`__class__.__name__`, 
+        by default None
+    kwargs : additional arguments of :class:`graphwar.attack.Attacker`,
+
+    Raises
+    ------
+    TypeError
+        unexpected keyword argument in `kwargs`       
 
     Example
     -------
@@ -46,11 +64,7 @@ class PGDAttack(UntargetedAttacker, Surrogate):
 
     Note
     ----
-    MinMax attack is a variant of 
-    :class:`graphwar.attack.untargeted.PGDAttack` attack.   
-
-    Note
-    ----
+    * MinMax attack is a variant of :class:`graphwar.attack.untargeted.PGDAttack` attack.   
     * Please remember to call :meth:`reset` before each attack.      
 
     """
@@ -238,8 +252,26 @@ class PGDAttack(UntargetedAttacker, Surrogate):
 class MinmaxAttack(PGDAttack):
     r"""Implementation of `MinMax` attack from the: 
     `"Topology Attack and Defense for Graph Neural Networks:
-     An Optimization Perspective" 
+    An Optimization Perspective" 
     <https://arxiv.org/abs/1906.04214>`_ paper (IJCAI'19)
+
+    Parameters
+    ----------
+    data : Data
+        PyG-like data denoting the input graph
+    device : str, optional
+        the device of the attack running on, by default "cpu"
+    seed : Optional[int], optional
+        the random seed for reproducing the attack, by default None
+    name : Optional[str], optional
+        name of the attacker, if None, it would be :obj:`__class__.__name__`, 
+        by default None
+    kwargs : additional arguments of :class:`graphwar.attack.Attacker`,
+
+    Raises
+    ------
+    TypeError
+        unexpected keyword argument in `kwargs`       
 
     Example
     -------

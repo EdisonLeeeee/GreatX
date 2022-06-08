@@ -102,17 +102,15 @@
 <span class="sd">    a surrogate model for estimating labels or computing</span>
 <span class="sd">    gradient information.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    device : str, optional</span>
+<span class="sd">        the device of a model to use for, by default &quot;cpu&quot;    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_is_setup</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># flags to denote the surrogate model is properly set</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Initialize a surrogate model</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        device : str, optional</span>
-<span class="sd">            the device of a model to use for, by default &quot;cpu&quot;</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 

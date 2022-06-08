@@ -5,6 +5,27 @@ from graphwar.training import Trainer
 
 
 class SATTrainer(Trainer):
+    """Custom trainer for :class:`graphwar.nn.models.SAT`
+
+    Parameters
+    ----------
+    model : nn.Module
+        the model used for training
+    device : Union[str, torch.device], optional
+        the device used for training, by default 'cpu'
+    cfg : other keyword arguments, such as `lr` and `weight_decay`.   
+
+    Note
+    ----
+    :class:`graphwar.training.SATTrainer` accepts the following additional arguments:   
+
+    * :obj:`eps_U`: scale of perturbation on eigenvectors
+    * :obj:`eps_V`: scale of perturbation on eigenvalues
+    * :obj:`lambda_U`: trade-off parameters for eigenvectors-specific loss
+    * :obj:`lambda_V`: trade-off parameters for eigenvalues-specific loss
+
+    """
+
     def train_step(self, inputs: dict) -> dict:
         """One-step training on the input dataloader.
 
@@ -64,4 +85,3 @@ class SATTrainer(Trainer):
         loss.backward()
         self.callbacks.on_train_batch_end(0)
         return dict(loss=loss.item(), acc=out.argmax(1).eq(y).float().mean().item())
-

@@ -96,9 +96,28 @@
 <div class="viewcode-block" id="UntargetedAttacker"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.UntargetedAttacker">[docs]</a><span class="k">class</span> <span class="nc">UntargetedAttacker</span><span class="p">(</span><span class="n">FlipAttacker</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Base class for adversarial non-targeted attack.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : Data</span>
+<span class="sd">        PyG-like data denoting the input graph</span>
+<span class="sd">    device : str, optional</span>
+<span class="sd">        the device of the attack running on, by default &quot;cpu&quot;</span>
+<span class="sd">    seed : Optional[int], optional</span>
+<span class="sd">        the random seed for reproducing the attack, by default None</span>
+<span class="sd">    name : Optional[str], optional</span>
+<span class="sd">        name of the attacker, if None, it would be :obj:`__class__.__name__`, </span>
+<span class="sd">        by default None</span>
+<span class="sd">    kwargs : additional arguments of :class:`graphwar.attack.Attacker`,</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        unexpected keyword argument in `kwargs`       </span>
+
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
-<span class="sd">    `UntargetedAttacker` is a subclass of `FlipAttacker`.</span>
+<span class="sd">    :obj:`graphwar.attack.targeted.UntargetedAttacker` is a subclass of </span>
+<span class="sd">    :obj:`graphwar.attack.FlipAttacker`.</span>
 <span class="sd">    It belongs to graph modification attack (GMA).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 

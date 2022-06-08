@@ -90,7 +90,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for graphwar.dataset.graphwar_dataset</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -100,7 +100,8 @@
 <span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span><span class="p">,</span> <span class="n">InMemoryDataset</span><span class="p">,</span> <span class="n">download_url</span>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span>
 
-<span class="k">def</span> <span class="nf">load_npz</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">load_npz</span><span class="p">(</span><span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
     <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">allow_pickle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">loader</span><span class="p">:</span>
         <span class="n">loader</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">loader</span><span class="p">)</span>
         <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">loader</span><span class="p">[</span><span class="s1">&#39;adj_matrix&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
@@ -109,15 +110,15 @@
 
         <span class="k">if</span> <span class="n">attr_matrix</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;O&#39;</span><span class="p">:</span>
             <span class="c1"># scipy sparse matrix</span>
-            <span class="n">attr_matrix</span> <span class="o">=</span> <span class="n">attr_matrix</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="o">.</span><span class="n">A</span>   
+            <span class="n">attr_matrix</span> <span class="o">=</span> <span class="n">attr_matrix</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="o">.</span><span class="n">A</span>
 
         <span class="n">labels</span> <span class="o">=</span> <span class="n">loader</span><span class="p">[</span><span class="s1">&#39;node_label&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">adj_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="n">_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">adj_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">labels</span><span class="p">,</span> <span class="n">_labels</span><span class="p">])</span>        
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">labels</span><span class="p">,</span> <span class="n">_labels</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">labels</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">labels</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>   
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
 
         <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">attr_matrix</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
         <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">adj_matrix</span><span class="o">.</span><span class="n">tocoo</span><span class="p">()</span>
@@ -131,6 +132,7 @@
 
     <span class="k">return</span> <span class="n">Data</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="o">=</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
 
+
 <span class="n">_DATASETS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;citeseer&#39;</span><span class="p">,</span> <span class="s1">&#39;citeseer_full&#39;</span><span class="p">,</span> <span class="s1">&#39;cora&#39;</span><span class="p">,</span> <span class="s1">&#39;cora_ml&#39;</span><span class="p">,</span> <span class="s1">&#39;cora_full&#39;</span><span class="p">,</span> <span class="s1">&#39;amazon_cs&#39;</span><span class="p">,</span>
     <span class="s1">&#39;amazon_photo&#39;</span><span class="p">,</span> <span class="s1">&#39;coauthor_cs&#39;</span><span class="p">,</span> <span class="s1">&#39;coauthor_phy&#39;</span><span class="p">,</span> <span class="s1">&#39;polblogs&#39;</span><span class="p">,</span> <span class="s1">&#39;karate_club&#39;</span><span class="p">,</span>
@@ -139,6 +141,48 @@
 
 
 <div class="viewcode-block" id="GraphWarDataset"><a class="viewcode-back" href="../../../modules/dataset.html#graphwar.dataset.GraphWarDataset">[docs]</a><span class="k">class</span> <span class="nc">GraphWarDataset</span><span class="p">(</span><span class="n">InMemoryDataset</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;A series of datasets used in GraphWar. These datasets are</span>
+<span class="sd">    stored in :obj:`.npz` format, consisting of a single graph.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    root : str</span>
+<span class="sd">        Root directory where the dataset should be saved.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the dataset. See :meth:`available_datasets`</span>
+<span class="sd">        for all available datasets.</span>
+<span class="sd">    transform : Optional[Callable], optional</span>
+<span class="sd">        A function/transform that takes in an</span>
+<span class="sd">        :obj:`torch_geometric.data.Data` object and returns a transformed</span>
+<span class="sd">        version. The data object will be transformed before every access, </span>
+<span class="sd">        by default None</span>
+<span class="sd">    pre_transform : Optional[Callable], optional</span>
+<span class="sd">        A function/transform that takes in</span>
+<span class="sd">        an :obj:`torch_geometric.data.Data` object and returns a</span>
+<span class="sd">        transformed version. The data object will be transformed before</span>
+<span class="sd">        being saved to disk, by default None    </span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphWarDataset</span>
+<span class="sd">    &gt;&gt;&gt; import torch_geometric.transforms as T</span>
+
+<span class="sd">    &gt;&gt;&gt; GraphWarDataset.available_datasets() # see all available datasets.</span>
+<span class="sd">    [&#39;cora&#39;, &#39;citeseer&#39;, &#39;pubmed&#39;, ...]</span>
+
+<span class="sd">    &gt;&gt;&gt; dataset = GraphWarDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
+<span class="sd">                          transform=T.LargestConnectedComponents())</span>
+<span class="sd">    &gt;&gt;&gt; data = dataset[0] # there is only one graph</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    We follow the setting in :obj:`Nettack` from the: `&quot;Adversarial Attacks on Neural Networks </span>
+<span class="sd">    for Graph Data&quot; &lt;https://arxiv.org/abs/1805.07984&gt;`_ paper, </span>
+<span class="sd">    which considers the largest connected component for each graph.</span>
+
+<span class="sd">    For more details of these datasets, see https://github.com/EdisonLeeeee/GraphData</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/EdisonLeeeee/GraphData/raw/master/datasets/</span><span class="si">{}</span><span class="s1">.npz&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -174,9 +218,14 @@
         <span class="n">data</span><span class="p">,</span> <span class="n">slices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collate</span><span class="p">([</span><span class="n">data</span><span class="p">])</span>
         <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="n">slices</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">processed_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
+<div class="viewcode-block" id="GraphWarDataset.available_datasets"><a class="viewcode-back" href="../../../modules/dataset.html#graphwar.dataset.GraphWarDataset.available_datasets">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">available_datasets</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Return all available datasets.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">_DATASETS</span><span class="p">)</span></div>
+
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;GraphWar-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span></div>
-    
 </pre></div>
 
            </div>

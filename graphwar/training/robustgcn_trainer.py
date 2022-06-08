@@ -5,6 +5,23 @@ from graphwar.training import Trainer
 
 
 class RobustGCNTrainer(Trainer):
+    """Custom trainer for :class:`graphwar.nn.models.RobustGCN`
+
+    Parameters
+    ----------
+    model : nn.Module
+        the model used for training
+    device : Union[str, torch.device], optional
+        the device used for training, by default 'cpu'
+    cfg : other keyword arguments, such as `lr` and `weight_decay`.      
+
+    Note
+    ----
+    :class:`graphwar.training.RobustGCNTrainer` accepts the following additional arguments: 
+
+    * :obj:`kl`: trade-off parameter for kl loss      
+
+    """
 
     def train_step(self, inputs: dict) -> dict:
         """One-step training on the input dataloader.

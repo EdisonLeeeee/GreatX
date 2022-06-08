@@ -106,7 +106,7 @@
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphwar.nn.layers.Sequential" title="graphwar.nn.layers.Sequential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sequential</span></code></a></p></td>
-<td><p>A modified <cite>torch.nn.Sequential</cite> which can take multiple inputs.</p></td>
+<td><p>A modified <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Sequential</span></code> which can take multiple inputs.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.nn.layers.GCNConv" title="graphwar.nn.layers.GCNConv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GCNConv</span></code></a></p></td>
 <td><p></p></td>
@@ -152,12 +152,12 @@
 <span class="target" id="module-graphwar.nn.layers"></span><dl class="py class">
 <dt class="sig sig-object py" id="graphwar.nn.layers.Sequential">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Sequential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/nn/layers/container.html#Sequential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.nn.layers.Sequential" title="Permalink to this definition">¶</a></dt>
-<dd><p>A modified <cite>torch.nn.Sequential</cite> which can take multiple inputs.</p>
+<dd><p>A modified <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Sequential</span></code> which can take multiple inputs.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.nn.layers</span> <span class="kn">import</span> <span class="n">Sequential</span><span class="p">,</span> <span class="n">GCNConv</span>
 <span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">edge_index</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># size [2, M]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edge_index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span> <span class="c1"># size [2, M]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -203,13 +203,9 @@
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>The argument <cite>loc</cite> must be specified as the location of feature input <cite>x</cite>,</p></li>
+<li><p>The argument <code class="xref py py-obj docutils literal notranslate"><span class="pre">loc</span></code> must be specified as the location of feature input <code class="xref py py-obj docutils literal notranslate"><span class="pre">x</span></code>,  which would walk through the whole layers.</p></li>
+<li><p>The usage of keyword argument must be matched with that of the layers  with more than one arguments required.</p></li>
 </ul>
-<p>which would walk through the whole layers.</p>
-<ul class="simple">
-<li><p>The usage of keyword argument must be matched with that of the layers</p></li>
-</ul>
-<p>with more than one arguments required.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.nn.layers.Sequential.forward">

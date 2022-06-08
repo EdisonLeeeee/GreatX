@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphwar.utils.overlap &mdash; GraphWar 0.1.0 documentation</title>
+  <title>graphwar.functional.spmm &mdash; GraphWar 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -80,7 +80,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>graphwar.utils.overlap</li>
+      <li>graphwar.functional.spmm</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -89,51 +89,58 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for graphwar.utils.overlap</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">torch</span>
+  <h1>Source code for graphwar.functional.spmm</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">torch_scatter</span> <span class="kn">import</span> <span class="n">scatter</span>
 
 
-<div class="viewcode-block" id="overlap"><a class="viewcode-back" href="../../../modules/utils.html#graphwar.utils.overlap">[docs]</a><span class="k">def</span> <span class="nf">overlap</span><span class="p">(</span><span class="n">edge_index1</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index2</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
-            <span class="n">on</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;edge&#39;</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Compute graph overlapping according to</span>
-<span class="sd">    Node Similarity Preserving Graph Convolutional Networks</span>
+<span class="c1"># @torch.jit.script</span>
+<div class="viewcode-block" id="spmm"><a class="viewcode-back" href="../../../modules/functional.html#graphwar.functional.spmm">[docs]</a><span class="k">def</span> <span class="nf">spmm</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+         <span class="n">edge_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">reduce</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;sum&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Sparse matrix multiplication using :class:`torch_scatter`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    edge_index1 (Tensor) : edges indices of a graph</span>
-<span class="sd">        a graph</span>
-<span class="sd">    edge_index2 (Tensor) : edges indices of another graph</span>
-<span class="sd">        another graph</span>
-<span class="sd">    on (str) : compute overlap on `edge` or `node`, by default edge</span>
+<span class="sd">    x : Tensor</span>
+<span class="sd">        the input dense 2D-matrix</span>
+<span class="sd">    edge_index : Tensor</span>
+<span class="sd">        the location of the non-zeros elements in the sparse matrix,</span>
+<span class="sd">        denoted as :obj:`edge_index` with shape [2, M]</span>
+<span class="sd">    edge_weight : Optional[Tensor], optional</span>
+<span class="sd">        the edge weight of the sparse matrix, by default None</span>
+<span class="sd">    reduce : str, optional</span>
+<span class="sd">        reduction of the sparse matrix multiplication, by default &#39;sum&#39;</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    float</span>
-<span class="sd">        overlapping of the two graphs on edge or node</span>
+<span class="sd">    Tensor</span>
+<span class="sd">        the output result of the multiplication.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; import torch</span>
+<span class="sd">    &gt;&gt;&gt; from graphwar.functional import spmm</span>
+
+<span class="sd">    &gt;&gt;&gt; x = torch.randn(5,2)</span>
+<span class="sd">    &gt;&gt;&gt; edge_index = torch.LongTensor([[1,2], [3,4]])</span>
+<span class="sd">    &gt;&gt;&gt; spmm(x, edge_index)</span>
+
+<span class="sd">    &gt;&gt;&gt; # which is equivalent to:</span>
+<span class="sd">    &gt;&gt;&gt; A = torch.zeros(5,5)</span>
+<span class="sd">    &gt;&gt;&gt; A[edge_index[0], edge_index[1]] = 1.0</span>
+<span class="sd">    &gt;&gt;&gt; torch.mm(A,x)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">edge_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="s1">&#39;edge&#39;</span><span class="p">:</span>
-        <span class="n">row1</span><span class="p">,</span> <span class="n">col1</span> <span class="o">=</span> <span class="n">edge_index1</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-        <span class="n">row2</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">edge_index2</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-
-        <span class="n">set_a</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">row1</span><span class="p">,</span> <span class="n">col1</span><span class="p">))</span>
-        <span class="n">set_b</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">row2</span><span class="p">,</span> <span class="n">col2</span><span class="p">))</span>
-
-    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="s1">&#39;node&#39;</span><span class="p">:</span>
-        <span class="n">set_a</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">edge_index1</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
-        <span class="n">set_b</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">edge_index2</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;It currently only supports overlapping on `edge` or `node`, but got </span><span class="si">{</span><span class="n">on</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-
-    <span class="n">intersection</span> <span class="o">=</span> <span class="n">set_a</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">set_b</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">symmetric</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">intersection</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">set_a</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">intersection</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">set_b</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">intersection</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">set_a</span><span class="p">)</span></div>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">edge_weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">*</span> <span class="n">edge_weight</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">scatter</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim_size</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">reduce</span><span class="o">=</span><span class="n">reduce</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
 </pre></div>
 
            </div>

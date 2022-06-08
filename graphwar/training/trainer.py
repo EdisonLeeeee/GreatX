@@ -16,6 +16,14 @@ from graphwar.utils import BunchDict, Progbar
 class Trainer:
     """A simple trainer to train graph neural network models conveniently.
 
+    Parameters
+    ----------
+    model : nn.Module
+        the model used for training
+    device : Union[str, torch.device], optional
+        the device used for training, by default 'cpu'
+    cfg : other keyword arguments, such as `lr` and `weight_decay`.    
+
     Example
     -------
     >>> from graphwar.training import Trainer
@@ -43,16 +51,6 @@ class Trainer:
     """
 
     def __init__(self, model: nn.Module, device: Union[str, torch.device] = 'cpu', **cfg):
-        """Initialize a Trainer object.
-
-        Parameters
-        ----------
-        model : nn.Module
-            the model used for training
-        device : Union[str, torch.device], optional
-            the device used for training, by default 'cpu'
-        cfg : other keyword arguments, such as `lr` and `weight_decay`.
-        """
         self.device = torch.device(device)
         self.model = model.to(self.device)
 
@@ -70,7 +68,7 @@ class Trainer:
 
         Parameters
         ----------
-        train_inputs : dict like inputs
+        train_inputs : dict like or custom inputs
             training data. It is used for `train_step`.
         val_inputs : Optional[dict]
             used for validation.
@@ -79,7 +77,7 @@ class Trainer:
             see `graphwar.training.callbacks`, by default None
         verbose : Optional[int], optional
             verbosity during training, can be:
-            None, 1, 2, 3, 4, by default 1
+            :obj:`None, 1, 2, 3, 4`, by default 1
         epochs : int, optional
             training epochs, by default 100
 
@@ -132,17 +130,17 @@ class Trainer:
         return self
 
     def train_step(self, inputs: dict) -> dict:
-        """One-step training on the input dataloader.
+        """One-step training on the inputs.
 
         Parameters
         ----------
-        inputs : dict like inputs
+        inputs : dict like or custom inputs
             the training data.
 
         Returns
         -------
         dict
-            the output logs, including `loss` and `val_acc`, etc.
+            the output logs, including `loss` and `acc`, etc.
         """
         model = self.model
         self.callbacks.on_train_batch_begin(0)
@@ -173,7 +171,7 @@ class Trainer:
 
         Parameters
         ----------
-        inputs : dict like inputs
+        inputs : dict like or custom inputs
             test data, it is used for `test_step`.
         verbose : Optional[int], optional
             verbosity during evaluation, by default 1
@@ -200,6 +198,18 @@ class Trainer:
 
     @torch.no_grad()
     def test_step(self, inputs: dict) -> dict:
+        """One-step evaluation on the inputs.
+
+        Parameters
+        ----------
+        inputs : dict like or custom inputs
+            the testing data.
+
+        Returns
+        -------
+        dict
+            the output logs, including `loss` and `acc`, etc.
+        """
         model = self.model
         model.eval()
         data = inputs['data'].to(self.device)
@@ -222,6 +232,18 @@ class Trainer:
 
     @torch.no_grad()
     def predict_step(self, inputs: dict) -> Tensor:
+        """One-step prediction on the inputs.
+
+        Parameters
+        ----------
+        inputs : dict like or custom inputs
+            the prediction data.
+
+        Returns
+        -------
+        Tensor
+            the output prediction.
+        """
         model = self.model
         model.eval()
         callbacks = self.callbacks
@@ -243,7 +265,7 @@ class Trainer:
         """
         Parameters
         ----------
-        inputs : dict like inputs
+        inputs : dict like or custom inputs
             predict data, it is used for `predict_step`
         transform : Callable
             Callable function applied on output predictions.

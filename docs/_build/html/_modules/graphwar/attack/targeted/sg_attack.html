@@ -112,6 +112,24 @@
 <span class="sd">    `&quot;Adversarial Attack on Large Scale Graph&quot; </span>
 <span class="sd">    &lt;https://arxiv.org/abs/2009.03488&gt;`_ paper (TKDE&#39;21)</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : Data</span>
+<span class="sd">        PyG-like data denoting the input graph</span>
+<span class="sd">    device : str, optional</span>
+<span class="sd">        the device of the attack running on, by default &quot;cpu&quot;</span>
+<span class="sd">    seed : Optional[int], optional</span>
+<span class="sd">        the random seed for reproducing the attack, by default None</span>
+<span class="sd">    name : Optional[str], optional</span>
+<span class="sd">        name of the attacker, if None, it would be :obj:`__class__.__name__`, </span>
+<span class="sd">        by default None</span>
+<span class="sd">    kwargs : additional arguments of :class:`graphwar.attack.Attacker`,</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        unexpected keyword argument in `kwargs`       </span>
+
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphWarDataset</span>

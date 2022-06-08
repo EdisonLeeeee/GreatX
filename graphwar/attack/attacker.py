@@ -14,6 +14,24 @@ from graphwar import set_seed
 class Attacker(torch.nn.Module):
     """Adversarial attacker for graph data. Note that this is an abstract class.
 
+    Parameters
+    ----------
+    data : Data
+        PyG-like data denoting the input graph
+    device : str, optional
+        the device of the attack running on, by default "cpu"
+    seed : Optional[int], optional
+        the random seed for reproducing the attack, by default None
+    name : Optional[str], optional
+        name of the attacker, if None, it would be :obj:`__class__.__name__`, 
+        by default None
+    kwargs : additional arguments of :class:`graphwar.attack.Attacker`,
+
+    Raises
+    ------
+    TypeError
+        unexpected keyword argument in `kwargs`    
+
     Examples
     --------
     For example, the attacker model should be defined as follows:
@@ -33,24 +51,6 @@ class Attacker(torch.nn.Module):
     def __init__(self, data: Data, device: str = "cpu",
                  seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
         """Initialization of an attacker model.
-
-        Parameters
-        ----------
-        data : Data
-            PyG-like input data
-        device : str, optional
-            the device of the attack running on, by default "cpu"
-        seed : Optional[int], optional
-            the random seed for reproducing the attack, by default None
-        name : Optional[str], optional
-            name of the attacker, if None, it would be `__class__.__name__`, 
-            by default None
-        kwargs : additional arguments of :class:`graphwar.attack.Attacker`,
-
-        Raises
-        ------
-        TypeError
-            unexpected keyword argument in `kwargs`
         """
 
         super().__init__()

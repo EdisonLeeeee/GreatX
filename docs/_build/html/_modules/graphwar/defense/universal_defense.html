@@ -104,6 +104,7 @@
 
 
 <span class="k">class</span> <span class="nc">UniversalDefense</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for graph universal defense&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -112,7 +113,7 @@
 
     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">target_nodes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span>
                 <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;return the defended graph with defensive perturbation performed on.</span>
+        <span class="sd">&quot;&quot;&quot;Return the defended graph with defensive perturbation performed on.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -138,7 +139,7 @@
         <span class="k">return</span> <span class="n">data</span>
 
     <span class="k">def</span> <span class="nf">removed_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_nodes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;return edges to remove with the defensive perturbation performed on </span>
+        <span class="sd">&quot;&quot;&quot;Return edges to remove with the defensive perturbation performed on </span>
 <span class="sd">        on the target nodes</span>
 
 <span class="sd">        Parameters</span>
@@ -161,7 +162,7 @@
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">anchors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;return the top-k anchor nodes</span>
+        <span class="sd">&quot;&quot;&quot;Return the top-k anchor nodes</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -177,7 +178,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_anchors</span><span class="p">[:</span><span class="n">k</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">patch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;return the universal patch of the defensive perturbation</span>
+        <span class="sd">&quot;&quot;&quot;Return the universal patch of the defensive perturbation</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -197,6 +198,17 @@
 
 <div class="viewcode-block" id="GUARD"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.GUARD">[docs]</a><span class="k">class</span> <span class="nc">GUARD</span><span class="p">(</span><span class="n">UniversalDefense</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Graph Universal Adversarial Defense (GUARD)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : Data</span>
+<span class="sd">        the PyG-like input data</span>
+<span class="sd">    alpha : float, optional</span>
+<span class="sd">        the scale factor for node degree, by default 2</span>
+<span class="sd">    batch_size : int, optional</span>
+<span class="sd">        the batch size for computing node influence, by default 512        </span>
+<span class="sd">    device : str, optional</span>
+<span class="sd">        the device where the method running on, by default &quot;cpu&quot;        </span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -255,6 +267,15 @@
 <div class="viewcode-block" id="DegreeGUARD"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.DegreeGUARD">[docs]</a><span class="k">class</span> <span class="nc">DegreeGUARD</span><span class="p">(</span><span class="n">UniversalDefense</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Graph Universal Defense based on node degrees</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : Data</span>
+<span class="sd">        the PyG-like input data</span>
+<span class="sd">    descending : bool, optional</span>
+<span class="sd">        whether the degree of chosen nodes are in descending order, by default False</span>
+<span class="sd">    device : str, optional</span>
+<span class="sd">        the device where the method running on, by default &quot;cpu&quot;        </span>
+
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; data = ... # PyG-like Data</span>
@@ -273,6 +294,13 @@
 
 <div class="viewcode-block" id="RandomGUARD"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.RandomGUARD">[docs]</a><span class="k">class</span> <span class="nc">RandomGUARD</span><span class="p">(</span><span class="n">UniversalDefense</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Graph Universal Defense based on random choice</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : Data</span>
+<span class="sd">        the PyG-like input data</span>
+<span class="sd">    device : str, optional</span>
+<span class="sd">        the device where the method running on, by default &quot;cpu&quot;    </span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>

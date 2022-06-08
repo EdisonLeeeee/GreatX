@@ -101,16 +101,16 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.defense.CosinePurification" title="graphwar.defense.CosinePurification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CosinePurification</span></code></a></p></td>
-<td><p></p></td>
+<td><p>Graph purification based on cosine similarity of connected nodes.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphwar.defense.JaccardPurification" title="graphwar.defense.JaccardPurification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">JaccardPurification</span></code></a></p></td>
-<td><p></p></td>
+<td><p>Graph purification based on Jaccard similarity of connected nodes.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.defense.SVDPurification" title="graphwar.defense.SVDPurification"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SVDPurification</span></code></a></p></td>
-<td><p></p></td>
+<td><p>Graph purification based on low-rank Singular Value Decomposition (SVD) reconstruction on the adjacency matrix.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#graphwar.defense.EigenDecomposition" title="graphwar.defense.EigenDecomposition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EigenDecomposition</span></code></a></p></td>
-<td><p></p></td>
+<td><p>Graph purification based on low-rank Eigen Decomposition reconstruction on the adjacency matrix.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.defense.GNNGUARD" title="graphwar.defense.GNNGUARD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GNNGUARD</span></code></a></p></td>
 <td><p></p></td>
@@ -129,22 +129,88 @@
 <span class="target" id="module-graphwar.defense"></span><dl class="py class">
 <dt class="sig sig-object py" id="graphwar.defense.CosinePurification">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CosinePurification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_singleton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/defense/purification.html#CosinePurification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.defense.CosinePurification" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Graph purification based on cosine similarity of
+connected nodes.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>:classL`CosinePurification` is an extension of
+<a class="reference internal" href="#graphwar.defense.JaccardPurification" title="graphwar.defense.JaccardPurification"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.defense.JaccardPurification</span></code></a> for dealing with
+continuous node features.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – threshold to filter edges based on cosine similarity, by default 0.</p></li>
+<li><p><strong>allow_singleton</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether such defense strategy allow singleton nodes, by default False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="graphwar.defense.JaccardPurification">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">JaccardPurification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_singleton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/defense/purification.html#JaccardPurification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.defense.JaccardPurification" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Graph purification based on Jaccard similarity of
+connected nodes.
+As in <a class="reference external" href="https://arxiv.org/abs/1903.01610">“Adversarial Examples on Graph Data: Deep Insights
+into Attack and Defense”</a> paper (IJCAI’19)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – threshold to filter edges based on Jaccard similarity, by default 0.</p></li>
+<li><p><strong>allow_singleton</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether such defense strategy allow singleton nodes, by default False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="graphwar.defense.SVDPurification">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SVDPurification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binaryzation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_edge_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/defense/purification.html#SVDPurification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.defense.SVDPurification" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Graph purification based on low-rank
+Singular Value Decomposition (SVD) reconstruction on
+the adjacency matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>K</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – the top-k largest singular value for reconstruction, by default 50</p></li>
+<li><p><strong>threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – threshold to set elements in the reconstructed adjacency matrix as zero, by default 0.01</p></li>
+<li><p><strong>binaryzation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to binarize the reconstructed adjacency matrix, by default False</p></li>
+<li><p><strong>remove_edge_index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to remove the <code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_index</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_weight</span></code>
+int the input <code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code> after reconstruction, by default True</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We set the reconstructed adjacency matrix as <cite>adj_t</cite> to be compatible with
+torch_geometric where <cite>adj_t</cite> denotes the <code class="xref py py-class docutils literal notranslate"><span class="pre">torch_sparse.SparseTensor</span></code>.</p>
+</div>
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="graphwar.defense.EigenDecomposition">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EigenDecomposition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_edge_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/defense/purification.html#EigenDecomposition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.defense.EigenDecomposition" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Graph purification based on low-rank
+Eigen Decomposition reconstruction on
+the adjacency matrix.</p>
+<p><a class="reference internal" href="#graphwar.defense.EigenDecomposition" title="graphwar.defense.EigenDecomposition"><code class="xref py py-class docutils literal notranslate"><span class="pre">EigenDecomposition</span></code></a> is similar to <a class="reference internal" href="#graphwar.defense.SVDPurification" title="graphwar.defense.SVDPurification"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.defense.SVDPurification</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>K</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – the top-k largest singular value for reconstruction, by default 50</p></li>
+<li><p><strong>normalize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to normalize the input adjacency matrix</p></li>
+<li><p><strong>remove_edge_index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to remove the <code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_index</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_weight</span></code>
+int the input <code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code> after reconstruction, by default True</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We set the reconstructed adjacency matrix as <cite>adj_t</cite> to be compatible with
+torch_geometric where <cite>adj_t</cite> denotes the <code class="xref py py-class docutils literal notranslate"><span class="pre">torch_sparse.SparseTensor</span></code>.</p>
+</div>
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="graphwar.defense.GNNGUARD">
@@ -183,6 +249,16 @@ strings are acceptable.</p>
 <dt class="sig sig-object py" id="graphwar.defense.GUARD">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GUARD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/defense/universal_defense.html#GUARD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.defense.GUARD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Graph Universal Adversarial Defense (GUARD)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – the PyG-like input data</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – the scale factor for node degree, by default 2</p></li>
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – the batch size for computing node influence, by default 512</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device where the method running on, by default “cpu”</p></li>
+</ul>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">surrogate</span> <span class="o">=</span> <span class="n">GCN</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">num_features</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">acts</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">surrogate_trainer</span> <span class="o">=</span> <span class="n">Trainer</span><span class="p">(</span><span class="n">surrogate</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
@@ -236,6 +312,15 @@ strings are acceptable.</p>
 <dt class="sig sig-object py" id="graphwar.defense.DegreeGUARD">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DegreeGUARD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descending</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/defense/universal_defense.html#DegreeGUARD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.defense.DegreeGUARD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Graph Universal Defense based on node degrees</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – the PyG-like input data</p></li>
+<li><p><strong>descending</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether the degree of chosen nodes are in descending order, by default False</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device where the method running on, by default “cpu”</p></li>
+</ul>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># PyG-like Data</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">guard</span> <span class="o">=</span> <span class="n">DegreeGUARD</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
@@ -255,6 +340,14 @@ strings are acceptable.</p>
 <dt class="sig sig-object py" id="graphwar.defense.RandomGUARD">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RandomGUARD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/defense/universal_defense.html#RandomGUARD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.defense.RandomGUARD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Graph Universal Defense based on random choice</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Data</em>) – the PyG-like input data</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device where the method running on, by default “cpu”</p></li>
+</ul>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># PyG-like Data</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">guard</span> <span class="o">=</span> <span class="n">RandomGUARD</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>

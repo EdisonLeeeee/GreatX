@@ -11,6 +11,18 @@ from graphwar.utils import scipy_normalize
 
 
 class JaccardPurification(BaseTransform):
+    r"""Graph purification based on Jaccard similarity of
+    connected nodes. 
+    As in `"Adversarial Examples on Graph Data: Deep Insights 
+    into Attack and Defense"  <https://arxiv.org/abs/1903.01610>`_ paper (IJCAI'19)
+
+    Parameters
+    ----------
+    threshold : float, optional
+        threshold to filter edges based on Jaccard similarity, by default 0.
+    allow_singleton : bool, optional
+        whether such defense strategy allow singleton nodes, by default False    
+    """
 
     def __init__(self, threshold: float = 0., allow_singleton: bool = False):
         # TODO: add percentage purification
@@ -43,6 +55,22 @@ class JaccardPurification(BaseTransform):
 
 
 class CosinePurification(BaseTransform):
+    r"""Graph purification based on cosine similarity of
+    connected nodes. 
+
+    Note
+    ----
+    :classL`CosinePurification` is an extension of
+    :class:`graphwar.defense.JaccardPurification` for dealing with
+    continuous node features.
+
+    Parameters
+    ----------
+    threshold : float, optional
+        threshold to filter edges based on cosine similarity, by default 0.
+    allow_singleton : bool, optional
+        whether such defense strategy allow singleton nodes, by default False    
+    """
 
     def __init__(self, threshold: float = 0., allow_singleton: bool = False):
         # TODO: add percentage purification
@@ -75,6 +103,27 @@ class CosinePurification(BaseTransform):
 
 
 class SVDPurification(BaseTransform):
+    r"""Graph purification based on low-rank 
+    Singular Value Decomposition (SVD) reconstruction on
+    the adjacency matrix.
+
+    Parameters
+    ----------
+    K : int, optional
+        the top-k largest singular value for reconstruction, by default 50
+    threshold : float, optional
+        threshold to set elements in the reconstructed adjacency matrix as zero, by default 0.01
+    binaryzation : bool, optional
+        whether to binarize the reconstructed adjacency matrix, by default False
+    remove_edge_index : bool, optional
+        whether to remove the :obj:`edge_index` and :obj:`edge_weight`
+        int the input :obj:`data` after reconstruction, by default True
+
+    Note
+    ----
+    We set the reconstructed adjacency matrix as `adj_t` to be compatible with
+    torch_geometric where `adj_t` denotes the :class:`torch_sparse.SparseTensor`.        
+    """
 
     def __init__(self, K: int = 50, threshold: float = 0.01,
                  binaryzation: bool = False,
@@ -112,6 +161,27 @@ class SVDPurification(BaseTransform):
 
 
 class EigenDecomposition(BaseTransform):
+    r"""Graph purification based on low-rank 
+    Eigen Decomposition reconstruction on
+    the adjacency matrix.
+
+    :class:`EigenDecomposition` is similar to :class:`graphwar.defense.SVDPurification`
+
+    Parameters
+    ----------
+    K : int, optional
+        the top-k largest singular value for reconstruction, by default 50
+    normalize : bool, optional
+        whether to normalize the input adjacency matrix
+    remove_edge_index : bool, optional
+        whether to remove the :obj:`edge_index` and :obj:`edge_weight`
+        int the input :obj:`data` after reconstruction, by default True
+
+    Note
+    ----
+    We set the reconstructed adjacency matrix as `adj_t` to be compatible with
+    torch_geometric where `adj_t` denotes the :class:`torch_sparse.SparseTensor`.
+    """
 
     def __init__(self, K: int = 50, normalize: bool = True,
                  remove_edge_index: bool = True):

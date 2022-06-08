@@ -103,6 +103,18 @@
 
 
 <div class="viewcode-block" id="JaccardPurification"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.JaccardPurification">[docs]</a><span class="k">class</span> <span class="nc">JaccardPurification</span><span class="p">(</span><span class="n">BaseTransform</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Graph purification based on Jaccard similarity of</span>
+<span class="sd">    connected nodes. </span>
+<span class="sd">    As in `&quot;Adversarial Examples on Graph Data: Deep Insights </span>
+<span class="sd">    into Attack and Defense&quot;  &lt;https://arxiv.org/abs/1903.01610&gt;`_ paper (IJCAI&#39;19)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    threshold : float, optional</span>
+<span class="sd">        threshold to filter edges based on Jaccard similarity, by default 0.</span>
+<span class="sd">    allow_singleton : bool, optional</span>
+<span class="sd">        whether such defense strategy allow singleton nodes, by default False    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">allow_singleton</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="c1"># TODO: add percentage purification</span>
@@ -135,6 +147,22 @@
 
 
 <div class="viewcode-block" id="CosinePurification"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.CosinePurification">[docs]</a><span class="k">class</span> <span class="nc">CosinePurification</span><span class="p">(</span><span class="n">BaseTransform</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Graph purification based on cosine similarity of</span>
+<span class="sd">    connected nodes. </span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    :classL`CosinePurification` is an extension of</span>
+<span class="sd">    :class:`graphwar.defense.JaccardPurification` for dealing with</span>
+<span class="sd">    continuous node features.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    threshold : float, optional</span>
+<span class="sd">        threshold to filter edges based on cosine similarity, by default 0.</span>
+<span class="sd">    allow_singleton : bool, optional</span>
+<span class="sd">        whether such defense strategy allow singleton nodes, by default False    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">allow_singleton</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="c1"># TODO: add percentage purification</span>
@@ -167,6 +195,27 @@
 
 
 <div class="viewcode-block" id="SVDPurification"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.SVDPurification">[docs]</a><span class="k">class</span> <span class="nc">SVDPurification</span><span class="p">(</span><span class="n">BaseTransform</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Graph purification based on low-rank </span>
+<span class="sd">    Singular Value Decomposition (SVD) reconstruction on</span>
+<span class="sd">    the adjacency matrix.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    K : int, optional</span>
+<span class="sd">        the top-k largest singular value for reconstruction, by default 50</span>
+<span class="sd">    threshold : float, optional</span>
+<span class="sd">        threshold to set elements in the reconstructed adjacency matrix as zero, by default 0.01</span>
+<span class="sd">    binaryzation : bool, optional</span>
+<span class="sd">        whether to binarize the reconstructed adjacency matrix, by default False</span>
+<span class="sd">    remove_edge_index : bool, optional</span>
+<span class="sd">        whether to remove the :obj:`edge_index` and :obj:`edge_weight`</span>
+<span class="sd">        int the input :obj:`data` after reconstruction, by default True</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    We set the reconstructed adjacency matrix as `adj_t` to be compatible with</span>
+<span class="sd">    torch_geometric where `adj_t` denotes the :class:`torch_sparse.SparseTensor`.        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
                  <span class="n">binaryzation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -204,6 +253,27 @@
 
 
 <div class="viewcode-block" id="EigenDecomposition"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.EigenDecomposition">[docs]</a><span class="k">class</span> <span class="nc">EigenDecomposition</span><span class="p">(</span><span class="n">BaseTransform</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Graph purification based on low-rank </span>
+<span class="sd">    Eigen Decomposition reconstruction on</span>
+<span class="sd">    the adjacency matrix.</span>
+
+<span class="sd">    :class:`EigenDecomposition` is similar to :class:`graphwar.defense.SVDPurification`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    K : int, optional</span>
+<span class="sd">        the top-k largest singular value for reconstruction, by default 50</span>
+<span class="sd">    normalize : bool, optional</span>
+<span class="sd">        whether to normalize the input adjacency matrix</span>
+<span class="sd">    remove_edge_index : bool, optional</span>
+<span class="sd">        whether to remove the :obj:`edge_index` and :obj:`edge_weight`</span>
+<span class="sd">        int the input :obj:`data` after reconstruction, by default True</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    We set the reconstructed adjacency matrix as `adj_t` to be compatible with</span>
+<span class="sd">    torch_geometric where `adj_t` denotes the :class:`torch_sparse.SparseTensor`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                  <span class="n">remove_edge_index</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>

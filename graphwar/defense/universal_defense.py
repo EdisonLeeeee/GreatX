@@ -12,6 +12,7 @@ from graphwar.utils import remove_edges
 
 
 class UniversalDefense(torch.nn.Module):
+    """Base class for graph universal defense"""
 
     def __init__(self, device: str = "cpu"):
         super().__init__()
@@ -20,7 +21,7 @@ class UniversalDefense(torch.nn.Module):
 
     def forward(self, data: Data, target_nodes: Union[int, Tensor],
                 k: int = 50, symmetric: bool = True) -> Data:
-        """return the defended graph with defensive perturbation performed on.
+        """Return the defended graph with defensive perturbation performed on.
 
         Parameters
         ----------
@@ -46,7 +47,7 @@ class UniversalDefense(torch.nn.Module):
         return data
 
     def removed_edges(self, target_nodes: Union[int, Tensor], k: int = 50) -> Tensor:
-        """return edges to remove with the defensive perturbation performed on 
+        """Return edges to remove with the defensive perturbation performed on 
         on the target nodes
 
         Parameters
@@ -69,7 +70,7 @@ class UniversalDefense(torch.nn.Module):
         return torch.stack([row, col], dim=0)
 
     def anchors(self, k: int = 50) -> Tensor:
-        """return the top-k anchor nodes
+        """Return the top-k anchor nodes
 
         Parameters
         ----------
@@ -85,7 +86,7 @@ class UniversalDefense(torch.nn.Module):
         return self._anchors[:k]
 
     def patch(self, k=50) -> Tensor:
-        """return the universal patch of the defensive perturbation
+        """Return the universal patch of the defensive perturbation
 
         Parameters
         ----------
@@ -105,6 +106,17 @@ class UniversalDefense(torch.nn.Module):
 
 class GUARD(UniversalDefense, Surrogate):
     """Graph Universal Adversarial Defense (GUARD)
+
+    Parameters
+    ----------
+    data : Data
+        the PyG-like input data
+    alpha : float, optional
+        the scale factor for node degree, by default 2
+    batch_size : int, optional
+        the batch size for computing node influence, by default 512        
+    device : str, optional
+        the device where the method running on, by default "cpu"        
 
     Example
     -------
@@ -163,6 +175,15 @@ class GUARD(UniversalDefense, Surrogate):
 class DegreeGUARD(UniversalDefense):
     """Graph Universal Defense based on node degrees
 
+    Parameters
+    ----------
+    data : Data
+        the PyG-like input data
+    descending : bool, optional
+        whether the degree of chosen nodes are in descending order, by default False
+    device : str, optional
+        the device where the method running on, by default "cpu"        
+
     Example
     -------
     >>> data = ... # PyG-like Data
@@ -181,6 +202,13 @@ class DegreeGUARD(UniversalDefense):
 
 class RandomGUARD(UniversalDefense):
     """Graph Universal Defense based on random choice
+
+    Parameters
+    ----------
+    data : Data
+        the PyG-like input data
+    device : str, optional
+        the device where the method running on, by default "cpu"    
 
     Example
     -------

@@ -5,4 +5,5 @@ from .gnnguard import GNNGUARD
 
 classes = __all__ = ["CosinePurification", "JaccardPurification",
                      "SVDPurification", "EigenDecomposition",
-                     "GNNGUARD", "GUARD", "DegreeGUARD", "RandomGUARD"]
+                     "GNNGUARD",
+                     "UniversalDefense", "GUARD", "DegreeGUARD", "RandomGUARD"]

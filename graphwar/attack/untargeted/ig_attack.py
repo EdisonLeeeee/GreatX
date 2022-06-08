@@ -14,6 +14,40 @@ from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
 
 
 class IGAttack(UntargetedAttacker, Surrogate):
+    r"""Implementation of `IG-FGSM` attack from the: 
+    `"Adversarial Examples on Graph Data: Deep Insights 
+    into Attack and Defense" 
+    <https://arxiv.org/abs/1903.01610>`_ paper (IJCAI'19)
+
+    Example
+    -------
+    >>> from graphwar.dataset import GraphWarDataset
+    >>> import torch_geometric.transforms as T
+
+    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+                          transform=T.LargestConnectedComponents())
+    >>> data = dataset[0]
+
+    >>> surrogate_model = ... # train your surrogate model
+
+    >>> from graphwar.attack.untargeted import IGAttack
+    >>> attacker = IGAttack(data)
+    >>> attacker.setup_surrogate(surrogate_model)
+    >>> attacker.reset()
+    >>> attacker.attack(0.05) # attack with 0.05% of edge perturbations
+    >>> attacker.data() # get attacked graph
+
+    >>> attacker.edge_flips() # get edge flips after attack
+
+    >>> attacker.added_edges() # get added edges after attack
+
+    >>> attacker.removed_edges() # get removed edges after attack   
+
+    Note
+    ----
+    * In the paper, `IG-FGSM` attack was implemented for targeted attack, we adapt the codes for the non-targeted attack here.    
+    * Please remember to call :meth:`reset` before each attack. 
+    """
     # IGAttack can conduct feature attack
     _allow_feature_attack: bool = True
 

@@ -106,6 +106,45 @@
 
 
 <div class="viewcode-block" id="IGAttack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.targeted.IGAttack">[docs]</a><span class="k">class</span> <span class="nc">IGAttack</span><span class="p">(</span><span class="n">TargetedAttacker</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Implementation of `IG-FGSM` attack from the: </span>
+<span class="sd">    `&quot;Adversarial Examples on Graph Data: Deep Insights </span>
+<span class="sd">    into Attack and Defense&quot; </span>
+<span class="sd">    &lt;https://arxiv.org/abs/1903.01610&gt;`_ paper (IJCAI&#39;19)</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphWarDataset</span>
+<span class="sd">    &gt;&gt;&gt; import torch_geometric.transforms as T</span>
+
+<span class="sd">    &gt;&gt;&gt; dataset = GraphWarDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
+<span class="sd">                          transform=T.LargestConnectedComponents())</span>
+<span class="sd">    &gt;&gt;&gt; data = dataset[0]</span>
+
+<span class="sd">    &gt;&gt;&gt; surrogate_model = ... # train your surrogate model</span>
+
+<span class="sd">    &gt;&gt;&gt; from graphwar.attack.targeted import IGAttack</span>
+<span class="sd">    &gt;&gt;&gt; attacker = IGAttack(data)</span>
+<span class="sd">    &gt;&gt;&gt; attacker.setup_surrogate(surrogate_model)</span>
+<span class="sd">    &gt;&gt;&gt; attacker.reset()</span>
+<span class="sd">    &gt;&gt;&gt; attacker.attack(target=1) # attacking target node `1` with default budget set as node degree</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.reset()</span>
+<span class="sd">    &gt;&gt;&gt; attacker.attack(target=1, num_budgets=1) # attacking target node `1` with budget set as 1</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.data() # get attacked graph</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.edge_flips() # get edge flips after attack</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.added_edges() # get added edges after attack</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.removed_edges() # get removed edges after attack        </span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    * Please remember to call :meth:`reset` before each attack.     </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># IGAttack can conduct feature attack</span>
     <span class="n">_allow_feature_attack</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 

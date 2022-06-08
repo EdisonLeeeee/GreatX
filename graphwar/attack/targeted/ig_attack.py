@@ -14,6 +14,45 @@ from graphwar.functional import to_dense_adj
 
 
 class IGAttack(TargetedAttacker, Surrogate):
+    r"""Implementation of `IG-FGSM` attack from the: 
+    `"Adversarial Examples on Graph Data: Deep Insights 
+    into Attack and Defense" 
+    <https://arxiv.org/abs/1903.01610>`_ paper (IJCAI'19)
+
+    Example
+    -------
+    >>> from graphwar.dataset import GraphWarDataset
+    >>> import torch_geometric.transforms as T
+
+    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+                          transform=T.LargestConnectedComponents())
+    >>> data = dataset[0]
+
+    >>> surrogate_model = ... # train your surrogate model
+
+    >>> from graphwar.attack.targeted import IGAttack
+    >>> attacker = IGAttack(data)
+    >>> attacker.setup_surrogate(surrogate_model)
+    >>> attacker.reset()
+    >>> attacker.attack(target=1) # attacking target node `1` with default budget set as node degree
+
+    >>> attacker.reset()
+    >>> attacker.attack(target=1, num_budgets=1) # attacking target node `1` with budget set as 1
+
+    >>> attacker.data() # get attacked graph
+
+    >>> attacker.edge_flips() # get edge flips after attack
+
+    >>> attacker.added_edges() # get added edges after attack
+
+    >>> attacker.removed_edges() # get removed edges after attack        
+
+    Note
+    ----
+    * Please remember to call :meth:`reset` before each attack.     
+
+    """
+
     # IGAttack can conduct feature attack
     _allow_feature_attack: bool = True
 

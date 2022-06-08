@@ -107,6 +107,46 @@
 
 
 <div class="viewcode-block" id="PGDAttack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.PGDAttack">[docs]</a><span class="k">class</span> <span class="nc">PGDAttack</span><span class="p">(</span><span class="n">UntargetedAttacker</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Implementation of `PGD` attack from the: </span>
+<span class="sd">    `&quot;Topology Attack and Defense for Graph Neural Networks:</span>
+<span class="sd">     An Optimization Perspective&quot; </span>
+<span class="sd">    &lt;https://arxiv.org/abs/1906.04214&gt;`_ paper (IJCAI&#39;19)</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphWarDataset</span>
+<span class="sd">    &gt;&gt;&gt; import torch_geometric.transforms as T</span>
+
+<span class="sd">    &gt;&gt;&gt; dataset = GraphWarDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
+<span class="sd">                          transform=T.LargestConnectedComponents())</span>
+<span class="sd">    &gt;&gt;&gt; data = dataset[0]</span>
+
+<span class="sd">    &gt;&gt;&gt; surrogate_model = ... # train your surrogate model</span>
+
+<span class="sd">    &gt;&gt;&gt; from graphwar.attack.untargeted import PGDAttack</span>
+<span class="sd">    &gt;&gt;&gt; attacker = PGDAttack(data)</span>
+<span class="sd">    &gt;&gt;&gt; attacker.setup_surrogate(surrogate_model)</span>
+<span class="sd">    &gt;&gt;&gt; attacker.reset()</span>
+<span class="sd">    &gt;&gt;&gt; attacker.attack(0.05) # attack with 0.05% of edge perturbations</span>
+<span class="sd">    &gt;&gt;&gt; attacker.data() # get attacked graph</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.edge_flips() # get edge flips after attack</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.added_edges() # get added edges after attack</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.removed_edges() # get removed edges after attack       </span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    MinMax attack is a variant of </span>
+<span class="sd">    :class:`graphwar.attack.untargeted.PGDAttack` attack.   </span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    * Please remember to call :meth:`reset` before each attack.      </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># PGDAttack cannot ensure that there is not singleton node after attacks.</span>
     <span class="n">_allow_singleton</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -288,6 +328,41 @@
 
 
 <div class="viewcode-block" id="MinmaxAttack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.MinmaxAttack">[docs]</a><span class="k">class</span> <span class="nc">MinmaxAttack</span><span class="p">(</span><span class="n">PGDAttack</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Implementation of `MinMax` attack from the: </span>
+<span class="sd">    `&quot;Topology Attack and Defense for Graph Neural Networks:</span>
+<span class="sd">     An Optimization Perspective&quot; </span>
+<span class="sd">    &lt;https://arxiv.org/abs/1906.04214&gt;`_ paper (IJCAI&#39;19)</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphWarDataset</span>
+<span class="sd">    &gt;&gt;&gt; import torch_geometric.transforms as T</span>
+
+<span class="sd">    &gt;&gt;&gt; dataset = GraphWarDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
+<span class="sd">                          transform=T.LargestConnectedComponents())</span>
+<span class="sd">    &gt;&gt;&gt; data = dataset[0]</span>
+
+<span class="sd">    &gt;&gt;&gt; surrogate_model = ... # train your surrogate model</span>
+
+<span class="sd">    &gt;&gt;&gt; from graphwar.attack.untargeted import MinmaxAttack</span>
+<span class="sd">    &gt;&gt;&gt; attacker = MinmaxAttack(data)</span>
+<span class="sd">    &gt;&gt;&gt; attacker.setup_surrogate(surrogate_model)</span>
+<span class="sd">    &gt;&gt;&gt; attacker.reset()</span>
+<span class="sd">    &gt;&gt;&gt; attacker.attack(0.05) # attack with 0.05% of edge perturbations</span>
+<span class="sd">    &gt;&gt;&gt; attacker.data() # get attacked graph</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.edge_flips() # get edge flips after attack</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.added_edges() # get added edges after attack</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.removed_edges() # get removed edges after attack       </span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    * MinMax attack is a variant of :class:`graphwar.attack.untargeted.PGDAttack` attack.</span>
+<span class="sd">    * Please remember to call :meth:`reset` before each attack.     </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="MinmaxAttack.setup_surrogate"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.MinmaxAttack.setup_surrogate">[docs]</a>    <span class="k">def</span> <span class="nf">setup_surrogate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surrogate</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
                         <span class="n">labeled_nodes</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>

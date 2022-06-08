@@ -6,5 +6,6 @@ from .pgd_attack import MinmaxAttack, PGDAttack
 from .metattack import Metattack
 from .ig_attack import IGAttack
 
-classes = __all__ = ['DICEAttack', 'FGAttack', 'IGAttack', 'Metattack', 'MinmaxAttack', 'PGDAttack', 
-                    'RandomAttack', 'UntargetedAttacker']
+classes = __all__ = ['UntargetedAttacker',
+                     'RandomAttack', 'DICEAttack', 'FGAttack',
+                     'IGAttack', 'Metattack', 'MinmaxAttack', 'PGDAttack']

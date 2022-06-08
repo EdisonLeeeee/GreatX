@@ -106,6 +106,37 @@
 
 
 <div class="viewcode-block" id="LGCBackdoor"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.backdoor.LGCBackdoor">[docs]</a><span class="k">class</span> <span class="nc">LGCBackdoor</span><span class="p">(</span><span class="n">BackdoorAttacker</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Implementation of `LGCB` attack from the: </span>
+<span class="sd">    `&quot;Neighboring Backdoor Attacks on Graph Convolutional Network&quot; </span>
+<span class="sd">    &lt;https://arxiv.org/abs/2201.06202&gt;`_ paper (arXiv&#39;22)</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphWarDataset</span>
+<span class="sd">    &gt;&gt;&gt; import torch_geometric.transforms as T</span>
+
+<span class="sd">    &gt;&gt;&gt; dataset = GraphWarDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
+<span class="sd">                          transform=T.LargestConnectedComponents())</span>
+<span class="sd">    &gt;&gt;&gt; data = dataset[0]</span>
+
+<span class="sd">    &gt;&gt;&gt; surrogate_model = ... # train your surrogate model</span>
+
+<span class="sd">    &gt;&gt;&gt; from graphwar.attack.backdoor import LGCBackdoor</span>
+<span class="sd">    &gt;&gt;&gt; attacker.setup_surrogate(surrogate_model)</span>
+<span class="sd">    &gt;&gt;&gt; attacker = LGCBackdoor(data)</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.reset()</span>
+<span class="sd">    &gt;&gt;&gt; attacker.attack(num_budgets=50, target_class=0)</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.data() # get attacked graph</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.trigger() # get trigger node</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    * Please remember to call :meth:`reset` before each attack.      </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="LGCBackdoor.setup_surrogate"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.backdoor.LGCBackdoor.setup_surrogate">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">setup_surrogate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surrogate</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;LGCBackdoor&quot;</span><span class="p">:</span>
@@ -149,6 +180,37 @@
 
 
 <div class="viewcode-block" id="FGBackdoor"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.backdoor.FGBackdoor">[docs]</a><span class="k">class</span> <span class="nc">FGBackdoor</span><span class="p">(</span><span class="n">BackdoorAttacker</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Implementation of `GB-FGSM` attack from the: </span>
+<span class="sd">    `&quot;Neighboring Backdoor Attacks on Graph Convolutional Network&quot; </span>
+<span class="sd">    &lt;https://arxiv.org/abs/2201.06202&gt;`_ paper (arXiv&#39;22)</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphWarDataset</span>
+<span class="sd">    &gt;&gt;&gt; import torch_geometric.transforms as T</span>
+
+<span class="sd">    &gt;&gt;&gt; dataset = GraphWarDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
+<span class="sd">                          transform=T.LargestConnectedComponents())</span>
+<span class="sd">    &gt;&gt;&gt; data = dataset[0]</span>
+
+<span class="sd">    &gt;&gt;&gt; surrogate_model = ... # train your surrogate model</span>
+
+<span class="sd">    &gt;&gt;&gt; from graphwar.attack.backdoor import FGBackdoor</span>
+<span class="sd">    &gt;&gt;&gt; attacker.setup_surrogate(surrogate_model)</span>
+<span class="sd">    &gt;&gt;&gt; attacker = FGBackdoor(data)</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.reset()</span>
+<span class="sd">    &gt;&gt;&gt; attacker.attack(num_budgets=50, target_class=0)</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.data() # get attacked graph</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.trigger() # get trigger node</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    * Please remember to call :meth:`reset` before each attack.         </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FGBackdoor.setup_surrogate"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.backdoor.FGBackdoor.setup_surrogate">[docs]</a>    <span class="k">def</span> <span class="nf">setup_surrogate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surrogate</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
                         <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;FGBackdoor&quot;</span><span class="p">:</span>

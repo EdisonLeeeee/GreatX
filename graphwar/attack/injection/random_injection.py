@@ -8,32 +8,38 @@ from graphwar.attack.injection.injection_attacker import InjectionAttacker
 
 
 class RandomInjection(InjectionAttacker):
-    """Injection nodes into a graph randomly.
+    r"""Injection nodes into a graph randomly.
 
     Example
     -------
-    >>> attacker = RandomInjection(data)
-    >>> attacker.reset()
-    # inject 10 nodes, where each nodes has 2 edges
-    >>> attacker.attack(num_budgets=10, num_edges_local=2) 
-    # inject 10 nodes, with 100 edges in total
-    >>> attacker.attack(num_budgets=10, num_edges_global=100) 
-    # inject 10 nodes, where each nodes has 2 edges, 
-    # the features of injected nodes lies in [0,1]
-    >>> attacker.attack(num_budgets=10, num_edges_local=2, feat_limits=(0,1)) 
-    >>> attacker.attack(num_budgets=10, num_edges_local=2, feat_limits={'min': 0, 'max':1}) 
-    # inject 10 nodes, where each nodes has 2 edges, 
-    # the features of injected each node has 10 nonzero elements
-    >>> attacker.attack(num_budgets=10, num_edges_local=2, feat_budgets=10) 
+    >>> from graphwar.dataset import GraphWarDataset
+    >>> import torch_geometric.transforms as T
 
-    # get injected nodes
-    >>> attacker.injected_nodes()
-    # get injected edges
-    >>> attacker.injected_edges()
-    # get injected nodes' features
-    >>> attacker.injected_feats()
-    # get perturbed graph
-    >>> attacker.data()
+    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+                          transform=T.LargestConnectedComponents())
+    >>> data = dataset[0]
+
+
+    >>> from graphwar.attack.injection import RandomInjection
+    >>> attacker = RandomInjection(data)
+
+    >>> attacker.reset()
+    >>> attacker.attack(10, feat_limits=(0, 1))  # injecting 10 nodes for continuous features
+
+    >>> attacker.reset()
+    >>> attacker.attack(10, feat_budgets=10)  # injecting 10 nodes for binary features    
+
+    >>> attacker.data() # get attacked graph
+
+    >>> attacker.injected_nodes() # get injected nodes after attack
+
+    >>> attacker.injected_edges() # get injected edges after attack
+
+    >>> attacker.injected_feats() # get injected features after attack   
+
+    Note
+    ----
+    * Please remember to call :meth:`reset` before each attack.       
     """
 
     def attack(self, num_budgets: Union[int, float], *,

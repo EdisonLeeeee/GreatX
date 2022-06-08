@@ -13,6 +13,51 @@ from graphwar.functional import to_dense_adj
 
 
 class FGAttack(UntargetedAttacker, Surrogate):
+    r"""Implementation of `FGA` attack from the: 
+    `"Fast Gradient Attack on Network Embedding" 
+    <https://arxiv.org/abs/1809.02797>`_ paper (arXiv'18)
+
+    Example
+    -------
+    >>> from graphwar.dataset import GraphWarDataset
+    >>> import torch_geometric.transforms as T
+
+    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+                          transform=T.LargestConnectedComponents())
+    >>> data = dataset[0]
+
+    >>> surrogate_model = ... # train your surrogate model
+
+    >>> from graphwar.attack.untargeted import FGAttack
+    >>> attacker = FGAttack(data)
+    >>> attacker.setup_surrogate(surrogate_model)
+    >>> attacker.reset()
+    >>> attacker.attack(0.05) # attack with 0.05% of edge perturbations
+    >>> attacker.data() # get attacked graph
+
+    >>> attacker.edge_flips() # get edge flips after attack
+
+    >>> attacker.added_edges() # get added edges after attack
+
+    >>> attacker.removed_edges() # get removed edges after attack      
+
+    Note
+    ----
+    This is a simple but effective attack that utilizing gradient information
+    of the adjacency matrix. There are several work sharing the same heuristic,
+    we list them as follows:
+    [1] `FGSM`: `"Explaining and Harnessing Adversarial Examples" 
+    <https://arxiv.org/abs/1412.6572>`_ paper (ICLR'15)
+    [2] `"Link Prediction Adversarial Attack Via Iterative Gradient Attack" 
+    <https://ieeexplore.ieee.org/abstract/document/9141291>`_ paper (IEEE Trans'20)
+    [3] `"Adversarial Attack on Graph Structured Data" 
+    <https://arxiv.org/abs/1806.02371>`_ paper (ICML'18)
+
+    Note
+    ----
+    * Please remember to call :meth:`reset` before each attack.     
+    """
+
     # FGAttack can conduct feature attack
     _allow_feature_attack: bool = True
 

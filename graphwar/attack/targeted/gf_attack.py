@@ -13,6 +13,39 @@ from graphwar.utils import singleton_filter
 
 
 class GFAttack(TargetedAttacker):
+    r"""Implementation of `GFA` attack from the: 
+    `"A Restricted Black - box Adversarial Framework Towards 
+    Attacking Graph Embedding Models" 
+    <https://arxiv.org/abs/1908.01297>`_ paper (AAAI'20)
+
+    Example
+    -------
+    >>> from graphwar.dataset import GraphWarDataset
+    >>> import torch_geometric.transforms as T
+
+    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+                          transform=T.LargestConnectedComponents())
+    >>> data = dataset[0]
+
+    >>> from graphwar.attack.targeted import IGAttack
+    >>> attacker = IGAttack(data)
+    >>> attacker.attack(target=1) # attacking target node `1` with default budget set as node degree
+
+    >>> attacker.attack(target=1, num_budgets=1) # attacking target node `1` with budget set as 1
+
+    >>> attacker.data() # get attacked graph
+
+    >>> attacker.edge_flips() # get edge flips after attack
+
+    >>> attacker.added_edges() # get added edges after attack
+
+    >>> attacker.removed_edges() # get removed edges after attack      
+
+    Note
+    ----
+    * In the paper, the authors mainly consider the single edge perturbations, i.e., :obj:`num_budgets=1`.
+    * Please remember to call :meth:`reset` before each attack.     
+    """
 
     def __init__(self, data: Data, K: int = 2, T: int = 128, device: str = "cpu",
                  seed: Optional[int] = None, name: Optional[str] = None, **kwargs):

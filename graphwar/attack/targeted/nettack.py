@@ -14,11 +14,43 @@ from graphwar.utils import singleton_filter, scipy_normalize, LikelihoodFilter
 
 
 class Nettack(TargetedAttacker, Surrogate):
-    """Implementation of the method proposed in the paper:
-    'Adversarial Attacks on Neural Networks for Graph Data'
-    by Daniel Zügner, Amir Akbarnejad and Stephan Günnemann,
-    published at SIGKDD'18, August 2018, London, UK
+    r"""Implementation of `Nettack` attack from the: 
+    `"Adversarial Attacks on Neural Networks for Graph Data" 
+    <https://arxiv.org/abs/1805.07984>`_ paper (KDD'18)
+
+    Example
+    -------
+    >>> from graphwar.dataset import GraphWarDataset
+    >>> import torch_geometric.transforms as T
+
+    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+                          transform=T.LargestConnectedComponents())
+    >>> data = dataset[0]
+
+    >>> surrogate_model = ... # train your surrogate model
+
+    >>> from graphwar.attack.targeted import Nettack
+    >>> attacker = Nettack(data)
+    >>> attacker.setup_surrogate(surrogate_model)
+    >>> attacker.reset()
+    >>> attacker.attack(target=1) # attacking target node `1` with default budget set as node degree
+
+    >>> attacker.reset()
+    >>> attacker.attack(target=1, num_budgets=1) # attacking target node `1` with budget set as 1
+
+    >>> attacker.data() # get attacked graph
+
+    >>> attacker.edge_flips() # get edge flips after attack
+
+    >>> attacker.added_edges() # get added edges after attack
+
+    >>> attacker.removed_edges() # get removed edges after attack       
+
+    Note
+    ----
+    * Please remember to call :meth:`reset` before each attack.     
     """
+
     # Nettack can conduct feature attack
     _allow_feature_attack = True
     _allow_singleton: bool = False

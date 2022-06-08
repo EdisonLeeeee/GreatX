@@ -13,6 +13,40 @@ from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
 
 
 class Metattack(UntargetedAttacker, Surrogate):
+    r"""Implementation of `Metattack` attack from the: 
+    `"Adversarial Attacks on Graph Neural Networks 
+    via Meta Learning" 
+    <https://arxiv.org/abs/1902.08412>`_ paper (ICLR'19)
+
+    Example
+    -------
+    >>> from graphwar.dataset import GraphWarDataset
+    >>> import torch_geometric.transforms as T
+
+    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+                          transform=T.LargestConnectedComponents())
+    >>> data = dataset[0]
+
+    >>> surrogate_model = ... # train your surrogate model
+
+    >>> from graphwar.attack.untargeted import Metattack
+    >>> attacker = Metattack(data)
+    >>> attacker.setup_surrogate(surrogate_model)
+    >>> attacker.reset()
+    >>> attacker.attack(0.05) # attack with 0.05% of edge perturbations
+    >>> attacker.data() # get attacked graph
+
+    >>> attacker.edge_flips() # get edge flips after attack
+
+    >>> attacker.added_edges() # get added edges after attack
+
+    >>> attacker.removed_edges() # get removed edges after attack
+
+    Note
+    ----
+    * Please remember to call :meth:`reset` before each attack.     
+    """
+
     # Metattack can also conduct feature attack
     _allow_feature_attack: bool = True
 

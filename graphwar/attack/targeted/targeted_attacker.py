@@ -4,6 +4,13 @@ from graphwar.attack.flip_attacker import FlipAttacker
 
 
 class TargetedAttacker(FlipAttacker):
+    r"""Base class for adversarial targeted attack.
+
+    Note
+    ----
+    `TargetedAttacker` is a subclass of `FlipAttacker`.
+    It belongs to graph modification attack (GMA).
+    """
 
     def reset(self) -> "TargetedAttacker":
         """Reset the state of the Attacker

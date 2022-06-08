@@ -7,5 +7,7 @@ from .gf_attack import GFAttack
 from .ig_attack import IGAttack
 from .nettack import Nettack
 
-classes = __all__ = ['DICEAttack', 'FGAttack', 'GFAttack', 'IGAttack', 'Nettack', 
-                    'RandomAttack', 'SGAttack', 'TargetedAttacker']
+classes = __all__ = ['TargetedAttacker', 'RandomAttack',
+                     'DICEAttack', 'FGAttack', 'IGAttack', 'SGAttack',
+                     'Nettack', 'GFAttack',
+                     ]

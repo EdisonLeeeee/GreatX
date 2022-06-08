@@ -12,10 +12,41 @@ from graphwar.attack.injection.injection_attacker import InjectionAttacker
 
 
 class AdvInjection(InjectionAttacker, Surrogate):
-    """2nd place solution of KDD CUP 2020
+    r"""2nd place solution of KDD CUP 2020
     "Adversarial attack and defense" challenge.
 
+    Example
+    -------
+    >>> from graphwar.dataset import GraphWarDataset
+    >>> import torch_geometric.transforms as T
 
+    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+                          transform=T.LargestConnectedComponents())
+    >>> data = dataset[0]
+
+    >>> surrogate_model = ... # train your surrogate model
+
+    >>> from graphwar.attack.injection import AdvInjection
+    >>> attacker.setup_surrogate(surrogate_model)
+    >>> attacker = AdvInjection(data)
+
+    >>> attacker.reset()
+    >>> attacker.attack(10, feat_limits=(0, 1))  # injecting 10 nodes for continuous features
+
+    >>> attacker.reset()
+    >>> attacker.attack(10, feat_budgets=10)  # injecting 10 nodes for binary features    
+
+    >>> attacker.data() # get attacked graph
+
+    >>> attacker.injected_nodes() # get injected nodes after attack
+
+    >>> attacker.injected_edges() # get injected edges after attack
+
+    >>> attacker.injected_feats() # get injected features after attack   
+
+    Note
+    ----
+    * Please remember to call :meth:`reset` before each attack.        
     """
 
     def attack(self, num_budgets: Union[int, float], *,

@@ -10,6 +10,9 @@ from graphwar.utils import add_edges
 
 
 class BackdoorAttacker(Attacker):
+    """Base class for backdoor attacks.
+
+    """
 
     def reset(self) -> "BackdoorAttacker":
         """Reset the state of the Attacker

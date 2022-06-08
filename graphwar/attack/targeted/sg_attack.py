@@ -16,6 +16,44 @@ SubGraph = namedtuple('SubGraph', ['edge_index', 'sub_edges', 'non_edges',
 
 
 class SGAttack(TargetedAttacker, Surrogate):
+    r"""Implementation of `SGA` attack from the: 
+    `"Adversarial Attack on Large Scale Graph" 
+    <https://arxiv.org/abs/2009.03488>`_ paper (TKDE'21)
+
+    Example
+    -------
+    >>> from graphwar.dataset import GraphWarDataset
+    >>> import torch_geometric.transforms as T
+
+    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+                          transform=T.LargestConnectedComponents())
+    >>> data = dataset[0]
+
+    >>> surrogate_model = ... # train your surrogate model
+
+    >>> from graphwar.attack.targeted import SGAttack
+    >>> attacker = SGAttack(data)
+    >>> attacker.setup_surrogate(surrogate_model)
+    >>> attacker.reset()
+    >>> attacker.attack(target=1) # attacking target node `1` with default budget set as node degree
+
+    >>> attacker.reset()
+    >>> attacker.attack(target=1, num_budgets=1) # attacking target node `1` with budget set as 1
+
+    >>> attacker.data() # get attacked graph
+
+    >>> attacker.edge_flips() # get edge flips after attack
+
+    >>> attacker.added_edges() # get added edges after attack
+
+    >>> attacker.removed_edges() # get removed edges after attack        
+
+    Note
+    ----
+    * `SGAttack` is a scalable attack that can be applied to large scale graphs.
+    * Please remember to call :meth:`reset` before each attack.        
+    """
+
     # SGAttack cannot ensure that there is not singleton node after attacks.
     _allow_singleton = True
 

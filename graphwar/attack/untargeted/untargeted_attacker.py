@@ -2,6 +2,13 @@ from graphwar.attack.flip_attacker import FlipAttacker
 
 
 class UntargetedAttacker(FlipAttacker):
+    r"""Base class for adversarial non-targeted attack.
+
+    Note
+    ----
+    `UntargetedAttacker` is a subclass of `FlipAttacker`.
+    It belongs to graph modification attack (GMA).
+    """
 
     def reset(self) -> "UntargetedAttacker":
         """Reset the state of the Attacker

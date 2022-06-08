@@ -104,10 +104,41 @@
 
 
 <div class="viewcode-block" id="AdvInjection"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.AdvInjection">[docs]</a><span class="k">class</span> <span class="nc">AdvInjection</span><span class="p">(</span><span class="n">InjectionAttacker</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;2nd place solution of KDD CUP 2020</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;2nd place solution of KDD CUP 2020</span>
 <span class="sd">    &quot;Adversarial attack and defense&quot; challenge.</span>
 
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphWarDataset</span>
+<span class="sd">    &gt;&gt;&gt; import torch_geometric.transforms as T</span>
 
+<span class="sd">    &gt;&gt;&gt; dataset = GraphWarDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
+<span class="sd">                          transform=T.LargestConnectedComponents())</span>
+<span class="sd">    &gt;&gt;&gt; data = dataset[0]</span>
+
+<span class="sd">    &gt;&gt;&gt; surrogate_model = ... # train your surrogate model</span>
+
+<span class="sd">    &gt;&gt;&gt; from graphwar.attack.injection import AdvInjection</span>
+<span class="sd">    &gt;&gt;&gt; attacker.setup_surrogate(surrogate_model)</span>
+<span class="sd">    &gt;&gt;&gt; attacker = AdvInjection(data)</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.reset()</span>
+<span class="sd">    &gt;&gt;&gt; attacker.attack(10, feat_limits=(0, 1))  # injecting 10 nodes for continuous features</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.reset()</span>
+<span class="sd">    &gt;&gt;&gt; attacker.attack(10, feat_budgets=10)  # injecting 10 nodes for binary features    </span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.data() # get attacked graph</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.injected_nodes() # get injected nodes after attack</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.injected_edges() # get injected edges after attack</span>
+
+<span class="sd">    &gt;&gt;&gt; attacker.injected_feats() # get injected features after attack   </span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    * Please remember to call :meth:`reset` before each attack.        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AdvInjection.attack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.injection.AdvInjection.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_budgets</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span>

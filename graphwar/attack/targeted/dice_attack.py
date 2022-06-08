@@ -5,15 +5,43 @@ from graphwar.attack.targeted.random_attack import RandomAttack
 
 
 class DICEAttack(RandomAttack):
-    r"""DICE attacker that randomly chooses edges to flip 
-    based on “Disconnect Internally, Connect Externally” (DICE), 
+    r"""Implementation of `DICE` attack from the: 
+    `"Hiding Individuals and Communities in a Social 
+    Network" <https://arxiv.org/abs/1608.00375>`_ paper
+
+    DICE randomly chooses edges to flip based on the principle of
+    “Disconnect Internally, Connect Externally” (DICE), 
     which conducts attacks by removing edges between nodes
     with high correlations and connecting edges with low correlations.
 
-    Reference:
-    [1] M. Waniek, T. P. Michalak, M. J. Wooldridge, and T. Rahwan, 
-    “Hidding individuals and communities in a social network,” 
-    Nature Human Behaviour, vol. 2, no. 2, pp. 139–147, 2018.
+    Example
+    -------
+    >>> from graphwar.dataset import GraphWarDataset
+    >>> import torch_geometric.transforms as T
+
+    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+                          transform=T.LargestConnectedComponents())
+    >>> data = dataset[0]
+
+    >>> from graphwar.attack.targeted import IGAttack
+    >>> attacker = IGAttack(data)
+    >>> attacker.reset()
+    >>> attacker.attack(target=1) # attacking target node `1` with default budget set as node degree
+
+    >>> attacker.reset()
+    >>> attacker.attack(target=1, num_budgets=1) # attacking target node `1` with budget set as 1
+
+    >>> attacker.data() # get attacked graph
+
+    >>> attacker.edge_flips() # get edge flips after attack
+
+    >>> attacker.added_edges() # get added edges after attack
+
+    >>> attacker.removed_edges() # get removed edges after attack    
+
+    Note
+    ----
+    * Please remember to call :meth:`reset` before each attack.        
     """
 
     def get_added_edge(self, influence_nodes: list) -> Optional[tuple]:

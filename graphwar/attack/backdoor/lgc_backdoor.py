@@ -14,6 +14,37 @@ from graphwar import Surrogate
 
 
 class LGCBackdoor(BackdoorAttacker):
+    r"""Implementation of `LGCB` attack from the: 
+    `"Neighboring Backdoor Attacks on Graph Convolutional Network" 
+    <https://arxiv.org/abs/2201.06202>`_ paper (arXiv'22)
+
+    Example
+    -------
+    >>> from graphwar.dataset import GraphWarDataset
+    >>> import torch_geometric.transforms as T
+
+    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+                          transform=T.LargestConnectedComponents())
+    >>> data = dataset[0]
+
+    >>> surrogate_model = ... # train your surrogate model
+
+    >>> from graphwar.attack.backdoor import LGCBackdoor
+    >>> attacker.setup_surrogate(surrogate_model)
+    >>> attacker = LGCBackdoor(data)
+
+    >>> attacker.reset()
+    >>> attacker.attack(num_budgets=50, target_class=0)
+
+    >>> attacker.data() # get attacked graph
+
+    >>> attacker.trigger() # get trigger node
+
+    Note
+    ----
+    * Please remember to call :meth:`reset` before each attack.      
+
+    """
 
     @torch.no_grad()
     def setup_surrogate(self, surrogate: nn.Module) -> "LGCBackdoor":
@@ -57,6 +88,37 @@ class LGCBackdoor(BackdoorAttacker):
 
 
 class FGBackdoor(BackdoorAttacker, Surrogate):
+    r"""Implementation of `GB-FGSM` attack from the: 
+    `"Neighboring Backdoor Attacks on Graph Convolutional Network" 
+    <https://arxiv.org/abs/2201.06202>`_ paper (arXiv'22)
+
+    Example
+    -------
+    >>> from graphwar.dataset import GraphWarDataset
+    >>> import torch_geometric.transforms as T
+
+    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+                          transform=T.LargestConnectedComponents())
+    >>> data = dataset[0]
+
+    >>> surrogate_model = ... # train your surrogate model
+
+    >>> from graphwar.attack.backdoor import FGBackdoor
+    >>> attacker.setup_surrogate(surrogate_model)
+    >>> attacker = FGBackdoor(data)
+
+    >>> attacker.reset()
+    >>> attacker.attack(num_budgets=50, target_class=0)
+
+    >>> attacker.data() # get attacked graph
+
+    >>> attacker.trigger() # get trigger node
+
+    Note
+    ----
+    * Please remember to call :meth:`reset` before each attack.         
+
+    """
 
     def setup_surrogate(self, surrogate: nn.Module, *,
                         eps: float = 1.0) -> "FGBackdoor":

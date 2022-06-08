@@ -8,7 +8,33 @@ from graphwar.attack.untargeted.untargeted_attacker import UntargetedAttacker
 
 
 class RandomAttack(UntargetedAttacker):
-    """Random attacker that randomly chooses edges to flip."""
+    r"""Random attacker that randomly chooses edges to flip.
+
+    Example
+    -------
+    >>> from graphwar.dataset import GraphWarDataset
+    >>> import torch_geometric.transforms as T
+
+    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+                          transform=T.LargestConnectedComponents())
+    >>> data = dataset[0]
+
+    >>> from graphwar.attack.untargeted import RandomAttack
+    >>> attacker = RandomAttack(data)
+    >>> attacker.reset()
+    >>> attacker.attack(0.05) # attack with 0.05% of edge perturbations
+    >>> attacker.data() # get attacked graph
+
+    >>> attacker.edge_flips() # get edge flips after attack
+
+    >>> attacker.added_edges() # get added edges after attack
+
+    >>> attacker.removed_edges() # get removed edges after attack
+
+    Note
+    ----
+    * Please remember to call :meth:`reset` before each attack.        
+    """
 
     def attack(self,
                num_budgets=0.05, *,

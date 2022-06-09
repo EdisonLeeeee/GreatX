@@ -23,9 +23,9 @@
   <a href="https://github.com/pytorch/pytorch">
     <img src="https://img.shields.io/badge/PyTorch->=1.8-FF6F00?logo=pytorch" alt="pytorch">
   </a>   
-  <!-- <a href="https://pypi.org/project/graphwar/">
-    <img src="https://badge.fury.io/py/graphwar.png" alt="pypi">
-  </a>        -->
+  <a href="https://pypi.org/project/graphwar/">
+    <img src="https://badge.fury.io/py/graphwar.svg" alt="pypi">
+  </a>       
   <a href="https://github.com/EdisonLeeeee/GraphWar/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/EdisonLeeeee/GraphWar" alt="license">
     <img src="https://img.shields.io/badge/Contributions-Welcome-278ea5" alt="Contrib"/>    
@@ -41,6 +41,7 @@
 
 
 # 💨 News
+- June 9, 2022: GraphWar **v0.1.0** has been released. We also provide the [documentation](https://graphwar.readthedocs.io/en/latest) along with numerous [examples](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples) .
 - May 27, 2022: GraphWar has been refactored with [PyTorch Geometric (PyG)](https://github.com/pyg-team/pytorch_geometric), old code based on [DGL](https://www.dgl.ai) can be found [here](https://github.com/EdisonLeeeee/GraphWar/tree/dgl). We will soon release the first version of GraphWar, stay tuned!
 
 NOTE: GraphWar is still in the early stages and the API will likely continue to change. 
@@ -51,7 +52,6 @@ Please make sure you have installed [PyTorch](https://pytorch.org) and [PyTorch 
 
 
 ```bash
-# Coming soon
 pip install -U graphwar
 ```
 

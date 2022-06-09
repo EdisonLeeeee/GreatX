@@ -126,6 +126,7 @@ class GUARD(UniversalDefense, Surrogate):
     >>> trainer.fit({'data': data, 'mask': splits.train_nodes}, 
                 {'data': data, 'mask': splits.val_nodes}, callbacks=[ckp])
     >>> trainer.evaluate({'data': data, 'mask': splits.test_nodes})
+
     >>> guard = GUARD(data, device=device)
     >>> guard.setup_surrogate(surrogate, data.y[splits.train_nodes])
     >>> target_node = 1

@@ -3,7 +3,6 @@ from torch import nn
 from torch import Tensor
 from torch_sparse import SparseTensor, matmul
 
-from torch_geometric.nn.conv import MessagePassing
 from torch_geometric.nn.conv.gcn_conv import gcn_norm
 from torch_geometric.nn.dense.linear import Linear
 from torch_geometric.typing import Adj, OptTensor
@@ -14,9 +13,38 @@ from graphwar.nn.layers.gcn_conv import dense_gcn_norm
 
 
 class DAGNNConv(nn.Module):
-    """
-    Deep Adaptive Graph Neural Network in
-    `Towards Deeper Graph Neural Networks <https://arxiv.org/abs/2007.09296>`
+    r"""The DAGNN operator from the `"Towards Deeper Graph Neural 
+    Networks" <https://arxiv.org/abs/2007.09296>`_
+    paper (KDD'20)
+
+    Parameters
+    ----------
+    in_channels : int
+        dimensions of input samples
+    out_channels : int, optional
+        dimensions of output samples, by default 1
+    K : int, optional
+        the number of propagation steps, by default 1
+    add_self_loops : bool, optional
+        whether to add self-loops to the input graph, by default True
+    bias : bool, optional
+        whether to use bias in the layers, by default True    
+
+    Note
+    ----
+    * :obj:`out_channels` must be 1 for any cases
+
+    Different from that in :class:`torch_geometric`, 
+    for the inputs :obj:`x`, :obj:`edge_index`, and :obj:`edge_weight`,
+    our implementation supports:
+
+    * :obj:`edge_index` is :class:`torch.FloatTensor`: dense adjacency matrix with shape :obj:`[N, N]`
+    * :obj:`edge_index` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`
+    * :obj:`edge_index` is :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`
+
+    See also
+    --------
+    :class:`graphwar.nn.models.DAGNN`       
     """
 
     def __init__(self, in_channels: int, out_channels: int = 1, K: int = 1,

@@ -30,7 +30,8 @@ class BunchDict(OrderedDict):
     >>> b.c = 6
     >>> b['c']
     6
-    # Converting objects in BunchDict to `torch.Tensor` if possible.
+
+    >>> # Converting objects in BunchDict to `torch.Tensor` if possible.
     >>> b = BunchDict(a=[1,2,3])
     >>> b.to_tensor()
     Objects in BunchDict:

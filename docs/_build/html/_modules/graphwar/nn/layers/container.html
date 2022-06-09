@@ -96,13 +96,18 @@
 
 
 <div class="viewcode-block" id="Sequential"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.Sequential">[docs]</a><span class="k">class</span> <span class="nc">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A modified :class:`torch.nn.Sequential` which can take multiple inputs.</span>
+    <span class="sd">&quot;&quot;&quot;A modified :class:`torch.nn.Sequential` which can accept multiple inputs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    loc : int, optional</span>
+<span class="sd">        the location of feature input :obj:`x`, by default 0    </span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    &gt;&gt;&gt; import torch</span>
 <span class="sd">    &gt;&gt;&gt; from graphwar.nn.layers import Sequential, GCNConv</span>
-<span class="sd">    &gt;&gt;&gt;</span>
+
 <span class="sd">    &gt;&gt;&gt; edge_index = torch.LongTensor([[1, 2], [3,4]]) # size [2, M]</span>
 <span class="sd">    &gt;&gt;&gt; x = torch.randn(5, 20)</span>
 
@@ -144,10 +149,10 @@
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
 <span class="sd">    * The argument :obj:`loc` must be specified as the location of feature input :obj:`x`,  which would walk through the whole layers.</span>
-<span class="sd">    * The usage of keyword argument must be matched with that of the layers  with more than one arguments required.</span>
+<span class="sd">    * The usage of keyword argument must be matched with that of the layers with more than one arguments required.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">loc</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">loc</span> <span class="o">=</span> <span class="n">loc</span>
         <span class="n">para_required</span> <span class="o">=</span> <span class="p">[]</span>

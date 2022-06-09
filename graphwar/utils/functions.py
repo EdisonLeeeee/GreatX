@@ -90,7 +90,8 @@ def repeat(src: Any, length: Optional[int] = None) -> Any:
     ['relu', 'relu']
     >>> repeat(None, 2)
     [None, None]
-    # repeat for iterable object
+
+    >>> # repeat for iterable object
     >>> repeat([1, 2, 3], 2)
     [1, 2]
     >>> repeat([1, 2, 3], 5)
@@ -124,10 +125,10 @@ def wrapper(func: Callable) -> Callable:
     to be modified are `hids` and `acts`. 
 
     Uses can custom these arguments by setting argument 
+
     * `includes` : to includes custom arguments
     * `excludes` : to excludes custom arguments
-    * `length_as` : to make the length of the arguments 
-    the same as `length_as`, by default, it is `hids`.
+    * `length_as` : to make the length of the arguments the same as `length_as`, by default, it is `hids`.
 
     Parameters
     ----------

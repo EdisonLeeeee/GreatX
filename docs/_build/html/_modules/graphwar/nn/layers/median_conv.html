@@ -105,6 +105,41 @@
 
 
 <div class="viewcode-block" id="MedianConv"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.MedianConv">[docs]</a><span class="k">class</span> <span class="nc">MedianConv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;The graph convolutional operator with median aggregation</span>
+<span class="sd">    from the `&quot;Understanding Structural Vulnerability </span>
+<span class="sd">    in Graph Convolutional Networks&quot;</span>
+<span class="sd">    &lt;https://www.ijcai.org/proceedings/2021/310&gt;`_ paper (IJCAI&#39;21)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels : int</span>
+<span class="sd">        dimensions of int samples</span>
+<span class="sd">    out_channels : int</span>
+<span class="sd">        dimensions of output samples</span>
+<span class="sd">    add_self_loops : bool, optional</span>
+<span class="sd">        whether to add self-loops to the input graph, by default True</span>
+<span class="sd">    normalize : bool, optional</span>
+<span class="sd">        whether to compute symmetric normalization</span>
+<span class="sd">        coefficients on the fly, by default True</span>
+<span class="sd">    bias : bool, optional</span>
+<span class="sd">        whether to use bias in the layers, by default True     </span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    The same as :class:`torch_geometric`, our implementation supports:</span>
+
+<span class="sd">    * :class:`torch.LongTensor` (recommended): edge indices with shape :obj:`[2, M]`</span>
+<span class="sd">    * :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`  </span>
+
+<span class="sd">    In addition, the arguments :obj:`add_self_loops` and :obj:`normalize` </span>
+<span class="sd">    are worked separately. One can set :obj:`normalize=True`  but set</span>
+<span class="sd">    :obj:`add_self_loops=False`, different from that in :class:`torch_geometric`.                 </span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :class:`graphwar.nn.models.MedianGCN`       </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                  <span class="n">add_self_loops</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                  <span class="n">bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
@@ -129,25 +164,26 @@
 <div class="viewcode-block" id="MedianConv.reset_parameters"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.MedianConv.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lin</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span>
         <span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span></div>
-        
-<div class="viewcode-block" id="MedianConv.forward"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.MedianConv.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Adj</span><span class="p">,</span> 
+
+<div class="viewcode-block" id="MedianConv.forward"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.MedianConv.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Adj</span><span class="p">,</span>
                 <span class="n">edge_weight</span><span class="p">:</span> <span class="n">OptTensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-        
+
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        
+
         <span class="c1"># NOTE: we do not support Dense adjacency matrix here</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">SparseTensor</span><span class="p">):</span>
             <span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">edge_index</span><span class="o">.</span><span class="n">coo</span><span class="p">()</span>
             <span class="n">edge_index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-                
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_self_loops</span><span class="p">:</span>
-<span class="c1">#             edge_index, edge_weight = remove_self_loops(edge_index)</span>
-            <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">add_self_loops</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">num_nodes</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-        
+            <span class="c1">#             edge_index, edge_weight = remove_self_loops(edge_index)</span>
+            <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">add_self_loops</span><span class="p">(</span>
+                <span class="n">edge_index</span><span class="p">,</span> <span class="n">num_nodes</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">:</span>
             <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">gcn_norm</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
                                                <span class="n">improved</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                               <span class="n">add_self_loops</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>    
+                                               <span class="n">add_self_loops</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 
         <span class="n">out</span> <span class="o">=</span> <span class="n">median_reduce</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">)</span>
 
@@ -158,16 +194,17 @@
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="si">}</span><span class="s1">, &#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>    </div>
-    
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span></div>
+
+
 <span class="k">def</span> <span class="nf">median_reduce</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">:</span> <span class="n">OptTensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
     <span class="c1"># NOTE: `to_dense_batch` requires the `index` is sorted by column</span>
-    <span class="c1"># TODO: is there any elegant way to avoid `argsort`?    </span>
+    <span class="c1"># TODO: is there any elegant way to avoid `argsort`?</span>
     <span class="n">ix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">edge_index</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="n">edge_index</span> <span class="o">=</span> <span class="n">edge_index</span><span class="p">[:,</span> <span class="n">ix</span><span class="p">]</span>
     <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">edge_index</span>
     <span class="n">x_j</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
-    
+
     <span class="k">if</span> <span class="n">edge_weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">x_j</span> <span class="o">=</span> <span class="n">x_j</span> <span class="o">*</span> <span class="n">edge_weight</span><span class="p">[</span><span class="n">ix</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 

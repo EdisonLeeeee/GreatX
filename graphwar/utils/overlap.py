@@ -5,7 +5,8 @@ from torch import Tensor
 def overlap(edge_index1: Tensor, edge_index2: Tensor,
             on: str = 'edge', symmetric: bool = False) -> float:
     """Compute graph overlapping according to
-    Node Similarity Preserving Graph Convolutional Networks
+    the `"Node Similarity Preserving Graph Convolutional Networks"
+    <https://arxiv.org/abs/2011.09643>`_ paper (WSDM'21)
 
     Parameters
     ----------

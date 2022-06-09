@@ -96,16 +96,64 @@
 
 
 <div class="viewcode-block" id="ElasticGNN"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.models.ElasticGNN">[docs]</a><span class="k">class</span> <span class="nc">ElasticGNN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Graph Neural Networks with elastic message passing.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Graph Neural Networks with elastic </span>
+<span class="sd">    message passing (ElasticGNN) from the `&quot;Elastic Graph Neural </span>
+<span class="sd">    Networks&quot; &lt;https://arxiv.org/abs/2107.06996&gt;`_</span>
+<span class="sd">    paper (ICML&#39;21)</span>
 
-<span class="sd">    Example:</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels : int, </span>
+<span class="sd">        the input dimensions of model</span>
+<span class="sd">    out_channels : int, </span>
+<span class="sd">        the output dimensions of model</span>
+<span class="sd">    hids : list, optional</span>
+<span class="sd">        the number of hidden units for each hidden layer, by default [64]</span>
+<span class="sd">    acts : list, optional</span>
+<span class="sd">        the activation function for each hidden layer, by default [&#39;relu&#39;]</span>
+<span class="sd">    K : int, optional</span>
+<span class="sd">        the number of propagation steps during message passing, by default 3</span>
+<span class="sd">    lambda1 : float, optional</span>
+<span class="sd">        trade-off hyperparameter, by default 3</span>
+<span class="sd">    lambda2 : float, optional</span>
+<span class="sd">        trade-off hyperparameter, by default 3</span>
+<span class="sd">    L21 : bool, optional</span>
+<span class="sd">        whether to use row-wise projection </span>
+<span class="sd">        on the l2 ball of radius λ1., by default True</span>
+<span class="sd">    cached : bool, optional</span>
+<span class="sd">        whether to cache the incident matrix, by default True     </span>
+<span class="sd">    dropout : float, optional</span>
+<span class="sd">        the dropout ratio of model, by default 0.8</span>
+<span class="sd">    bias : bool, optional</span>
+<span class="sd">        whether to use bias in the layers, by default True</span>
+<span class="sd">    bn: bool, optional</span>
+<span class="sd">        whether to use :class:`BatchNorm1d` after the convolution layer, by default False         </span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    It is convenient to extend the number of layers with different or the same</span>
+<span class="sd">    hidden units (activation functions) using :meth:`graphwar.utils.wrapper`. </span>
+
+<span class="sd">    See Examples below:</span>
+
+<span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    # ElasticGNN with one hidden layer</span>
+<span class="sd">    &gt;&gt;&gt; # ElasticGNN with one hidden layer</span>
 <span class="sd">    &gt;&gt;&gt; model = ElasticGNN(100, 10)</span>
-<span class="sd">    # ElasticGNN with two hidden layers</span>
+
+<span class="sd">    &gt;&gt;&gt; # ElasticGNN with two hidden layers</span>
 <span class="sd">    &gt;&gt;&gt; model = ElasticGNN(100, 10, hids=[32, 16], acts=[&#39;relu&#39;, &#39;elu&#39;])</span>
-<span class="sd">    # ElasticGNN with two hidden layers, without activation at the first layer</span>
+
+<span class="sd">    &gt;&gt;&gt; # ElasticGNN with two hidden layers, without activation at the first layer</span>
 <span class="sd">    &gt;&gt;&gt; model = ElasticGNN(100, 10, hids=[32, 16], acts=[None, &#39;relu&#39;])</span>
+
+<span class="sd">    &gt;&gt;&gt; # ElasticGNN with very deep architectures, each layer has elu as activation function</span>
+<span class="sd">    &gt;&gt;&gt; model = ElasticGNN(100, 10, hids=[16]*8, acts=[&#39;elu&#39;])</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :class:`graphwar.nn.layers.ElasticGNN`    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@wrapper</span>
@@ -114,31 +162,13 @@
                  <span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                  <span class="n">hids</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">16</span><span class="p">],</span>
                  <span class="n">acts</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;relu&#39;</span><span class="p">],</span>
-                 <span class="n">dropout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
                  <span class="n">K</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
                  <span class="n">lambda1</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
                  <span class="n">lambda2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-                 <span class="n">bn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">cached</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">dropout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
                  <span class="n">bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                 <span class="n">cached</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        in_channels : int, </span>
-<span class="sd">            the input dimensions of model</span>
-<span class="sd">        out_channels : int, </span>
-<span class="sd">            the output dimensions of model</span>
-<span class="sd">        hids : list, optional</span>
-<span class="sd">            the number of hidden units of each hidden layer, by default [16]</span>
-<span class="sd">        acts : list, optional</span>
-<span class="sd">            the activation function of each hidden layer, by default [&#39;relu&#39;]</span>
-<span class="sd">        dropout : float, optional</span>
-<span class="sd">            the dropout ratio of model, by default 0.8</span>
-<span class="sd">        bias : bool, optional</span>
-<span class="sd">            whether to use bias in the layers, by default True</span>
-<span class="sd">        bn: bool, optional</span>
-<span class="sd">            whether to use `BatchNorm1d` after the convolution layer, by default False</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+                 <span class="n">bn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
@@ -167,6 +197,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">lin</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="ElasticGNN.cache_clear"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.models.ElasticGNN.cache_clear">[docs]</a>    <span class="k">def</span> <span class="nf">cache_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clear cached inputs or intermediate results.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prop</span><span class="o">.</span><span class="n">_cached_inc</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 

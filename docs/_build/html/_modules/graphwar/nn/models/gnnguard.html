@@ -99,16 +99,53 @@
 
 
 <div class="viewcode-block" id="GNNGUARD"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.models.GNNGUARD">[docs]</a><span class="k">class</span> <span class="nc">GNNGUARD</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Graph Convolution Network (GCN) with GNNGUARD</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Graph Convolution Network (GCN) with </span>
+<span class="sd">    :class:`graphwar.defense.GNNGUARD` from the `&quot;GNNGUARD: </span>
+<span class="sd">    Defending Graph Neural Networks against Adversarial Attacks&quot;</span>
+<span class="sd">    &lt;https://arxiv.org/abs/2006.08149&gt;`_ paper (NeurIPS&#39;20)</span>
 
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    # GNNGUARD with one hidden layer</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels : int, </span>
+<span class="sd">        the input dimensions of model</span>
+<span class="sd">    out_channels : int, </span>
+<span class="sd">        the output dimensions of model</span>
+<span class="sd">    hids : list, optional</span>
+<span class="sd">        the number of hidden units for each hidden layer, by default [16]</span>
+<span class="sd">    acts : list, optional</span>
+<span class="sd">        the activation function for each hidden layer, by default [&#39;relu&#39;]</span>
+<span class="sd">    dropout : float, optional</span>
+<span class="sd">        the dropout ratio of model, by default 0.5</span>
+<span class="sd">    bias : bool, optional</span>
+<span class="sd">        whether to use bias in the layers, by default True</span>
+<span class="sd">    bn: bool, optional</span>
+<span class="sd">        whether to use :class:`BatchNorm1d` after the convolution layer, by default False   </span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :class:`graphwar.defense.GNNGUARD`      </span>
+<span class="sd">    :class:`graphwar.nn.models.GCN`      </span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    It is convenient to extend the number of layers with different or the same</span>
+<span class="sd">    hidden units (activation functions) using :meth:`graphwar.utils.wrapper`. </span>
+
+<span class="sd">    See Examples below:</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; # GNNGUARD with one hidden layer</span>
 <span class="sd">    &gt;&gt;&gt; model = GNNGUARD(100, 10)</span>
-<span class="sd">    # GNNGUARD with two hidden layers</span>
+
+<span class="sd">    &gt;&gt;&gt; # GNNGUARD with two hidden layers</span>
 <span class="sd">    &gt;&gt;&gt; model = GNNGUARD(100, 10, hids=[32, 16], acts=[&#39;relu&#39;, &#39;elu&#39;])</span>
-<span class="sd">    # GNNGUARD with two hidden layers, without activation at the first layer</span>
+
+<span class="sd">    &gt;&gt;&gt; # GNNGUARD with two hidden layers, without activation at the first layer</span>
 <span class="sd">    &gt;&gt;&gt; model = GNNGUARD(100, 10, hids=[32, 16], acts=[None, &#39;relu&#39;])</span>
+
+<span class="sd">    &gt;&gt;&gt; # GNNGUARD with very deep architectures, each layer has elu as activation function</span>
+<span class="sd">    &gt;&gt;&gt; model = GNNGUARD(100, 10, hids=[16]*8, acts=[&#39;elu&#39;])</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -122,24 +159,6 @@
                  <span class="n">bn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                  <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                  <span class="n">bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        in_channels : int, </span>
-<span class="sd">            the input dimensions of model</span>
-<span class="sd">        out_channels : int, </span>
-<span class="sd">            the output dimensions of model</span>
-<span class="sd">        hids : list, optional</span>
-<span class="sd">            the number of hidden units of each hidden layer, by default [16]</span>
-<span class="sd">        acts : list, optional</span>
-<span class="sd">            the activation function of each hidden layer, by default [&#39;relu&#39;]</span>
-<span class="sd">        dropout : float, optional</span>
-<span class="sd">            the dropout ratio of model, by default 0.5</span>
-<span class="sd">        bias : bool, optional</span>
-<span class="sd">            whether to use bias in the layers, by default True</span>
-<span class="sd">        bn: bool, optional</span>
-<span class="sd">            whether to use `BatchNorm1d` after the convolution layer, by default False          </span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 

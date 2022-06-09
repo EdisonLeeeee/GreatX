@@ -100,7 +100,35 @@
 
 <div class="viewcode-block" id="DropEdge"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.DropEdge">[docs]</a><span class="k">class</span> <span class="nc">DropEdge</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    DropEdge: Sampling edge using a uniform distribution.</span>
+<span class="sd">    DropEdge: Sampling edge using a uniform distribution </span>
+<span class="sd">    from the `&quot;DropEdge: Towards Deep Graph Convolutional </span>
+<span class="sd">    Networks on Node Classification&quot; &lt;https://arxiv.org/abs/1907.10903&gt;`_</span>
+<span class="sd">    paper (ICLR&#39;20)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    p : float, optional</span>
+<span class="sd">        the probability of dropping out on each edge, by default 0.5</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tuple[Tensor, Tensor]</span>
+<span class="sd">        the output edge index and edge weight</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        p is out of range [0,1]</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from graphwar.nn.layers import DropEdge</span>
+<span class="sd">    &gt;&gt;&gt; edge_index = torch.LongTensor([[1, 2], [3,4]])</span>
+<span class="sd">    &gt;&gt;&gt; DropEdge(p=0.5)(edge_index)      </span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :class:`graphwar.functional.drop_edge`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">):</span>
@@ -111,22 +139,94 @@
         <span class="k">return</span> <span class="n">drop_edge</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span></div></div>
 
 
-<span class="k">class</span> <span class="nc">DropNode</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="DropNode"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.DropNode">[docs]</a><span class="k">class</span> <span class="nc">DropNode</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DropNode: Sampling node using a uniform distribution.</span>
+<span class="sd">    from the `&quot;Graph Contrastive Learning </span>
+<span class="sd">    with Augmentations&quot; &lt;https://arxiv.org/abs/2010.139023&gt;`_</span>
+<span class="sd">    paper (NeurIPS&#39;20)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    p : float, optional</span>
+<span class="sd">        the probability of dropping out on each node, by default 0.5</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tuple[Tensor, Tensor]</span>
+<span class="sd">        the output edge index and edge weight</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from graphwar.nn.layers import DropNode</span>
+<span class="sd">    &gt;&gt;&gt; edge_index = torch.LongTensor([[1, 2], [3,4]])</span>
+<span class="sd">    &gt;&gt;&gt; DropNode(p=0.5)(edge_index)          </span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :class:`graphwar.functional.drop_node`    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
 
-    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="n">drop_node</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span>
+<div class="viewcode-block" id="DropNode.forward"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.DropNode.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">drop_node</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="DropPath"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.DropPath">[docs]</a><span class="k">class</span> <span class="nc">DropPath</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    DropPath: path-wise structured dropout.</span>
+    <span class="sd">&quot;&quot;&quot;DropPath: a structured form of :class:`graphwar.functional.drop_edge`.</span>
+<span class="sd">    From the `&quot;MaskGAE: Masked Graph Modeling Meets </span>
+<span class="sd">    Graph Autoencoders&quot; &lt;https://arxiv.org/abs/2205.10053&gt;`_</span>
+<span class="sd">    paper (arXiv&#39;22)</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : Optional[Union[float, Tensor]], optional</span>
+<span class="sd">        if :obj:`r` is integer value: the percentage of nodes in the graph that</span>
+<span class="sd">        chosen as root nodes to perform random walks, by default 0.5</span>
+<span class="sd">        if :obj:`r` is :class:`torch.Tensor`: a set of custom root nodes</span>
+<span class="sd">    walks_per_node : int, optional</span>
+<span class="sd">        number of walks per node, by default 2</span>
+<span class="sd">    walk_length : int, optional</span>
+<span class="sd">        number of walk length per node, by default 4</span>
+<span class="sd">    p : float, optional</span>
+<span class="sd">        :obj:`p` in random walks, by default 1</span>
+<span class="sd">    q : float, optional</span>
+<span class="sd">        :obj:`q` in random walks, by default 1</span>
+<span class="sd">    num_nodes : int, optional</span>
+<span class="sd">        number of total nodes in the graph, by default None</span>
+<span class="sd">    by : str, optional</span>
+<span class="sd">        sampling root nodes uniformly :obj:`uniform` or </span>
+<span class="sd">        by degree distribution :obj:`degree`, by default &#39;degree&#39;</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tuple[Tensor, Tensor]</span>
+<span class="sd">        the output edge index and edge weight</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ImportError</span>
+<span class="sd">        if :class:`torch_cluster` is not installed.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        :obj:`r` is out of scope [0,1]</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        :obj:`r` is not integer value or a Tensor</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt;&gt; from graphwar.nn.layers import DropPath</span>
+<span class="sd">    &gt;&gt;&gt; edge_index = torch.LongTensor([[1, 2], [3,4]])</span>
+<span class="sd">    &gt;&gt;&gt; DropPath(r=0.5)(edge_index)   </span>
+
+<span class="sd">    &gt;&gt;&gt; DropPath(r=torch.tensor([1,2]))(edge_index) # specify root nodes           </span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :class:`graphwar.functional.drop_path`        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>

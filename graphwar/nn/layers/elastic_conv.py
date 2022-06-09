@@ -58,13 +58,43 @@ def inc_norm(inc: SparseTensor, edge_index: Adj,
 
 class ElasticConv(nn.Module):
     r"""
-    The elastic message passing layer from the paper
-    "Elastic Graph Neural Networks", ICML 2021
+    The ElasticGNN operator from the `"Elastic Graph Neural 
+    Networks" <https://arxiv.org/abs/2107.06996>`_
+    paper (ICML'21)
 
     Parameters
     ----------
-    add_self_loop : bool
-        whether to add self-loop edges
+    K : int, optional
+        the number of propagation steps, by default 3
+    lambda_amp : float, optional
+        trade-off of adaptive message passing, by default 0.1
+    normalize : bool, optional
+        Whether to add self-loops and compute
+        symmetric normalization coefficients on the fly, by default True
+    add_self_loops : bool, optional
+        whether to add self-loops to the input graph, by default True
+    lambda1 : float, optional
+        trade-off hyperparameter, by default 3
+    lambda2 : float, optional
+        trade-off hyperparameter, by default 3
+    L21 : bool, optional
+        whether to use row-wise projection 
+        on the l2 ball of radius λ1., by default True
+    cached : bool, optional
+        whether to cache the incident matrix, by default True  
+
+    Note
+    ----
+    The same as :class:`torch_geometric`, 
+    for the inputs :obj:`x`, :obj:`edge_index`, and :obj:`edge_weight`,
+    our implementation supports:
+
+    * :obj:`edge_index` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`
+    * :obj:`edge_index` is :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`           
+
+    See also
+    --------
+    :class:`graphwar.nn.models.ElasticGNN`       
     """
 
     _cached_inc: Optional[SparseTensor] = None  # incident matrix
@@ -94,6 +124,7 @@ class ElasticConv(nn.Module):
         self.cache_clear()
 
     def cache_clear(self):
+        """Clear cached inputs or intermediate results."""
         self._cached_inc = None
         return self
 
@@ -177,7 +208,7 @@ class ElasticConv(nn.Module):
         scale[index] = scale[index] / \
             row_norm[index]  # avoid to be devided by 0
         return scale.unsqueeze(1) * x
-    
+
     def __repr__(self) -> str:
         return (f'{self.__class__.__name__}(lambda_amp={self.lambda_amp}, K={self.K}) '
-               f'lambda1={self.lambda1}, lambda2={self.lambda2}')        
+                f'lambda1={self.lambda1}, lambda2={self.lambda2}')

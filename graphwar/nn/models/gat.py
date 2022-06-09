@@ -6,16 +6,49 @@ from graphwar.utils import wrapper
 
 
 class GAT(nn.Module):
-    """Graph Attention Network (GAT)
+    r"""Graph Attention Networks (GAT) from the 
+    `"Graph Attention Networks"
+    <https://arxiv.org/abs/1710.10903>`_ paper (ICLR'19)
 
-    Example
-    -------
-    # GAT with one hidden layer
+    Parameters
+    ----------
+    in_channels : int, 
+        the input dimensions of model
+    out_channels : int, 
+        the output dimensions of model
+    hids : list, optional
+        the number of hidden units for each hidden layer, by default [8]
+    num_heads : list, optional
+        the number of attention heads for each hidden layer, by default [8]        
+    acts : list, optional
+        the activation function for each hidden layer, by default ['relu']
+    dropout : float, optional
+        the dropout ratio of model, by default 0.6
+    bias : bool, optional
+        whether to use bias in the layers, by default True
+    bn: bool, optional
+        whether to use :class:`BatchNorm1d` after the convolution layer, by default False         
+
+    Note
+    ----
+    It is convenient to extend the number of layers with different or the same
+    hidden units (activation functions) using :meth:`graphwar.utils.wrapper`. 
+
+    See Examples below:
+
+    Examples
+    --------
+    >>> # GAT with one hidden layer
     >>> model = GAT(100, 10)
-    # GAT with two hidden layers
-    >>> model = GAT(100, 10, hids=[32, 16], num_heads=[8, 8], acts=['relu', 'elu'])
-    # GAT with two hidden layers, without activation at the first layer
-    >>> model = GAT(100, 10, hids=[32, 16], num_heads=[8, 8], acts=[None, 'elu'])
+
+    >>> # GAT with two hidden layers
+    >>> model = GAT(100, 10, hids=[32, 16], acts=['relu', 'elu'])
+
+    >>> # GAT with two hidden layers, without activation at the first layer
+    >>> model = GAT(100, 10, hids=[32, 16], acts=[None, 'relu'])
+
+    >>> # GAT with very deep architectures, each layer has elu as activation function
+    >>> model = GAT(100, 10, hids=[16]*8, acts=['elu'])
 
     References
     ----------
@@ -36,26 +69,6 @@ class GAT(nn.Module):
                  bias: bool = True,
                  bn: bool = False,
                  includes=['num_heads']):
-        r"""
-        Parameters
-        ----------
-        in_channels : int, 
-            the input dimensions of model
-        out_channels : int, 
-            the output dimensions of model
-        hids : list, optional
-            the number of hidden units of each hidden layer, by default [8]
-        num_heads : list, optional
-            the number of attention heads of each hidden layer, by default [8]
-        acts : list, optional
-            the activation function of each hidden layer, by default ['elu']
-        dropout : float, optional
-            the dropout ratio of model, by default 0.5
-        bias : bool, optional
-            whether to use bias in the layers, by default True      
-        bn: bool, optional
-            whether to use `BatchNorm1d` after the convolution layer, by default False            
-        """
         super().__init__()
         head = 1
         conv = []

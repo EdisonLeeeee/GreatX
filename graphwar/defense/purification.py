@@ -60,7 +60,7 @@ class CosinePurification(BaseTransform):
 
     Note
     ----
-    :classL`CosinePurification` is an extension of
+    :class:`CosinePurification` is an extension of
     :class:`graphwar.defense.JaccardPurification` for dealing with
     continuous node features.
 
@@ -121,8 +121,8 @@ class SVDPurification(BaseTransform):
 
     Note
     ----
-    We set the reconstructed adjacency matrix as `adj_t` to be compatible with
-    torch_geometric where `adj_t` denotes the :class:`torch_sparse.SparseTensor`.        
+    We set the reconstructed adjacency matrix as :obj:`adj_t` to be compatible with
+    torch_geometric where :obj:`adj_t` denotes the :class:`torch_sparse.SparseTensor`.        
     """
 
     def __init__(self, K: int = 50, threshold: float = 0.01,
@@ -179,8 +179,8 @@ class EigenDecomposition(BaseTransform):
 
     Note
     ----
-    We set the reconstructed adjacency matrix as `adj_t` to be compatible with
-    torch_geometric where `adj_t` denotes the :class:`torch_sparse.SparseTensor`.
+    We set the reconstructed adjacency matrix as :obj:`adj_t` to be compatible with
+    torch_geometric where :obj:`adj_t` denotes the :class:`torch_sparse.SparseTensor`.
     """
 
     def __init__(self, K: int = 50, normalize: bool = True,

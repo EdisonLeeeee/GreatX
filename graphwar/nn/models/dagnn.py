@@ -6,16 +6,54 @@ from graphwar.utils import wrapper
 
 
 class DAGNN(nn.Module):
-    """Deep Adaptive Graph Neural Networks.
+    r"""The DAGNN operator from the `"Towards Deeper Graph Neural 
+    Networks" <https://arxiv.org/abs/2007.09296>`_
+    paper (KDD'20)
 
-    Example
-    -------
-    # DAGNN with one hidden layer
+    Parameters
+    ----------
+    in_channels : int, 
+        the input dimensions of model
+    out_channels : int, 
+        the output dimensions of model
+    hids : list, optional
+        the number of hidden units for each hidden layer, by default [64]
+    K : int, optional
+        the number of propagation steps, by default 10    
+    acts : list, optional
+        the activation function for each hidden layer, by default ['relu']
+    dropout : float, optional
+        the dropout ratio of model, by default 0.5
+    bias : bool, optional
+        whether to use bias in the layers, by default True
+    bn: bool, optional
+        whether to use :class:`BatchNorm1d` after the convolution layer, by default False         
+
+    Note
+    ----
+    It is convenient to extend the number of layers with different or the same
+    hidden units (activation functions) using :meth:`graphwar.utils.wrapper`. 
+
+    See Examples below:
+
+    Examples
+    --------
+    >>> # DAGNN with one hidden layer
     >>> model = DAGNN(100, 10)
-    # DAGNN with two hidden layers
+
+    >>> # DAGNN with two hidden layers
     >>> model = DAGNN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
-    # DAGNN with two hidden layers, without activation at the first layer
+
+    >>> # DAGNN with two hidden layers, without activation at the first layer
     >>> model = DAGNN(100, 10, hids=[32, 16], acts=[None, 'relu'])
+
+    >>> # DAGNN with very deep architectures, each layer has elu as activation function
+    >>> model = DAGNN(100, 10, hids=[16]*8, acts=['elu'])
+
+    See also
+    --------
+    :class:`graphwar.nn.layers.DAGNNConv`    
+
     """
 
     @wrapper
@@ -28,24 +66,6 @@ class DAGNN(nn.Module):
                  K: int = 10,
                  bn: bool = False,
                  bias: bool = True):
-        r"""
-        Parameters
-        ----------
-        in_channels : int, 
-            the input dimensions of model
-        out_channels : int, 
-            the output dimensions of model
-        hids : list, optional
-            the number of hidden units of each hidden layer, by default [64]
-        acts : list, optional
-            the activation function of each hidden layer, by default ['relu']
-        dropout : float, optional
-            the dropout ratio of model, by default 0.5
-        bias : bool, optional
-            whether to use bias in the layers, by default True
-        bn: bool, optional
-            whether to use `BatchNorm1d` after the convolution layer, by default False
-        """
 
         super().__init__()
         assert len(hids) > 0

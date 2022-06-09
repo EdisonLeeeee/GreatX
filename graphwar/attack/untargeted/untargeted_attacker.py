@@ -20,12 +20,12 @@ class UntargetedAttacker(FlipAttacker):
     Raises
     ------
     TypeError
-        unexpected keyword argument in `kwargs`       
+        unexpected keyword argument in :obj:`kwargs`       
 
     Note
     ----
-    :obj:`graphwar.attack.targeted.UntargetedAttacker` is a subclass of 
-    :obj:`graphwar.attack.FlipAttacker`.
+    :class:`graphwar.attack.targeted.UntargetedAttacker` is a subclass of 
+    :class:`graphwar.attack.FlipAttacker`.
     It belongs to graph modification attack (GMA).
     """
 

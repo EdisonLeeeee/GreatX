@@ -6,6 +6,18 @@ from torch_geometric.utils import to_scipy_sparse_matrix, add_self_loops
 
 
 class GNNGUARD(torch.nn.Module):
+    r"""Implementation of GNNGUARD
+    from the `"GNNGUARD: 
+    Defending Graph Neural Networks against Adversarial Attacks"
+    <https://arxiv.org/abs/2006.08149>`_ paper (NeurIPS'20)
+
+    Parameters
+    ----------
+    threshold : float, optional
+        threshold for removing edges based on attention scores, by default 0.1
+    add_self_loops : bool, optional
+        whether to add self-loops to the input graph, by default False    
+    """
 
     def __init__(self, threshold: float = 0.1, add_self_loops: bool = False):
         super().__init__()

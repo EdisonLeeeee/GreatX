@@ -21,8 +21,8 @@ def add_colorbar(im, aspect=10, pad_fraction=0.5, **kwargs):
 
 
 class CKA:
-    """Centered Kernel Alignment (CKA) metric, where the features of the networks are compared.
-    See https://github.com/AntixK/PyTorch-Model-Compare
+    """Centered Kernel Alignment (CKA) metric, 
+    where the features of the networks are compared.
 
     Parameters
     ----------
@@ -49,6 +49,11 @@ class CKA:
     >>> cka = CKA(m1, m2)
     >>> cka.compare(data)
     >>> cka.plot_results()    
+
+    Reference
+    ---------
+    * Paper: https://arxiv.org/abs/2010.15327
+    * Code: https://github.com/AntixK/PyTorch-Model-Compare
     """
 
     def __init__(self,

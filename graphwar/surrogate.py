@@ -47,9 +47,9 @@ class Surrogate(Module):
         Raises
         ------
         RuntimeError
-            if the surrogate model is not an instance of `torch.nn.Module`
+            if the surrogate model is not an instance of :class:`torch.nn.Module`
         RuntimeError
-            if the surrogate model is not an instance of `required`
+            if the surrogate model is not an instance of :obj:`required`
         """
 
         if not isinstance(surrogate, Module):

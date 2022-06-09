@@ -3,7 +3,6 @@ from typing import Optional
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import numpy as np
 
 from torch import Tensor
 from torch_geometric.nn.dense.linear import Linear
@@ -17,16 +16,49 @@ from graphwar.utils import wrapper
 
 
 class SimPGCN(nn.Module):
-    """Similarity Preserving Graph Convolution Network (SimPGCN). 
+    r"""Similarity Preserving Graph Convolution Network (SimPGCN)
+    from the `"Node Similarity Preserving Graph Convolutional Networks"
+    <https://arxiv.org/abs/2011.09643>`_ paper (WSDM'21)
 
-    Example
-    -------
-    # SimPGCN with one hidden layer
+    Parameters
+    ----------
+    in_channels : int, 
+        the input dimensions of model
+    out_channels : int, 
+        the output dimensions of model
+    hids : list, optional
+        the number of hidden units for each hidden layer, by default [64]
+    acts : list, optional
+        the activation function for each hidden layer, by default None
+    dropout : float, optional
+        the dropout ratio of model, by default 0.5
+    bias : bool, optional
+        whether to use bias in the layers, by default True
+    gamma : float, optional
+        trade-off hyperparameter, by default 0.01
+    bn: bool, optional (*NOT IMPLEMENTED NOW*)
+        whether to use :class:`BatchNorm1d` after the convolution layer, by default False         
+
+    Note
+    ----
+    It is convenient to extend the number of layers with different or the same
+    hidden units (activation functions) using :meth:`graphwar.utils.wrapper`. 
+
+    See Examples below:
+
+    Examples
+    --------
+    >>> # SimPGCN with one hidden layer
     >>> model = SimPGCN(100, 10)
-    # SimPGCN with two hidden layers
+
+    >>> # SimPGCN with two hidden layers
     >>> model = SimPGCN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
-    # SimPGCN with two hidden layers, without activation at the first layer
+
+    >>> # SimPGCN with two hidden layers, without activation at the first layer
     >>> model = SimPGCN(100, 10, hids=[32, 16], acts=[None, 'relu'])
+
+    >>> # SimPGCN with very deep architectures, each layer has elu as activation function
+    >>> model = SimPGCN(100, 10, hids=[16]*8, acts=['elu'])
 
     """
     @wrapper
@@ -36,9 +68,10 @@ class SimPGCN(nn.Module):
                  hids: list = [64],
                  acts: list = [None],
                  dropout: float = 0.5,
-                 bn: bool = False,  # TODO
                  bias: bool = True,
-                 gamma: float = 0.01):
+                 gamma: float = 0.01,
+                 bn: bool = False  # TODO
+                 ):
 
         super().__init__()
 
@@ -104,6 +137,7 @@ class SimPGCN(nn.Module):
         self.cache_clear()
 
     def cache_clear(self):
+        """Clear cached inputs or intermediate results."""
         self._adj_knn = self._pseudo_labels = self._node_pairs = None
         return self
 

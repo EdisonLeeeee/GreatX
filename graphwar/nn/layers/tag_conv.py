@@ -15,6 +15,42 @@ from graphwar.nn.layers.gcn_conv import dense_gcn_norm
 
 
 class TAGConv(nn.Module):
+    r"""The topological adaptive graph convolutional operator from 
+    the `"Topological Adaptive Graph Convolutional Networks"
+    <https://arxiv.org/abs/1806.03536>`_ paper (arXiv'17)
+
+    Parameters
+    ----------
+    in_channels : int
+        dimensions of int samples
+    out_channels : int
+        dimensions of output samples
+    K : int
+        the number of propagation steps, by default 2     
+    add_self_loops : bool, optional
+        whether to add self-loops to the input graph, by default True
+    normalize : bool, optional
+        whether to compute symmetric normalization
+        coefficients on the fly, by default True
+    bias : bool, optional
+        whether to use bias in the layers, by default True    
+
+    Note
+    ----
+    Different from that in :class:`torch_geometric`, 
+    for the inputs :obj:`x`, :obj:`edge_index`, and :obj:`edge_weight`,
+    our implementation supports:
+
+    * :obj:`edge_index` is :class:`torch.FloatTensor`: dense adjacency matrix with shape :obj:`[N, N]`
+    * :obj:`edge_index` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`
+    * :obj:`edge_index` is :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`   
+
+    See also
+    --------
+    :class:`graphwar.nn.models.TAGCN`       
+
+    """
+
     def __init__(self, in_channels: int,
                  out_channels: int,
                  K: int = 2,

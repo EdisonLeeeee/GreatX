@@ -36,7 +36,7 @@ class PGDAttack(UntargetedAttacker, Surrogate):
     Raises
     ------
     TypeError
-        unexpected keyword argument in `kwargs`       
+        unexpected keyword argument in :obj:`kwargs`       
 
     Example
     -------
@@ -271,7 +271,7 @@ class MinmaxAttack(PGDAttack):
     Raises
     ------
     TypeError
-        unexpected keyword argument in `kwargs`       
+        unexpected keyword argument in :obj:`kwargs`       
 
     Example
     -------

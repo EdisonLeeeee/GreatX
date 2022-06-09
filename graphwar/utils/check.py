@@ -9,13 +9,13 @@ def is_edge_index(x: Any) -> bool:
 
     Example
     -------
-    >>> from graphwar import check
+    >>> from graphwar import is_edge_index
     >>> import torch
 
     >>> edges = torch.LongTensor([[1,2], [3,4]])
-    >>> check(edges)
+    >>> is_edge_index(edges)
     True
-    >>> check(edges.t()))
+    >>> is_edge_index(edges.t()))
     False
     """
     return torch.is_tensor(x) and x.size(0) == 2 and x.dtype == torch.long and x.ndim == 2

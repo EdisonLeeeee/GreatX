@@ -163,6 +163,17 @@
 
 
 <div class="viewcode-block" id="SingletonFilter"><a class="viewcode-back" href="../../../modules/utils.html#graphwar.utils.SingletonFilter">[docs]</a><span class="k">class</span> <span class="nc">SingletonFilter</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Computes a mask for entries potentially </span>
+<span class="sd">    leading to singleton nodes, i.e. one of the </span>
+<span class="sd">    two nodes corresponding to the entry have </span>
+<span class="sd">    degree 1 and there is an edge between the two nodes.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adj_matrix : sp.csr_matrix</span>
+<span class="sd">        the input adjacency matrix    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adj_matrix</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">degree</span> <span class="o">=</span> <span class="n">adj_matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">A1</span>
 
@@ -176,6 +187,18 @@
 
 
 <div class="viewcode-block" id="LikelihoodFilter"><a class="viewcode-back" href="../../../modules/utils.html#graphwar.utils.LikelihoodFilter">[docs]</a><span class="k">class</span> <span class="nc">LikelihoodFilter</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Likelihood filter from the </span>
+<span class="sd">    `&quot;Adversarial Attacks on Neural Networks for Graph Data&quot; </span>
+<span class="sd">    &lt;https://arxiv.org/abs/1805.07984&gt;`_ paper (KDD&#39;18)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    degree : np.ndarray</span>
+<span class="sd">        the degree of the nodes in the graph</span>
+<span class="sd">    ll_cutoff : float, optional</span>
+<span class="sd">        likelihood cutoff, by default 0.004    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">degree</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">ll_cutoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.004</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">ll_cutoff</span> <span class="o">=</span> <span class="n">ll_cutoff</span>
@@ -321,6 +344,18 @@
 
 
 <span class="k">class</span> <span class="nc">LikelihoodFilterTensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Likelihood filter (Tensor version) )from the </span>
+<span class="sd">    `&quot;Adversarial Attacks on Neural Networks for Graph Data&quot; </span>
+<span class="sd">    &lt;https://arxiv.org/abs/1805.07984&gt;`_ paper (KDD&#39;18)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    degree : Tensor</span>
+<span class="sd">        the degree of the nodes in the graph</span>
+<span class="sd">    ll_cutoff : float, optional</span>
+<span class="sd">        likelihood cutoff, by default 0.004       </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">degree</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">ll_cutoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.004</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">ll_cutoff</span> <span class="o">=</span> <span class="n">ll_cutoff</span>

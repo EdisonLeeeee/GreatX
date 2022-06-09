@@ -4,16 +4,64 @@ from graphwar.utils import wrapper
 
 
 class ElasticGNN(nn.Module):
-    """Graph Neural Networks with elastic message passing.
+    r"""Graph Neural Networks with elastic 
+    message passing (ElasticGNN) from the `"Elastic Graph Neural 
+    Networks" <https://arxiv.org/abs/2107.06996>`_
+    paper (ICML'21)
 
-    Example:
+    Parameters
+    ----------
+    in_channels : int, 
+        the input dimensions of model
+    out_channels : int, 
+        the output dimensions of model
+    hids : list, optional
+        the number of hidden units for each hidden layer, by default [64]
+    acts : list, optional
+        the activation function for each hidden layer, by default ['relu']
+    K : int, optional
+        the number of propagation steps during message passing, by default 3
+    lambda1 : float, optional
+        trade-off hyperparameter, by default 3
+    lambda2 : float, optional
+        trade-off hyperparameter, by default 3
+    L21 : bool, optional
+        whether to use row-wise projection 
+        on the l2 ball of radius λ1., by default True
+    cached : bool, optional
+        whether to cache the incident matrix, by default True     
+    dropout : float, optional
+        the dropout ratio of model, by default 0.8
+    bias : bool, optional
+        whether to use bias in the layers, by default True
+    bn: bool, optional
+        whether to use :class:`BatchNorm1d` after the convolution layer, by default False         
+
+    Note
+    ----
+    It is convenient to extend the number of layers with different or the same
+    hidden units (activation functions) using :meth:`graphwar.utils.wrapper`. 
+
+    See Examples below:
+
+    Examples
     --------
-    # ElasticGNN with one hidden layer
+    >>> # ElasticGNN with one hidden layer
     >>> model = ElasticGNN(100, 10)
-    # ElasticGNN with two hidden layers
+
+    >>> # ElasticGNN with two hidden layers
     >>> model = ElasticGNN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
-    # ElasticGNN with two hidden layers, without activation at the first layer
+
+    >>> # ElasticGNN with two hidden layers, without activation at the first layer
     >>> model = ElasticGNN(100, 10, hids=[32, 16], acts=[None, 'relu'])
+
+    >>> # ElasticGNN with very deep architectures, each layer has elu as activation function
+    >>> model = ElasticGNN(100, 10, hids=[16]*8, acts=['elu'])
+
+    See also
+    --------
+    :class:`graphwar.nn.layers.ElasticGNN`    
+
     """
 
     @wrapper
@@ -22,31 +70,13 @@ class ElasticGNN(nn.Module):
                  out_channels: int,
                  hids: list = [16],
                  acts: list = ['relu'],
-                 dropout: float = 0.8,
                  K: int = 3,
                  lambda1: float = 3,
                  lambda2: float = 3,
-                 bn: bool = False,
+                 cached: bool = True,
+                 dropout: float = 0.8,
                  bias: bool = True,
-                 cached: bool = True):
-        r"""
-        Parameters
-        ----------
-        in_channels : int, 
-            the input dimensions of model
-        out_channels : int, 
-            the output dimensions of model
-        hids : list, optional
-            the number of hidden units of each hidden layer, by default [16]
-        acts : list, optional
-            the activation function of each hidden layer, by default ['relu']
-        dropout : float, optional
-            the dropout ratio of model, by default 0.8
-        bias : bool, optional
-            whether to use bias in the layers, by default True
-        bn: bool, optional
-            whether to use `BatchNorm1d` after the convolution layer, by default False
-        """
+                 bn: bool = False):
 
         super().__init__()
 
@@ -75,6 +105,7 @@ class ElasticGNN(nn.Module):
         self.lin.reset_parameters()
 
     def cache_clear(self):
+        """Clear cached inputs or intermediate results."""
         self.prop._cached_inc = None
         return self
 

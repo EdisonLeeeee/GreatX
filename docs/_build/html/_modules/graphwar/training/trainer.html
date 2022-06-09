@@ -402,6 +402,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">m</span>
 
 <div class="viewcode-block" id="Trainer.cache_clear"><a class="viewcode-back" href="../../../modules/training.html#graphwar.training.Trainer.cache_clear">[docs]</a>    <span class="k">def</span> <span class="nf">cache_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Trainer&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Clear cached inputs or intermediate results</span>
+<span class="sd">        of the model.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s1">&#39;cache_clear&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">cache_clear</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span></div>

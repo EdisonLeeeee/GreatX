@@ -55,7 +55,7 @@ def setup_logger(
     >>> logger.warning('message')
     WARNING [12/19 17:02:32 my exp]: message
 
-    # specify output files
+    >>> # specify output files
     >>> logger = setup_logger(output='log.txt', name='my exp')
     # additive, by default mode='w' 
     >>> logger = setup_logger(output='log.txt', name='my exp', mode='a')    

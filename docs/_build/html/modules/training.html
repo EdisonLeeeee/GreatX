@@ -100,22 +100,19 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">callbacks</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.training.Trainer" title="graphwar.training.Trainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Trainer</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.training.Trainer" title="graphwar.training.Trainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Trainer</span></code></a></p></td>
 <td><p>A simple trainer to train graph neural network models conveniently.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.training.get_trainer" title="graphwar.training.get_trainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_trainer</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.training.get_trainer" title="graphwar.training.get_trainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_trainer</span></code></a></p></td>
 <td><p>Get the default trainer using str or a model in <a class="reference internal" href="nn.html#module-graphwar.nn.models" title="graphwar.nn.models"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.nn.models</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.training.RobustGCNTrainer" title="graphwar.training.RobustGCNTrainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RobustGCNTrainer</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.training.RobustGCNTrainer" title="graphwar.training.RobustGCNTrainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RobustGCNTrainer</span></code></a></p></td>
 <td><p>Custom trainer for <a class="reference internal" href="nn.html#graphwar.nn.models.RobustGCN" title="graphwar.nn.models.RobustGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.nn.models.RobustGCN</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.training.SimPGCNTrainer" title="graphwar.training.SimPGCNTrainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimPGCNTrainer</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.training.SimPGCNTrainer" title="graphwar.training.SimPGCNTrainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimPGCNTrainer</span></code></a></p></td>
 <td><p>Custom trainer for <a class="reference internal" href="nn.html#graphwar.nn.models.SimPGCN" title="graphwar.nn.models.SimPGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.nn.models.SimPGCN</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.training.SATTrainer" title="graphwar.training.SATTrainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SATTrainer</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.training.SATTrainer" title="graphwar.training.SATTrainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SATTrainer</span></code></a></p></td>
 <td><p>Custom trainer for <a class="reference internal" href="nn.html#graphwar.nn.models.SAT" title="graphwar.nn.models.SAT"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.nn.models.SAT</span></code></a></p></td>
 </tr>
 </tbody>
@@ -310,7 +307,9 @@ see <cite>graphwar.training.callbacks</cite>, by default None</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.training.Trainer.cache_clear">
 <span class="sig-name descname"><span class="pre">cache_clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#graphwar.training.Trainer" title="graphwar.training.trainer.Trainer"><span class="pre">graphwar.training.trainer.Trainer</span></a></span></span><a class="reference internal" href="../_modules/graphwar/training/trainer.html#Trainer.cache_clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.Trainer.cache_clear" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Clear cached inputs or intermediate results
+of the model.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="graphwar.training.Trainer.extra_repr">

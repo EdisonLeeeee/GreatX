@@ -7,16 +7,53 @@ from graphwar.utils import wrapper
 
 
 class GNNGUARD(nn.Module):
-    """Graph Convolution Network (GCN) with GNNGUARD
+    r"""Graph Convolution Network (GCN) with 
+    :class:`graphwar.defense.GNNGUARD` from the `"GNNGUARD: 
+    Defending Graph Neural Networks against Adversarial Attacks"
+    <https://arxiv.org/abs/2006.08149>`_ paper (NeurIPS'20)
 
-    Example
-    -------
-    # GNNGUARD with one hidden layer
+    Parameters
+    ----------
+    in_channels : int, 
+        the input dimensions of model
+    out_channels : int, 
+        the output dimensions of model
+    hids : list, optional
+        the number of hidden units for each hidden layer, by default [16]
+    acts : list, optional
+        the activation function for each hidden layer, by default ['relu']
+    dropout : float, optional
+        the dropout ratio of model, by default 0.5
+    bias : bool, optional
+        whether to use bias in the layers, by default True
+    bn: bool, optional
+        whether to use :class:`BatchNorm1d` after the convolution layer, by default False   
+
+    See also
+    --------
+    :class:`graphwar.defense.GNNGUARD`      
+    :class:`graphwar.nn.models.GCN`      
+
+    Note
+    ----
+    It is convenient to extend the number of layers with different or the same
+    hidden units (activation functions) using :meth:`graphwar.utils.wrapper`. 
+
+    See Examples below:
+
+    Examples
+    --------
+    >>> # GNNGUARD with one hidden layer
     >>> model = GNNGUARD(100, 10)
-    # GNNGUARD with two hidden layers
+
+    >>> # GNNGUARD with two hidden layers
     >>> model = GNNGUARD(100, 10, hids=[32, 16], acts=['relu', 'elu'])
-    # GNNGUARD with two hidden layers, without activation at the first layer
+
+    >>> # GNNGUARD with two hidden layers, without activation at the first layer
     >>> model = GNNGUARD(100, 10, hids=[32, 16], acts=[None, 'relu'])
+
+    >>> # GNNGUARD with very deep architectures, each layer has elu as activation function
+    >>> model = GNNGUARD(100, 10, hids=[16]*8, acts=['elu'])
 
     """
 
@@ -30,24 +67,6 @@ class GNNGUARD(nn.Module):
                  bn: bool = False,
                  normalize: bool = True,
                  bias: bool = True):
-        r"""
-        Parameters
-        ----------
-        in_channels : int, 
-            the input dimensions of model
-        out_channels : int, 
-            the output dimensions of model
-        hids : list, optional
-            the number of hidden units of each hidden layer, by default [16]
-        acts : list, optional
-            the activation function of each hidden layer, by default ['relu']
-        dropout : float, optional
-            the dropout ratio of model, by default 0.5
-        bias : bool, optional
-            whether to use bias in the layers, by default True
-        bn: bool, optional
-            whether to use `BatchNorm1d` after the convolution layer, by default False          
-        """
 
         super().__init__()
 

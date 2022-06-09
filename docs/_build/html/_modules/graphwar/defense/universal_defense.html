@@ -103,7 +103,7 @@
 <span class="kn">from</span> <span class="nn">graphwar.utils</span> <span class="kn">import</span> <span class="n">remove_edges</span>
 
 
-<span class="k">class</span> <span class="nc">UniversalDefense</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="UniversalDefense"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.UniversalDefense">[docs]</a><span class="k">class</span> <span class="nc">UniversalDefense</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base class for graph universal defense&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">):</span>
@@ -111,7 +111,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_anchors</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">target_nodes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span>
+<div class="viewcode-block" id="UniversalDefense.forward"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.UniversalDefense.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">target_nodes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span>
                 <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the defended graph with defensive perturbation performed on.</span>
 
@@ -136,9 +136,9 @@
         <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span> <span class="o">=</span> <span class="n">remove_edges</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">,</span>
                                        <span class="bp">self</span><span class="o">.</span><span class="n">removed_edges</span><span class="p">(</span><span class="n">target_nodes</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span>
                                        <span class="n">symmetric</span><span class="o">=</span><span class="n">symmetric</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">data</span>
+        <span class="k">return</span> <span class="n">data</span></div>
 
-    <span class="k">def</span> <span class="nf">removed_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_nodes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<div class="viewcode-block" id="UniversalDefense.removed_edges"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.UniversalDefense.removed_edges">[docs]</a>    <span class="k">def</span> <span class="nf">removed_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_nodes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return edges to remove with the defensive perturbation performed on </span>
 <span class="sd">        on the target nodes</span>
 
@@ -159,9 +159,9 @@
         <span class="n">col</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anchors</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
         <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">repeat_interleave</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">col</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">anchors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<div class="viewcode-block" id="UniversalDefense.anchors"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.UniversalDefense.anchors">[docs]</a>    <span class="k">def</span> <span class="nf">anchors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the top-k anchor nodes</span>
 
 <span class="sd">        Parameters</span>
@@ -175,9 +175,9 @@
 <span class="sd">            the top-k anchor nodes</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_anchors</span><span class="p">[:</span><span class="n">k</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_anchors</span><span class="p">[:</span><span class="n">k</span><span class="p">]</span></div>
 
-    <span class="k">def</span> <span class="nf">patch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<div class="viewcode-block" id="UniversalDefense.patch"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.UniversalDefense.patch">[docs]</a>    <span class="k">def</span> <span class="nf">patch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the universal patch of the defensive perturbation</span>
 
 <span class="sd">        Parameters</span>
@@ -193,7 +193,7 @@
         <span class="n">_patch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">bool</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
         <span class="n">_patch</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">anchors</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)]</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="n">_patch</span>
+        <span class="k">return</span> <span class="n">_patch</span></div></div>
 
 
 <div class="viewcode-block" id="GUARD"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.GUARD">[docs]</a><span class="k">class</span> <span class="nc">GUARD</span><span class="p">(</span><span class="n">UniversalDefense</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>
@@ -218,6 +218,7 @@
 <span class="sd">    &gt;&gt;&gt; trainer.fit({&#39;data&#39;: data, &#39;mask&#39;: splits.train_nodes}, </span>
 <span class="sd">                {&#39;data&#39;: data, &#39;mask&#39;: splits.val_nodes}, callbacks=[ckp])</span>
 <span class="sd">    &gt;&gt;&gt; trainer.evaluate({&#39;data&#39;: data, &#39;mask&#39;: splits.test_nodes})</span>
+
 <span class="sd">    &gt;&gt;&gt; guard = GUARD(data, device=device)</span>
 <span class="sd">    &gt;&gt;&gt; guard.setup_surrogate(surrogate, data.y[splits.train_nodes])</span>
 <span class="sd">    &gt;&gt;&gt; target_node = 1</span>

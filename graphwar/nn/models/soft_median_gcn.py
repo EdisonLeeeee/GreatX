@@ -5,16 +5,63 @@ from graphwar.utils import wrapper
 
 
 class SoftMedianGCN(nn.Module):
-    """Graph Convolution Network (GCN) with Soft Median Aggregation
+    r"""Graph Convolution Network (GCN) with 
+    soft median aggregation (MedianGCN)
+    from the `"Robustness of Graph Neural Networks 
+    at Scale" <https://arxiv.org/abs/2110.14038>`_ paper 
+    (NeurIPS'21)
 
-    Example
-    -------
-    # SoftMedianGCN with one hidden layer
+    Parameters
+    ----------
+    in_channels : int, 
+        the input dimensions of model
+    out_channels : int, 
+        the output dimensions of model
+    hids : list, optional
+        the number of hidden units for each hidden layer, by default [16]
+    acts : list, optional
+        the activation function for each hidden layer, by default ['relu']
+    dropout : float, optional
+        the dropout ratio of model, by default 0.5
+    bias : bool, optional
+        whether to use bias in the layers, by default True
+    normalize : bool, optional
+        whether to compute symmetric normalization
+        coefficients on the fly, by default False             
+    row_normalize : bool, optional
+        whether to perform row-normalization on the fly, by default True           
+    cached : bool, optional
+        whether the layer will cache
+        the computation of :math:`(\mathbf{\hat{D}}^{-1/2} \mathbf{\hat{A}}
+        \mathbf{\hat{D}}^{-1/2})` and sorted edges on first execution, 
+        and will use the cached version for further executions, by default False
+    bn: bool, optional
+        whether to use :class:`BatchNorm1d` after the convolution layer, by default False   
+
+    Note
+    ----
+    It is convenient to extend the number of layers with different or the same
+    hidden units (activation functions) using :meth:`graphwar.utils.wrapper`. 
+
+    See Examples below:
+
+    Examples
+    --------
+    >>> # SoftMedianGCN with one hidden layer
     >>> model = SoftMedianGCN(100, 10)
-    # SoftMedianGCN with two hidden layers
+
+    >>> # SoftMedianGCN with two hidden layers
     >>> model = SoftMedianGCN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
-    # SoftMedianGCN with two hidden layers, without activation at the first layer
+
+    >>> # SoftMedianGCN with two hidden layers, without activation at the first layer
     >>> model = SoftMedianGCN(100, 10, hids=[32, 16], acts=[None, 'relu'])
+
+    >>> # SoftMedianGCN with very deep architectures, each layer has elu as activation function
+    >>> model = SoftMedianGCN(100, 10, hids=[16]*8, acts=['elu'])
+
+    See also
+    --------
+    :class:`graphwar.nn.layers.SoftMedianConv`    
 
     """
 
@@ -25,29 +72,11 @@ class SoftMedianGCN(nn.Module):
                  hids: list = [16],
                  acts: list = ['relu'],
                  dropout: float = 0.5,
-                 bn: bool = False,
                  bias: bool = True,
-                 row_normalize: bool = False,
                  normalize: bool = False,
-                 cached: bool = True):
-        r"""
-        Parameters
-        ----------
-        in_channels : int, 
-            the input dimensions of model
-        out_channels : int, 
-            the output dimensions of model
-        hids : list, optional
-            the number of hidden units of each hidden layer, by default [16]
-        acts : list, optional
-            the activation function of each hidden layer, by default ['relu']
-        dropout : float, optional
-            the dropout ratio of model, by default 0.5
-        bias : bool, optional
-            whether to use bias in the layers, by default True
-        bn: bool, optional
-            whether to use `BatchNorm1d` after the convolution layer, by default False          
-        """
+                 row_normalize: bool = False,
+                 cached: bool = True,
+                 bn: bool = False):
 
         super().__init__()
 
@@ -76,6 +105,7 @@ class SoftMedianGCN(nn.Module):
         self.cache_clear()
 
     def cache_clear(self):
+        """Clear cached inputs or intermediate results."""
         for conv in self.conv:
             if hasattr(conv, '_cached_edges'):
                 conv._cached_edges = None

@@ -310,6 +310,8 @@ class Trainer:
         self._model = m
 
     def cache_clear(self) -> "Trainer":
+        """Clear cached inputs or intermediate results
+        of the model."""
         if hasattr(self.model, 'cache_clear'):
             self.model.cache_clear()
         return self

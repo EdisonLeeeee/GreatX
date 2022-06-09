@@ -11,10 +11,35 @@ from graphwar.nn.layers.gcn_conv import dense_gcn_norm
 
 
 class AdaptiveConv(nn.Module):
-    r"""
-    The adaptive message passing layer from the paper
-    "Graph Neural Networks with Adaptive Residual", NeurIPS 2021
+    r"""The AirGNN operator from the `"Graph Neural Networks 
+    with Adaptive Residual" <https://openreview.net/forum?id=hfkER_KJiNw>`_
+    paper (NeurIPS'21)
 
+    Parameters
+    ----------
+    K : int, optional
+        the number of propagation steps during message passing, by default 3
+    lambda_amp : float, optional
+        trade-off for adaptive message passing, by default 0.1
+    normalize : bool, optional
+        Whether to add self-loops and compute
+        symmetric normalization coefficients on the fly, by default True
+    add_self_loops : bool, optional
+        whether to add self-loops to the input graph, by default True
+
+    Note
+    ----
+    Different from that in :class:`torch_geometric`, 
+    for the inputs :obj:`x`, :obj:`edge_index`, and :obj:`edge_weight`,
+    our implementation supports:
+
+    * :obj:`edge_index` is :class:`torch.FloatTensor`: dense adjacency matrix with shape :obj:`[N, N]`
+    * :obj:`edge_index` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`
+    * :obj:`edge_index` is :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`     
+
+    See also
+    --------
+    :class:`graphwar.nn.models.AirGNN`     
     """
 
     def __init__(self,
@@ -22,7 +47,6 @@ class AdaptiveConv(nn.Module):
                  lambda_amp: float = 0.1,
                  normalize: bool = True,
                  add_self_loops: bool = True):
-
         super().__init__()
 
         self.K = K
@@ -86,6 +110,6 @@ class AdaptiveConv(nn.Module):
             out = edge_index @ x
 
         return x - out
-    
+
     def __repr__(self) -> str:
-        return (f'{self.__class__.__name__}(lambda_amp={self.lambda_amp}, K={self.K})')        
+        return (f'{self.__class__.__name__}(lambda_amp={self.lambda_amp}, K={self.K})')

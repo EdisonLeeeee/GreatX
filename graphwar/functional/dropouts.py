@@ -14,7 +14,10 @@ from torch_geometric.utils.num_nodes import maybe_num_nodes
 def drop_edge(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
               p: float = 0.5, training: bool = True) -> Tuple[Tensor, Tensor]:
     """
-    DropEdge: Sampling edge using a uniform distribution.
+    DropEdge: Sampling edge using a uniform distribution 
+    from the `"DropEdge: Towards Deep Graph Convolutional 
+    Networks on Node Classification" <https://arxiv.org/abs/1907.10903>`_
+    paper (ICLR'20)
 
     Parameters
     ----------
@@ -42,7 +45,11 @@ def drop_edge(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
     -------
     >>> from graphwar.functional import drop_edge
     >>> edge_index = torch.LongTensor([[1, 2], [3,4]])
-    >>> drop_edge(edge_index, p=0.5)        
+    >>> drop_edge(edge_index, p=0.5)      
+
+    See also
+    --------
+    :class:`graphwar.nn.layers.DropEdge`         
     """
 
     if p < 0. or p > 1.:
@@ -67,6 +74,9 @@ def drop_node(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
               num_nodes: Optional[int] = None) -> Tuple[Tensor, Tensor]:
     """
     DropNode: Sampling node using a uniform distribution.
+    from the `"Graph Contrastive Learning 
+    with Augmentations" <https://arxiv.org/abs/2010.139023>`_
+    paper (NeurIPS'20)
 
     Parameters
     ----------
@@ -96,6 +106,9 @@ def drop_node(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
     >>> edge_index = torch.LongTensor([[1, 2], [3,4]])
     >>> drop_node(edge_index, p=0.5)
 
+    See also
+    --------
+    :class:`graphwar.nn.layers.DropNode`   
     """
 
     if p < 0. or p > 1.:
@@ -123,6 +136,10 @@ def drop_path(edge_index: Tensor,
               num_nodes: int = None,
               by: str = 'degree') -> Tuple[Tensor, Tensor]:
     """DropPath: a structured form of :class:`graphwar.functional.drop_edge`.
+    From the `"MaskGAE: Masked Graph Modeling Meets 
+    Graph Autoencoders" <https://arxiv.org/abs/2205.10053>`_
+    paper (arXiv'22)
+
 
     Parameters
     ----------
@@ -169,7 +186,14 @@ def drop_path(edge_index: Tensor,
     -------
     >>> from graphwar.functional import drop_path
     >>> edge_index = torch.LongTensor([[1, 2], [3,4]])
-    >>> drop_path(edge_index, p=0.5)         
+    >>> drop_path(edge_index, r=0.5)   
+
+    >>> drop_path(edge_index, r=torch.tensor([1,2])) # specify root nodes   
+
+
+    See also
+    --------
+    :class:`graphwar.nn.layers.DropPath`      
     """
 
     if torch_cluster is None:

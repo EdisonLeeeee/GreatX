@@ -124,14 +124,14 @@
 <code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_index</span></code> with shape [2, M],
 where M is the number of edges.</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar</span> <span class="kn">import</span> <span class="n">check</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar</span> <span class="kn">import</span> <span class="n">is_edge_index</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">check</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_edge_index</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
 <span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">check</span><span class="p">(</span><span class="n">edges</span><span class="o">.</span><span class="n">t</span><span class="p">()))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_edge_index</span><span class="p">(</span><span class="n">edges</span><span class="o">.</span><span class="n">t</span><span class="p">()))</span>
 <span class="go">False</span>
 </pre></div>
 </div>
@@ -169,8 +169,8 @@ gradient information.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>torch.nn.Module</cite></p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>required</cite></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <code class="xref py py-obj docutils literal notranslate"><span class="pre">required</span></code></p></li>
 </ul>
 </dd>
 </dl>

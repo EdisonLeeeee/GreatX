@@ -4,7 +4,10 @@ import numpy as np
 
 def scipy_normalize(adj_matrix: sp.csr_matrix,
                     add_self_loops: bool = True) -> sp.csr_matrix:
-    """Normalize a sparse matrix according to :obj:`GCN`.
+    """Normalize a sparse matrix according to :obj:`GCN`
+    from the `"Semi-supervised
+    Classification with Graph Convolutional Networks"
+    <https://arxiv.org/abs/1609.02907>`_ paper (ICLR'17)
 
     Parameters
     ----------

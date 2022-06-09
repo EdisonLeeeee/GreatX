@@ -109,6 +109,51 @@
 
 
 <div class="viewcode-block" id="SoftMedianConv"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.SoftMedianConv">[docs]</a><span class="k">class</span> <span class="nc">SoftMedianConv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;The graph convolutional operator with soft </span>
+<span class="sd">    median aggregation from the `&quot;Robustness of Graph Neural Networks </span>
+<span class="sd">    at Scale&quot; &lt;https://arxiv.org/abs/2110.14038&gt;`_ paper (NeurIPS&#39;21)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels : int</span>
+<span class="sd">        dimensions of int samples</span>
+<span class="sd">    out_channels : int</span>
+<span class="sd">        dimensions of output samples</span>
+<span class="sd">    cached : bool, optional</span>
+<span class="sd">        whether the layer will cache</span>
+<span class="sd">        the computation of :math:`(\mathbf{\hat{D}}^{-1/2} \mathbf{\hat{A}}</span>
+<span class="sd">        \mathbf{\hat{D}}^{-1/2})` and sorted edges on first execution, </span>
+<span class="sd">        and will use the cached version for further executions, by default False</span>
+<span class="sd">    add_self_loops : bool, optional</span>
+<span class="sd">        whether to add self-loops to the input graph, by default True</span>
+<span class="sd">    normalize : bool, optional</span>
+<span class="sd">        whether to compute symmetric normalization</span>
+<span class="sd">        coefficients on the fly, by default False</span>
+<span class="sd">    row_normalize : bool, optional</span>
+<span class="sd">        whether to perform row-normalization on the fly, by default True        </span>
+<span class="sd">    bias : bool, optional</span>
+<span class="sd">        whether to use bias in the layers, by default True    </span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    RuntimeWarning</span>
+<span class="sd">        if module `&quot;glcore&quot; &lt;https://github.com/EdisonLeeeee/glcore&gt;`_ is not properly installed.</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    * The input edges must be sorted for :meth:`dimmedian_idx` from :class:`glcore`</span>
+
+<span class="sd">    The same as :class:`torch_geometric`, </span>
+<span class="sd">    for the inputs :obj:`x`, :obj:`edge_index`, and :obj:`edge_weight`,</span>
+<span class="sd">    our implementation supports:</span>
+
+<span class="sd">    * :obj:`edge_index` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`</span>
+<span class="sd">    * :obj:`edge_index` is :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`      </span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :class:`graphwar.nn.models.SoftMedianGCN`   </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_cached_edges</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -144,6 +189,7 @@
         <span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SoftMedianConv.cache_clear"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.SoftMedianConv.cache_clear">[docs]</a>    <span class="k">def</span> <span class="nf">cache_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clear cached inputs or intermediate results.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cached_edges</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -168,12 +214,12 @@
                 <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">gcn_norm</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
                                                    <span class="n">improved</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                                    <span class="n">add_self_loops</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-                
+
             <span class="k">if</span> <span class="n">edge_weight</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">new_ones</span><span class="p">(</span><span class="n">edge_index</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>                
+                <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">new_ones</span><span class="p">(</span><span class="n">edge_index</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 
             <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">sort_edge_index</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">)</span>
-                
+
             <span class="c1"># cache edges</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_cached_edges</span> <span class="o">=</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span>
@@ -195,11 +241,12 @@
         <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span><span class="si">}</span><span class="s1">, &#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_channels</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span></div>
 
-<span class="k">def</span> <span class="nf">soft_median_reduce</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> 
+
+<span class="k">def</span> <span class="nf">soft_median_reduce</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
                        <span class="n">edge_weight</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-    
+    <span class="sd">&quot;&quot;&quot;weighted dimension-wise Median aggregation&quot;&quot;&quot;</span>
+
     <span class="k">assert</span> <span class="n">edge_weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-    <span class="c1"># ========= weighted dimension-wise Median aggregation ===</span>
     <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">edge_index</span>
     <span class="n">N</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
     <span class="n">median_idx</span> <span class="o">=</span> <span class="n">dimmedian_idx</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>

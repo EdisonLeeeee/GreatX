@@ -10,12 +10,48 @@ from graphwar import is_edge_index
 
 
 class JKNet(nn.Module):
-    """Graph Convolution Network with Jumping knowledge (JKNet)
+    r"""Implementation of Graph Convolution Network with 
+    Jumping knowledge (JKNet) from
+    the `"Representation Learning on Graphs with 
+    Jumping Knowledge Networks"
+    <https://arxiv.org/abs/1806.03536>`_ paper (ICML'18)
 
-    Example
-    -------
-    # JKNet with five hidden layers
+    Parameters
+    ----------
+    in_channels : int, 
+        the input dimensions of model
+    out_channels : int, 
+        the output dimensions of model
+    hids : list, optional
+        the number of hidden units for each hidden layer, by default [16, 16, 16]
+    acts : list, optional
+        the activation function for each hidden layer, by default ['relu', 'relu', 'relu']
+    dropout : float, optional
+        the dropout ratio of model, by default 0.5
+    mode : str, optional
+        the mode of jumping knowledge, including 'cat', 'lstm', and 'max',          
+    bias : bool, optional
+        whether to use bias in the layers, by default True
+    bn: bool, optional
+        whether to use :class:`BatchNorm1d` after the convolution layer, by default False              
+
+    Note
+    ----
+    To accept a different graph as inputs, please call :meth:`cache_clear` first
+    to clear cached results.
+
+    It is convenient to extend the number of layers with different or the same
+    hidden units (activation functions) using :meth:`graphwar.utils.wrapper`. 
+
+    See Examples below:
+
+    Examples
+    --------
+    >>> # JKNet with five hidden layers
     >>> model = JKNet(100, 10, hids=[16]*5)
+
+
+
     """
 
     @wrapper
@@ -28,27 +64,6 @@ class JKNet(nn.Module):
                  mode: str = 'cat',
                  bn: bool = False,
                  bias: bool = True):
-        r"""
-        Parameters
-        ----------
-        in_channels : int, 
-            the input dimensions of model
-        out_channels : int, 
-            the output dimensions of model
-        hids : list, optional
-            the number of hidden units of each hidden layer, by default [16, 16, 16]
-        acts : list, optional
-            the activation function of each hidden layer, by default ['relu', 'relu', 'relu']
-        dropout : float, optional
-            the dropout ratio of model, by default 0.5
-        mode : str, optional
-            the mode of jumping knowledge, including 'cat', 'lstm', and 'max',
-            by default 'cat'
-        bias : bool, optional
-            whether to use bias in the layers, by default True
-        bn: bool, optional
-            whether to use `BatchNorm1d` after the convolution layer, by default False
-        """
 
         super().__init__()
         self.mode = mode

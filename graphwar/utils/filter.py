@@ -71,6 +71,17 @@ def singleton_mask(adj_matrix: Tensor):
 
 
 class SingletonFilter:
+    """Computes a mask for entries potentially 
+    leading to singleton nodes, i.e. one of the 
+    two nodes corresponding to the entry have 
+    degree 1 and there is an edge between the two nodes.
+
+    Parameters
+    ----------
+    adj_matrix : sp.csr_matrix
+        the input adjacency matrix    
+    """
+
     def __init__(self, adj_matrix: sp.csr_matrix):
         self.degree = adj_matrix.sum(1).A1
 
@@ -84,6 +95,18 @@ class SingletonFilter:
 
 
 class LikelihoodFilter:
+    """Likelihood filter from the 
+    `"Adversarial Attacks on Neural Networks for Graph Data" 
+    <https://arxiv.org/abs/1805.07984>`_ paper (KDD'18)
+
+    Parameters
+    ----------
+    degree : np.ndarray
+        the degree of the nodes in the graph
+    ll_cutoff : float, optional
+        likelihood cutoff, by default 0.004    
+    """
+
     def __init__(self, degree: np.ndarray, ll_cutoff: float = 0.004):
 
         self.ll_cutoff = ll_cutoff
@@ -229,6 +252,18 @@ class LikelihoodFilter:
 
 
 class LikelihoodFilterTensor:
+    """Likelihood filter (Tensor version) )from the 
+    `"Adversarial Attacks on Neural Networks for Graph Data" 
+    <https://arxiv.org/abs/1805.07984>`_ paper (KDD'18)
+
+    Parameters
+    ----------
+    degree : Tensor
+        the degree of the nodes in the graph
+    ll_cutoff : float, optional
+        likelihood cutoff, by default 0.004       
+    """
+
     def __init__(self, degree: torch.Tensor, ll_cutoff: float = 0.004):
 
         self.ll_cutoff = ll_cutoff

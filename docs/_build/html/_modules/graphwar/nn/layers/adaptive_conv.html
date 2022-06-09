@@ -103,10 +103,35 @@
 
 
 <div class="viewcode-block" id="AdaptiveConv"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.AdaptiveConv">[docs]</a><span class="k">class</span> <span class="nc">AdaptiveConv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The adaptive message passing layer from the paper</span>
-<span class="sd">    &quot;Graph Neural Networks with Adaptive Residual&quot;, NeurIPS 2021</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;The AirGNN operator from the `&quot;Graph Neural Networks </span>
+<span class="sd">    with Adaptive Residual&quot; &lt;https://openreview.net/forum?id=hfkER_KJiNw&gt;`_</span>
+<span class="sd">    paper (NeurIPS&#39;21)</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    K : int, optional</span>
+<span class="sd">        the number of propagation steps during message passing, by default 3</span>
+<span class="sd">    lambda_amp : float, optional</span>
+<span class="sd">        trade-off for adaptive message passing, by default 0.1</span>
+<span class="sd">    normalize : bool, optional</span>
+<span class="sd">        Whether to add self-loops and compute</span>
+<span class="sd">        symmetric normalization coefficients on the fly, by default True</span>
+<span class="sd">    add_self_loops : bool, optional</span>
+<span class="sd">        whether to add self-loops to the input graph, by default True</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    Different from that in :class:`torch_geometric`, </span>
+<span class="sd">    for the inputs :obj:`x`, :obj:`edge_index`, and :obj:`edge_weight`,</span>
+<span class="sd">    our implementation supports:</span>
+
+<span class="sd">    * :obj:`edge_index` is :class:`torch.FloatTensor`: dense adjacency matrix with shape :obj:`[N, N]`</span>
+<span class="sd">    * :obj:`edge_index` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`</span>
+<span class="sd">    * :obj:`edge_index` is :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`     </span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :class:`graphwar.nn.models.AirGNN`     </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -114,7 +139,6 @@
                  <span class="n">lambda_amp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
                  <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                  <span class="n">add_self_loops</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="n">K</span>
@@ -178,9 +202,9 @@
             <span class="n">out</span> <span class="o">=</span> <span class="n">edge_index</span> <span class="o">@</span> <span class="n">x</span>
 
         <span class="k">return</span> <span class="n">x</span> <span class="o">-</span> <span class="n">out</span></div>
-    
+
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">(lambda_amp=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lambda_amp</span><span class="si">}</span><span class="s1">, K=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>        </div>
+        <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">(lambda_amp=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lambda_amp</span><span class="si">}</span><span class="s1">, K=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

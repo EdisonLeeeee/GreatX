@@ -35,7 +35,7 @@ class IGAttack(TargetedAttacker, Surrogate):
     Raises
     ------
     TypeError
-        unexpected keyword argument in `kwargs`       
+        unexpected keyword argument in :obj:`kwargs`       
 
     Example
     -------

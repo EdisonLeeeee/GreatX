@@ -31,11 +31,11 @@ class FlipAttacker(Attacker):
     Raises
     ------
     TypeError
-        unexpected keyword argument in `kwargs`       
+        unexpected keyword argument in :obj:`kwargs`       
 
     Note
     ----
-    :obj:`graphwar.attack.FlipAttacker` is a base class for graph modification attacks (GMA).
+    :class:`graphwar.attack.FlipAttacker` is a base class for graph modification attacks (GMA).
     """
 
     def reset(self) -> "FlipAttacker":

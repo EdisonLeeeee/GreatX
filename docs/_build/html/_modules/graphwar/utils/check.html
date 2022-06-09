@@ -101,13 +101,13 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from graphwar import check</span>
+<span class="sd">    &gt;&gt;&gt; from graphwar import is_edge_index</span>
 <span class="sd">    &gt;&gt;&gt; import torch</span>
 
 <span class="sd">    &gt;&gt;&gt; edges = torch.LongTensor([[1,2], [3,4]])</span>
-<span class="sd">    &gt;&gt;&gt; check(edges)</span>
+<span class="sd">    &gt;&gt;&gt; is_edge_index(edges)</span>
 <span class="sd">    True</span>
-<span class="sd">    &gt;&gt;&gt; check(edges.t()))</span>
+<span class="sd">    &gt;&gt;&gt; is_edge_index(edges.t()))</span>
 <span class="sd">    False</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">is_tensor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">torch</span><span class="o">.</span><span class="n">long</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span></div>

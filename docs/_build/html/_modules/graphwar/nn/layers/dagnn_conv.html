@@ -95,7 +95,6 @@
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
 <span class="kn">from</span> <span class="nn">torch_sparse</span> <span class="kn">import</span> <span class="n">SparseTensor</span><span class="p">,</span> <span class="n">matmul</span>
 
-<span class="kn">from</span> <span class="nn">torch_geometric.nn.conv</span> <span class="kn">import</span> <span class="n">MessagePassing</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.nn.conv.gcn_conv</span> <span class="kn">import</span> <span class="n">gcn_norm</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.nn.dense.linear</span> <span class="kn">import</span> <span class="n">Linear</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.typing</span> <span class="kn">import</span> <span class="n">Adj</span><span class="p">,</span> <span class="n">OptTensor</span>
@@ -106,9 +105,38 @@
 
 
 <div class="viewcode-block" id="DAGNNConv"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.DAGNNConv">[docs]</a><span class="k">class</span> <span class="nc">DAGNNConv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Deep Adaptive Graph Neural Network in</span>
-<span class="sd">    `Towards Deeper Graph Neural Networks &lt;https://arxiv.org/abs/2007.09296&gt;`</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;The DAGNN operator from the `&quot;Towards Deeper Graph Neural </span>
+<span class="sd">    Networks&quot; &lt;https://arxiv.org/abs/2007.09296&gt;`_</span>
+<span class="sd">    paper (KDD&#39;20)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels : int</span>
+<span class="sd">        dimensions of input samples</span>
+<span class="sd">    out_channels : int, optional</span>
+<span class="sd">        dimensions of output samples, by default 1</span>
+<span class="sd">    K : int, optional</span>
+<span class="sd">        the number of propagation steps, by default 1</span>
+<span class="sd">    add_self_loops : bool, optional</span>
+<span class="sd">        whether to add self-loops to the input graph, by default True</span>
+<span class="sd">    bias : bool, optional</span>
+<span class="sd">        whether to use bias in the layers, by default True    </span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    * :obj:`out_channels` must be 1 for any cases</span>
+
+<span class="sd">    Different from that in :class:`torch_geometric`, </span>
+<span class="sd">    for the inputs :obj:`x`, :obj:`edge_index`, and :obj:`edge_weight`,</span>
+<span class="sd">    our implementation supports:</span>
+
+<span class="sd">    * :obj:`edge_index` is :class:`torch.FloatTensor`: dense adjacency matrix with shape :obj:`[N, N]`</span>
+<span class="sd">    * :obj:`edge_index` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`</span>
+<span class="sd">    * :obj:`edge_index` is :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :class:`graphwar.nn.models.DAGNN`       </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>

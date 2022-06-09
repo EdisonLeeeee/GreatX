@@ -98,16 +98,49 @@
 
 
 <div class="viewcode-block" id="GAT"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.models.GAT">[docs]</a><span class="k">class</span> <span class="nc">GAT</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Graph Attention Network (GAT)</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Graph Attention Networks (GAT) from the </span>
+<span class="sd">    `&quot;Graph Attention Networks&quot;</span>
+<span class="sd">    &lt;https://arxiv.org/abs/1710.10903&gt;`_ paper (ICLR&#39;19)</span>
 
-<span class="sd">    Example</span>
-<span class="sd">    -------</span>
-<span class="sd">    # GAT with one hidden layer</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels : int, </span>
+<span class="sd">        the input dimensions of model</span>
+<span class="sd">    out_channels : int, </span>
+<span class="sd">        the output dimensions of model</span>
+<span class="sd">    hids : list, optional</span>
+<span class="sd">        the number of hidden units for each hidden layer, by default [8]</span>
+<span class="sd">    num_heads : list, optional</span>
+<span class="sd">        the number of attention heads for each hidden layer, by default [8]        </span>
+<span class="sd">    acts : list, optional</span>
+<span class="sd">        the activation function for each hidden layer, by default [&#39;relu&#39;]</span>
+<span class="sd">    dropout : float, optional</span>
+<span class="sd">        the dropout ratio of model, by default 0.6</span>
+<span class="sd">    bias : bool, optional</span>
+<span class="sd">        whether to use bias in the layers, by default True</span>
+<span class="sd">    bn: bool, optional</span>
+<span class="sd">        whether to use :class:`BatchNorm1d` after the convolution layer, by default False         </span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    It is convenient to extend the number of layers with different or the same</span>
+<span class="sd">    hidden units (activation functions) using :meth:`graphwar.utils.wrapper`. </span>
+
+<span class="sd">    See Examples below:</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; # GAT with one hidden layer</span>
 <span class="sd">    &gt;&gt;&gt; model = GAT(100, 10)</span>
-<span class="sd">    # GAT with two hidden layers</span>
-<span class="sd">    &gt;&gt;&gt; model = GAT(100, 10, hids=[32, 16], num_heads=[8, 8], acts=[&#39;relu&#39;, &#39;elu&#39;])</span>
-<span class="sd">    # GAT with two hidden layers, without activation at the first layer</span>
-<span class="sd">    &gt;&gt;&gt; model = GAT(100, 10, hids=[32, 16], num_heads=[8, 8], acts=[None, &#39;elu&#39;])</span>
+
+<span class="sd">    &gt;&gt;&gt; # GAT with two hidden layers</span>
+<span class="sd">    &gt;&gt;&gt; model = GAT(100, 10, hids=[32, 16], acts=[&#39;relu&#39;, &#39;elu&#39;])</span>
+
+<span class="sd">    &gt;&gt;&gt; # GAT with two hidden layers, without activation at the first layer</span>
+<span class="sd">    &gt;&gt;&gt; model = GAT(100, 10, hids=[32, 16], acts=[None, &#39;relu&#39;])</span>
+
+<span class="sd">    &gt;&gt;&gt; # GAT with very deep architectures, each layer has elu as activation function</span>
+<span class="sd">    &gt;&gt;&gt; model = GAT(100, 10, hids=[16]*8, acts=[&#39;elu&#39;])</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -128,26 +161,6 @@
                  <span class="n">bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                  <span class="n">bn</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                  <span class="n">includes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;num_heads&#39;</span><span class="p">]):</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        in_channels : int, </span>
-<span class="sd">            the input dimensions of model</span>
-<span class="sd">        out_channels : int, </span>
-<span class="sd">            the output dimensions of model</span>
-<span class="sd">        hids : list, optional</span>
-<span class="sd">            the number of hidden units of each hidden layer, by default [8]</span>
-<span class="sd">        num_heads : list, optional</span>
-<span class="sd">            the number of attention heads of each hidden layer, by default [8]</span>
-<span class="sd">        acts : list, optional</span>
-<span class="sd">            the activation function of each hidden layer, by default [&#39;elu&#39;]</span>
-<span class="sd">        dropout : float, optional</span>
-<span class="sd">            the dropout ratio of model, by default 0.5</span>
-<span class="sd">        bias : bool, optional</span>
-<span class="sd">            whether to use bias in the layers, by default True      </span>
-<span class="sd">        bn: bool, optional</span>
-<span class="sd">            whether to use `BatchNorm1d` after the convolution layer, by default False            </span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="n">head</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">conv</span> <span class="o">=</span> <span class="p">[]</span>

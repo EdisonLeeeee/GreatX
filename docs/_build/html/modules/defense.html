@@ -113,15 +113,18 @@
 <td><p>Graph purification based on low-rank Eigen Decomposition reconstruction on the adjacency matrix.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.defense.GNNGUARD" title="graphwar.defense.GNNGUARD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GNNGUARD</span></code></a></p></td>
-<td><p></p></td>
+<td><p>Implementation of GNNGUARD from the <a class="reference external" href="https://arxiv.org/abs/2006.08149">&quot;GNNGUARD: Defending Graph Neural Networks against Adversarial Attacks&quot;</a> paper (NeurIPS'20)</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.defense.GUARD" title="graphwar.defense.GUARD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GUARD</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.defense.UniversalDefense" title="graphwar.defense.UniversalDefense"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UniversalDefense</span></code></a></p></td>
+<td><p>Base class for graph universal defense</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.defense.GUARD" title="graphwar.defense.GUARD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GUARD</span></code></a></p></td>
 <td><p>Graph Universal Adversarial Defense (GUARD)</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.defense.DegreeGUARD" title="graphwar.defense.DegreeGUARD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DegreeGUARD</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.defense.DegreeGUARD" title="graphwar.defense.DegreeGUARD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DegreeGUARD</span></code></a></p></td>
 <td><p>Graph Universal Defense based on node degrees</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.defense.RandomGUARD" title="graphwar.defense.RandomGUARD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RandomGUARD</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.defense.RandomGUARD" title="graphwar.defense.RandomGUARD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RandomGUARD</span></code></a></p></td>
 <td><p>Graph Universal Defense based on random choice</p></td>
 </tr>
 </tbody>
@@ -133,7 +136,7 @@
 connected nodes.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>:classL`CosinePurification` is an extension of
+<p><a class="reference internal" href="#graphwar.defense.CosinePurification" title="graphwar.defense.CosinePurification"><code class="xref py py-class docutils literal notranslate"><span class="pre">CosinePurification</span></code></a> is an extension of
 <a class="reference internal" href="#graphwar.defense.JaccardPurification" title="graphwar.defense.JaccardPurification"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.defense.JaccardPurification</span></code></a> for dealing with
 continuous node features.</p>
 </div>
@@ -183,8 +186,8 @@ int the input <code class="xref py py-obj docutils literal notranslate"><span cl
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>We set the reconstructed adjacency matrix as <cite>adj_t</cite> to be compatible with
-torch_geometric where <cite>adj_t</cite> denotes the <code class="xref py py-class docutils literal notranslate"><span class="pre">torch_sparse.SparseTensor</span></code>.</p>
+<p>We set the reconstructed adjacency matrix as <code class="xref py py-obj docutils literal notranslate"><span class="pre">adj_t</span></code> to be compatible with
+torch_geometric where <code class="xref py py-obj docutils literal notranslate"><span class="pre">adj_t</span></code> denotes the <code class="xref py py-class docutils literal notranslate"><span class="pre">torch_sparse.SparseTensor</span></code>.</p>
 </div>
 </dd></dl>
 
@@ -207,15 +210,26 @@ int the input <code class="xref py py-obj docutils literal notranslate"><span cl
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>We set the reconstructed adjacency matrix as <cite>adj_t</cite> to be compatible with
-torch_geometric where <cite>adj_t</cite> denotes the <code class="xref py py-class docutils literal notranslate"><span class="pre">torch_sparse.SparseTensor</span></code>.</p>
+<p>We set the reconstructed adjacency matrix as <code class="xref py py-obj docutils literal notranslate"><span class="pre">adj_t</span></code> to be compatible with
+torch_geometric where <code class="xref py py-obj docutils literal notranslate"><span class="pre">adj_t</span></code> denotes the <code class="xref py py-class docutils literal notranslate"><span class="pre">torch_sparse.SparseTensor</span></code>.</p>
 </div>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="graphwar.defense.GNNGUARD">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GNNGUARD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_self_loops</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/defense/gnnguard.html#GNNGUARD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.defense.GNNGUARD" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="py method">
+<dd><p>Implementation of GNNGUARD
+from the <a class="reference external" href="https://arxiv.org/abs/2006.08149">“GNNGUARD:
+Defending Graph Neural Networks against Adversarial Attacks”</a> paper (NeurIPS’20)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – threshold for removing edges based on attention scores, by default 0.1</p></li>
+<li><p><strong>add_self_loops</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to add self-loops to the input graph, by default False</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
 <dt class="sig sig-object py" id="graphwar.defense.GNNGUARD.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/defense/gnnguard.html#GNNGUARD.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.defense.GNNGUARD.forward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines the computation performed at every call.</p>
@@ -246,6 +260,96 @@ strings are acceptable.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="graphwar.defense.UniversalDefense">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">UniversalDefense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/defense/universal_defense.html#UniversalDefense"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.defense.UniversalDefense" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for graph universal defense</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="graphwar.defense.UniversalDefense.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch_geometric.data.data.Data</span></span></span><a class="reference internal" href="../_modules/graphwar/defense/universal_defense.html#UniversalDefense.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.defense.UniversalDefense.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the defended graph with defensive perturbation performed on.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>a graph represented as PyG-like data instance</em>) – the graph where the defensive perturbation performed on</p></li>
+<li><p><strong>target_nodes</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>Tensor</em><em>]</em>) – the target nodes where the defensive perturbation performed on</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – the number of anchor nodes in the defensive perturbation, by default 50</p></li>
+<li><p><strong>symmetric</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Determine whether the resulting graph is forcibly symmetric,
+by default True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>Data</strong> – the defended graph with defensive perturbation performed on the target nodes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>PyG-like data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="graphwar.defense.UniversalDefense.removed_edges">
+<span class="sig-name descname"><span class="pre">removed_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/graphwar/defense/universal_defense.html#UniversalDefense.removed_edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.defense.UniversalDefense.removed_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return edges to remove with the defensive perturbation performed on
+on the target nodes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_nodes</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>Tensor</em><em>]</em>) – the target nodes where the defensive perturbation performed on</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – the number of anchor nodes in the defensive perturbation, by default 50</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the edges to remove with the defensive perturbation performed on
+on the target nodes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tensor, shape [2, k]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="graphwar.defense.UniversalDefense.anchors">
+<span class="sig-name descname"><span class="pre">anchors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/graphwar/defense/universal_defense.html#UniversalDefense.anchors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.defense.UniversalDefense.anchors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the top-k anchor nodes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – the number of anchor nodes in the defensive perturbation, by default 50</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the top-k anchor nodes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="graphwar.defense.UniversalDefense.patch">
+<span class="sig-name descname"><span class="pre">patch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="reference internal" href="../_modules/graphwar/defense/universal_defense.html#UniversalDefense.patch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.defense.UniversalDefense.patch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the universal patch of the defensive perturbation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – the number of anchor nodes in the defensive perturbation, by default 50</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the 0-1 (boolean) universal patch where 1 denotes the edges to be removed.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="graphwar.defense.UniversalDefense.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></em><a class="headerlink" href="#graphwar.defense.UniversalDefense.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="graphwar.defense.GUARD">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GUARD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch_geometric.data.data.Data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">512</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/defense/universal_defense.html#GUARD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.defense.GUARD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Graph Universal Adversarial Defense (GUARD)</p>
@@ -266,7 +370,9 @@ strings are acceptable.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">({</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="n">splits</span><span class="o">.</span><span class="n">train_nodes</span><span class="p">},</span>
 <span class="go">            {&#39;data&#39;: data, &#39;mask&#39;: splits.val_nodes}, callbacks=[ckp])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">trainer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">({</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="n">splits</span><span class="o">.</span><span class="n">test_nodes</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">guard</span> <span class="o">=</span> <span class="n">GUARD</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">guard</span> <span class="o">=</span> <span class="n">GUARD</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">guard</span><span class="o">.</span><span class="n">setup_surrogate</span><span class="p">(</span><span class="n">surrogate</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">splits</span><span class="o">.</span><span class="n">train_nodes</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">target_node</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">perturbed_data</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># Other PyG-like Data</span>
@@ -294,8 +400,8 @@ strings are acceptable.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>torch.nn.Module</cite></p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <cite>required</cite></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <code class="xref py py-obj docutils literal notranslate"><span class="pre">required</span></code></p></li>
 </ul>
 </dd>
 </dl>

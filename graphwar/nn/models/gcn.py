@@ -6,16 +6,51 @@ from graphwar.utils import wrapper
 
 
 class GCN(nn.Module):
-    """Graph Convolution Network (GCN)
+    r"""Graph Convolution Network (GCN) from the `"Semi-supervised
+    Classification with Graph Convolutional Networks"
+    <https://arxiv.org/abs/1609.02907>`_ paper (ICLR'17)
 
-    Example
-    -------
-    # GCN with one hidden layer
+    Parameters
+    ----------
+    in_channels : int, 
+        the input dimensions of model
+    out_channels : int, 
+        the output dimensions of model
+    hids : list, optional
+        the number of hidden units for each hidden layer, by default [16]
+    acts : list, optional
+        the activation function for each hidden layer, by default ['relu']
+    dropout : float, optional
+        the dropout ratio of model, by default 0.5
+    bias : bool, optional
+        whether to use bias in the layers, by default True
+    bn: bool, optional
+        whether to use :class:`BatchNorm1d` after the convolution layer, by default False         
+
+    Note
+    ----
+    It is convenient to extend the number of layers with different or the same
+    hidden units (activation functions) using :meth:`graphwar.utils.wrapper`. 
+
+    See Examples below:
+
+    Examples
+    --------
+    >>> # GCN with one hidden layer
     >>> model = GCN(100, 10)
-    # GCN with two hidden layers
+
+    >>> # GCN with two hidden layers
     >>> model = GCN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
-    # GCN with two hidden layers, without activation at the first layer
+
+    >>> # GCN with two hidden layers, without activation at the first layer
     >>> model = GCN(100, 10, hids=[32, 16], acts=[None, 'relu'])
+
+    >>> # GCN with very deep architectures, each layer has elu as activation function
+    >>> model = GCN(100, 10, hids=[16]*8, acts=['elu'])
+
+    See also
+    --------
+    :class:`graphwar.nn.layers.GCNConv`    
 
     """
 
@@ -29,24 +64,6 @@ class GCN(nn.Module):
                  bn: bool = False,
                  normalize: bool = True,
                  bias: bool = True):
-        r"""
-        Parameters
-        ----------
-        in_channels : int, 
-            the input dimensions of model
-        out_channels : int, 
-            the output dimensions of model
-        hids : list, optional
-            the number of hidden units of each hidden layer, by default [16]
-        acts : list, optional
-            the activation function of each hidden layer, by default ['relu']
-        dropout : float, optional
-            the dropout ratio of model, by default 0.5
-        bias : bool, optional
-            whether to use bias in the layers, by default True
-        bn: bool, optional
-            whether to use `BatchNorm1d` after the convolution layer, by default False          
-        """
 
         super().__init__()
 

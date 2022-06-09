@@ -105,15 +105,15 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    target : int</span>
-<span class="sd">        Total number of steps expected.</span>
+<span class="sd">        total number of steps expected.</span>
 <span class="sd">    width : int, optional</span>
-<span class="sd">        Progress bar width on screen, by default 30</span>
+<span class="sd">        progress bar width on screen, by default 30</span>
 <span class="sd">    verbose : int, optional</span>
-<span class="sd">        Verbosity mode, 0 (silent), 1 (verbose), 2 (semi-verbose), by default 1</span>
+<span class="sd">        verbosity mode, 0 (silent), 1 (verbose), 2 (semi-verbose), by default 1</span>
 <span class="sd">    interval : float, optional</span>
-<span class="sd">        Minimum visual progress update interval (in seconds), by default 0.05</span>
+<span class="sd">        minimum visual progress update interval (in seconds), by default 0.05</span>
 <span class="sd">    unit_name : str, optional</span>
-<span class="sd">        Display name for step counts (usually &quot;step&quot; or &quot;sample&quot;), by default &#39;step&#39;</span>
+<span class="sd">        display name for step counts (usually &quot;step&quot; or &quot;sample&quot;), by default &#39;step&#39;</span>
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -161,11 +161,11 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        current : int</span>
-<span class="sd">            Index of current step.</span>
+<span class="sd">            index of current step</span>
 <span class="sd">        msg : Optional[Union[str, List, Tuple]], optional</span>
 <span class="sd">            :obj:`(name, value_for_last_step)` or string messages, by default None</span>
 <span class="sd">        finalize : Optional[bool], optional</span>
-<span class="sd">            Whether this is the last update for the progress bar. If</span>
+<span class="sd">            whether this is the last update for the progress bar. If</span>
 <span class="sd">            :obj:`None`, defaults to :obj:`current &gt;= self.target`, by default None</span>
 
 <span class="sd">        Raises</span>
@@ -301,7 +301,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        n : int</span>
-<span class="sd">            number of steps to add to the progress bar.</span>
+<span class="sd">            number of steps to add to the progress bar</span>
 <span class="sd">        msg : Optional[Union[str, List, Tuple]], optional</span>
 <span class="sd">            :obj:`(name, value_for_last_step)` or string messages, by default None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -315,7 +315,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        n : int or float or Numeric</span>
-<span class="sd">            A Number.</span>
+<span class="sd">            a Number.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>

@@ -14,6 +14,45 @@ from graphwar.nn.layers.gcn_conv import dense_gcn_norm
 
 
 class SGConv(nn.Module):
+    r"""The simplified graph convolutional operator from 
+    the `"Simplifying Graph Convolutional Networks"
+    <https://arxiv.org/abs/1902.07153>`_ paper (ICML'19)
+
+    Parameters
+    ----------
+    in_channels : int
+        dimensions of int samples
+    out_channels : int
+        dimensions of output samples
+    K : int
+        the number of propagation steps, by default 1     
+    cached : bool, optional
+        whether the layer will cache
+        the computation of :math:`(\mathbf{\hat{D}}^{-1/2} \mathbf{\hat{A}}
+        \mathbf{\hat{D}}^{-1/2})^K` on first execution, and will use the
+        cached version for further executions, by default False
+    add_self_loops : bool, optional
+        whether to add self-loops to the input graph, by default True
+    normalize : bool, optional
+        whether to compute symmetric normalization
+        coefficients on the fly, by default True
+    bias : bool, optional
+        whether to use bias in the layers, by default True    
+
+    Note
+    ----
+    Different from that in :class:`torch_geometric`, 
+    for the inputs :obj:`x`, :obj:`edge_index`, and :obj:`edge_weight`,
+    our implementation supports:
+
+    * :obj:`edge_index` is :class:`torch.FloatTensor`: dense adjacency matrix with shape :obj:`[N, N]`
+    * :obj:`edge_index` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`
+    * :obj:`edge_index` is :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`   
+
+    See also
+    --------
+    :class:`graphwar.nn.models.SGC`    
+    """
 
     _cached_x: Optional[Tensor]
 
@@ -42,6 +81,7 @@ class SGConv(nn.Module):
         self.cache_clear()
 
     def cache_clear(self):
+        """Clear cached inputs or intermediate results."""
         self._cached_x = None
         return self
 

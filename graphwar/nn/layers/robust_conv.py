@@ -16,6 +16,39 @@ from graphwar.nn.layers.gcn_conv import dense_gcn_norm
 
 
 class RobustConv(nn.Module):
+    r"""The robust graph convolutional operator
+    from the `"Robust Graph Convolutional Networks 
+    Against Adversarial Attacks"
+    <http://pengcui.thumedialab.com/papers/RGCN.pdf>`_ paper (KDD'19)
+
+    Parameters
+    ----------
+    in_channels : int
+        dimensions of int samples
+    out_channels : int
+        dimensions of output samples
+    gamma : float, optional
+        the scale of attention on the variances, by default 1.0
+    add_self_loops : bool, optional
+        whether to add self-loops to the input graph, by default True
+    bias : bool, optional
+        whether to use bias in the layers, by default True     
+
+    Note
+    ----
+    Different from that in :class:`torch_geometric`, 
+    For the inputs :obj:`x`, :obj:`edge_index`, and :obj:`edge_weight`,
+    our implementation supports:
+
+    * :obj:`edge_index` is :class:`torch.FloatTensor`: dense adjacency matrix with shape :obj:`[N, N]`
+    * :obj:`edge_index` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`
+    * :obj:`edge_index` is :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`           
+
+    See also
+    --------
+    :class:`graphwar.nn.models.RobustGCN`       
+    """
+
     def __init__(self, in_channels: int, out_channels: int,
                  gamma: float = 1.0,
                  add_self_loops: bool = True,

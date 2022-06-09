@@ -23,8 +23,8 @@ def get(act: Optional[str] = None, inplace: bool = False) -> nn.Module:
     Parameters
     ----------
     act : string or None
-        the string to get activations, if `None`, return `nn.Identity()` 
-        that returns the input as output.
+        the string to get activations, if None, return :class:`nn.Identity()` 
+        that returns the input as output, by default None
     inplace : bool, optional
         the inplace argument in activation functions
         currently it is not work since not all the functions 
@@ -35,6 +35,7 @@ def get(act: Optional[str] = None, inplace: bool = False) -> nn.Module:
     >>> from graphwar.nn.layers import activations
     >>> activations.get('relu')
     ReLU()
+
     >>> activations.get(None)
     Identity()
 

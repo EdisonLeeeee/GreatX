@@ -13,15 +13,15 @@ class Progbar:
     Parameters
     ----------
     target : int
-        Total number of steps expected.
+        total number of steps expected.
     width : int, optional
-        Progress bar width on screen, by default 30
+        progress bar width on screen, by default 30
     verbose : int, optional
-        Verbosity mode, 0 (silent), 1 (verbose), 2 (semi-verbose), by default 1
+        verbosity mode, 0 (silent), 1 (verbose), 2 (semi-verbose), by default 1
     interval : float, optional
-        Minimum visual progress update interval (in seconds), by default 0.05
+        minimum visual progress update interval (in seconds), by default 0.05
     unit_name : str, optional
-        Display name for step counts (usually "step" or "sample"), by default 'step'
+        display name for step counts (usually "step" or "sample"), by default 'step'
 
     Example
     -------
@@ -69,11 +69,11 @@ class Progbar:
         Parameters
         ----------
         current : int
-            Index of current step.
+            index of current step
         msg : Optional[Union[str, List, Tuple]], optional
             :obj:`(name, value_for_last_step)` or string messages, by default None
         finalize : Optional[bool], optional
-            Whether this is the last update for the progress bar. If
+            whether this is the last update for the progress bar. If
             :obj:`None`, defaults to :obj:`current >= self.target`, by default None
 
         Raises
@@ -209,7 +209,7 @@ class Progbar:
         Parameters
         ----------
         n : int
-            number of steps to add to the progress bar.
+            number of steps to add to the progress bar
         msg : Optional[Union[str, List, Tuple]], optional
             :obj:`(name, value_for_last_step)` or string messages, by default None
         """
@@ -223,7 +223,7 @@ class Progbar:
         Parameters
         ----------
         n : int or float or Numeric
-            A Number.
+            a Number.
 
         Returns
         -------

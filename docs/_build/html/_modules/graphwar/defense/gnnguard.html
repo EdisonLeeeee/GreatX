@@ -98,6 +98,18 @@
 
 
 <div class="viewcode-block" id="GNNGUARD"><a class="viewcode-back" href="../../../modules/defense.html#graphwar.defense.GNNGUARD">[docs]</a><span class="k">class</span> <span class="nc">GNNGUARD</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Implementation of GNNGUARD</span>
+<span class="sd">    from the `&quot;GNNGUARD: </span>
+<span class="sd">    Defending Graph Neural Networks against Adversarial Attacks&quot;</span>
+<span class="sd">    &lt;https://arxiv.org/abs/2006.08149&gt;`_ paper (NeurIPS&#39;20)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    threshold : float, optional</span>
+<span class="sd">        threshold for removing edges based on attention scores, by default 0.1</span>
+<span class="sd">    add_self_loops : bool, optional</span>
+<span class="sd">        whether to add self-loops to the input graph, by default False    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">add_self_loops</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>

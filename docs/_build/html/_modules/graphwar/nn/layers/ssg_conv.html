@@ -107,6 +107,46 @@
 
 
 <div class="viewcode-block" id="SSGConv"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.SSGConv">[docs]</a><span class="k">class</span> <span class="nc">SSGConv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;The simple spectral graph convolutional operator from </span>
+<span class="sd">    the `&quot;Simple Spectral Graph Convolution&quot;</span>
+<span class="sd">    &lt;https://openreview.net/forum?id=CYO5T-YjWZV&gt;`_ paper (ICLR&#39;21)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels : int</span>
+<span class="sd">        dimensions of int samples</span>
+<span class="sd">    out_channels : int</span>
+<span class="sd">        dimensions of output samples</span>
+<span class="sd">    K : int</span>
+<span class="sd">        the number of propagation steps, by default 5     </span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Teleport probability :math:`\alpha`, by default 0.1           </span>
+<span class="sd">    cached : bool, optional </span>
+<span class="sd">        whether the layer will cache</span>
+<span class="sd">        the K-step aggregation on first execution, and will use the</span>
+<span class="sd">        cached version for further executions, by default False</span>
+<span class="sd">    add_self_loops : bool, optional</span>
+<span class="sd">        whether to add self-loops to the input graph, by default True</span>
+<span class="sd">    normalize : bool, optional</span>
+<span class="sd">        whether to compute symmetric normalization</span>
+<span class="sd">        coefficients on the fly, by default True</span>
+<span class="sd">    bias : bool, optional</span>
+<span class="sd">        whether to use bias in the layers, by default True    </span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    Different from that in :class:`torch_geometric`, </span>
+<span class="sd">    for the inputs :obj:`x`, :obj:`edge_index`, and :obj:`edge_weight`,</span>
+<span class="sd">    our implementation supports:</span>
+
+<span class="sd">    * :obj:`edge_index` is :class:`torch.FloatTensor`: dense adjacency matrix with shape :obj:`[N, N]`</span>
+<span class="sd">    * :obj:`edge_index` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`</span>
+<span class="sd">    * :obj:`edge_index` is :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`   </span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :class:`graphwar.nn.models.SSGC`   </span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_cached_x</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span>
 
@@ -139,6 +179,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cache_clear</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="SSGConv.cache_clear"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.SSGConv.cache_clear">[docs]</a>    <span class="k">def</span> <span class="nf">cache_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clear cached inputs or intermediate results.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cached_x</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 

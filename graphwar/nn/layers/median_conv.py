@@ -13,6 +13,41 @@ from torch_sparse import SparseTensor
 
 
 class MedianConv(nn.Module):
+    r"""The graph convolutional operator with median aggregation
+    from the `"Understanding Structural Vulnerability 
+    in Graph Convolutional Networks"
+    <https://www.ijcai.org/proceedings/2021/310>`_ paper (IJCAI'21)
+
+    Parameters
+    ----------
+    in_channels : int
+        dimensions of int samples
+    out_channels : int
+        dimensions of output samples
+    add_self_loops : bool, optional
+        whether to add self-loops to the input graph, by default True
+    normalize : bool, optional
+        whether to compute symmetric normalization
+        coefficients on the fly, by default True
+    bias : bool, optional
+        whether to use bias in the layers, by default True     
+
+    Note
+    ----
+    The same as :class:`torch_geometric`, our implementation supports:
+
+    * :class:`torch.LongTensor` (recommended): edge indices with shape :obj:`[2, M]`
+    * :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`  
+
+    In addition, the arguments :obj:`add_self_loops` and :obj:`normalize` 
+    are worked separately. One can set :obj:`normalize=True`  but set
+    :obj:`add_self_loops=False`, different from that in :class:`torch_geometric`.                 
+
+    See also
+    --------
+    :class:`graphwar.nn.models.MedianGCN`       
+    """
+
     def __init__(self, in_channels: int, out_channels: int,
                  add_self_loops: bool = True, normalize: bool = False,
                  bias: bool = True):
@@ -37,25 +72,26 @@ class MedianConv(nn.Module):
     def reset_parameters(self):
         self.lin.reset_parameters()
         zeros(self.bias)
-        
-    def forward(self, x: Tensor, edge_index: Adj, 
+
+    def forward(self, x: Tensor, edge_index: Adj,
                 edge_weight: OptTensor = None) -> Tensor:
-        
+
         x = self.lin(x)
-        
+
         # NOTE: we do not support Dense adjacency matrix here
         if isinstance(edge_index, SparseTensor):
             row, col, edge_weight = edge_index.coo()
             edge_index = torch.stack([row, col], dim=0)
-                
+
         if self.add_self_loops:
-#             edge_index, edge_weight = remove_self_loops(edge_index)
-            edge_index, edge_weight = add_self_loops(edge_index, num_nodes=x.size(0))
-        
+            #             edge_index, edge_weight = remove_self_loops(edge_index)
+            edge_index, edge_weight = add_self_loops(
+                edge_index, num_nodes=x.size(0))
+
         if self.normalize:
             edge_index, edge_weight = gcn_norm(edge_index, edge_weight, x.size(0),
                                                improved=False,
-                                               add_self_loops=False, dtype=x.dtype)    
+                                               add_self_loops=False, dtype=x.dtype)
 
         out = median_reduce(x, edge_index, edge_weight)
 
@@ -66,16 +102,17 @@ class MedianConv(nn.Module):
 
     def __repr__(self) -> str:
         return (f'{self.__class__.__name__}({self.in_channels}, '
-                f'{self.out_channels})')    
-    
+                f'{self.out_channels})')
+
+
 def median_reduce(x: Tensor, edge_index: Tensor, edge_weight: OptTensor = None) -> Tensor:
     # NOTE: `to_dense_batch` requires the `index` is sorted by column
-    # TODO: is there any elegant way to avoid `argsort`?    
+    # TODO: is there any elegant way to avoid `argsort`?
     ix = torch.argsort(edge_index[1])
     edge_index = edge_index[:, ix]
     row, col = edge_index
     x_j = x[row]
-    
+
     if edge_weight is not None:
         x_j = x_j * edge_weight[ix].unsqueeze(-1)
 

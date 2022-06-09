@@ -4,13 +4,18 @@ import torch.nn as nn
 
 
 class Sequential(nn.Sequential):
-    """A modified :class:`torch.nn.Sequential` which can take multiple inputs.
+    """A modified :class:`torch.nn.Sequential` which can accept multiple inputs.
+
+    Parameters
+    ----------
+    loc : int, optional
+        the location of feature input :obj:`x`, by default 0    
 
     Example
     -------
     >>> import torch
     >>> from graphwar.nn.layers import Sequential, GCNConv
-    >>>
+
     >>> edge_index = torch.LongTensor([[1, 2], [3,4]]) # size [2, M]
     >>> x = torch.randn(5, 20)
 
@@ -52,10 +57,10 @@ class Sequential(nn.Sequential):
     Note
     ----
     * The argument :obj:`loc` must be specified as the location of feature input :obj:`x`,  which would walk through the whole layers.
-    * The usage of keyword argument must be matched with that of the layers  with more than one arguments required.
+    * The usage of keyword argument must be matched with that of the layers with more than one arguments required.
     """
 
-    def __init__(self, *args, loc=0):
+    def __init__(self, *args, loc: int = 0):
         super().__init__(*args)
         self.loc = loc
         para_required = []

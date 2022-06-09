@@ -113,8 +113,8 @@
 
 
 <div class="viewcode-block" id="CKA"><a class="viewcode-back" href="../../../modules/utils.html#graphwar.utils.CKA">[docs]</a><span class="k">class</span> <span class="nc">CKA</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Centered Kernel Alignment (CKA) metric, where the features of the networks are compared.</span>
-<span class="sd">    See https://github.com/AntixK/PyTorch-Model-Compare</span>
+    <span class="sd">&quot;&quot;&quot;Centered Kernel Alignment (CKA) metric, </span>
+<span class="sd">    where the features of the networks are compared.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -141,6 +141,11 @@
 <span class="sd">    &gt;&gt;&gt; cka = CKA(m1, m2)</span>
 <span class="sd">    &gt;&gt;&gt; cka.compare(data)</span>
 <span class="sd">    &gt;&gt;&gt; cka.plot_results()    </span>
+
+<span class="sd">    Reference</span>
+<span class="sd">    ---------</span>
+<span class="sd">    * Paper: https://arxiv.org/abs/2010.15327</span>
+<span class="sd">    * Code: https://github.com/AntixK/PyTorch-Model-Compare</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>

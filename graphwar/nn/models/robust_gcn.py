@@ -6,21 +6,54 @@ from graphwar.utils import wrapper
 
 
 class RobustGCN(nn.Module):
-    """Robust Graph Convolution Network (RobustGCN). 
+    r"""Robust graph convolutional network (RobustGCN)
+    from the `"Robust Graph Convolutional Networks 
+    Against Adversarial Attacks"
+    <http://pengcui.thumedialab.com/papers/RGCN.pdf>`_ paper (KDD'19)
 
-    Example
-    -------
-    # RobustGCN with one hidden layer
-    >>> model = RobustGCN(100, 10)
-    # RobustGCN with two hidden layers
-    >>> model = RobustGCN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
-    # RobustGCN with two hidden layers, without activation at the first layer
-    >>> model = RobustGCN(100, 10, hids=[32, 16], acts=[None, 'relu'])
+    Parameters
+    ----------
+    in_channels : int, 
+        the input dimensions of model
+    out_channels : int, 
+        the output dimensions of model
+    hids : list, optional
+        the number of hidden units for each hidden layer, by default [32]
+    acts : list, optional
+        the activation function for each hidden layer, by default ['relu']
+    dropout : float, optional
+        the dropout ratio of model, by default 0.5
+    bias : bool, optional
+        whether to use bias in the layers, by default True
+    gamma : float, optional
+        the scale of attention on the variances, by default 1.0       
+    bn: bool, optional
+        whether to use :class:`BatchNorm1d` after the convolution layer, by default False   
 
     Note
     ----
-    please make sure `hids` and `acts` are both `list` or `tuple` and
-    `len(hids)==len(acts)`.
+    It is convenient to extend the number of layers with different or the same
+    hidden units (activation functions) using :meth:`graphwar.utils.wrapper`. 
+
+    See Examples below:
+
+    Examples
+    --------
+    >>> # RobustGCN with one hidden layer
+    >>> model = RobustGCN(100, 10)
+
+    >>> # RobustGCN with two hidden layers
+    >>> model = RobustGCN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
+
+    >>> # RobustGCN with two hidden layers, without activation at the first layer
+    >>> model = RobustGCN(100, 10, hids=[32, 16], acts=[None, 'relu'])
+
+    >>> # RobustGCN with very deep architectures, each layer has elu as activation function
+    >>> model = RobustGCN(100, 10, hids=[16]*8, acts=['elu'])
+
+    See also
+    --------
+    :class:`graphwar.nn.layers.RobustConv`    
 
     """
 
@@ -31,27 +64,9 @@ class RobustGCN(nn.Module):
                  hids: list = [32],
                  acts: list = ['relu'],
                  dropout: float = 0.5,
-                 bn: bool = False,
                  bias: bool = True,
-                 gamma: float = 1.0):
-        r"""
-        Parameters
-        ----------
-        in_channels : int, 
-            the input dimensions of model
-        out_channels : int, 
-            the output dimensions of model
-        hids : list, optional
-            the number of hidden units of each hidden layer, by default [32]
-        acts : list, optional
-            the activation function of each hidden layer, by default ['relu']
-        dropout : float, optional
-            the dropout ratio of model, by default 0.5
-        bias : bool, optional
-            whether to use bias in the layers, by default True
-        gamma : float, optional
-            the attention weight, by default 1.0
-        """
+                 gamma: float = 1.0,
+                 bn: bool = False,):
 
         super().__init__()
 
@@ -86,6 +101,7 @@ class RobustGCN(nn.Module):
         self.cache_clear()
 
     def cache_clear(self):
+        """Clear cached inputs or intermediate results."""
         self.mean = self.var = None
         return self
 

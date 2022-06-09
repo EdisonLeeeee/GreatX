@@ -15,6 +15,38 @@ from graphwar.nn.layers.gcn_conv import dense_gcn_norm
 
 
 class SATConv(nn.Module):
+    r"""The spectral adversarial training operator
+    from the `"Spectral Adversarial Training for Robust Graph Neural Network"
+    <https://arxiv.org/>`_ paper (arXiv'22)
+
+    Parameters
+    ----------
+    in_channels : int
+        dimensions of int samples
+    out_channels : int
+        dimensions of output samples
+    add_self_loops : bool, optional
+        whether to add self-loops to the input graph, by default True
+    normalize : bool, optional
+        whether to compute symmetric normalization
+        coefficients on the fly, by default True
+    bias : bool, optional
+        whether to use bias in the layers, by default True    
+
+    Note
+    ----
+    For the inputs :obj:`x`, :obj:`U`, and :obj:`V`,
+    our implementation supports:
+
+    * :obj:`U` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`
+    * :obj:`U` is :class:`torch.FloatTensor` and :obj:`V` is :obj:`None`: dense matrix with shape :obj:`[N, N]`
+    * :obj:`U` and :obj:`V` are :class:`torch.FloatTensor`: eigenvector and corresponding eigenvalues           
+
+    See also
+    --------
+    :class:`graphwar.nn.models.SAT`       
+    """
+
     def __init__(self, in_channels: int, out_channels: int,
                  add_self_loops: bool = True,
                  normalize: bool = True,
@@ -46,8 +78,8 @@ class SATConv(nn.Module):
         if is_edge_like:
             edge_index, edge_weight = U, V
             if self.add_self_loops:
-                edge_index, edge_weight = add_self_loops(edge_index, edge_weight, 
-                                                         num_nodes=x.size(0))            
+                edge_index, edge_weight = add_self_loops(edge_index, edge_weight,
+                                                         num_nodes=x.size(0))
             if self.normalize:
                 edge_index, edge_weight = gcn_norm(  # yapf: disable
                     edge_index, edge_weight, x.size(0), False,

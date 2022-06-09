@@ -118,11 +118,55 @@
 
 
 <div class="viewcode-block" id="GCNConv"><a class="viewcode-back" href="../../../../modules/nn.html#graphwar.nn.layers.GCNConv">[docs]</a><span class="k">class</span> <span class="nc">GCNConv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;The graph convolutional operator from the `&quot;Semi-supervised</span>
+<span class="sd">    Classification with Graph Convolutional Networks&quot;</span>
+<span class="sd">    &lt;https://arxiv.org/abs/1609.02907&gt;`_ paper (ICLR&#39;17)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels : int</span>
+<span class="sd">        dimensions of int samples</span>
+<span class="sd">    out_channels : int</span>
+<span class="sd">        dimensions of output samples</span>
+<span class="sd">    improved : bool, optional</span>
+<span class="sd">        whether the layer computes</span>
+<span class="sd">        :math:`\mathbf{\hat{A}}` as :math:`\mathbf{A} + 2\mathbf{I}`, </span>
+<span class="sd">        by default False</span>
+<span class="sd">    cached : bool, optional (*UNUSED*)</span>
+<span class="sd">        whether the layer will cache</span>
+<span class="sd">        the computation of :math:`\mathbf{\hat{D}}^{-1/2} \mathbf{\hat{A}}</span>
+<span class="sd">        \mathbf{\hat{D}}^{-1/2}` on first execution, and will use the</span>
+<span class="sd">        cached version for further executions, by default False</span>
+<span class="sd">    add_self_loops : bool, optional</span>
+<span class="sd">        whether to add self-loops to the input graph, by default True</span>
+<span class="sd">    normalize : bool, optional</span>
+<span class="sd">        whether to compute symmetric normalization</span>
+<span class="sd">        coefficients on the fly, by default True</span>
+<span class="sd">    bias : bool, optional</span>
+<span class="sd">        whether to use bias in the layers, by default True    </span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    Different from that in :class:`torch_geometric`, </span>
+<span class="sd">    for the inputs :obj:`x`, :obj:`edge_index`, and :obj:`edge_weight`,</span>
+<span class="sd">    our implementation supports:</span>
+
+<span class="sd">    * :obj:`edge_index` is :class:`torch.FloatTensor`: dense adjacency matrix with shape :obj:`[N, N]`</span>
+<span class="sd">    * :obj:`edge_index` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`</span>
+<span class="sd">    * :obj:`edge_index` is :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`   </span>
+
+<span class="sd">    In addition, the argument :obj:`cached` is unused. We add this argument </span>
+<span class="sd">    to be compatible with :class:`torch_geometric`.</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :class:`graphwar.nn.models.GCN`         </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">out_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                  <span class="n">improved</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">cached</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                  <span class="n">add_self_loops</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                  <span class="n">bias</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">in_channels</span> <span class="o">=</span> <span class="n">in_channels</span>

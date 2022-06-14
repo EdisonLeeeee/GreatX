@@ -30,7 +30,7 @@ width = 5
 #                      Before Attack                                 #
 # ================================================================== #
 trainer_before = Trainer(
-    GCN(dataset.num_features, dataset.num_classes, bias=False), device=device)
+    GCN(dataset.num_features, dataset.num_classes, bias=False, acts=None), device=device)
 ckp = ModelCheckpoint('model_before.pth', monitor='val_acc')
 trainer_before.fit({'data': data, 'mask': splits.train_nodes},
                    {'data': data, 'mask': splits.val_nodes}, callbacks=[ckp])

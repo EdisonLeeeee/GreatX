@@ -138,7 +138,8 @@ class SGAttack(TargetedAttacker, Surrogate):
     def get_top_attackers(self, subgraph, target, target_label, best_wrong_label, num_attackers):
         non_edge_grad, _ = self.compute_gradients(
             subgraph, target, target_label, best_wrong_label)
-        _, index = torch.topk(non_edge_grad, k=num_attackers, sorted=False)
+        _, index = torch.topk(non_edge_grad, k=min(
+            num_attackers, non_edge_grad.size(0)), sorted=False)
         attacker_nodes = subgraph.non_edges[1][index]
         return attacker_nodes.tolist()
 

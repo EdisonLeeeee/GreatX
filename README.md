@@ -188,6 +188,8 @@ In detail, the following methods are currently implemented:
 | **SVDPurification**     | *Entezari et al.* [All You Need Is Low (Rank): Defending Against Adversarial Attacks on Graphs](https://arxiv.org/abs/1903.01610), *WSDM'20* | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/defense/gcn_svd.py)           |
 | **GNNGUARD**            | *Zhang et al.* [GNNGUARD: Defending Graph Neural Networks against Adversarial Attacks](https://arxiv.org/abs/2006.08149), *NeurIPS'20*       | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/defense/gnn_guard.py)         |
 | **GUARD**               | *Li et al.* [GUARD: Graph Universal Adversarial Defense](https://arxiv.org/abs/2204.09803), *arXiv'22*                                       | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/defense/universal_defense.py) |
+| **FeaturePropagation**               | *Rossi et al.* [On the Unreasonable Effectiveness of Feature propagation in Learning on Graphs with Missing Node Features](https://arxiv.org/abs/2111.12128), *ICLR'21*                                       | [[**Example**]](https://github.com/EdisonLeeeee/GraphWar/blob/master/examples/defense/feature_propagation.py) |
+
 
 More details of literatures and the official codes can be found at [Awesome Graph Adversarial Learning](https://github.com/gitgiter/Graph-Adversarial-Learning).
 ## Others

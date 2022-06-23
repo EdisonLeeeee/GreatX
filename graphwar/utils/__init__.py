@@ -10,6 +10,7 @@ from .ego_graph import ego_graph
 from .overlap import overlap
 from .modification import remove_edges, add_edges, flip_edges
 from .scipy_sparse import scipy_normalize
+from .missing_feature import MissingFeature
 
 classes = __all__ = ['Progbar', 'BunchDict', 'CKA', 'topk', 'wrapper',
                      'repeat', 'split_nodes', 'split_nodes_by_classes',
@@ -18,4 +19,4 @@ classes = __all__ = ['Progbar', 'BunchDict', 'CKA', 'topk', 'wrapper',
                      "LikelihoodFilter", "singleton_mask",
                      'add_edges', 'remove_edges', 'flip_edges',
                      'scipy_normalize', 'normalize',
-                     'overlap', 'ego_graph']
+                     'overlap', 'ego_graph', 'MissingFeature']

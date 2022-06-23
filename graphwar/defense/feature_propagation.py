@@ -30,6 +30,14 @@ class FeaturePropagation(BaseTransform):
     add_self_loops : bool, optional
         whether to add self-loops to the input graph, by default True
         
+    Example
+    -------
+    >>> data = ... # PyG-like data
+    >>> data = FeaturePropagation()(data)
+    
+    >>> # missing_mask is a mask `[num_nodes, num_features]` indicating where the feature is missing
+    >>> data = FeaturePropagation(missing_mask=missing_mask)(data)
+        
     Reference
     ---------
     * https://github.com/twitter-research/feature-propagation

@@ -1,24 +1,17 @@
-from typing import Optional
-from copy import copy
-
 import torch
-from torch import Tensor
-from torch_geometric.utils import add_self_loops
-from torch_geometric.nn.conv.gcn_conv import gcn_norm
 
 from torch_geometric.data import Data
 from torch_geometric.transforms import BaseTransform
-from graphwar.functional import spmm
 
 
 class MissingFeature(BaseTransform):
-    r"""Implementation of `MissingFeature`
+    r"""Implementation of :class:`MissingFeature`
     from the `"On the Unreasonable Effectiveness 
     of Feature propagation in Learning 
     on Graphs with Missing Node Features"
     <https://arxiv.org/abs/2111.12128>`_ paper (ICLR'21)
     
-    `MissingFeature` generates missing feature mask 
+    :class:`MissingFeature` generates missing feature mask 
     indicating whether each feature is present or missing.
     according differemt stractegies.
     
@@ -38,8 +31,8 @@ class MissingFeature(BaseTransform):
     missing_value : float, optional
         value to fill missing features, by default float("nan")    
 
-    Reference
-    ---------
+    Reference:
+    
     * https://github.com/twitter-research/feature-propagation
         
     """
@@ -47,15 +40,13 @@ class MissingFeature(BaseTransform):
     def __init__(self, missing_rate: float = 0.5, 
                  missing_type: str = 'uniform', 
                  missing_value : float = float("nan")):
-        super().__init__()
         assert missing_type in ("uniform", "structural"), missing_type
+        assert missing_rate < 1, missing_rate
         self.missing_rate = missing_rate
         self.missing_type = missing_type
         self.missing_value = missing_value
 
-    def __call__(self, data: Data, inplace: bool = True) -> Data:
-        if not inplace:
-            data = copy(data)
+    def __call__(self, data: Data) -> Data:
             
         num_nodes, num_features = data.x.size()
         if self.missing_type == "structural":  # either remove all of a nodes features or none

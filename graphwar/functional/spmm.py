@@ -8,7 +8,7 @@ from torch_scatter import scatter
 def spmm(x: Tensor, edge_index: Tensor,
          edge_weight: Optional[Tensor] = None,
          reduce: str = 'sum') -> Tensor:
-    """Sparse matrix multiplication using :class:`torch_scatter`.
+    r"""Sparse matrix multiplication using :class:`torch_scatter`.
 
     Parameters
     ----------
@@ -34,7 +34,7 @@ def spmm(x: Tensor, edge_index: Tensor,
 
     >>> x = torch.randn(5,2)
     >>> edge_index = torch.LongTensor([[1,2], [3,4]])
-    >>> spmm(x, edge_index)
+    >>> spmm(x, edge_index, reduce='sum')
 
     >>> # which is equivalent to:
     >>> A = torch.zeros(5,5)

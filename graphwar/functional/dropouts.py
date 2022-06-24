@@ -13,7 +13,7 @@ from torch_geometric.utils.num_nodes import maybe_num_nodes
 
 def drop_edge(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
               p: float = 0.5, training: bool = True) -> Tuple[Tensor, Tensor]:
-    """
+    r"""
     DropEdge: Sampling edge using a uniform distribution 
     from the `"DropEdge: Towards Deep Graph Convolutional 
     Networks on Node Classification" <https://arxiv.org/abs/1907.10903>`_

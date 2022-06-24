@@ -1,5 +1,4 @@
 from typing import Optional
-from copy import copy
 
 import torch
 from torch import Tensor
@@ -33,13 +32,13 @@ class FeaturePropagation(BaseTransform):
     Example
     -------
     >>> data = ... # PyG-like data
-    >>> data = FeaturePropagation()(data)
+    >>> data = FeaturePropagation(num_iterations=40)(data)
     
     >>> # missing_mask is a mask `[num_nodes, num_features]` indicating where the feature is missing
     >>> data = FeaturePropagation(missing_mask=missing_mask)(data)
         
-    Reference
-    ---------
+    Reference:
+    
     * https://github.com/twitter-research/feature-propagation
         
     """
@@ -53,19 +52,20 @@ class FeaturePropagation(BaseTransform):
         self.normalize = normalize
         self.add_self_loops = add_self_loops
 
-    def __call__(self, data: Data, inplace: bool = True) -> Data:
-        if not inplace:
-            data = copy(data)
+    def __call__(self, data: Data) -> Data:
             
         # out is inizialized to 0 for missing values. However, 
         # its initialization does not matter for the final
         # value at convergence
-        out = x = data.x
-        known_feature_mask = missing_mask = self.missing_mask
+        x = data.x
+        known_feature_mask = None
+        missing_mask = self.missing_mask
         if missing_mask is not None:
             out = torch.zeros_like(x)
             known_feature_mask = ~missing_mask
             out[known_feature_mask] = x[known_feature_mask]
+        else:
+            out = x.clone()
 
         edge_index, edge_weight = data.edge_index, data.edge_weight
         

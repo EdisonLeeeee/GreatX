@@ -17,10 +17,11 @@ dataset = GraphWarDataset(root='~/data/pygdata', name='cora',
 
 
 data = dataset[0]
-data = FeaturePropagation(missing_mask=data.missing_mask)(data)
-splits = split_nodes(data.y, random_state=15)
-
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+data = data.to(device)
+data = FeaturePropagation(missing_mask=data.missing_mask)(data)
+splits = split_nodes(data.y.cpu(), random_state=15)
+
 model = GCN(dataset.num_features, dataset.num_classes)
 trainer = Trainer(model, device=device)
 ckp = ModelCheckpoint('model.pth', monitor='val_acc')

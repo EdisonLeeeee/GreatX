@@ -12,7 +12,11 @@ from graphwar.utils import remove_edges
 
 
 class UniversalDefense(torch.nn.Module):
-    """Base class for graph universal defense"""
+    r"""Base class for graph universal defense
+    from the `"Graph Universal Adversarial Defense"
+    <https://arxiv.org/abs/2204.09803>`_ paper (arXiv'22)
+    
+    """
 
     def __init__(self, device: str = "cpu"):
         super().__init__()
@@ -105,7 +109,10 @@ class UniversalDefense(torch.nn.Module):
 
 
 class GUARD(UniversalDefense, Surrogate):
-    """Graph Universal Adversarial Defense (GUARD)
+    r"""Implementation of Graph Universal Adversarial 
+    Defense (GUARD) from the `"Graph Universal 
+    Adversarial Defense"
+    <https://arxiv.org/abs/2204.09803>`_ paper (arXiv'22)
 
     Parameters
     ----------
@@ -174,8 +181,11 @@ class GUARD(UniversalDefense, Surrogate):
 
 
 class DegreeGUARD(UniversalDefense):
-    """Graph Universal Defense based on node degrees
-
+    r"""Implementation of Graph Universal Defense 
+    based on node degrees from the `"Graph Universal 
+    Adversarial Defense"
+    <https://arxiv.org/abs/2204.09803>`_ paper (arXiv'22)
+    
     Parameters
     ----------
     data : Data
@@ -202,7 +212,10 @@ class DegreeGUARD(UniversalDefense):
 
 
 class RandomGUARD(UniversalDefense):
-    """Graph Universal Defense based on random choice
+    r"""Implementation of Graph Universal Defense 
+    based on random choices from the `"Graph Universal 
+    Adversarial Defense"
+    <https://arxiv.org/abs/2204.09803>`_ paper (arXiv'22)
 
     Parameters
     ----------

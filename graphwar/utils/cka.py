@@ -50,8 +50,8 @@ class CKA:
     >>> cka.compare(data)
     >>> cka.plot_results()    
 
-    Reference
-    ---------
+    Reference:
+    
     * Paper: https://arxiv.org/abs/2010.15327
     * Code: https://github.com/AntixK/PyTorch-Model-Compare
     """

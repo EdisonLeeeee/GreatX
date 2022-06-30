@@ -1,13 +1,13 @@
 # **GREATX**: A Graph Reliability Toolbox
 
 <p align="center">
-  <img width = "600" height = "180" src="https://github.com/EdisonLeeeee/GREATX/blob/master/imgs/greatx.png" alt="banner"/>
+  <img width = "600" height = "150" src="https://github.com/EdisonLeeeee/GREATX/blob/master/imgs/greatx.png" alt="banner"/>
   <br/>
 </p>
 <p align="center">GREATX is great!</p>
 
 <p align=center>
-  <a href="https://greatx.readthedocs.io/en/latest">
+  <a href="https://greatx.readthedocs.io/en/latest/">
     [Documentation]
   </a>         
   |
@@ -38,7 +38,7 @@ It means reliability/robustness against the following threats:
 + Distribution Shift
 + Adversarial Attacks
 
-For more details, See [Recent Advances in Reliable Deep Graph Learning: Adversarial Attack, Inherent Noise, and Distribution Shift](https://arxiv.org/abs/2202.07114)
+For more details, please refer to our paper [**Recent Advances in Reliable Deep Graph Learning: Adversarial Attack, Inherent Noise, and Distribution Shift**](https://arxiv.org/abs/2202.07114)
 
 
 

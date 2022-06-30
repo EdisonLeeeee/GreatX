@@ -49,7 +49,7 @@ _DATASETS = {
 
 
 class GraphDataset(InMemoryDataset):
-    r"""A series of datasets used in GREATX. These datasets are
+    r"""A series of datasets used in GreatX. These datasets are
     stored in :obj:`.npz` format, consisting of a single graph.
 
     Parameters
@@ -103,11 +103,11 @@ class GraphDataset(InMemoryDataset):
 
     @property
     def raw_dir(self) -> str:
-        return osp.join(self.root, f"GREATX-{self.name}", 'raw')
+        return osp.join(self.root, f"GreatX-{self.name}", 'raw')
 
     @property
     def processed_dir(self) -> str:
-        return osp.join(self.root, f"GREATX-{self.name}", 'processed')
+        return osp.join(self.root, f"GreatX-{self.name}", 'processed')
 
     @property
     def raw_file_names(self) -> str:
@@ -133,4 +133,4 @@ class GraphDataset(InMemoryDataset):
         return list(_DATASETS)
 
     def __repr__(self) -> str:
-        return f'GREATX-{self.name.capitalize()}'
+        return f'GreatX-{self.name.capitalize()}'

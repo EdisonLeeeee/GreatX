@@ -1,6 +1,6 @@
-:github_url: https://github.com/EdisonLeeeee/GREATX
+:github_url: https://github.com/EdisonLeeeee/GreatX
 
-Welcome to GREATX's documentation!
+Welcome to GreatX's documentation!
 =========================================
 .. image:: ../../imgs/greatx.png
 

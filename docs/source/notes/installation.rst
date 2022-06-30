@@ -4,12 +4,12 @@ Installation
 
 #. Install package
 
-   Install the newest GREATX:
+   Install the newest GreatX:
 
     .. code-block:: bash
     
         # Recommended
-        git clone https://github.com/EdisonLeeeee/GREATX.git && cd GREATX
+        git clone https://github.com/EdisonLeeeee/GreatX.git && cd GreatX
         pip install -e . --verbose
 
    Or install via pip (may not contain all the new features)
@@ -21,4 +21,4 @@ Installation
 
 .. note::
     If you meet any installation problem, feel free to open an issue
-    in the our github `page <https://github.com/EdisonLeeeee/GREATX/issues>`_
+    in the our github `page <https://github.com/EdisonLeeeee/GreatX/issues>`_

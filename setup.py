@@ -19,7 +19,7 @@ def get_version():
 
 
 VERSION = get_version()
-url = 'https://github.com/EdisonLeeeee/GREATX'
+url = 'https://github.com/EdisonLeeeee/GreatX'
 
 
 install_requires = [

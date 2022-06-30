@@ -112,13 +112,13 @@ def setup_logger(
     return logger
 
 
-def get_logger(name: str = "GREATX"):
+def get_logger(name: str = "GreatX"):
     """Get a logger for a given name.
 
     Parameters
     ----------
     name : str, optional
-        name of the logger, by default "GREATX"
+        name of the logger, by default "GreatX"
 
     Returns
     -------

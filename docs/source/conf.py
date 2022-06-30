@@ -23,7 +23,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 author = 'Jintang Li'
-project = 'GREATX'
+project = 'GreatX'
 copyright = '{}, {}'.format(datetime.datetime.now().year, author)
 
 version = greatx.__version__

@@ -16,7 +16,7 @@ def check():
         is_outdated, latest = check_outdated('greatx', __version__)
         if is_outdated:
             logging.warning(
-                f'The GREATX package is out of date. Your version is '
+                f'The GreatX package is out of date. Your version is '
                 f'{__version__}, while the latest version is {latest}.')
     except Exception:
         pass

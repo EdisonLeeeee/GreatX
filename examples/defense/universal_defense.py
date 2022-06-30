@@ -1,7 +1,7 @@
 import torch
 import torch_geometric.transforms as T
 
-from graphwar.dataset import GraphWarDataset
+from graphwar.dataset import GraphDataset
 from graphwar import set_seed
 from graphwar.nn.models import GCN
 from graphwar.training import Trainer
@@ -9,8 +9,8 @@ from graphwar.training.callbacks import ModelCheckpoint
 from graphwar.utils import split_nodes
 from graphwar.defense import GUARD, RandomGUARD, DegreeGUARD
 
-dataset = GraphWarDataset(root='~/data/pygdata', name='cora',
-                          transform=T.LargestConnectedComponents())
+dataset = GraphDataset(root='~/data/pygdata', name='cora',
+                       transform=T.LargestConnectedComponents())
 
 data = dataset[0]
 splits = split_nodes(data.y, random_state=15)

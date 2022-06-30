@@ -1,7 +1,7 @@
 import torch
 import torch_geometric.transforms as T
 
-from graphwar.dataset import GraphWarDataset
+from graphwar.dataset import GraphDataset
 from graphwar import set_seed
 from graphwar.nn.models import GCN
 from graphwar.training import Trainer
@@ -10,10 +10,10 @@ from graphwar.utils import split_nodes, MissingFeature
 from graphwar.defense import FeaturePropagation
 
 set_seed(123)
-dataset = GraphWarDataset(root='~/data/pygdata', name='cora',
-                          transform=T.Compose([T.LargestConnectedComponents(), 
-                                               MissingFeature(missing_rate=0.5) # here we generate 50% missing features
-                                               ]))
+dataset = GraphDataset(root='~/data/pygdata', name='cora',
+                       transform=T.Compose([T.LargestConnectedComponents(),
+                                            MissingFeature(missing_rate=0.5)  # here we generate 50% missing features
+                                            ]))
 
 
 data = dataset[0]

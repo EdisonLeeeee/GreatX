@@ -12,10 +12,10 @@ class RandomInjection(InjectionAttacker):
 
     Example
     -------
-    >>> from graphwar.dataset import GraphWarDataset
+    >>> from graphwar.dataset import GraphDataset
     >>> import torch_geometric.transforms as T
 
-    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+    >>> dataset = GraphDataset(root='~/data/pygdata', name='cora', 
                           transform=T.LargestConnectedComponents())
     >>> data = dataset[0]
 
@@ -48,7 +48,7 @@ class RandomInjection(InjectionAttacker):
                num_edges_global: Optional[int] = None,
                num_edges_local: Optional[int] = None,
                feat_limits: Optional[Union[tuple, dict]] = None,
-               feat_budgets:  Optional[int] = None,
+               feat_budgets: Optional[int] = None,
                disable: bool = False) -> "RandomInjection":
         """Base method that describes the adversarial injection attack
 
@@ -94,7 +94,7 @@ class RandomInjection(InjectionAttacker):
 
         candidate_nodes = self.targets.tolist()
 
-        for injected_node in tqdm(range(self.num_nodes, self.num_nodes+self.num_budgets),
+        for injected_node in tqdm(range(self.num_nodes, self.num_nodes + self.num_budgets),
                                   desc="Injecting nodes...",
                                   disable=disable):
             sampled = np.random.choice(

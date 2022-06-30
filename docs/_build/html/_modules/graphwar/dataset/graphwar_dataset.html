@@ -140,7 +140,7 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="GraphWarDataset"><a class="viewcode-back" href="../../../modules/dataset.html#graphwar.dataset.GraphWarDataset">[docs]</a><span class="k">class</span> <span class="nc">GraphWarDataset</span><span class="p">(</span><span class="n">InMemoryDataset</span><span class="p">):</span>
+<div class="viewcode-block" id="GraphDataset"><a class="viewcode-back" href="../../../modules/dataset.html#graphwar.dataset.GraphDataset">[docs]</a><span class="k">class</span> <span class="nc">GraphDataset</span><span class="p">(</span><span class="n">InMemoryDataset</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;A series of datasets used in GraphWar. These datasets are</span>
 <span class="sd">    stored in :obj:`.npz` format, consisting of a single graph.</span>
 
@@ -164,13 +164,13 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphWarDataset</span>
+<span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphDataset</span>
 <span class="sd">    &gt;&gt;&gt; import torch_geometric.transforms as T</span>
 
-<span class="sd">    &gt;&gt;&gt; GraphWarDataset.available_datasets() # see all available datasets.</span>
+<span class="sd">    &gt;&gt;&gt; GraphDataset.available_datasets() # see all available datasets.</span>
 <span class="sd">    [&#39;cora&#39;, &#39;citeseer&#39;, &#39;pubmed&#39;, ...]</span>
 
-<span class="sd">    &gt;&gt;&gt; dataset = GraphWarDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
+<span class="sd">    &gt;&gt;&gt; dataset = GraphDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
 <span class="sd">                          transform=T.LargestConnectedComponents())</span>
 <span class="sd">    &gt;&gt;&gt; data = dataset[0] # there is only one graph</span>
 
@@ -218,7 +218,7 @@
         <span class="n">data</span><span class="p">,</span> <span class="n">slices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collate</span><span class="p">([</span><span class="n">data</span><span class="p">])</span>
         <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="n">slices</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">processed_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-<div class="viewcode-block" id="GraphWarDataset.available_datasets"><a class="viewcode-back" href="../../../modules/dataset.html#graphwar.dataset.GraphWarDataset.available_datasets">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GraphDataset.available_datasets"><a class="viewcode-back" href="../../../modules/dataset.html#graphwar.dataset.GraphDataset.available_datasets">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">available_datasets</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Return all available datasets.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

@@ -20,10 +20,10 @@ class LGCBackdoor(BackdoorAttacker):
 
     Example
     -------
-    >>> from graphwar.dataset import GraphWarDataset
+    >>> from graphwar.dataset import GraphDataset
     >>> import torch_geometric.transforms as T
 
-    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+    >>> dataset = GraphDataset(root='~/data/pygdata', name='cora', 
                           transform=T.LargestConnectedComponents())
     >>> data = dataset[0]
 
@@ -94,10 +94,10 @@ class FGBackdoor(BackdoorAttacker, Surrogate):
 
     Example
     -------
-    >>> from graphwar.dataset import GraphWarDataset
+    >>> from graphwar.dataset import GraphDataset
     >>> import torch_geometric.transforms as T
 
-    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+    >>> dataset = GraphDataset(root='~/data/pygdata', name='cora', 
                           transform=T.LargestConnectedComponents())
     >>> data = dataset[0]
 

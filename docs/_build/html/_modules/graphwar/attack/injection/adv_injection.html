@@ -109,10 +109,10 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphWarDataset</span>
+<span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphDataset</span>
 <span class="sd">    &gt;&gt;&gt; import torch_geometric.transforms as T</span>
 
-<span class="sd">    &gt;&gt;&gt; dataset = GraphWarDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
+<span class="sd">    &gt;&gt;&gt; dataset = GraphDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
 <span class="sd">                          transform=T.LargestConnectedComponents())</span>
 <span class="sd">    &gt;&gt;&gt; data = dataset[0]</span>
 

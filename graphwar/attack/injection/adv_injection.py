@@ -17,10 +17,10 @@ class AdvInjection(InjectionAttacker, Surrogate):
 
     Example
     -------
-    >>> from graphwar.dataset import GraphWarDataset
+    >>> from graphwar.dataset import GraphDataset
     >>> import torch_geometric.transforms as T
 
-    >>> dataset = GraphWarDataset(root='~/data/pygdata', name='cora', 
+    >>> dataset = GraphDataset(root='~/data/pygdata', name='cora', 
                           transform=T.LargestConnectedComponents())
     >>> data = dataset[0]
 
@@ -56,7 +56,7 @@ class AdvInjection(InjectionAttacker, Surrogate):
                num_edges_global: Optional[int] = None,
                num_edges_local: Optional[int] = None,
                feat_limits: Optional[Union[tuple, dict]] = None,
-               feat_budgets:  Optional[int] = None,
+               feat_budgets: Optional[int] = None,
                disable: bool = False) -> "AdvInjection":
         super().attack(num_budgets, targets=targets,
                        num_edges_global=num_edges_global,
@@ -74,7 +74,7 @@ class AdvInjection(InjectionAttacker, Surrogate):
         feat_budgets = self.feat_budgets
         injected_feats = None
 
-        for injected_node in tqdm(range(self.num_nodes, self.num_nodes+self.num_budgets),
+        for injected_node in tqdm(range(self.num_nodes, self.num_nodes + self.num_budgets),
                                   desc="Injecting nodes...",
                                   disable=disable):
             injected_edge_index = np.stack(
@@ -107,7 +107,7 @@ class AdvInjection(InjectionAttacker, Surrogate):
                 edge_index = torch.cat(
                     [edge_index, injected_edge_index, injected_edge_index.flip(0)], dim=1)
                 edge_weight = torch.cat(
-                    [edge_weight, edge_weight.new_ones(injected_edge_index.size(1)*2)], dim=0)
+                    [edge_weight, edge_weight.new_ones(injected_edge_index.size(1) * 2)], dim=0)
 
                 if feat_budgets is not None:
                     topk = torch.topk(

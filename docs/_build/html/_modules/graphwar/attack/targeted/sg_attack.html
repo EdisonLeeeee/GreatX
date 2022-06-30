@@ -13,6 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -230,7 +231,8 @@
 <div class="viewcode-block" id="SGAttack.get_top_attackers"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.targeted.SGAttack.get_top_attackers">[docs]</a>    <span class="k">def</span> <span class="nf">get_top_attackers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subgraph</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">target_label</span><span class="p">,</span> <span class="n">best_wrong_label</span><span class="p">,</span> <span class="n">num_attackers</span><span class="p">):</span>
         <span class="n">non_edge_grad</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_gradients</span><span class="p">(</span>
             <span class="n">subgraph</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">target_label</span><span class="p">,</span> <span class="n">best_wrong_label</span><span class="p">)</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">non_edge_grad</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">num_attackers</span><span class="p">,</span> <span class="nb">sorted</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">non_edge_grad</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span>
+            <span class="n">num_attackers</span><span class="p">,</span> <span class="n">non_edge_grad</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="nb">sorted</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">attacker_nodes</span> <span class="o">=</span> <span class="n">subgraph</span><span class="o">.</span><span class="n">non_edges</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">index</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">attacker_nodes</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
 

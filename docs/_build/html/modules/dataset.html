@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphwar.dataset &mdash; GraphWar 0.1.0 documentation</title>
+  <title>greatx.dataset &mdash; GREATX 0.1.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="graphwar.attack" href="attack.html" />
-    <link rel="prev" title="graphwar" href="root.html" /> 
+    <link rel="next" title="greatx.attack" href="attack.html" />
+    <link rel="prev" title="greatx" href="root.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -27,8 +27,8 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> GraphWar
-            <img src="../_static/graphwar.png" class="logo" alt="Logo"/>
+            <a href="../index.html" class="icon icon-home"> GREATX
+            <img src="../_static/greatx.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.1.0
@@ -47,9 +47,9 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="root.html">graphwar</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">graphwar.dataset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="attack.html">graphwar.attack</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="root.html">greatx</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">greatx.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attack.html">greatx.attack</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="attack.html#base-classes">Base Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="attack.html#targeted-attacks">Targeted Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="attack.html#untargeted-attacks">Untargeted Attacks</a></li>
@@ -57,15 +57,15 @@
 <li class="toctree-l2"><a class="reference internal" href="attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="defense.html">graphwar.defense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nn.html">graphwar.nn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="nn.html#graphwar-nn-layers">graphwar.nn.layers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nn.html#graphwar-nn-models">graphwar.nn.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="defense.html">greatx.defense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nn.html">greatx.nn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nn.html#greatx-nn-layers">greatx.nn.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nn.html#greatx-nn-models">greatx.nn.models</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="functional.html">graphwar.functional</a></li>
-<li class="toctree-l1"><a class="reference internal" href="training.html">graphwar.training</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">graphwar.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functional.html">greatx.functional</a></li>
+<li class="toctree-l1"><a class="reference internal" href="training.html">greatx.training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">greatx.utils</a></li>
 </ul>
 
         </div>
@@ -74,7 +74,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">GraphWar</a>
+          <a href="../index.html">GREATX</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -82,7 +82,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>graphwar.dataset</li>
+      <li>greatx.dataset</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/modules/dataset.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -92,30 +92,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="graphwar-dataset">
-<h1>graphwar.dataset<a class="headerlink" href="#graphwar-dataset" title="Permalink to this heading">¶</a></h1>
+  <div class="section" id="greatx-dataset">
+<h1>greatx.dataset<a class="headerlink" href="#greatx-dataset" title="Permalink to this heading">¶</a></h1>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.dataset.GraphDataset" title="graphwar.dataset.GraphDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GraphDataset</span></code></a></p></td>
-<td><p>A series of datasets used in GraphWar.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greatx.dataset.GraphDataset" title="greatx.dataset.GraphDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GraphDataset</span></code></a></p></td>
+<td><p>A series of datasets used in GREATX.</p></td>
 </tr>
 </tbody>
 </table>
-<span class="target" id="module-graphwar.dataset"></span><dl class="py class">
-<dt class="sig sig-object py" id="graphwar.dataset.GraphDataset">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GraphDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/dataset/graph_dataset.html#GraphDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.dataset.GraphDataset" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-greatx.dataset"></span><dl class="py class">
+<dt class="sig sig-object py" id="greatx.dataset.GraphDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GraphDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/dataset/graph_dataset.html#GraphDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.dataset.GraphDataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">InMemoryDataset</span></code></p>
-<p>A series of datasets used in GraphWar. These datasets are
+<p>A series of datasets used in GREATX. These datasets are
 stored in <code class="xref py py-obj docutils literal notranslate"><span class="pre">npz</span></code> format, consisting of a single graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>root</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Root directory where the dataset should be saved.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the dataset. See <a class="reference internal" href="#graphwar.dataset.GraphDataset.available_datasets" title="graphwar.dataset.GraphDataset.available_datasets"><code class="xref py py-meth docutils literal notranslate"><span class="pre">available_datasets()</span></code></a>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the dataset. See <a class="reference internal" href="#greatx.dataset.GraphDataset.available_datasets" title="greatx.dataset.GraphDataset.available_datasets"><code class="xref py py-meth docutils literal notranslate"><span class="pre">available_datasets()</span></code></a>
 for all available datasets.</p></li>
 <li><p><strong>transform</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em><em>, </em><em>optional</em>) – A function/transform that takes in an
 <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch_geometric.data.Data</span></code> object and returns a transformed
@@ -129,7 +129,7 @@ being saved to disk, by default None</p></li>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.dataset</span> <span class="kn">import</span> <span class="n">GraphDataset</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">greatx.dataset</span> <span class="kn">import</span> <span class="n">GraphDataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch_geometric.transforms</span> <span class="k">as</span> <span class="nn">T</span>
 </pre></div>
 </div>
@@ -150,8 +150,8 @@ which considers the largest connected component for each graph.</p>
 <p>For more details of these datasets, see <a class="reference external" href="https://github.com/EdisonLeeeee/GraphData">https://github.com/EdisonLeeeee/GraphData</a></p>
 </div>
 <dl class="py method">
-<dt class="sig sig-object py" id="graphwar.dataset.GraphDataset.available_datasets">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">available_datasets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/graphwar/dataset/graph_dataset.html#GraphDataset.available_datasets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.dataset.GraphDataset.available_datasets" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="greatx.dataset.GraphDataset.available_datasets">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">available_datasets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/greatx/dataset/graph_dataset.html#GraphDataset.available_datasets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.dataset.GraphDataset.available_datasets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all available datasets.</p>
 </dd></dl>
 
@@ -163,8 +163,8 @@ which considers the largest connected component for each graph.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="root.html" class="btn btn-neutral float-left" title="graphwar" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="attack.html" class="btn btn-neutral float-right" title="graphwar.attack" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="root.html" class="btn btn-neutral float-left" title="greatx" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="attack.html" class="btn btn-neutral float-right" title="greatx.attack" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

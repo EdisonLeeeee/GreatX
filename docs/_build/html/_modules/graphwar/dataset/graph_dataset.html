@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphwar.dataset.graph_dataset &mdash; GraphWar 0.1.0 documentation</title>
+  <title>greatx.dataset.graph_dataset &mdash; GREATX 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -25,8 +25,8 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> GraphWar
-            <img src="../../../_static/graphwar.png" class="logo" alt="Logo"/>
+            <a href="../../../index.html" class="icon icon-home"> GREATX
+            <img src="../../../_static/greatx.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.1.0
@@ -45,9 +45,9 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/root.html">graphwar</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/dataset.html">graphwar.dataset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/root.html">greatx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/dataset.html">greatx.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">greatx.attack</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#base-classes">Base Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
@@ -55,15 +55,15 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/defense.html">graphwar.defense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/nn.html">graphwar.nn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules/nn.html#graphwar-nn-layers">graphwar.nn.layers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules/nn.html#graphwar-nn-models">graphwar.nn.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/defense.html">greatx.defense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/nn.html">greatx.nn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/nn.html#greatx-nn-layers">greatx.nn.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/nn.html#greatx-nn-models">greatx.nn.models</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/functional.html">graphwar.functional</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/training.html">graphwar.training</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/utils.html">graphwar.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/functional.html">greatx.functional</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/training.html">greatx.training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/utils.html">greatx.utils</a></li>
 </ul>
 
         </div>
@@ -72,7 +72,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">GraphWar</a>
+          <a href="../../../index.html">GREATX</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -81,7 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>graphwar.dataset.graph_dataset</li>
+      <li>greatx.dataset.graph_dataset</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -90,7 +90,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for graphwar.dataset.graph_dataset</h1><div class="highlight"><pre>
+  <h1>Source code for greatx.dataset.graph_dataset</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
@@ -141,8 +141,8 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="GraphDataset"><a class="viewcode-back" href="../../../modules/dataset.html#graphwar.dataset.GraphDataset">[docs]</a><span class="k">class</span> <span class="nc">GraphDataset</span><span class="p">(</span><span class="n">InMemoryDataset</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;A series of datasets used in GraphWar. These datasets are</span>
+<div class="viewcode-block" id="GraphDataset"><a class="viewcode-back" href="../../../modules/dataset.html#greatx.dataset.GraphDataset">[docs]</a><span class="k">class</span> <span class="nc">GraphDataset</span><span class="p">(</span><span class="n">InMemoryDataset</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;A series of datasets used in GREATX. These datasets are</span>
 <span class="sd">    stored in :obj:`.npz` format, consisting of a single graph.</span>
 
 <span class="sd">    Parameters</span>
@@ -165,7 +165,7 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphDataset</span>
+<span class="sd">    &gt;&gt;&gt; from greatx.dataset import GraphDataset</span>
 <span class="sd">    &gt;&gt;&gt; import torch_geometric.transforms as T</span>
 
 <span class="sd">    &gt;&gt;&gt; GraphDataset.available_datasets() # see all available datasets.</span>
@@ -196,11 +196,11 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">raw_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;GraphWar-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;raw&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;GREATX-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;raw&#39;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">processed_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;GraphWar-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;processed&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;GREATX-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;processed&#39;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">raw_file_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -219,14 +219,14 @@
         <span class="n">data</span><span class="p">,</span> <span class="n">slices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collate</span><span class="p">([</span><span class="n">data</span><span class="p">])</span>
         <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="n">slices</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">processed_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
-<div class="viewcode-block" id="GraphDataset.available_datasets"><a class="viewcode-back" href="../../../modules/dataset.html#graphwar.dataset.GraphDataset.available_datasets">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GraphDataset.available_datasets"><a class="viewcode-back" href="../../../modules/dataset.html#greatx.dataset.GraphDataset.available_datasets">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">available_datasets</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Return all available datasets.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">_DATASETS</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;GraphWar-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;GREATX-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span></div>
 </pre></div>
 
            </div>

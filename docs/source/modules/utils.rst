@@ -1,14 +1,14 @@
-graphwar.utils
+greatx.utils
 ===================
 
-.. currentmodule:: graphwar.utils
+.. currentmodule:: greatx.utils
 
 .. autosummary::
     :nosignatures:
-    {% for cls in graphwar.utils.classes %}
+    {% for cls in greatx.utils.classes %}
       {{ cls }}
     {% endfor %}
 
-.. automodule:: graphwar.utils
+.. automodule:: greatx.utils
     :members:
     :undoc-members:

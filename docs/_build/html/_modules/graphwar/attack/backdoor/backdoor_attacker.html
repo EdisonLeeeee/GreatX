@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphwar.attack.backdoor.backdoor_attacker &mdash; GraphWar 0.1.0 documentation</title>
+  <title>greatx.attack.backdoor.backdoor_attacker &mdash; GREATX 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -25,8 +25,8 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> GraphWar
-            <img src="../../../../_static/graphwar.png" class="logo" alt="Logo"/>
+            <a href="../../../../index.html" class="icon icon-home"> GREATX
+            <img src="../../../../_static/greatx.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.1.0
@@ -45,9 +45,9 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/root.html">graphwar</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/dataset.html">graphwar.dataset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/attack.html">graphwar.attack</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/root.html">greatx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/dataset.html">greatx.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/attack.html">greatx.attack</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#base-classes">Base Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
@@ -55,15 +55,15 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">graphwar.defense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.html">graphwar.nn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#graphwar-nn-layers">graphwar.nn.layers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#graphwar-nn-models">graphwar.nn.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">greatx.defense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.html">greatx.nn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#greatx-nn-layers">greatx.nn.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#greatx-nn-models">greatx.nn.models</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/functional.html">graphwar.functional</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/training.html">graphwar.training</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/utils.html">graphwar.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/functional.html">greatx.functional</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/training.html">greatx.training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/utils.html">greatx.utils</a></li>
 </ul>
 
         </div>
@@ -72,7 +72,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../../index.html">GraphWar</a>
+          <a href="../../../../index.html">GREATX</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -81,7 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>graphwar.attack.backdoor.backdoor_attacker</li>
+      <li>greatx.attack.backdoor.backdoor_attacker</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -90,7 +90,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for graphwar.attack.backdoor.backdoor_attacker</h1><div class="highlight"><pre>
+  <h1>Source code for greatx.attack.backdoor.backdoor_attacker</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
 
@@ -98,16 +98,16 @@
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
 
-<span class="kn">from</span> <span class="nn">graphwar.attack.attacker</span> <span class="kn">import</span> <span class="n">Attacker</span>
-<span class="kn">from</span> <span class="nn">graphwar.utils</span> <span class="kn">import</span> <span class="n">add_edges</span>
+<span class="kn">from</span> <span class="nn">greatx.attack.attacker</span> <span class="kn">import</span> <span class="n">Attacker</span>
+<span class="kn">from</span> <span class="nn">greatx.utils</span> <span class="kn">import</span> <span class="n">add_edges</span>
 
 
-<div class="viewcode-block" id="BackdoorAttacker"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.backdoor.BackdoorAttacker">[docs]</a><span class="k">class</span> <span class="nc">BackdoorAttacker</span><span class="p">(</span><span class="n">Attacker</span><span class="p">):</span>
+<div class="viewcode-block" id="BackdoorAttacker"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.backdoor.BackdoorAttacker">[docs]</a><span class="k">class</span> <span class="nc">BackdoorAttacker</span><span class="p">(</span><span class="n">Attacker</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base class for backdoor attacks.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="BackdoorAttacker.reset"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.backdoor.BackdoorAttacker.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BackdoorAttacker&quot;</span><span class="p">:</span>
+<div class="viewcode-block" id="BackdoorAttacker.reset"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.backdoor.BackdoorAttacker.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BackdoorAttacker&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Reset the state of the Attacker</span>
 
 <span class="sd">        Returns</span>
@@ -121,7 +121,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="BackdoorAttacker.attack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.backdoor.BackdoorAttacker.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_budgets</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">targets_class</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BackdoorAttacker&quot;</span><span class="p">:</span>
+<div class="viewcode-block" id="BackdoorAttacker.attack"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.backdoor.BackdoorAttacker.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_budgets</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">targets_class</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BackdoorAttacker&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Base method that describes the adversarial backdoor attack</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -147,10 +147,10 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="BackdoorAttacker.trigger"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.backdoor.BackdoorAttacker.trigger">[docs]</a>    <span class="k">def</span> <span class="nf">trigger</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<div class="viewcode-block" id="BackdoorAttacker.trigger"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.backdoor.BackdoorAttacker.trigger">[docs]</a>    <span class="k">def</span> <span class="nf">trigger</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trigger</span></div>
 
-<div class="viewcode-block" id="BackdoorAttacker.data"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.backdoor.BackdoorAttacker.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_node</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
+<div class="viewcode-block" id="BackdoorAttacker.data"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.backdoor.BackdoorAttacker.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_node</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;return the attacked graph</span>
 
 <span class="sd">        Parameters</span>

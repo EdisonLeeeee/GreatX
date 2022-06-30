@@ -1,14 +1,14 @@
-graphwar.training
+greatx.training
 ===================
 
-.. currentmodule:: graphwar.training
+.. currentmodule:: greatx.training
 
 .. autosummary::
     :nosignatures:
-    {% for cls in graphwar.training.classes %}
+    {% for cls in greatx.training.classes %}
       {{ cls }}
     {% endfor %}
 
-.. automodule:: graphwar.training
+.. automodule:: greatx.training
     :members:
     :undoc-members:

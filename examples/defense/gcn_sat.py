@@ -1,13 +1,13 @@
 import torch
 import torch_geometric.transforms as T
 
-from graphwar.dataset import GraphDataset
-from graphwar import set_seed
-from graphwar.nn.models import SAT
-from graphwar.defense import EigenDecomposition
-from graphwar.training import SATTrainer
-from graphwar.training.callbacks import ModelCheckpoint
-from graphwar.utils import split_nodes
+from greatx.dataset import GraphDataset
+from greatx import set_seed
+from greatx.nn.models import SAT
+from greatx.defense import EigenDecomposition
+from greatx.training import SATTrainer
+from greatx.training.callbacks import ModelCheckpoint
+from greatx.utils import split_nodes
 
 dataset = GraphDataset(root='~/data/pygdata', name='cora',
                        transform=T.Compose([T.LargestConnectedComponents(),

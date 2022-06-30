@@ -1,33 +1,33 @@
-graphwar.nn
+greatx.nn
 ===================
 
-graphwar.nn.layers
+greatx.nn.layers
 ------------------------------------------------
 
-.. currentmodule:: graphwar.nn.layers
+.. currentmodule:: greatx.nn.layers
 
 .. autosummary::
     :nosignatures:
-    {% for cls in graphwar.nn.layers.classes %}
+    {% for cls in greatx.nn.layers.classes %}
       {{ cls }}
     {% endfor %}
 
-.. automodule:: graphwar.nn.layers
+.. automodule:: greatx.nn.layers
     :members:
     :undoc-members:
 
 
-graphwar.nn.models
+greatx.nn.models
 ------------------------------------------------
 
-.. currentmodule:: graphwar.nn.models
+.. currentmodule:: greatx.nn.models
 
 .. autosummary::
     :nosignatures:
-    {% for cls in graphwar.nn.models.classes %}
+    {% for cls in greatx.nn.models.classes %}
       {{ cls }}
     {% endfor %}
 
-.. automodule:: graphwar.nn.models
+.. automodule:: greatx.nn.models
     :members:
     :undoc-members:

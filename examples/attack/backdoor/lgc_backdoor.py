@@ -2,12 +2,12 @@ import torch
 import torch_geometric.transforms as T
 
 from tqdm import tqdm
-from graphwar import set_seed
-from graphwar.dataset import GraphDataset
-from graphwar.nn.models import GCN
-from graphwar.training import Trainer
-from graphwar.training.callbacks import ModelCheckpoint
-from graphwar.utils import split_nodes
+from greatx import set_seed
+from greatx.dataset import GraphDataset
+from greatx.nn.models import GCN
+from greatx.training import Trainer
+from greatx.training.callbacks import ModelCheckpoint
+from greatx.utils import split_nodes
 
 # ================================================================== #
 #                      Load datasets                                 #
@@ -39,7 +39,7 @@ print(f"{count/data.num_nodes:.2%} of nodes are classified as class {target_clas
 # ================================================================== #
 #                      Attacking                                     #
 # ================================================================== #
-from graphwar.attack.backdoor import LGCBackdoor
+from greatx.attack.backdoor import LGCBackdoor
 
 attacker = LGCBackdoor(data, device=device)
 attacker.setup_surrogate(model)

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphwar.attack.targeted.fg_attack &mdash; GraphWar 0.1.0 documentation</title>
+  <title>greatx.attack.targeted.fg_attack &mdash; GREATX 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -25,8 +25,8 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> GraphWar
-            <img src="../../../../_static/graphwar.png" class="logo" alt="Logo"/>
+            <a href="../../../../index.html" class="icon icon-home"> GREATX
+            <img src="../../../../_static/greatx.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.1.0
@@ -45,9 +45,9 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/root.html">graphwar</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/dataset.html">graphwar.dataset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/attack.html">graphwar.attack</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/root.html">greatx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/dataset.html">greatx.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/attack.html">greatx.attack</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#base-classes">Base Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
@@ -55,15 +55,15 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">graphwar.defense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.html">graphwar.nn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#graphwar-nn-layers">graphwar.nn.layers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#graphwar-nn-models">graphwar.nn.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">greatx.defense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.html">greatx.nn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#greatx-nn-layers">greatx.nn.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#greatx-nn-models">greatx.nn.models</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/functional.html">graphwar.functional</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/training.html">graphwar.training</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/utils.html">graphwar.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/functional.html">greatx.functional</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/training.html">greatx.training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/utils.html">greatx.utils</a></li>
 </ul>
 
         </div>
@@ -72,7 +72,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../../index.html">GraphWar</a>
+          <a href="../../../../index.html">GREATX</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -81,7 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>graphwar.attack.targeted.fg_attack</li>
+      <li>greatx.attack.targeted.fg_attack</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -90,7 +90,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for graphwar.attack.targeted.fg_attack</h1><div class="highlight"><pre>
+  <h1>Source code for greatx.attack.targeted.fg_attack</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
@@ -98,13 +98,13 @@
 <span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="kn">import</span> <span class="n">grad</span>
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
-<span class="kn">from</span> <span class="nn">graphwar.attack.targeted.targeted_attacker</span> <span class="kn">import</span> <span class="n">TargetedAttacker</span>
-<span class="kn">from</span> <span class="nn">graphwar.surrogate</span> <span class="kn">import</span> <span class="n">Surrogate</span>
-<span class="kn">from</span> <span class="nn">graphwar.utils</span> <span class="kn">import</span> <span class="n">singleton_mask</span>
-<span class="kn">from</span> <span class="nn">graphwar.functional</span> <span class="kn">import</span> <span class="n">to_dense_adj</span>
+<span class="kn">from</span> <span class="nn">greatx.attack.targeted.targeted_attacker</span> <span class="kn">import</span> <span class="n">TargetedAttacker</span>
+<span class="kn">from</span> <span class="nn">greatx.surrogate</span> <span class="kn">import</span> <span class="n">Surrogate</span>
+<span class="kn">from</span> <span class="nn">greatx.utils</span> <span class="kn">import</span> <span class="n">singleton_mask</span>
+<span class="kn">from</span> <span class="nn">greatx.functional</span> <span class="kn">import</span> <span class="n">to_dense_adj</span>
 
 
-<div class="viewcode-block" id="FGAttack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.targeted.FGAttack">[docs]</a><span class="k">class</span> <span class="nc">FGAttack</span><span class="p">(</span><span class="n">TargetedAttacker</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>
+<div class="viewcode-block" id="FGAttack"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.targeted.FGAttack">[docs]</a><span class="k">class</span> <span class="nc">FGAttack</span><span class="p">(</span><span class="n">TargetedAttacker</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Implementation of `FGA` attack from the: </span>
 <span class="sd">    `&quot;Fast Gradient Attack on Network Embedding&quot; </span>
 <span class="sd">    &lt;https://arxiv.org/abs/1809.02797&gt;`_ paper (arXiv&#39;18)</span>
@@ -120,7 +120,7 @@
 <span class="sd">    name : Optional[str], optional</span>
 <span class="sd">        name of the attacker, if None, it would be :obj:`__class__.__name__`, </span>
 <span class="sd">        by default None</span>
-<span class="sd">    kwargs : additional arguments of :class:`graphwar.attack.Attacker`,</span>
+<span class="sd">    kwargs : additional arguments of :class:`greatx.attack.Attacker`,</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
@@ -129,7 +129,7 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphDataset</span>
+<span class="sd">    &gt;&gt;&gt; from greatx.dataset import GraphDataset</span>
 <span class="sd">    &gt;&gt;&gt; import torch_geometric.transforms as T</span>
 
 <span class="sd">    &gt;&gt;&gt; dataset = GraphDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
@@ -138,7 +138,7 @@
 
 <span class="sd">    &gt;&gt;&gt; surrogate_model = ... # train your surrogate model</span>
 
-<span class="sd">    &gt;&gt;&gt; from graphwar.attack.targeted import FGAttack</span>
+<span class="sd">    &gt;&gt;&gt; from greatx.attack.targeted import FGAttack</span>
 <span class="sd">    &gt;&gt;&gt; attacker = FGAttack(data)</span>
 <span class="sd">    &gt;&gt;&gt; attacker.setup_surrogate(surrogate_model)</span>
 <span class="sd">    &gt;&gt;&gt; attacker.reset()</span>
@@ -177,7 +177,7 @@
     <span class="c1"># FGAttack cannot ensure there are no singleton nodes</span>
     <span class="n">_allow_singleton</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="FGAttack.reset"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.targeted.FGAttack.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FGAttack.reset"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.targeted.FGAttack.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modified_adj</span> <span class="o">=</span> <span class="n">to_dense_adj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edge_index</span><span class="p">,</span>
                                          <span class="bp">self</span><span class="o">.</span><span class="n">edge_weight</span><span class="p">,</span>
@@ -185,7 +185,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">modified_feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feat</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="FGAttack.attack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.targeted.FGAttack.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="FGAttack.attack"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.targeted.FGAttack.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                <span class="n">target</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
                <span class="n">target_label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">num_budgets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -266,7 +266,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="FGAttack.structure_score"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.targeted.FGAttack.structure_score">[docs]</a>    <span class="k">def</span> <span class="nf">structure_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modified_adj</span><span class="p">,</span> <span class="n">adj_grad</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<div class="viewcode-block" id="FGAttack.structure_score"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.targeted.FGAttack.structure_score">[docs]</a>    <span class="k">def</span> <span class="nf">structure_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modified_adj</span><span class="p">,</span> <span class="n">adj_grad</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">direct_attack</span><span class="p">:</span>
             <span class="n">score</span> <span class="o">=</span> <span class="n">adj_grad</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">modified_adj</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
             <span class="n">score</span> <span class="o">-=</span> <span class="n">score</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
@@ -285,7 +285,7 @@
             <span class="n">score</span><span class="p">[:,</span> <span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="k">return</span> <span class="n">score</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FGAttack.feature_score"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.targeted.FGAttack.feature_score">[docs]</a>    <span class="k">def</span> <span class="nf">feature_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modified_feat</span><span class="p">,</span> <span class="n">feat_grad</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+<div class="viewcode-block" id="FGAttack.feature_score"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.targeted.FGAttack.feature_score">[docs]</a>    <span class="k">def</span> <span class="nf">feature_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modified_feat</span><span class="p">,</span> <span class="n">feat_grad</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">direct_attack</span><span class="p">:</span>
             <span class="n">score</span> <span class="o">=</span> <span class="n">feat_grad</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">modified_feat</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
@@ -296,7 +296,7 @@
         <span class="n">score</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="k">return</span> <span class="n">score</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FGAttack.compute_gradients"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.targeted.FGAttack.compute_gradients">[docs]</a>    <span class="k">def</span> <span class="nf">compute_gradients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modified_adj</span><span class="p">,</span> <span class="n">modified_feat</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">target_label</span><span class="p">):</span>
+<div class="viewcode-block" id="FGAttack.compute_gradients"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.targeted.FGAttack.compute_gradients">[docs]</a>    <span class="k">def</span> <span class="nf">compute_gradients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modified_adj</span><span class="p">,</span> <span class="n">modified_feat</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">target_label</span><span class="p">):</span>
 
         <span class="n">logit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">surrogate</span><span class="p">(</span><span class="n">modified_feat</span><span class="p">,</span> <span class="n">modified_adj</span><span class="p">)[</span>
             <span class="n">target</span><span class="p">]</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span>

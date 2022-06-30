@@ -2,7 +2,7 @@
 
 To build the documentation:
 
-1. [Build and install](https://github.com/EdisonLeeeee/GraphWar) `GraphWar` from source.
+1. [Build and install](https://github.com/EdisonLeeeee/GREATX) `GREATX` from source.
 2. Install [Sphinx](https://www.sphinx-doc.org/en/master/) theme via
    ```
    pip install git+https://github.com/pyg-team/pyg_sphinx_theme.git

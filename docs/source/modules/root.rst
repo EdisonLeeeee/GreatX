@@ -1,15 +1,15 @@
-graphwar
+greatx
 ===============
 
-.. automodule:: graphwar.utils.seed
+.. automodule:: greatx.utils.seed
     :members:
     :undoc-members:
 
-.. automodule:: graphwar.utils.check
+.. automodule:: greatx.utils.check
     :members:
     :undoc-members:
 
-.. automodule:: graphwar.surrogate
+.. automodule:: greatx.surrogate
     :members:
     :undoc-members:
     :exclude-members: training

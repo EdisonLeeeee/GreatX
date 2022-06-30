@@ -1,13 +1,13 @@
 import torch
 import torch_geometric.transforms as T
 
-from graphwar.dataset import GraphDataset
-from graphwar import set_seed
-from graphwar.nn.models import GCN
-from graphwar.training import Trainer
-from graphwar.training.callbacks import ModelCheckpoint
-from graphwar.utils import split_nodes
-from graphwar.functional import drop_node
+from greatx.dataset import GraphDataset
+from greatx import set_seed
+from greatx.nn.models import GCN
+from greatx.training import Trainer
+from greatx.training.callbacks import ModelCheckpoint
+from greatx.utils import split_nodes
+from greatx.functional import drop_node
 
 
 def drop_hook(self, inputs):

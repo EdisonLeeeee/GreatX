@@ -7,7 +7,7 @@ def get_version():
     # From: https://github.com/facebookresearch/iopath/blob/master/setup.py
     # Author: Facebook Research
     init_py_path = osp.join(
-        osp.abspath(osp.dirname(__file__)), "graphwar", "version.py"
+        osp.abspath(osp.dirname(__file__)), "greatx", "version.py"
     )
     init_py = open(init_py_path, "r").readlines()
     version_line = [line.strip() for line in init_py if line.startswith("__version__")][
@@ -19,7 +19,7 @@ def get_version():
 
 
 VERSION = get_version()
-url = 'https://github.com/EdisonLeeeee/GraphWar'
+url = 'https://github.com/EdisonLeeeee/GREATX'
 
 
 install_requires = [
@@ -40,7 +40,7 @@ setup_requires = ['pytest-runner']
 tests_require = ['pytest', 'pytest-cov']
 
 setup(
-    name='graphwar',
+    name='greatx',
     version=VERSION,
     description='Arms Race in Adversarial Graph Learning',
     author='Jintang Li',

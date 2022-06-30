@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphwar.utils.scipy_sparse &mdash; GraphWar 0.1.0 documentation</title>
+  <title>greatx.utils.scipy_sparse &mdash; GREATX 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -25,8 +25,8 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> GraphWar
-            <img src="../../../_static/graphwar.png" class="logo" alt="Logo"/>
+            <a href="../../../index.html" class="icon icon-home"> GREATX
+            <img src="../../../_static/greatx.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.1.0
@@ -45,9 +45,9 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/root.html">graphwar</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/dataset.html">graphwar.dataset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">graphwar.attack</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/root.html">greatx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/dataset.html">greatx.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">greatx.attack</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#base-classes">Base Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
@@ -55,15 +55,15 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/defense.html">graphwar.defense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/nn.html">graphwar.nn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules/nn.html#graphwar-nn-layers">graphwar.nn.layers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules/nn.html#graphwar-nn-models">graphwar.nn.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/defense.html">greatx.defense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/nn.html">greatx.nn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/nn.html#greatx-nn-layers">greatx.nn.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/nn.html#greatx-nn-models">greatx.nn.models</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/functional.html">graphwar.functional</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/training.html">graphwar.training</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/utils.html">graphwar.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/functional.html">greatx.functional</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/training.html">greatx.training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/utils.html">greatx.utils</a></li>
 </ul>
 
         </div>
@@ -72,7 +72,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">GraphWar</a>
+          <a href="../../../index.html">GREATX</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -81,7 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>graphwar.utils.scipy_sparse</li>
+      <li>greatx.utils.scipy_sparse</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -90,12 +90,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for graphwar.utils.scipy_sparse</h1><div class="highlight"><pre>
+  <h1>Source code for greatx.utils.scipy_sparse</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-<div class="viewcode-block" id="scipy_normalize"><a class="viewcode-back" href="../../../modules/utils.html#graphwar.utils.scipy_normalize">[docs]</a><span class="k">def</span> <span class="nf">scipy_normalize</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">,</span>
+<div class="viewcode-block" id="scipy_normalize"><a class="viewcode-back" href="../../../modules/utils.html#greatx.utils.scipy_normalize">[docs]</a><span class="k">def</span> <span class="nf">scipy_normalize</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">,</span>
                     <span class="n">add_self_loops</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Normalize a sparse matrix according to :obj:`GCN`</span>
 <span class="sd">    from the `&quot;Semi-supervised</span>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphwar.training &mdash; GraphWar 0.1.0 documentation</title>
+  <title>greatx.training &mdash; GREATX 0.1.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="graphwar.utils" href="utils.html" />
-    <link rel="prev" title="graphwar.functional" href="functional.html" /> 
+    <link rel="next" title="greatx.utils" href="utils.html" />
+    <link rel="prev" title="greatx.functional" href="functional.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -27,8 +27,8 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> GraphWar
-            <img src="../_static/graphwar.png" class="logo" alt="Logo"/>
+            <a href="../index.html" class="icon icon-home"> GREATX
+            <img src="../_static/greatx.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.1.0
@@ -47,9 +47,9 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="root.html">graphwar</a></li>
-<li class="toctree-l1"><a class="reference internal" href="dataset.html">graphwar.dataset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="attack.html">graphwar.attack</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="root.html">greatx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset.html">greatx.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attack.html">greatx.attack</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="attack.html#base-classes">Base Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="attack.html#targeted-attacks">Targeted Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="attack.html#untargeted-attacks">Untargeted Attacks</a></li>
@@ -57,15 +57,15 @@
 <li class="toctree-l2"><a class="reference internal" href="attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="defense.html">graphwar.defense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nn.html">graphwar.nn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="nn.html#graphwar-nn-layers">graphwar.nn.layers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nn.html#graphwar-nn-models">graphwar.nn.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="defense.html">greatx.defense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nn.html">greatx.nn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nn.html#greatx-nn-layers">greatx.nn.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nn.html#greatx-nn-models">greatx.nn.models</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="functional.html">graphwar.functional</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">graphwar.training</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">graphwar.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functional.html">greatx.functional</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">greatx.training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">greatx.utils</a></li>
 </ul>
 
         </div>
@@ -74,7 +74,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">GraphWar</a>
+          <a href="../index.html">GREATX</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -82,7 +82,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>graphwar.training</li>
+      <li>greatx.training</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/modules/training.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -92,34 +92,34 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="graphwar-training">
-<h1>graphwar.training<a class="headerlink" href="#graphwar-training" title="Permalink to this heading">¶</a></h1>
+  <div class="section" id="greatx-training">
+<h1>greatx.training<a class="headerlink" href="#greatx-training" title="Permalink to this heading">¶</a></h1>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.training.Trainer" title="graphwar.training.Trainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Trainer</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greatx.training.Trainer" title="greatx.training.Trainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Trainer</span></code></a></p></td>
 <td><p>A simple trainer to train graph neural network models conveniently.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.training.get_trainer" title="graphwar.training.get_trainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_trainer</span></code></a></p></td>
-<td><p>Get the default trainer using str or a model in <a class="reference internal" href="nn.html#module-graphwar.nn.models" title="graphwar.nn.models"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.nn.models</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#greatx.training.get_trainer" title="greatx.training.get_trainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_trainer</span></code></a></p></td>
+<td><p>Get the default trainer using str or a model in <a class="reference internal" href="nn.html#module-greatx.nn.models" title="greatx.nn.models"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.training.RobustGCNTrainer" title="graphwar.training.RobustGCNTrainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RobustGCNTrainer</span></code></a></p></td>
-<td><p>Custom trainer for <a class="reference internal" href="nn.html#graphwar.nn.models.RobustGCN" title="graphwar.nn.models.RobustGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.nn.models.RobustGCN</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greatx.training.RobustGCNTrainer" title="greatx.training.RobustGCNTrainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RobustGCNTrainer</span></code></a></p></td>
+<td><p>Custom trainer for <a class="reference internal" href="nn.html#greatx.nn.models.RobustGCN" title="greatx.nn.models.RobustGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.RobustGCN</span></code></a></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#graphwar.training.SimPGCNTrainer" title="graphwar.training.SimPGCNTrainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimPGCNTrainer</span></code></a></p></td>
-<td><p>Custom trainer for <a class="reference internal" href="nn.html#graphwar.nn.models.SimPGCN" title="graphwar.nn.models.SimPGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.nn.models.SimPGCN</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#greatx.training.SimPGCNTrainer" title="greatx.training.SimPGCNTrainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimPGCNTrainer</span></code></a></p></td>
+<td><p>Custom trainer for <a class="reference internal" href="nn.html#greatx.nn.models.SimPGCN" title="greatx.nn.models.SimPGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.SimPGCN</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#graphwar.training.SATTrainer" title="graphwar.training.SATTrainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SATTrainer</span></code></a></p></td>
-<td><p>Custom trainer for <a class="reference internal" href="nn.html#graphwar.nn.models.SAT" title="graphwar.nn.models.SAT"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.nn.models.SAT</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greatx.training.SATTrainer" title="greatx.training.SATTrainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SATTrainer</span></code></a></p></td>
+<td><p>Custom trainer for <a class="reference internal" href="nn.html#greatx.nn.models.SAT" title="greatx.nn.models.SAT"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.SAT</span></code></a></p></td>
 </tr>
 </tbody>
 </table>
-<span class="target" id="module-graphwar.training"></span><dl class="py class">
-<dt class="sig sig-object py" id="graphwar.training.Trainer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Trainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">device</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/training/trainer.html#Trainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.Trainer" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-greatx.training"></span><dl class="py class">
+<dt class="sig sig-object py" id="greatx.training.Trainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Trainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">device</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/training/trainer.html#Trainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.Trainer" title="Permalink to this definition">¶</a></dt>
 <dd><p>A simple trainer to train graph neural network models conveniently.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -131,7 +131,7 @@
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.training</span> <span class="kn">import</span> <span class="n">Trainer</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">greatx.training</span> <span class="kn">import</span> <span class="n">Trainer</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># your model</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">trainer</span> <span class="o">=</span> <span class="n">Trainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
 </pre></div>
@@ -145,7 +145,7 @@
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># train with model picking</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.training</span> <span class="kn">import</span> <span class="n">ModelCheckpoint</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">greatx.training</span> <span class="kn">import</span> <span class="n">ModelCheckpoint</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cb</span> <span class="o">=</span> <span class="n">ModelCheckpoint</span><span class="p">(</span><span class="s1">&#39;my_ckpt&#39;</span><span class="p">,</span> <span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val_acc&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">({</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="n">train_mask</span><span class="p">},</span>
 <span class="go">{&#39;data&#39;: data, &#39;mask&#39;: val_mask}, callbacks=[cb])</span>
@@ -162,8 +162,8 @@
 </pre></div>
 </div>
 <dl class="py method">
-<dt class="sig sig-object py" id="graphwar.training.Trainer.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Callback</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#graphwar.training.Trainer" title="graphwar.training.trainer.Trainer"><span class="pre">Trainer</span></a></span></span><a class="reference internal" href="../_modules/graphwar/training/trainer.html#Trainer.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.Trainer.fit" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="greatx.training.Trainer.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Callback</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#greatx.training.Trainer" title="greatx.training.trainer.Trainer"><span class="pre">Trainer</span></a></span></span><a class="reference internal" href="../_modules/greatx/training/trainer.html#Trainer.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.Trainer.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple training method designed for <cite>:attr:model</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -171,7 +171,7 @@
 <li><p><strong>train_inputs</strong> (<em>dict like</em><em> or </em><em>custom inputs</em>) – training data. It is used for <cite>train_step</cite>.</p></li>
 <li><p><strong>val_inputs</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>]</em>) – used for validation.</p></li>
 <li><p><strong>callbacks</strong> (<em>Optional</em><em>[</em><em>Callback</em><em>]</em><em>, </em><em>optional</em>) – callbacks used for training,
-see <cite>graphwar.training.callbacks</cite>, by default None</p></li>
+see <cite>greatx.training.callbacks</cite>, by default None</p></li>
 <li><p><strong>verbose</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em><em>, </em><em>optional</em>) – verbosity during training, can be:
 <code class="xref py py-obj docutils literal notranslate"><span class="pre">None,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4</span></code>, by default 1</p></li>
 <li><p><strong>epochs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – training epochs, by default 100</p></li>
@@ -184,7 +184,7 @@ see <cite>graphwar.training.callbacks</cite>, by default None</p></li>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># train with model picking</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.training</span> <span class="kn">import</span> <span class="n">ModelCheckpoint</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">greatx.training</span> <span class="kn">import</span> <span class="n">ModelCheckpoint</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cb</span> <span class="o">=</span> <span class="n">ModelCheckpoint</span><span class="p">(</span><span class="s1">&#39;my_ckpt&#39;</span><span class="p">,</span> <span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val_acc&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">({</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">,</span> <span class="s1">&#39;mask&#39;</span><span class="p">:</span> <span class="n">train_mask</span><span class="p">},</span>
 <span class="go">{&#39;data&#39;: data, &#39;mask&#39;: val_mask}, callbacks=[cb])</span>
@@ -193,8 +193,8 @@ see <cite>graphwar.training.callbacks</cite>, by default None</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="graphwar.training.Trainer.train_step">
-<span class="sig-name descname"><span class="pre">train_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="../_modules/graphwar/training/trainer.html#Trainer.train_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.Trainer.train_step" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="greatx.training.Trainer.train_step">
+<span class="sig-name descname"><span class="pre">train_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="../_modules/greatx/training/trainer.html#Trainer.train_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.Trainer.train_step" title="Permalink to this definition">¶</a></dt>
 <dd><p>One-step training on the inputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -210,8 +210,8 @@ see <cite>graphwar.training.callbacks</cite>, by default None</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="graphwar.training.Trainer.evaluate">
-<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="utils.html#graphwar.utils.BunchDict" title="graphwar.utils.bunchdict.BunchDict"><span class="pre">BunchDict</span></a></span></span><a class="reference internal" href="../_modules/graphwar/training/trainer.html#Trainer.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.Trainer.evaluate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="greatx.training.Trainer.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="utils.html#greatx.utils.BunchDict" title="greatx.utils.bunchdict.BunchDict"><span class="pre">BunchDict</span></a></span></span><a class="reference internal" href="../_modules/greatx/training/trainer.html#Trainer.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.Trainer.evaluate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple evaluation step for <cite>:attr:model</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -224,7 +224,7 @@ see <cite>graphwar.training.callbacks</cite>, by default None</p></li>
 <dd class="field-even"><p>the dict-like output logs</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="utils.html#graphwar.utils.BunchDict" title="graphwar.utils.BunchDict">BunchDict</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="utils.html#greatx.utils.BunchDict" title="greatx.utils.BunchDict">BunchDict</a></p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -234,8 +234,8 @@ see <cite>graphwar.training.callbacks</cite>, by default None</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="graphwar.training.Trainer.test_step">
-<span class="sig-name descname"><span class="pre">test_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="../_modules/graphwar/training/trainer.html#Trainer.test_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.Trainer.test_step" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="greatx.training.Trainer.test_step">
+<span class="sig-name descname"><span class="pre">test_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="../_modules/greatx/training/trainer.html#Trainer.test_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.Trainer.test_step" title="Permalink to this definition">¶</a></dt>
 <dd><p>One-step evaluation on the inputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -251,8 +251,8 @@ see <cite>graphwar.training.callbacks</cite>, by default None</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="graphwar.training.Trainer.predict_step">
-<span class="sig-name descname"><span class="pre">predict_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference internal" href="../_modules/graphwar/training/trainer.html#Trainer.predict_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.Trainer.predict_step" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="greatx.training.Trainer.predict_step">
+<span class="sig-name descname"><span class="pre">predict_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference internal" href="../_modules/greatx/training/trainer.html#Trainer.predict_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.Trainer.predict_step" title="Permalink to this definition">¶</a></dt>
 <dd><p>One-step prediction on the inputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -268,8 +268,8 @@ see <cite>graphwar.training.callbacks</cite>, by default None</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="graphwar.training.Trainer.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Softmax(dim=-</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference internal" href="../_modules/graphwar/training/trainer.html#Trainer.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.Trainer.predict" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="greatx.training.Trainer.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Softmax(dim=-</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tensor</span></span></span><a class="reference internal" href="../_modules/greatx/training/trainer.html#Trainer.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.Trainer.predict" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -285,82 +285,82 @@ see <cite>graphwar.training.callbacks</cite>, by default None</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="graphwar.training.Trainer.config_optimizer">
-<span class="sig-name descname"><span class="pre">config_optimizer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optimizer</span></span></span><a class="reference internal" href="../_modules/graphwar/training/trainer.html#Trainer.config_optimizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.Trainer.config_optimizer" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="greatx.training.Trainer.config_optimizer">
+<span class="sig-name descname"><span class="pre">config_optimizer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optimizer</span></span></span><a class="reference internal" href="../_modules/greatx/training/trainer.html#Trainer.config_optimizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.Trainer.config_optimizer" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="graphwar.training.Trainer.config_scheduler">
-<span class="sig-name descname"><span class="pre">config_scheduler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/training/trainer.html#Trainer.config_scheduler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.Trainer.config_scheduler" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="greatx.training.Trainer.config_scheduler">
+<span class="sig-name descname"><span class="pre">config_scheduler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optimizer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/training/trainer.html#Trainer.config_scheduler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.Trainer.config_scheduler" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="graphwar.training.Trainer.config_callbacks">
-<span class="sig-name descname"><span class="pre">config_callbacks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CallbackList</span></span></span><a class="reference internal" href="../_modules/graphwar/training/trainer.html#Trainer.config_callbacks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.Trainer.config_callbacks" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="greatx.training.Trainer.config_callbacks">
+<span class="sig-name descname"><span class="pre">config_callbacks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CallbackList</span></span></span><a class="reference internal" href="../_modules/greatx/training/trainer.html#Trainer.config_callbacks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.Trainer.config_callbacks" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="graphwar.training.Trainer.model">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#graphwar.training.Trainer.model" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="greatx.training.Trainer.model">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#greatx.training.Trainer.model" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="graphwar.training.Trainer.cache_clear">
-<span class="sig-name descname"><span class="pre">cache_clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#graphwar.training.Trainer" title="graphwar.training.trainer.Trainer"><span class="pre">Trainer</span></a></span></span><a class="reference internal" href="../_modules/graphwar/training/trainer.html#Trainer.cache_clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.Trainer.cache_clear" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="greatx.training.Trainer.cache_clear">
+<span class="sig-name descname"><span class="pre">cache_clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#greatx.training.Trainer" title="greatx.training.trainer.Trainer"><span class="pre">Trainer</span></a></span></span><a class="reference internal" href="../_modules/greatx/training/trainer.html#Trainer.cache_clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.Trainer.cache_clear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear cached inputs or intermediate results
 of the model.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="graphwar.training.Trainer.extra_repr">
-<span class="sig-name descname"><span class="pre">extra_repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../_modules/graphwar/training/trainer.html#Trainer.extra_repr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.Trainer.extra_repr" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="greatx.training.Trainer.extra_repr">
+<span class="sig-name descname"><span class="pre">extra_repr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../_modules/greatx/training/trainer.html#Trainer.extra_repr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.Trainer.extra_repr" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="graphwar.training.get_trainer">
-<span class="sig-name descname"><span class="pre">get_trainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Module</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#graphwar.training.Trainer" title="graphwar.training.trainer.Trainer"><span class="pre">Trainer</span></a></span></span><a class="reference internal" href="../_modules/graphwar/training/get_trainer.html#get_trainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.get_trainer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the default trainer using str or a model in <a class="reference internal" href="nn.html#module-graphwar.nn.models" title="graphwar.nn.models"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.nn.models</span></code></a></p>
+<dt class="sig sig-object py" id="greatx.training.get_trainer">
+<span class="sig-name descname"><span class="pre">get_trainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Module</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#greatx.training.Trainer" title="greatx.training.trainer.Trainer"><span class="pre">Trainer</span></a></span></span><a class="reference internal" href="../_modules/greatx/training/get_trainer.html#get_trainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.get_trainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the default trainer using str or a model in <a class="reference internal" href="nn.html#module-greatx.nn.models" title="greatx.nn.models"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models</span></code></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>model</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>torch.nn.Module</em><em>]</em>) – the model to be trained in</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Custom trainer or default trainer <a class="reference internal" href="#graphwar.training.Trainer" title="graphwar.training.Trainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.training.Trainer</span></code></a> for the model.</p>
+<dd class="field-even"><p>Custom trainer or default trainer <a class="reference internal" href="#greatx.training.Trainer" title="greatx.training.Trainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.training.Trainer</span></code></a> for the model.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">graphwar</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">graphwar</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">get_trainer</span><span class="p">(</span><span class="s1">&#39;GCN&#39;</span><span class="p">)</span>
-<span class="go">graphwar.training.trainer.Trainer</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">greatx</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">greatx</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">get_trainer</span><span class="p">(</span><span class="s1">&#39;GCN&#39;</span><span class="p">)</span>
+<span class="go">greatx.training.trainer.Trainer</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">graphwar.nn.models</span> <span class="kn">import</span> <span class="n">GCN</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">graphwar</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">get_trainer</span><span class="p">(</span><span class="n">GCN</span><span class="p">)</span>
-<span class="go">graphwar.training.trainer.Trainer</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">greatx.nn.models</span> <span class="kn">import</span> <span class="n">GCN</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">greatx</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">get_trainer</span><span class="p">(</span><span class="n">GCN</span><span class="p">)</span>
+<span class="go">greatx.training.trainer.Trainer</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># by default, it returns `graphwar.training.Trainer`</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">graphwar</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">get_trainer</span><span class="p">(</span><span class="s1">&#39;unimplemeted_model&#39;</span><span class="p">)</span>
-<span class="go">graphwar.training.trainer.Trainer</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># by default, it returns `greatx.training.Trainer`</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">greatx</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">get_trainer</span><span class="p">(</span><span class="s1">&#39;unimplemeted_model&#39;</span><span class="p">)</span>
+<span class="go">greatx.training.trainer.Trainer</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">graphwar</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">get_trainer</span><span class="p">(</span><span class="s1">&#39;RobustGCN&#39;</span><span class="p">)</span>
-<span class="go">graphwar.training.robustgcn_trainer.RobustGCNTrainer</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">greatx</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">get_trainer</span><span class="p">(</span><span class="s1">&#39;RobustGCN&#39;</span><span class="p">)</span>
+<span class="go">greatx.training.robustgcn_trainer.RobustGCNTrainer</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># it is case-sensitive</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">graphwar</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">get_trainer</span><span class="p">(</span><span class="s1">&#39;robustGCN&#39;</span><span class="p">)</span>
-<span class="go">graphwar.training.trainer.Trainer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">greatx</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">get_trainer</span><span class="p">(</span><span class="s1">&#39;robustGCN&#39;</span><span class="p">)</span>
+<span class="go">greatx.training.trainer.Trainer</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="graphwar.training.RobustGCNTrainer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RobustGCNTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">device</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/training/robustgcn_trainer.html#RobustGCNTrainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.RobustGCNTrainer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Custom trainer for <a class="reference internal" href="nn.html#graphwar.nn.models.RobustGCN" title="graphwar.nn.models.RobustGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.nn.models.RobustGCN</span></code></a></p>
+<dt class="sig sig-object py" id="greatx.training.RobustGCNTrainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RobustGCNTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">device</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/training/robustgcn_trainer.html#RobustGCNTrainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.RobustGCNTrainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Custom trainer for <a class="reference internal" href="nn.html#greatx.nn.models.RobustGCN" title="greatx.nn.models.RobustGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.RobustGCN</span></code></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -372,14 +372,14 @@ of the model.</p>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#graphwar.training.RobustGCNTrainer" title="graphwar.training.RobustGCNTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.training.RobustGCNTrainer</span></code></a> accepts the following additional arguments:</p>
+<p><a class="reference internal" href="#greatx.training.RobustGCNTrainer" title="greatx.training.RobustGCNTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.training.RobustGCNTrainer</span></code></a> accepts the following additional arguments:</p>
 <ul class="simple">
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kl</span></code>: trade-off parameter for kl loss</p></li>
 </ul>
 </div>
 <dl class="py method">
-<dt class="sig sig-object py" id="graphwar.training.RobustGCNTrainer.train_step">
-<span class="sig-name descname"><span class="pre">train_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="../_modules/graphwar/training/robustgcn_trainer.html#RobustGCNTrainer.train_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.RobustGCNTrainer.train_step" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="greatx.training.RobustGCNTrainer.train_step">
+<span class="sig-name descname"><span class="pre">train_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="../_modules/greatx/training/robustgcn_trainer.html#RobustGCNTrainer.train_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.RobustGCNTrainer.train_step" title="Permalink to this definition">¶</a></dt>
 <dd><p>One-step training on the input dataloader.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -397,9 +397,9 @@ of the model.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="graphwar.training.SimPGCNTrainer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SimPGCNTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">device</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/training/simpgcn_trainer.html#SimPGCNTrainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.SimPGCNTrainer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Custom trainer for <a class="reference internal" href="nn.html#graphwar.nn.models.SimPGCN" title="graphwar.nn.models.SimPGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.nn.models.SimPGCN</span></code></a></p>
+<dt class="sig sig-object py" id="greatx.training.SimPGCNTrainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SimPGCNTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">device</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/training/simpgcn_trainer.html#SimPGCNTrainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.SimPGCNTrainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Custom trainer for <a class="reference internal" href="nn.html#greatx.nn.models.SimPGCN" title="greatx.nn.models.SimPGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.SimPGCN</span></code></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -411,14 +411,14 @@ of the model.</p>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#graphwar.training.SimPGCNTrainer" title="graphwar.training.SimPGCNTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.training.SimPGCNTrainer</span></code></a> accepts the following additional arguments:</p>
+<p><a class="reference internal" href="#greatx.training.SimPGCNTrainer" title="greatx.training.SimPGCNTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.training.SimPGCNTrainer</span></code></a> accepts the following additional arguments:</p>
 <ul class="simple">
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lambda_</span></code>: trade-off parameter for regression loss</p></li>
 </ul>
 </div>
 <dl class="py method">
-<dt class="sig sig-object py" id="graphwar.training.SimPGCNTrainer.train_step">
-<span class="sig-name descname"><span class="pre">train_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="../_modules/graphwar/training/simpgcn_trainer.html#SimPGCNTrainer.train_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.SimPGCNTrainer.train_step" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="greatx.training.SimPGCNTrainer.train_step">
+<span class="sig-name descname"><span class="pre">train_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="../_modules/greatx/training/simpgcn_trainer.html#SimPGCNTrainer.train_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.SimPGCNTrainer.train_step" title="Permalink to this definition">¶</a></dt>
 <dd><p>One-step training on the input dataloader.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -436,9 +436,9 @@ of the model.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="graphwar.training.SATTrainer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SATTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">device</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/graphwar/training/sat_trainer.html#SATTrainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.SATTrainer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Custom trainer for <a class="reference internal" href="nn.html#graphwar.nn.models.SAT" title="graphwar.nn.models.SAT"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.nn.models.SAT</span></code></a></p>
+<dt class="sig sig-object py" id="greatx.training.SATTrainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SATTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">device</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/training/sat_trainer.html#SATTrainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.SATTrainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Custom trainer for <a class="reference internal" href="nn.html#greatx.nn.models.SAT" title="greatx.nn.models.SAT"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.SAT</span></code></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -450,7 +450,7 @@ of the model.</p>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#graphwar.training.SATTrainer" title="graphwar.training.SATTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">graphwar.training.SATTrainer</span></code></a> accepts the following additional arguments:</p>
+<p><a class="reference internal" href="#greatx.training.SATTrainer" title="greatx.training.SATTrainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.training.SATTrainer</span></code></a> accepts the following additional arguments:</p>
 <ul class="simple">
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">eps_U</span></code>: scale of perturbation on eigenvectors</p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">eps_V</span></code>: scale of perturbation on eigenvalues</p></li>
@@ -459,8 +459,8 @@ of the model.</p>
 </ul>
 </div>
 <dl class="py method">
-<dt class="sig sig-object py" id="graphwar.training.SATTrainer.train_step">
-<span class="sig-name descname"><span class="pre">train_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="../_modules/graphwar/training/sat_trainer.html#SATTrainer.train_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#graphwar.training.SATTrainer.train_step" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="greatx.training.SATTrainer.train_step">
+<span class="sig-name descname"><span class="pre">train_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="../_modules/greatx/training/sat_trainer.html#SATTrainer.train_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.SATTrainer.train_step" title="Permalink to this definition">¶</a></dt>
 <dd><p>One-step training on the input dataloader.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -483,8 +483,8 @@ of the model.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="functional.html" class="btn btn-neutral float-left" title="graphwar.functional" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="utils.html" class="btn btn-neutral float-right" title="graphwar.utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="functional.html" class="btn btn-neutral float-left" title="greatx.functional" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="utils.html" class="btn btn-neutral float-right" title="greatx.utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

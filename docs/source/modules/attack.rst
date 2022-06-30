@@ -1,18 +1,18 @@
-graphwar.attack
+greatx.attack
 ===================
 
 Base Classes
 ------------------------------------------------
-.. currentmodule:: graphwar.attack
+.. currentmodule:: greatx.attack
 
 .. autosummary::
     :toctree: _autosummary
     :nosignatures:
-    {% for cls in graphwar.attack.classes %}
+    {% for cls in greatx.attack.classes %}
       {{ cls }}
     {% endfor %}
 
-.. automodule:: graphwar.attack
+.. automodule:: greatx.attack
     :members:
     :undoc-members:
     :exclude-members: extra_repr
@@ -20,16 +20,16 @@ Base Classes
 
 Targeted Attacks
 ------------------------------------------------
-.. currentmodule:: graphwar.attack.targeted
+.. currentmodule:: greatx.attack.targeted
 
 .. autosummary::
     :toctree: _autosummary
     :nosignatures:
-    {% for cls in graphwar.attack.targeted.classes %}
+    {% for cls in greatx.attack.targeted.classes %}
       {{ cls }}
     {% endfor %}
 
-.. automodule:: graphwar.attack.targeted
+.. automodule:: greatx.attack.targeted
     :members:
     :undoc-members:
     :exclude-members: extra_repr
@@ -37,48 +37,48 @@ Targeted Attacks
 
 Untargeted Attacks
 ------------------------------------------------
-.. currentmodule:: graphwar.attack.untargeted
+.. currentmodule:: greatx.attack.untargeted
 
 .. autosummary::
     :toctree: _autosummary
     :nosignatures:
-    {% for cls in graphwar.attack.untargeted.classes %}
+    {% for cls in greatx.attack.untargeted.classes %}
       {{ cls }}
     {% endfor %}
 
-.. automodule:: graphwar.attack.untargeted
+.. automodule:: greatx.attack.untargeted
     :members:
     :undoc-members:
     :exclude-members: extra_repr
 
 Injection Attacks
 ------------------------------------------------
-.. currentmodule:: graphwar.attack.injection
+.. currentmodule:: greatx.attack.injection
 
 .. autosummary::
     :toctree: _autosummary
     :nosignatures:
-    {% for cls in graphwar.attack.injection.classes %}
+    {% for cls in greatx.attack.injection.classes %}
       {{ cls }}
     {% endfor %}
 
-.. automodule:: graphwar.attack.injection
+.. automodule:: greatx.attack.injection
     :members:
     :undoc-members:
     :exclude-members: extra_repr
 
 Backdoor Attacks
 ------------------------------------------------
-.. currentmodule:: graphwar.attack.backdoor
+.. currentmodule:: greatx.attack.backdoor
 
 .. autosummary::
     :toctree: _autosummary
     :nosignatures:
-    {% for cls in graphwar.attack.backdoor.classes %}
+    {% for cls in greatx.attack.backdoor.classes %}
       {{ cls }}
     {% endfor %}
 
-.. automodule:: graphwar.attack.backdoor
+.. automodule:: greatx.attack.backdoor
     :members:
     :undoc-members:
     :exclude-members: extra_repr

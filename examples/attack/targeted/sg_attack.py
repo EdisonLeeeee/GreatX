@@ -2,13 +2,13 @@ import torch
 import numpy as np
 import torch_geometric.transforms as T
 
-from graphwar.dataset import GraphDataset
-from graphwar import set_seed
-from graphwar.nn.models import GCN, SGC
-from graphwar.training import Trainer
-from graphwar.training.callbacks import ModelCheckpoint
-from graphwar.utils import split_nodes
-from graphwar.attack.targeted import SGAttack
+from greatx.dataset import GraphDataset
+from greatx import set_seed
+from greatx.nn.models import GCN, SGC
+from greatx.training import Trainer
+from greatx.training.callbacks import ModelCheckpoint
+from greatx.utils import split_nodes
+from greatx.attack.targeted import SGAttack
 
 dataset = GraphDataset(root='~/data/pygdata', name='cora',
                        transform=T.LargestConnectedComponents())

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>graphwar.attack.untargeted.pgd_attack &mdash; GraphWar 0.1.0 documentation</title>
+  <title>greatx.attack.untargeted.pgd_attack &mdash; GREATX 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -25,8 +25,8 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> GraphWar
-            <img src="../../../../_static/graphwar.png" class="logo" alt="Logo"/>
+            <a href="../../../../index.html" class="icon icon-home"> GREATX
+            <img src="../../../../_static/greatx.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.1.0
@@ -45,9 +45,9 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/root.html">graphwar</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/dataset.html">graphwar.dataset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/attack.html">graphwar.attack</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/root.html">greatx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/dataset.html">greatx.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/attack.html">greatx.attack</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#base-classes">Base Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#targeted-attacks">Targeted Attacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#untargeted-attacks">Untargeted Attacks</a></li>
@@ -55,15 +55,15 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../modules/attack.html#backdoor-attacks">Backdoor Attacks</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">graphwar.defense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.html">graphwar.nn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#graphwar-nn-layers">graphwar.nn.layers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#graphwar-nn-models">graphwar.nn.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">greatx.defense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.html">greatx.nn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#greatx-nn-layers">greatx.nn.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#greatx-nn-models">greatx.nn.models</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/functional.html">graphwar.functional</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/training.html">graphwar.training</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/utils.html">graphwar.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/functional.html">greatx.functional</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/training.html">greatx.training</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/utils.html">greatx.utils</a></li>
 </ul>
 
         </div>
@@ -72,7 +72,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../../index.html">GraphWar</a>
+          <a href="../../../../index.html">GREATX</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -81,7 +81,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>graphwar.attack.untargeted.pgd_attack</li>
+      <li>greatx.attack.untargeted.pgd_attack</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -90,7 +90,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for graphwar.attack.untargeted.pgd_attack</h1><div class="highlight"><pre>
+  <h1>Source code for greatx.attack.untargeted.pgd_attack</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
@@ -102,12 +102,12 @@
 <span class="kn">from</span> <span class="nn">torch.distributions.bernoulli</span> <span class="kn">import</span> <span class="n">Bernoulli</span>
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
-<span class="kn">from</span> <span class="nn">graphwar.attack.untargeted.untargeted_attacker</span> <span class="kn">import</span> <span class="n">UntargetedAttacker</span>
-<span class="kn">from</span> <span class="nn">graphwar.surrogate</span> <span class="kn">import</span> <span class="n">Surrogate</span>
-<span class="kn">from</span> <span class="nn">graphwar.functional</span> <span class="kn">import</span> <span class="n">to_dense_adj</span>
+<span class="kn">from</span> <span class="nn">greatx.attack.untargeted.untargeted_attacker</span> <span class="kn">import</span> <span class="n">UntargetedAttacker</span>
+<span class="kn">from</span> <span class="nn">greatx.surrogate</span> <span class="kn">import</span> <span class="n">Surrogate</span>
+<span class="kn">from</span> <span class="nn">greatx.functional</span> <span class="kn">import</span> <span class="n">to_dense_adj</span>
 
 
-<div class="viewcode-block" id="PGDAttack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.PGDAttack">[docs]</a><span class="k">class</span> <span class="nc">PGDAttack</span><span class="p">(</span><span class="n">UntargetedAttacker</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>
+<div class="viewcode-block" id="PGDAttack"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.PGDAttack">[docs]</a><span class="k">class</span> <span class="nc">PGDAttack</span><span class="p">(</span><span class="n">UntargetedAttacker</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Implementation of `PGD` attack from the: </span>
 <span class="sd">    `&quot;Topology Attack and Defense for Graph Neural Networks:</span>
 <span class="sd">    An Optimization Perspective&quot; </span>
@@ -124,7 +124,7 @@
 <span class="sd">    name : Optional[str], optional</span>
 <span class="sd">        name of the attacker, if None, it would be :obj:`__class__.__name__`, </span>
 <span class="sd">        by default None</span>
-<span class="sd">    kwargs : additional arguments of :class:`graphwar.attack.Attacker`,</span>
+<span class="sd">    kwargs : additional arguments of :class:`greatx.attack.Attacker`,</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
@@ -133,7 +133,7 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphDataset</span>
+<span class="sd">    &gt;&gt;&gt; from greatx.dataset import GraphDataset</span>
 <span class="sd">    &gt;&gt;&gt; import torch_geometric.transforms as T</span>
 
 <span class="sd">    &gt;&gt;&gt; dataset = GraphDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
@@ -142,7 +142,7 @@
 
 <span class="sd">    &gt;&gt;&gt; surrogate_model = ... # train your surrogate model</span>
 
-<span class="sd">    &gt;&gt;&gt; from graphwar.attack.untargeted import PGDAttack</span>
+<span class="sd">    &gt;&gt;&gt; from greatx.attack.untargeted import PGDAttack</span>
 <span class="sd">    &gt;&gt;&gt; attacker = PGDAttack(data)</span>
 <span class="sd">    &gt;&gt;&gt; attacker.setup_surrogate(surrogate_model)</span>
 <span class="sd">    &gt;&gt;&gt; attacker.reset()</span>
@@ -157,7 +157,7 @@
 
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
-<span class="sd">    * MinMax attack is a variant of :class:`graphwar.attack.untargeted.PGDAttack` attack.   </span>
+<span class="sd">    * MinMax attack is a variant of :class:`greatx.attack.untargeted.PGDAttack` attack.   </span>
 <span class="sd">    * Please remember to call :meth:`reset` before each attack.      </span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -165,7 +165,7 @@
     <span class="c1"># PGDAttack cannot ensure that there is not singleton node after attacks.</span>
     <span class="n">_allow_singleton</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="PGDAttack.setup_surrogate"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.PGDAttack.setup_surrogate">[docs]</a>    <span class="k">def</span> <span class="nf">setup_surrogate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surrogate</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+<div class="viewcode-block" id="PGDAttack.setup_surrogate"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.PGDAttack.setup_surrogate">[docs]</a>    <span class="k">def</span> <span class="nf">setup_surrogate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surrogate</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
                         <span class="n">labeled_nodes</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
                         <span class="n">unlabeled_nodes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                         <span class="o">*</span><span class="p">,</span>
@@ -199,12 +199,12 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="PGDAttack.reset"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.PGDAttack.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="PGDAttack.reset"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.PGDAttack.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">perturbations</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adj</span><span class="p">)</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="PGDAttack.attack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.PGDAttack.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="PGDAttack.attack"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.PGDAttack.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                <span class="n">num_budgets</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
                <span class="n">C</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">CW_loss</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -242,7 +242,7 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="PGDAttack.config_C"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.PGDAttack.config_C">[docs]</a>    <span class="k">def</span> <span class="nf">config_C</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="PGDAttack.config_C"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.PGDAttack.config_C">[docs]</a>    <span class="k">def</span> <span class="nf">config_C</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">C</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">C</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">CW_loss</span><span class="p">:</span>
@@ -251,7 +251,7 @@
             <span class="n">C</span> <span class="o">=</span> <span class="mi">200</span>
         <span class="k">return</span> <span class="n">C</span></div>
 
-<div class="viewcode-block" id="PGDAttack.bisection"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.PGDAttack.bisection">[docs]</a>    <span class="k">def</span> <span class="nf">bisection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perturbations</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">):</span>
+<div class="viewcode-block" id="PGDAttack.bisection"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.PGDAttack.bisection">[docs]</a>    <span class="k">def</span> <span class="nf">bisection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perturbations</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">):</span>
         <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
             <span class="n">clipped_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">perturbations</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">clipped_matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_budgets</span>
@@ -269,14 +269,14 @@
                 <span class="n">a</span> <span class="o">=</span> <span class="n">miu</span>
         <span class="k">return</span> <span class="n">miu</span></div>
 
-<div class="viewcode-block" id="PGDAttack.get_perturbed_adj"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.PGDAttack.get_perturbed_adj">[docs]</a>    <span class="k">def</span> <span class="nf">get_perturbed_adj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perturbations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="PGDAttack.get_perturbed_adj"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.PGDAttack.get_perturbed_adj">[docs]</a>    <span class="k">def</span> <span class="nf">get_perturbed_adj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perturbations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">perturbations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">perturbations</span> <span class="k">if</span> <span class="n">perturbations</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">perturbations</span>
         <span class="n">adj_triu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">triu</span><span class="p">(</span><span class="n">perturbations</span><span class="p">,</span> <span class="n">diagonal</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">perturbations</span> <span class="o">=</span> <span class="n">adj_triu</span> <span class="o">+</span> <span class="n">adj_triu</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
         <span class="n">adj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">complementary</span> <span class="o">*</span> <span class="n">perturbations</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">adj</span>
         <span class="k">return</span> <span class="n">adj</span></div>
 
-<div class="viewcode-block" id="PGDAttack.projection"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.PGDAttack.projection">[docs]</a>    <span class="k">def</span> <span class="nf">projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perturbations</span><span class="p">):</span>
+<div class="viewcode-block" id="PGDAttack.projection"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.PGDAttack.projection">[docs]</a>    <span class="k">def</span> <span class="nf">projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perturbations</span><span class="p">):</span>
         <span class="n">clipped_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">perturbations</span><span class="p">)</span>
         <span class="n">num_modified</span> <span class="o">=</span> <span class="n">clipped_matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 
@@ -291,11 +291,11 @@
         <span class="n">perturbations</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">clipped_matrix</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">perturbations</span></div>
 
-<div class="viewcode-block" id="PGDAttack.clip"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.PGDAttack.clip">[docs]</a>    <span class="k">def</span> <span class="nf">clip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
+<div class="viewcode-block" id="PGDAttack.clip"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.PGDAttack.clip">[docs]</a>    <span class="k">def</span> <span class="nf">clip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matrix</span><span class="p">):</span>
         <span class="n">clipped_matrix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">clipped_matrix</span></div>
 
-<div class="viewcode-block" id="PGDAttack.bernoulli_sample"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.PGDAttack.bernoulli_sample">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+<div class="viewcode-block" id="PGDAttack.bernoulli_sample"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.PGDAttack.bernoulli_sample">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">bernoulli_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perturbations</span><span class="p">,</span> <span class="n">sample_epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">best_loss</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1e4</span>
         <span class="n">best_s</span> <span class="o">=</span> <span class="kc">None</span>
@@ -319,7 +319,7 @@
         <span class="k">assert</span> <span class="n">best_s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Something went wrong&quot;</span>
         <span class="k">return</span> <span class="n">best_s</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="PGDAttack.compute_loss"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.PGDAttack.compute_loss">[docs]</a>    <span class="k">def</span> <span class="nf">compute_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perturbations</span><span class="p">,</span> <span class="n">victim_nodes</span><span class="p">,</span> <span class="n">victim_labels</span><span class="p">):</span>
+<div class="viewcode-block" id="PGDAttack.compute_loss"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.PGDAttack.compute_loss">[docs]</a>    <span class="k">def</span> <span class="nf">compute_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perturbations</span><span class="p">,</span> <span class="n">victim_nodes</span><span class="p">,</span> <span class="n">victim_labels</span><span class="p">):</span>
         <span class="n">adj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_perturbed_adj</span><span class="p">(</span><span class="n">perturbations</span><span class="p">)</span>
         <span class="n">logit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">surrogate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feat</span><span class="p">,</span> <span class="n">adj</span><span class="p">)[</span><span class="n">victim_nodes</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span>
 
@@ -337,12 +337,12 @@
             <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">victim_labels</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">loss</span></div>
 
-<div class="viewcode-block" id="PGDAttack.compute_gradients"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.PGDAttack.compute_gradients">[docs]</a>    <span class="k">def</span> <span class="nf">compute_gradients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perturbations</span><span class="p">,</span> <span class="n">victim_nodes</span><span class="p">,</span> <span class="n">victim_labels</span><span class="p">):</span>
+<div class="viewcode-block" id="PGDAttack.compute_gradients"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.PGDAttack.compute_gradients">[docs]</a>    <span class="k">def</span> <span class="nf">compute_gradients</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">perturbations</span><span class="p">,</span> <span class="n">victim_nodes</span><span class="p">,</span> <span class="n">victim_labels</span><span class="p">):</span>
         <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_loss</span><span class="p">(</span><span class="n">perturbations</span><span class="p">,</span> <span class="n">victim_nodes</span><span class="p">,</span> <span class="n">victim_labels</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">grad</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">perturbations</span><span class="p">,</span> <span class="n">create_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div></div>
 
 
-<div class="viewcode-block" id="MinmaxAttack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.MinmaxAttack">[docs]</a><span class="k">class</span> <span class="nc">MinmaxAttack</span><span class="p">(</span><span class="n">PGDAttack</span><span class="p">):</span>
+<div class="viewcode-block" id="MinmaxAttack"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.MinmaxAttack">[docs]</a><span class="k">class</span> <span class="nc">MinmaxAttack</span><span class="p">(</span><span class="n">PGDAttack</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Implementation of `MinMax` attack from the: </span>
 <span class="sd">    `&quot;Topology Attack and Defense for Graph Neural Networks:</span>
 <span class="sd">    An Optimization Perspective&quot; </span>
@@ -359,7 +359,7 @@
 <span class="sd">    name : Optional[str], optional</span>
 <span class="sd">        name of the attacker, if None, it would be :obj:`__class__.__name__`, </span>
 <span class="sd">        by default None</span>
-<span class="sd">    kwargs : additional arguments of :class:`graphwar.attack.Attacker`,</span>
+<span class="sd">    kwargs : additional arguments of :class:`greatx.attack.Attacker`,</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
@@ -368,7 +368,7 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from graphwar.dataset import GraphDataset</span>
+<span class="sd">    &gt;&gt;&gt; from greatx.dataset import GraphDataset</span>
 <span class="sd">    &gt;&gt;&gt; import torch_geometric.transforms as T</span>
 
 <span class="sd">    &gt;&gt;&gt; dataset = GraphDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
@@ -377,7 +377,7 @@
 
 <span class="sd">    &gt;&gt;&gt; surrogate_model = ... # train your surrogate model</span>
 
-<span class="sd">    &gt;&gt;&gt; from graphwar.attack.untargeted import MinmaxAttack</span>
+<span class="sd">    &gt;&gt;&gt; from greatx.attack.untargeted import MinmaxAttack</span>
 <span class="sd">    &gt;&gt;&gt; attacker = MinmaxAttack(data)</span>
 <span class="sd">    &gt;&gt;&gt; attacker.setup_surrogate(surrogate_model)</span>
 <span class="sd">    &gt;&gt;&gt; attacker.reset()</span>
@@ -392,12 +392,12 @@
 
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
-<span class="sd">    * MinMax attack is a variant of :class:`graphwar.attack.untargeted.PGDAttack` attack.</span>
+<span class="sd">    * MinMax attack is a variant of :class:`greatx.attack.untargeted.PGDAttack` attack.</span>
 <span class="sd">    * Please remember to call :meth:`reset` before each attack.     </span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="MinmaxAttack.setup_surrogate"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.MinmaxAttack.setup_surrogate">[docs]</a>    <span class="k">def</span> <span class="nf">setup_surrogate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surrogate</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+<div class="viewcode-block" id="MinmaxAttack.setup_surrogate"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.MinmaxAttack.setup_surrogate">[docs]</a>    <span class="k">def</span> <span class="nf">setup_surrogate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surrogate</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
                         <span class="n">labeled_nodes</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
                         <span class="n">unlabeled_nodes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                         <span class="o">*</span><span class="p">,</span>
@@ -409,12 +409,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cached</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">state_dict</span><span class="p">())</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="MinmaxAttack.reset"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.MinmaxAttack.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="MinmaxAttack.reset"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.MinmaxAttack.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">surrogate</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cached</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="MinmaxAttack.attack"><a class="viewcode-back" href="../../../../modules/attack.html#graphwar.attack.untargeted.MinmaxAttack.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="MinmaxAttack.attack"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.MinmaxAttack.attack">[docs]</a>    <span class="k">def</span> <span class="nf">attack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                <span class="n">num_budgets</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
                <span class="n">C</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
                <span class="n">CW_loss</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>

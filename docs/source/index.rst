@@ -1,8 +1,8 @@
-:github_url: https://github.com/EdisonLeeeee/GraphWar
+:github_url: https://github.com/EdisonLeeeee/GREATX
 
-Welcome to GraphWar's documentation!
+Welcome to GREATX's documentation!
 =========================================
-.. image:: ../../imgs/graphwar.png
+.. image:: ../../imgs/greatx.png
 
 
 .. toctree::

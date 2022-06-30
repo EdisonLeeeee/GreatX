@@ -1,13 +1,13 @@
 import torch
 import torch_geometric.transforms as T
 
-from graphwar.dataset import GraphDataset
-from graphwar import set_seed
-from graphwar.nn.models import GCN
-from graphwar.training import Trainer
-from graphwar.training.callbacks import ModelCheckpoint
-from graphwar.utils import split_nodes
-from graphwar.defense import GUARD, RandomGUARD, DegreeGUARD
+from greatx.dataset import GraphDataset
+from greatx import set_seed
+from greatx.nn.models import GCN
+from greatx.training import Trainer
+from greatx.training.callbacks import ModelCheckpoint
+from greatx.utils import split_nodes
+from greatx.defense import GUARD, RandomGUARD, DegreeGUARD
 
 dataset = GraphDataset(root='~/data/pygdata', name='cora',
                        transform=T.LargestConnectedComponents())

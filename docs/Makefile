@@ -1,5 +1,5 @@
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = graphwar
+SPHINXPROJ    = greatx
 SOURCEDIR     = source
 BUILDDIR      = _build
 

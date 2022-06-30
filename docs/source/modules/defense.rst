@@ -1,14 +1,14 @@
-graphwar.defense
+greatx.defense
 ===================
 
-.. currentmodule:: graphwar.defense
+.. currentmodule:: greatx.defense
 
 .. autosummary::
     :nosignatures:
-    {% for cls in graphwar.defense.classes %}
+    {% for cls in greatx.defense.classes %}
       {{ cls }}
     {% endfor %}
 
-.. automodule:: graphwar.defense
+.. automodule:: greatx.defense
     :members:
     :undoc-members:

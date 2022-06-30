@@ -1,14 +1,14 @@
-graphwar.functional
+greatx.functional
 ===================
 
-.. currentmodule:: graphwar.functional
+.. currentmodule:: greatx.functional
 
 .. autosummary::
     :nosignatures:
-    {% for cls in graphwar.functional.classes %}
+    {% for cls in greatx.functional.classes %}
       {{ cls }}
     {% endfor %}
 
-.. automodule:: graphwar.functional
+.. automodule:: greatx.functional
     :members:
     :undoc-members:

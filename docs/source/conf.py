@@ -3,7 +3,7 @@ import doctest
 
 import sphinx_rtd_theme
 
-import great
+import greatx
 
 extensions = [
     'sphinx.ext.autodoc',
@@ -23,11 +23,11 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 author = 'Jintang Li'
-project = 'GREAT'
+project = 'GREATX'
 copyright = '{}, {}'.format(datetime.datetime.now().year, author)
 
-version = great.__version__
-release = great.__version__
+version = greatx.__version__
+release = greatx.__version__
 
 html_theme = 'sphinx_rtd_theme'
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
@@ -43,10 +43,10 @@ html_theme_options = {
     'navigation_depth': 4,
 }
 
-html_logo = '../../imgs/great.png'
+html_logo = '../../imgs/greatx.png'
 html_static_path = ['_static']
 # html_context = {'css_files': ['_static/css/custom.css']}
-rst_context = {'great': great}
+rst_context = {'greatx': greatx}
 
 add_module_names = False
 

@@ -1,4 +1,4 @@
-# **GreatX**: A Graph Reliability Toolbox
+# **GreatX**: Graph Reliability Toolbox
 
 <p align="center">
   <img width = "600" height = "150" src="https://github.com/EdisonLeeeee/GreatX/blob/master/imgs/greatx.png" alt="banner"/>
@@ -33,14 +33,14 @@
 </p>
                                                                    
 # ❓ What is Reliability on Graphs?
+![threats](./imgs/threats.png)
+
 It means reliability/robustness against the following threats:
-+ Inherent noise
++ Inherent Noise
 + Distribution Shift
-+ Adversarial Attacks
++ Adversarial Attack
 
 For more details, please refer to our paper [**Recent Advances in Reliable Deep Graph Learning: Adversarial Attack, Inherent Noise, and Distribution Shift**](https://arxiv.org/abs/2202.07114)
-
-
 
 
 # 💨 News
@@ -161,55 +161,52 @@ In detail, the following methods are currently implemented:
 
 ### Standard GNNs (without defense)
 
-| Methods   | Descriptions                                                                                                                               | Examples                                                                                     |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
-| **GCN**   | *Kipf et al.* [Semi-Supervised Classification with Graph Convolutional Networks](https://arxiv.org/abs/1609.02907), *ICLR'17*              | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/gcn.py)   |
-| **SGC**   | *Wu et al.*  [Simplifying Graph Convolutional Networks](https://arxiv.org/abs/1902.07153), *ICLR'19*                                       | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/sgc.py)   |
-| **GAT**   | *Veličković et al.*  [Graph Attention Networks](https://arxiv.org/abs/1710.10903), *ICLR'18*                                               | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/gat.py)   |
-| **DAGNN** | *Liu et al.*  [Towards Deeper Graph Neural Networks](https://arxiv.org/abs/2007.09296), *KDD'20*                                           | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/dagnn.py) |
-| **APPNP** | *Klicpera et al.*  [Predict then Propagate: Graph Neural Networks meet Personalized PageRank](https://arxiv.org/abs/1810.05997), *ICLR'19* | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/appnp.py) |
-| **JKNet** | *Xu et al.*  [Representation Learning on Graphs with Jumping Knowledge Networks](https://arxiv.org/abs/1806.03536), *ICML'18*              | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/jknet.py) |
-| **TAGCN** | *Du et al.*  [Topological Adaptive Graph Convolutional Networks](https://arxiv.org/abs/1806.03536), *arXiv'17*                             | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/tagcn.py) |
-| **SSGC**  | *ZHu et al.*  [Simple Spectral Graph Convolution](https://openreview.net/forum?id=CYO5T-YjWZV), *ICLR'21*                                  | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/ssgc.py)  |
-
-### Robust GNNs
-
-| Methods           | Descriptions                                                                                                                                                                                                                                | Examples                                                                                               |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| **MedianGCN**     | *Chen et al.* [Understanding Structural Vulnerability in Graph Convolutional Networks](https://www.ijcai.org/proceedings/2021/310), *IJCAI'21*                                                                                              | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/median_gcn.py)      |
-| **RobustGCN**     | *Zhu et al.*  [Robust Graph Convolutional Networks Against Adversarial Attacks](http://pengcui.thumedialab.com/papers/RGCN.pdf), *KDD'19*                                                                                                   | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/robust_gcn.py)      |
-| **SoftMedianGCN** | *Geisler et al.* [Reliable Graph Neural Networks via Robust Aggregation](https://arxiv.org/abs/2010.15651), *NeurIPS'20*<br>*Geisler et al.* [Robustness of Graph Neural Networks at Scale](https://arxiv.org/abs/2110.14038), *NeurIPS'21* | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/soft_median_gcn.py) |
-| **ElasticGNN**    | *Liu et al.* [Elastic Graph Neural Networks](https://arxiv.org/abs/2107.06996), *ICML'21*                                                                                                                                                   | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/elastic_gnn.py)     |
-| **AirGNN**        | *Liu et al.* [Graph Neural Networks with Adaptive Residual](https://openreview.net/forum?id=hfkER_KJiNw), *NeurIPS'21*                                                                                                                      | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/air_gnn.py)         |
-| **SimPGCN**       | *Jin et al.* [Node Similarity Preserving Graph Convolutional Networks](https://arxiv.org/abs/2011.09643), *WSDM'21*                                                                                                                         | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/simp_gcn.py)        |
-| **SAT**           | *Li et al.* [Spectral Adversarial Training for Robust Graph Neural Network](), *arXiv'22*                                                                                                                                                   | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/defense/gcn_sat.py)        |
+| Methods                 | Descriptions                                                                                                                               | Examples                                                                                     |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| **GCN**                 | *Kipf et al.* [Semi-Supervised Classification with Graph Convolutional Networks](https://arxiv.org/abs/1609.02907), *ICLR'17*              | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/gcn.py)   |
+| **SGC**                 | *Wu et al.*  [Simplifying Graph Convolutional Networks](https://arxiv.org/abs/1902.07153), *ICLR'19*                                       | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/sgc.py)   |
+| **GAT**                 | *Veličković et al.*  [Graph Attention Networks](https://arxiv.org/abs/1710.10903), *ICLR'18*                                               | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/gat.py)   |
+| **DAGNN**               | *Liu et al.*  [Towards Deeper Graph Neural Networks](https://arxiv.org/abs/2007.09296), *KDD'20*                                           | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/dagnn.py) |
+| **APPNP**               | *Klicpera et al.*  [Predict then Propagate: Graph Neural Networks meet Personalized PageRank](https://arxiv.org/abs/1810.05997), *ICLR'19* | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/appnp.py) |
+| **JKNet**               | *Xu et al.*  [Representation Learning on Graphs with Jumping Knowledge Networks](https://arxiv.org/abs/1806.03536), *ICML'18*              | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/jknet.py) |
+| **TAGCN**               | *Du et al.*  [Topological Adaptive Graph Convolutional Networks](https://arxiv.org/abs/1806.03536), *arXiv'17*                             | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/tagcn.py) |
+| **SSGC**                | *Zhu et al.*  [Simple Spectral Graph Convolution](https://openreview.net/forum?id=CYO5T-YjWZV), *ICLR'21*                                  | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/ssgc.py)  |
+| **NLGCN, NLMLP, NLGAT** | *Liu et al.*  [Non-Local Graph Neural Networks](https://ieeexplore.ieee.org/document/9645300), *TPAMI'22*                                  | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/nlgnn.py) |
 
 
 ### Techniques Against Adversarial Attacks
 
-| Methods                 | Descriptions                                                                                                                                 | Examples                                                                                                  |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| **JaccardPurification** | *Wu et al.* [Adversarial Examples on Graph Data: Deep Insights into Attack and Defense](https://arxiv.org/abs/1903.01610), *IJCAI'19*        | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/defense/gcn_jaccard.py)       |
-| **SVDPurification**     | *Entezari et al.* [All You Need Is Low (Rank): Defending Against Adversarial Attacks on Graphs](https://arxiv.org/abs/1903.01610), *WSDM'20* | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/defense/gcn_svd.py)           |
-| **GNNGUARD**            | *Zhang et al.* [GNNGUARD: Defending Graph Neural Networks against Adversarial Attacks](https://arxiv.org/abs/2006.08149), *NeurIPS'20*       | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/defense/gnn_guard.py)         |
-| **GUARD**               | *Li et al.* [GUARD: Graph Universal Adversarial Defense](https://arxiv.org/abs/2204.09803), *arXiv'22*                                       | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/defense/universal_defense.py) |
+| Methods                 | Descriptions                                                                                                                                                                                                                                | Examples                                                                                                  |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **MedianGCN**           | *Chen et al.* [Understanding Structural Vulnerability in Graph Convolutional Networks](https://www.ijcai.org/proceedings/2021/310), *IJCAI'21*                                                                                              | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/median_gcn.py)         |
+| **RobustGCN**           | *Zhu et al.*  [Robust Graph Convolutional Networks Against Adversarial Attacks](http://pengcui.thumedialab.com/papers/RGCN.pdf), *KDD'19*                                                                                                   | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/robust_gcn.py)         |
+| **SoftMedianGCN**       | *Geisler et al.* [Reliable Graph Neural Networks via Robust Aggregation](https://arxiv.org/abs/2010.15651), *NeurIPS'20*<br>*Geisler et al.* [Robustness of Graph Neural Networks at Scale](https://arxiv.org/abs/2110.14038), *NeurIPS'21* | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/soft_median_gcn.py)    |
+| **ElasticGNN**          | *Liu et al.* [Elastic Graph Neural Networks](https://arxiv.org/abs/2107.06996), *ICML'21*                                                                                                                                                   | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/elastic_gnn.py)        |
+| **AirGNN**              | *Liu et al.* [Graph Neural Networks with Adaptive Residual](https://openreview.net/forum?id=hfkER_KJiNw), *NeurIPS'21*                                                                                                                      | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/air_gnn.py)            |
+| **SimPGCN**             | *Jin et al.* [Node Similarity Preserving Graph Convolutional Networks](https://arxiv.org/abs/2011.09643), *WSDM'21*                                                                                                                         | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/simp_gcn.py)           |
+| **SAT**                 | *Li et al.* [Spectral Adversarial Training for Robust Graph Neural Network](), *arXiv'22*                                                                                                                                                   | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/defense/gcn_sat.py)           |
+| **JaccardPurification** | *Wu et al.* [Adversarial Examples on Graph Data: Deep Insights into Attack and Defense](https://arxiv.org/abs/1903.01610), *IJCAI'19*                                                                                                       | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/defense/gcn_jaccard.py)       |
+| **SVDPurification**     | *Entezari et al.* [All You Need Is Low (Rank): Defending Against Adversarial Attacks on Graphs](https://arxiv.org/abs/1903.01610), *WSDM'20*                                                                                                | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/defense/gcn_svd.py)           |
+| **GNNGUARD**            | *Zhang et al.* [GNNGUARD: Defending Graph Neural Networks against Adversarial Attacks](https://arxiv.org/abs/2006.08149), *NeurIPS'20*                                                                                                      | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/defense/gnn_guard.py)         |
+| **GUARD**               | *Li et al.* [GUARD: Graph Universal Adversarial Defense](https://arxiv.org/abs/2204.09803), *arXiv'22*                                                                                                                                      | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/defense/universal_defense.py) |
+
+More details of literatures and the official codes can be found at [Awesome Graph Adversarial Learning](https://github.com/gitgiter/Graph-Adversarial-Learning).
 
 ### Techniques Against Inherent Noise
 
 | Methods                | Descriptions                                                                                                                                                            | Examples                                                                                                    |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **DropEdge**           | *Rong et al.* [DropEdge: Towards Deep Graph Convolutional Networks on Node Classification](https://arxiv.org/abs/1907.10903), *ICLR'20*                                 | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/drop_edge.py)            |
+| **DropNode**           | *You et al.* [Graph Contrastive Learning with Augmentations](https://arxiv.org/abs/2010.13902), *NeurIPS'20*                                                            | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/drop_node.py)            |
+| **DropPath**           | *Li et al.* [MaskGAE: Masked Graph Modeling Meets Graph Autoencoders](https://arxiv.org/abs/2205.10053), *arXiv'22*'                                                    | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/drop_path.py)            |
 | **FeaturePropagation** | *Rossi et al.* [On the Unreasonable Effectiveness of Feature propagation in Learning on Graphs with Missing Node Features](https://arxiv.org/abs/2111.12128), *ICLR'21* | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/defense/feature_propagation.py) |
 
 
-More details of literatures and the official codes can be found at [Awesome Graph Adversarial Learning](https://github.com/gitgiter/Graph-Adversarial-Learning).
-
 ## Miscellaneous
-| Methods                             | Descriptions                                                                                                                                                                            | Examples                                                                                         |
-| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| **DropEdge**                        | *Rong et al.* [DropEdge: Towards Deep Graph Convolutional Networks on Node Classification](https://arxiv.org/abs/1907.10903), *ICLR'20*                                                 | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/drop_edge.py) |
-| **DropNode**                        | *You et al.* [Graph Contrastive Learning with Augmentations](https://arxiv.org/abs/2010.13902), *NeurIPS'20*                                                                            | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/drop_node.py) |
-| **DropPath**                        | *Li et al.* [MaskGAE: Masked Graph Modeling Meets Graph Autoencoders](https://arxiv.org/abs/2205.10053), *arXiv'22*'                                                                    | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/drop_path.py) |
-| **Centered Kernel Alignment (CKA)** | *Nguyen et al.* [Do Wide and Deep Networks Learn the Same Things? Uncovering How Neural Network Representations Vary with Width and Depth](https://arxiv.org/abs/2010.15327), *ICLR'21* | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/cka.py)              |
+| Methods                             | Descriptions                                                                                                                                                                            | Examples                                                                            |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| **Centered Kernel Alignment (CKA)** | *Nguyen et al.* [Do Wide and Deep Networks Learn the Same Things? Uncovering How Neural Network Representations Vary with Width and Depth](https://arxiv.org/abs/2010.15327), *ICLR'21* | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/cka.py) |
+
 
 
 # ❓ Known Issues

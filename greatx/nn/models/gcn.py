@@ -26,6 +26,9 @@ class GCN(nn.Module):
         whether to use bias in the layers, by default True
     bn: bool, optional
         whether to use :class:`BatchNorm1d` after the convolution layer, by default False         
+    normalize : bool, optional
+        whether to compute symmetric normalization
+        coefficients on the fly, by default True        
 
     Note
     ----
@@ -61,9 +64,9 @@ class GCN(nn.Module):
                  hids: list = [16],
                  acts: list = ['relu'],
                  dropout: float = 0.5,
+                 bias: bool = True,
                  bn: bool = False,
-                 normalize: bool = True,
-                 bias: bool = True):
+                 normalize: bool = True):
 
         super().__init__()
 

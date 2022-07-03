@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>greatx.dataset &mdash; GreatX 0.1.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/mytheme.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/greatx.png"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -27,7 +28,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> GreatX
+            <a href="../index.html">
             <img src="../_static/greatx.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
@@ -49,24 +50,10 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="root.html">greatx</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">greatx.dataset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="attack.html">greatx.attack</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="attack.html#base-classes">Base Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="attack.html#targeted-attacks">Targeted Attacks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="attack.html#untargeted-attacks">Untargeted Attacks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="attack.html#injection-attacks">Injection Attacks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="attack.html#backdoor-attacks">Backdoor Attacks</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="attack.html">greatx.attack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="defense.html">greatx.defense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nn.layers.html">greatx.nn.layers</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="nn.layers.html#id1">greatx.nn.layers</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="nn.models.html">greatx.nn.models</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="nn.models.html#greatx-nn-models-supervised">greatx.nn.models.supervised</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nn.models.html#greatx-nn-models-unsupervised">greatx.nn.models.unsupervised</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="nn.layers.html">greatx.nn.layers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nn.models.html">greatx.nn.models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="functional.html">greatx.functional</a></li>
 <li class="toctree-l1"><a class="reference internal" href="training.html">greatx.training</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utils.html">greatx.utils</a></li>
@@ -97,7 +84,7 @@
            <div itemprop="articleBody">
              
   <div class="section" id="greatx-dataset">
-<h1>greatx.dataset<a class="headerlink" href="#greatx-dataset" title="Permalink to this heading">¶</a></h1>
+<h1>greatx.dataset<a class="headerlink" href="#greatx-dataset" title="Permalink to this heading"></a></h1>
 <table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
@@ -111,7 +98,7 @@
 </table>
 <span class="target" id="module-greatx.dataset"></span><dl class="py class">
 <dt class="sig sig-object py" id="greatx.dataset.GraphDataset">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GraphDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/dataset/graph_dataset.html#GraphDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.dataset.GraphDataset" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GraphDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/dataset/graph_dataset.html#GraphDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.dataset.GraphDataset" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">InMemoryDataset</span></code></p>
 <p>A series of datasets used in GreatX. These datasets are
 stored in <code class="xref py py-obj docutils literal notranslate"><span class="pre">npz</span></code> format, consisting of a single graph.</p>
@@ -155,7 +142,7 @@ which considers the largest connected component for each graph.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.dataset.GraphDataset.available_datasets">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">available_datasets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/greatx/dataset/graph_dataset.html#GraphDataset.available_datasets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.dataset.GraphDataset.available_datasets" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">available_datasets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.10)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/greatx/dataset/graph_dataset.html#GraphDataset.available_datasets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.dataset.GraphDataset.available_datasets" title="Permalink to this definition"></a></dt>
 <dd><p>Return all available datasets.</p>
 </dd></dl>
 

@@ -2,32 +2,32 @@ greatx.nn.models
 ===================
 
 
-greatx.nn.supervised
+greatx.nn.models.supervised
 ------------------------------------------------
 
-.. currentmodule:: greatx.nn.supervised
+.. currentmodule:: greatx.nn.models.supervised
 
 .. autosummary::
     :nosignatures:
-    {% for cls in greatx.nn.supervised.classes %}
+    {% for cls in greatx.nn.models.supervised.classes %}
       {{ cls }}
     {% endfor %}
 
-.. automodule:: greatx.nn.supervised
+.. automodule:: greatx.nn.models.supervised
     :members:
     :undoc-members:
 
-greatx.nn.unsupervised
+greatx.nn.models.unsupervised
 ------------------------------------------------
 
-.. currentmodule:: greatx.nn.unsupervised
+.. currentmodule:: greatx.nn.models.unsupervised
 
 .. autosummary::
     :nosignatures:
-    {% for cls in greatx.nn.unsupervised.classes %}
+    {% for cls in greatx.nn.models.unsupervised.classes %}
       {{ cls }}
     {% endfor %}
 
-.. automodule:: greatx.nn.unsupervised
+.. automodule:: greatx.nn.models.unsupervised
     :members:
     :undoc-members:    

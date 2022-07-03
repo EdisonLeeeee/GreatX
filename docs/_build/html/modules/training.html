@@ -58,9 +58,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="defense.html">greatx.defense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nn.html">greatx.nn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="nn.html#greatx-nn-layers">greatx.nn.layers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nn.html#greatx-nn-models">greatx.nn.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nn.layers.html">greatx.nn.layers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nn.layers.html#id1">greatx.nn.layers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nn.models.html">greatx.nn.models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nn.models.html#greatx-nn-models-supervised">greatx.nn.models.supervised</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nn.models.html#greatx-nn-models-unsupervised">greatx.nn.models.unsupervised</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="functional.html">greatx.functional</a></li>
@@ -104,16 +108,16 @@
 <td><p>A simple trainer to train graph neural network models conveniently.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#greatx.training.get_trainer" title="greatx.training.get_trainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_trainer</span></code></a></p></td>
-<td><p>Get the default trainer using str or a model in <a class="reference internal" href="nn.html#module-greatx.nn.models" title="greatx.nn.models"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models</span></code></a></p></td>
+<td><p>Get the default trainer using str or a model in <a class="reference internal" href="nn.models.html#module-greatx.nn.models.supervised" title="greatx.nn.models.supervised"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#greatx.training.RobustGCNTrainer" title="greatx.training.RobustGCNTrainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RobustGCNTrainer</span></code></a></p></td>
-<td><p>Custom trainer for <a class="reference internal" href="nn.html#greatx.nn.models.RobustGCN" title="greatx.nn.models.RobustGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.RobustGCN</span></code></a></p></td>
+<td><p>Custom trainer for <a class="reference internal" href="nn.models.html#greatx.nn.models.supervised.RobustGCN" title="greatx.nn.models.supervised.RobustGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.RobustGCN</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#greatx.training.SimPGCNTrainer" title="greatx.training.SimPGCNTrainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimPGCNTrainer</span></code></a></p></td>
-<td><p>Custom trainer for <a class="reference internal" href="nn.html#greatx.nn.models.SimPGCN" title="greatx.nn.models.SimPGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.SimPGCN</span></code></a></p></td>
+<td><p>Custom trainer for <a class="reference internal" href="nn.models.html#greatx.nn.models.supervised.SimPGCN" title="greatx.nn.models.supervised.SimPGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.SimPGCN</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#greatx.training.SATTrainer" title="greatx.training.SATTrainer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SATTrainer</span></code></a></p></td>
-<td><p>Custom trainer for <a class="reference internal" href="nn.html#greatx.nn.models.SAT" title="greatx.nn.models.SAT"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.SAT</span></code></a></p></td>
+<td><p>Custom trainer for <a class="reference internal" href="nn.models.html#greatx.nn.models.supervised.SAT" title="greatx.nn.models.supervised.SAT"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.SAT</span></code></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -321,7 +325,7 @@ of the model.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="greatx.training.get_trainer">
 <span class="sig-name descname"><span class="pre">get_trainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Module</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#greatx.training.Trainer" title="greatx.training.trainer.Trainer"><span class="pre">Trainer</span></a></span></span><a class="reference internal" href="../_modules/greatx/training/get_trainer.html#get_trainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.get_trainer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the default trainer using str or a model in <a class="reference internal" href="nn.html#module-greatx.nn.models" title="greatx.nn.models"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models</span></code></a></p>
+<dd><p>Get the default trainer using str or a model in <a class="reference internal" href="nn.models.html#module-greatx.nn.models.supervised" title="greatx.nn.models.supervised"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised</span></code></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>model</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>torch.nn.Module</em><em>]</em>) – the model to be trained in</p>
@@ -360,7 +364,7 @@ of the model.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="greatx.training.RobustGCNTrainer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RobustGCNTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">device</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/training/robustgcn_trainer.html#RobustGCNTrainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.RobustGCNTrainer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Custom trainer for <a class="reference internal" href="nn.html#greatx.nn.models.RobustGCN" title="greatx.nn.models.RobustGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.RobustGCN</span></code></a></p>
+<dd><p>Custom trainer for <a class="reference internal" href="nn.models.html#greatx.nn.models.supervised.RobustGCN" title="greatx.nn.models.supervised.RobustGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.RobustGCN</span></code></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -399,7 +403,7 @@ of the model.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="greatx.training.SimPGCNTrainer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SimPGCNTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">device</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/training/simpgcn_trainer.html#SimPGCNTrainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.SimPGCNTrainer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Custom trainer for <a class="reference internal" href="nn.html#greatx.nn.models.SimPGCN" title="greatx.nn.models.SimPGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.SimPGCN</span></code></a></p>
+<dd><p>Custom trainer for <a class="reference internal" href="nn.models.html#greatx.nn.models.supervised.SimPGCN" title="greatx.nn.models.supervised.SimPGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.SimPGCN</span></code></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -438,7 +442,7 @@ of the model.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="greatx.training.SATTrainer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SATTrainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">device</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/training/sat_trainer.html#SATTrainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.training.SATTrainer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Custom trainer for <a class="reference internal" href="nn.html#greatx.nn.models.SAT" title="greatx.nn.models.SAT"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.SAT</span></code></a></p>
+<dd><p>Custom trainer for <a class="reference internal" href="nn.models.html#greatx.nn.models.supervised.SAT" title="greatx.nn.models.supervised.SAT"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.SAT</span></code></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

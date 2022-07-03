@@ -56,9 +56,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">greatx.defense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.html">greatx.nn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#greatx-nn-layers">greatx.nn.layers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#greatx-nn-models">greatx.nn.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.layers.html">greatx.nn.layers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.layers.html#id1">greatx.nn.layers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.models.html">greatx.nn.models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.models.html#greatx-nn-models-supervised">greatx.nn.models.supervised</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.models.html#greatx-nn-models-unsupervised">greatx.nn.models.unsupervised</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/functional.html">greatx.functional</a></li>
@@ -96,7 +100,7 @@
 <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
 
 
-<div class="viewcode-block" id="Sequential"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.Sequential">[docs]</a><span class="k">class</span> <span class="nc">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">):</span>
+<div class="viewcode-block" id="Sequential"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.Sequential">[docs]</a><span class="k">class</span> <span class="nc">Sequential</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A modified :class:`torch.nn.Sequential` which can accept multiple inputs.</span>
 
 <span class="sd">    Parameters</span>
@@ -162,7 +166,7 @@
             <span class="n">para_required</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">forward</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_para_required</span> <span class="o">=</span> <span class="n">para_required</span>
 
-<div class="viewcode-block" id="Sequential.forward"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.Sequential.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Sequential.forward"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.Sequential.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">loc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loc</span>
         <span class="k">assert</span> <span class="n">loc</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span>
@@ -179,7 +183,7 @@
             <span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[:</span><span class="n">loc</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">output</span><span class="p">,)</span> <span class="o">+</span> <span class="n">inputs</span><span class="p">[</span><span class="n">loc</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
         <span class="k">return</span> <span class="n">output</span></div>
 
-<div class="viewcode-block" id="Sequential.reset_parameters"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.Sequential.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Sequential.reset_parameters"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.Sequential.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="s1">&#39;reset_parameters&#39;</span><span class="p">):</span>
                 <span class="n">layer</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span></div></div>

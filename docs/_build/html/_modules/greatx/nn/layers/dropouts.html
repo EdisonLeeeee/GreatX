@@ -56,9 +56,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">greatx.defense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.html">greatx.nn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#greatx-nn-layers">greatx.nn.layers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#greatx-nn-models">greatx.nn.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.layers.html">greatx.nn.layers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.layers.html#id1">greatx.nn.layers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.models.html">greatx.nn.models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.models.html#greatx-nn-models-supervised">greatx.nn.models.supervised</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.models.html#greatx-nn-models-unsupervised">greatx.nn.models.unsupervised</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/functional.html">greatx.functional</a></li>
@@ -99,7 +103,7 @@
 <span class="kn">from</span> <span class="nn">greatx.functional</span> <span class="kn">import</span> <span class="n">drop_edge</span><span class="p">,</span> <span class="n">drop_node</span><span class="p">,</span> <span class="n">drop_path</span>
 
 
-<div class="viewcode-block" id="DropEdge"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.DropEdge">[docs]</a><span class="k">class</span> <span class="nc">DropEdge</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="DropEdge"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.DropEdge">[docs]</a><span class="k">class</span> <span class="nc">DropEdge</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DropEdge: Sampling edge using a uniform distribution </span>
 <span class="sd">    from the `&quot;DropEdge: Towards Deep Graph Convolutional </span>
@@ -136,11 +140,11 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
 
-<div class="viewcode-block" id="DropEdge.forward"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.DropEdge.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+<div class="viewcode-block" id="DropEdge.forward"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.DropEdge.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">drop_edge</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="DropNode"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.DropNode">[docs]</a><span class="k">class</span> <span class="nc">DropNode</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="DropNode"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.DropNode">[docs]</a><span class="k">class</span> <span class="nc">DropNode</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DropNode: Sampling node using a uniform distribution.</span>
 <span class="sd">    from the `&quot;Graph Contrastive Learning </span>
@@ -172,11 +176,11 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
 
-<div class="viewcode-block" id="DropNode.forward"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.DropNode.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+<div class="viewcode-block" id="DropNode.forward"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.DropNode.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">drop_node</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="DropPath"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.DropPath">[docs]</a><span class="k">class</span> <span class="nc">DropPath</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="DropPath"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.DropPath">[docs]</a><span class="k">class</span> <span class="nc">DropPath</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;DropPath: a structured form of :class:`greatx.functional.drop_edge`.</span>
 <span class="sd">    From the `&quot;MaskGAE: Masked Graph Modeling Meets </span>
 <span class="sd">    Graph Autoencoders&quot; &lt;https://arxiv.org/abs/2205.10053&gt;`_</span>
@@ -245,7 +249,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span> <span class="o">=</span> <span class="n">num_nodes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">by</span> <span class="o">=</span> <span class="n">by</span>
 
-<div class="viewcode-block" id="DropPath.forward"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.DropPath.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+<div class="viewcode-block" id="DropPath.forward"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.DropPath.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">drop_path</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">,</span>
                          <span class="n">num_nodes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">by</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span></div></div>
 </pre></div>

@@ -56,9 +56,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">greatx.defense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.html">greatx.nn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#greatx-nn-layers">greatx.nn.layers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#greatx-nn-models">greatx.nn.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.layers.html">greatx.nn.layers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.layers.html#id1">greatx.nn.layers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.models.html">greatx.nn.models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.models.html#greatx-nn-models-supervised">greatx.nn.models.supervised</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.models.html#greatx-nn-models-unsupervised">greatx.nn.models.unsupervised</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/functional.html">greatx.functional</a></li>
@@ -118,7 +122,7 @@
     <span class="k">return</span> <span class="n">adj</span>
 
 
-<div class="viewcode-block" id="GCNConv"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.GCNConv">[docs]</a><span class="k">class</span> <span class="nc">GCNConv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="GCNConv"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.GCNConv">[docs]</a><span class="k">class</span> <span class="nc">GCNConv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;The graph convolutional operator from the `&quot;Semi-supervised</span>
 <span class="sd">    Classification with Graph Convolutional Networks&quot;</span>
 <span class="sd">    &lt;https://arxiv.org/abs/1609.02907&gt;`_ paper (ICLR&#39;17)</span>
@@ -187,11 +191,11 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span>
 
-<div class="viewcode-block" id="GCNConv.reset_parameters"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.GCNConv.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GCNConv.reset_parameters"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.GCNConv.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lin</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span>
         <span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bias</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GCNConv.forward"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.GCNConv.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Adj</span><span class="p">,</span>
+<div class="viewcode-block" id="GCNConv.forward"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.GCNConv.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Adj</span><span class="p">,</span>
                 <span class="n">edge_weight</span><span class="p">:</span> <span class="n">OptTensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>

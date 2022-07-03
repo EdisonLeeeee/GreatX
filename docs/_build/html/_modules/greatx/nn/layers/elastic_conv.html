@@ -56,9 +56,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">greatx.defense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.html">greatx.nn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#greatx-nn-layers">greatx.nn.layers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#greatx-nn-models">greatx.nn.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.layers.html">greatx.nn.layers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.layers.html#id1">greatx.nn.layers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.models.html">greatx.nn.models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.models.html#greatx-nn-models-supervised">greatx.nn.models.supervised</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.models.html#greatx-nn-models-unsupervised">greatx.nn.models.unsupervised</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/functional.html">greatx.functional</a></li>
@@ -149,7 +153,7 @@
     <span class="k">return</span> <span class="n">inc</span>
 
 
-<div class="viewcode-block" id="ElasticConv"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.ElasticConv">[docs]</a><span class="k">class</span> <span class="nc">ElasticConv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticConv"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.ElasticConv">[docs]</a><span class="k">class</span> <span class="nc">ElasticConv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The ElasticGNN operator from the `&quot;Elastic Graph Neural </span>
 <span class="sd">    Networks&quot; &lt;https://arxiv.org/abs/2107.06996&gt;`_</span>
@@ -213,15 +217,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">L21</span> <span class="o">=</span> <span class="n">L21</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cached</span> <span class="o">=</span> <span class="n">cached</span>
 
-<div class="viewcode-block" id="ElasticConv.reset_parameters"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.ElasticConv.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticConv.reset_parameters"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.ElasticConv.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cache_clear</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ElasticConv.cache_clear"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.ElasticConv.cache_clear">[docs]</a>    <span class="k">def</span> <span class="nf">cache_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ElasticConv.cache_clear"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.ElasticConv.cache_clear">[docs]</a>    <span class="k">def</span> <span class="nf">cache_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Clear cached inputs or intermediate results.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cached_inc</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="ElasticConv.forward"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.ElasticConv.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Adj</span><span class="p">,</span>
+<div class="viewcode-block" id="ElasticConv.forward"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.ElasticConv.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Adj</span><span class="p">,</span>
                 <span class="n">edge_weight</span><span class="p">:</span> <span class="n">OptTensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">:</span>
@@ -251,7 +255,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">emp_forward</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">inc_mat</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ElasticConv.emp_forward"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.ElasticConv.emp_forward">[docs]</a>    <span class="k">def</span> <span class="nf">emp_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">inc_mat</span><span class="p">:</span> <span class="n">SparseTensor</span><span class="p">,</span>
+<div class="viewcode-block" id="ElasticConv.emp_forward"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.ElasticConv.emp_forward">[docs]</a>    <span class="k">def</span> <span class="nf">emp_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">inc_mat</span><span class="p">:</span> <span class="n">SparseTensor</span><span class="p">,</span>
                     <span class="n">edge_index</span><span class="p">:</span> <span class="n">Adj</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">:</span> <span class="n">OptTensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
         <span class="n">lambda1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda1</span>
         <span class="n">lambda2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda2</span>
@@ -289,11 +293,11 @@
 
         <span class="k">return</span> <span class="n">x</span></div>
 
-<div class="viewcode-block" id="ElasticConv.L1_projection"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.ElasticConv.L1_projection">[docs]</a>    <span class="k">def</span> <span class="nf">L1_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<div class="viewcode-block" id="ElasticConv.L1_projection"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.ElasticConv.L1_projection">[docs]</a>    <span class="k">def</span> <span class="nf">L1_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;component-wise projection onto the l∞ ball of radius λ1.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">min</span><span class="o">=-</span><span class="n">lambda_</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="n">lambda_</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ElasticConv.L21_projection"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.ElasticConv.L21_projection">[docs]</a>    <span class="k">def</span> <span class="nf">L21_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<div class="viewcode-block" id="ElasticConv.L21_projection"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.ElasticConv.L21_projection">[docs]</a>    <span class="k">def</span> <span class="nf">L21_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">lambda_</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
         <span class="c1"># row-wise projection on the l2 ball of radius λ1.</span>
         <span class="n">row_norm</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">scale</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">row_norm</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="n">lambda_</span><span class="p">)</span>

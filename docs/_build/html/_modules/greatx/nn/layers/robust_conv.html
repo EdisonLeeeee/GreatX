@@ -56,9 +56,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">greatx.defense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.html">greatx.nn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#greatx-nn-layers">greatx.nn.layers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.html#greatx-nn-models">greatx.nn.models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.layers.html">greatx.nn.layers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.layers.html#id1">greatx.nn.layers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules/nn.models.html">greatx.nn.models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.models.html#greatx-nn-models-supervised">greatx.nn.models.supervised</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/nn.models.html#greatx-nn-models-unsupervised">greatx.nn.models.unsupervised</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/functional.html">greatx.functional</a></li>
@@ -108,7 +112,7 @@
 <span class="kn">from</span> <span class="nn">greatx.nn.layers.gcn_conv</span> <span class="kn">import</span> <span class="n">dense_gcn_norm</span>
 
 
-<div class="viewcode-block" id="RobustConv"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.RobustConv">[docs]</a><span class="k">class</span> <span class="nc">RobustConv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="RobustConv"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.RobustConv">[docs]</a><span class="k">class</span> <span class="nc">RobustConv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;The robust graph convolutional operator</span>
 <span class="sd">    from the `&quot;Robust Graph Convolutional Networks </span>
 <span class="sd">    Against Adversarial Attacks&quot;</span>
@@ -168,13 +172,13 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span>
 
-<div class="viewcode-block" id="RobustConv.reset_parameters"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.RobustConv.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RobustConv.reset_parameters"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.RobustConv.reset_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">reset_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lin_mean</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lin_var</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span>
         <span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bias_mean</span><span class="p">)</span>
         <span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bias_var</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RobustConv.forward"><a class="viewcode-back" href="../../../../modules/nn.html#greatx.nn.layers.RobustConv.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">OptPairTensor</span><span class="p">],</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Adj</span><span class="p">,</span>
+<div class="viewcode-block" id="RobustConv.forward"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.RobustConv.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">OptPairTensor</span><span class="p">],</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Adj</span><span class="p">,</span>
                 <span class="n">edge_weight</span><span class="p">:</span> <span class="n">OptTensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">):</span>

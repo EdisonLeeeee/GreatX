@@ -7,6 +7,7 @@ from .dagnn import DAGNN
 from .jknet import JKNet
 from .tagcn import TAGCN
 from .nlgnn import NLGCN, NLGAT, NLMLP
+from .mlp import LogisticRegression, MLP
 
 # defense models
 from .median_gcn import MedianGCN
@@ -20,6 +21,7 @@ from .sat import SAT
 
 classes = __all__ = ["GCN", "SGC", "SSGC", "GAT", "APPNP", "DAGNN",
                      "JKNet", "TAGCN", "NLGCN", "NLGAT", "NLMLP",
+                     "LogisticRegression", "MLP",
                      "MedianGCN", "RobustGCN", "AirGNN",
                      "ElasticGNN", "SoftMedianGCN", "SimPGCN",
                      "GNNGUARD", "SAT"]

@@ -32,7 +32,7 @@ class GAT(nn.Module):
     Note
     ----
     It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :meth:`greatx.utils.wrapper`. 
+    hidden units (activation functions) using :func:`greatx.utils.wrapper`. 
 
     See Examples below:
 
@@ -51,7 +51,7 @@ class GAT(nn.Module):
     >>> model = GAT(100, 10, hids=[16]*8, acts=['elu'])
 
     Reference:
-    
+
     * Paper: https://arxiv.org/abs/1710.10903
     * Author's code: https://github.com/PetarV-/GAT
     * Pytorch implementation: https://github.com/Diego999/pyGAT    

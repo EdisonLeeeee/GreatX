@@ -7,11 +7,12 @@ from greatx.utils import wrapper
 
 
 class Discriminator(nn.Module):
-    def __init__(self, n_hidden):
+    def __init__(self, in_channels):
         super().__init__()
-        self.weight = nn.Parameter(torch.Tensor(n_hidden, n_hidden))
+        self.weight = nn.Parameter(torch.Tensor(in_channels, in_channels))
 
-    def uniform(self, size, tensor):
+    @staticmethod
+    def uniform(size, tensor):
         bound = 1.0 / math.sqrt(size)
         if tensor is not None:
             tensor.data.uniform_(-bound, bound)
@@ -26,6 +27,54 @@ class Discriminator(nn.Module):
 
 
 class DGI(nn.Module):
+    r"""Deep Graph Infomax (DGI) from the 
+    `"Deep Graph Infomax"
+    <https://arxiv.org/abs/1809.10341>`_ paper (ICLR'19)
+
+    Parameters
+    ----------
+    in_channels : int, 
+        the input dimensions of model
+    hids : list, optional
+        the number of hidden units for each hidden layer, by default [512]
+    acts : list, optional
+        the activation function for each hidden layer, by default ['prelu']
+    dropout : float, optional
+        the dropout ratio of model, by default 0.0
+    bias : bool, optional
+        whether to use bias in the layers, by default True
+    bn: bool, optional
+        whether to use :class:`BatchNorm1d` after the convolution layer, by default False         
+    normalize : bool, optional
+        whether to compute symmetric normalization
+        coefficients on the fly, by default True        
+
+    Note
+    ----
+    It is convenient to extend the number of layers with different or the same
+    hidden units (activation functions) using :func:`greatx.utils.wrapper`. 
+
+    See Examples below:
+
+    Examples
+    --------
+    >>> # DGI with one hidden layer
+    >>> model = DGI(100)
+
+    >>> # DGI with two hidden layers
+    >>> model = DGI(100, hids=[32, 16], acts=['relu', 'elu'])
+
+    >>> # DGI with two hidden layers, without activation at the first layer
+    >>> model = DGI(100, hids=[32, 16], acts=[None, 'relu'])
+
+    >>> # DGI with very deep architectures, each layer has elu as activation function
+    >>> model = DGI(100, hids=[16]*8, acts=['elu'])
+
+    Reference:
+
+    * Author's code: https://github.com/PetarV-/DGI
+
+    """
     @wrapper
     def __init__(self,
                  in_channels: int,

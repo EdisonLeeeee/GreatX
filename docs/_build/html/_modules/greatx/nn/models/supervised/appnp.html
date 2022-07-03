@@ -1,87 +1,102 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>greatx.nn.models.supervised.appnp &mdash; GreatX 0.1.0 documentation</title>
-      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../../_static/css/mytheme.css" type="text/css" />
-    <link rel="shortcut icon" href="../../../../../_static/greatx.png"/>
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/css/mytheme.css" type="text/css" />
+  <link rel="shortcut icon" href="../../../../../_static/greatx.png" />
   <!--[if lt IE 9]>
     <script src="../../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
-        <script src="../../../../../_static/jquery.js"></script>
-        <script src="../../../../../_static/underscore.js"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../../_static/doctools.js"></script>
-    <script src="../../../../../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../../../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../../../search.html" /> 
+
+  <script data-url_root="../../../../../" id="documentation_options"
+    src="../../../../../_static/documentation_options.js"></script>
+  <script src="../../../../../_static/jquery.js"></script>
+  <script src="../../../../../_static/underscore.js"></script>
+  <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+  <script src="../../../../../_static/doctools.js"></script>
+  <script src="../../../../../_static/js/theme.js"></script>
+  <link rel="index" title="Index" href="../../../../../genindex.html" />
+  <link rel="search" title="Search" href="../../../../../search.html" />
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../../../../../index.html">
-            <img src="../../../../../_static/greatx.png" class="logo" alt="Logo"/>
+        <div class="wy-side-nav-search">
+          <a href="../../../../../index.html">
+            <img src="../../../../../_static/greatx.png" class="logo" alt="Logo" />
           </a>
-              <div class="version">
-                0.1.0
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../notes/installation.html">Installation</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../modules/root.html">greatx</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../modules/dataset.html">greatx.dataset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../modules/attack.html">greatx.attack</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../modules/defense.html">greatx.defense</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../modules/nn.layers.html">greatx.nn.layers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../modules/nn.models.html">greatx.nn.models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../modules/functional.html">greatx.functional</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../modules/training.html">greatx.training</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../modules/utils.html">greatx.utils</a></li>
-</ul>
+          <div class="version">
+            0.1.0
+          </div>
+          <div role="search">
+            <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+              <input type="text" name="q" placeholder="Search docs" />
+              <input type="hidden" name="check_keywords" value="yes" />
+              <input type="hidden" name="area" value="default" />
+            </form>
+          </div>
+        </div>
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+          <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+          <ul>
+            <li class="toctree-l1"><a class="reference internal"
+                href="../../../../../notes/installation.html">Installation</a></li>
+          </ul>
+          <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+          <ul>
+            <li class="toctree-l1"><a class="reference internal" href="../../../../../modules/root.html">greatx</a></li>
+            <li class="toctree-l1"><a class="reference internal"
+                href="../../../../../modules/dataset.html">greatx.dataset</a></li>
+            <li class="toctree-l1"><a class="reference internal"
+                href="../../../../../modules/attack.html">greatx.attack</a></li>
+            <li class="toctree-l1"><a class="reference internal"
+                href="../../../../../modules/defense.html">greatx.defense</a></li>
+            <li class="toctree-l1"><a class="reference internal"
+                href="../../../../../modules/nn.layers.html">greatx.nn.layers</a></li>
+            <li class="toctree-l1"><a class="reference internal"
+                href="../../../../../modules/nn.models.html">greatx.nn.models</a></li>
+            <li class="toctree-l1"><a class="reference internal"
+                href="../../../../../modules/functional.html">greatx.functional</a></li>
+            <li class="toctree-l1"><a class="reference internal"
+                href="../../../../../modules/training.html">greatx.training</a></li>
+            <li class="toctree-l1"><a class="reference internal"
+                href="../../../../../modules/utils.html">greatx.utils</a></li>
+          </ul>
 
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../../../index.html">GreatX</a>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" aria-label="Mobile navigation menu">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../../../index.html">GreatX</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
-      <li>greatx.nn.models.supervised.appnp</li>
-      <li class="wy-breadcrumbs-aside">
-      </li>
-  </ul>
-  <hr/>
-</div>
+            <ul class="wy-breadcrumbs">
+              <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+              <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+              <li>greatx.nn.models.supervised.appnp</li>
+              <li class="wy-breadcrumbs-aside">
+              </li>
+            </ul>
+            <hr />
+          </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <h1>Source code for greatx.nn.models.supervised.appnp</h1><div class="highlight"><pre>
+            <div itemprop="articleBody">
+
+              <h1>Source code for greatx.nn.models.supervised.appnp</h1>
+              <div class="highlight">
+                <pre>
 <span></span><span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.nn</span> <span class="kn">import</span> <span class="n">APPNP</span> <span class="k">as</span> <span class="n">APPNPConv</span>
 
@@ -127,7 +142,7 @@
 <span class="sd">    to clear cached results.</span>
 
 <span class="sd">    It is convenient to extend the number of layers with different or the same</span>
-<span class="sd">    hidden units (activation functions) using :meth:`greatx.utils.wrapper`. </span>
+<span class="sd">    hidden units (activation functions) using :func:`greatx.utils.wrapper`. </span>
 
 <span class="sd">    See Examples below:</span>
 
@@ -184,33 +199,35 @@
 <div class="viewcode-block" id="APPNP.forward"><a class="viewcode-back" href="../../../../../modules/nn.models.html#greatx.nn.models.supervised.APPNP.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">)</span></div></div>
-</pre></div>
+</pre>
+              </div>
 
-           </div>
+            </div>
           </div>
           <footer>
 
-  <hr/>
+            <hr />
 
-  <div role="contentinfo">
-    <p>&#169; Copyright 2022, Jintang Li.</p>
-  </div>
+            <div role="contentinfo">
+              <p>&#169; Copyright 2022, Jintang Li.</p>
+            </div>
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+            <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+            provided by <a href="https://readthedocs.org">Read the Docs</a>.
 
-</footer>
+
+          </footer>
         </div>
       </div>
     </section>
   </div>
   <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+    jQuery(function () {
+      SphinxRtdTheme.Navigation.enable(true);
+    });
+  </script>
 
 </body>
+
 </html>

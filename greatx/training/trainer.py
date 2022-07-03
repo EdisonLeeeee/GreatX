@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from greatx.training.callbacks import (Callback, CallbackList, Optimizer,
-                                         Scheduler)
+                                       Scheduler)
 from torch import Tensor
 from torch.utils.data import DataLoader
 from torch_geometric.data import Data
@@ -34,18 +34,18 @@ class Trainer:
     Data(x=[2485, 1433], edge_index=[2, 10138], y=[2485])
 
     >>> # simple training
-    >>> trainer.fit({'data': data, 'mask': train_mask})
+    >>> trainer.fit({'data': data, 'mask': your_train_mask})
 
     >>> # train with model picking
     >>> from greatx.training import ModelCheckpoint
     >>> cb = ModelCheckpoint('my_ckpt', monitor='val_acc')
-    >>> trainer.fit({'data': data, 'mask': train_mask},
-    {'data': data, 'mask': val_mask}, callbacks=[cb])    
+    >>> trainer.fit({'data': data, 'mask': your_train_mask},
+    ... {'data': data, 'mask': your_val_mask}, callbacks=[cb])    
 
     >>> # get training logs
     >>> history = trainer.model.history
 
-    >>> trainer.evaluate({'data': data, 'mask': data.test_mask}) # evaluation
+    >>> trainer.evaluate({'data': data, 'mask': your_test_mask}) # evaluation
 
     >>> predict = trainer.predict({'data': data, 'mask': your_mask}) # prediction
     """
@@ -54,10 +54,14 @@ class Trainer:
         self.device = torch.device(device)
         self.model = model.to(self.device)
 
-        cfg.setdefault("lr", 1e-2)
-        cfg.setdefault("weight_decay", 5e-4)
-
         self.cfg = BunchDict(cfg)
+
+        if cfg:
+            print("Received extra configuration: " + str(self.cfg))
+
+        self.cfg.setdefault("lr", 1e-2)
+        self.cfg.setdefault("weight_decay", 5e-4)
+
         self.optimizer = self.config_optimizer()
         self.scheduler = self.config_scheduler(self.optimizer)
 

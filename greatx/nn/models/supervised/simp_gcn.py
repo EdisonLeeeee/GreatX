@@ -42,7 +42,7 @@ class SimPGCN(nn.Module):
     Note
     ----
     It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :meth:`greatx.utils.wrapper`. 
+    hidden units (activation functions) using :func:`greatx.utils.wrapper`. 
 
     See Examples below:
 
@@ -189,7 +189,7 @@ class SimPGCN(nn.Module):
         pseudo_labels = self._pseudo_labels
         if len(node_pairs[0]) > K:
             #             sampled = np.random.choice(len(node_pairs[0]), K, replace=False)
-            prob = torch.full((len(node_pairs[0]),), 1./len(node_pairs[0]))
+            prob = torch.full((len(node_pairs[0]),), 1. / len(node_pairs[0]))
             sampled = prob.multinomial(num_samples=K, replacement=False)
 
             embeddings0 = embeddings[node_pairs[0][sampled]]

@@ -161,6 +161,7 @@ In detail, the following methods are currently implemented:
 
 ### Standard GNNs (without defense)
 
+#### Supervised
 | Methods                 | Descriptions                                                                                                                               | Examples                                                                                                |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
 | **GCN**                 | *Kipf et al.* [Semi-Supervised Classification with Graph Convolutional Networks](https://arxiv.org/abs/1609.02907), *ICLR'17*              | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/supervised/gcn.py)   |
@@ -173,6 +174,10 @@ In detail, the following methods are currently implemented:
 | **SSGC**                | *Zhu et al.*  [Simple Spectral Graph Convolution](https://openreview.net/forum?id=CYO5T-YjWZV), *ICLR'21*                                  | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/supervised/ssgc.py)  |
 | **NLGCN, NLMLP, NLGAT** | *Liu et al.*  [Non-Local Graph Neural Networks](https://ieeexplore.ieee.org/document/9645300), *TPAMI'22*                                  | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/supervised/nlgnn.py) |
 
+#### Unsupervised/Self-supervise
+| Methods | Descriptions                                                                          | Examples                                                                                                |
+| ------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| **DGI** | *Veličković et al.* [Deep Graph Infomax](https://arxiv.org/abs/1809.10341), *ICLR'17* | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/unsupervised/dgi.py) |
 
 ### Techniques Against Adversarial Attacks
 

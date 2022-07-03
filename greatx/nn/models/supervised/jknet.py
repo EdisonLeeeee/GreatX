@@ -41,7 +41,7 @@ class JKNet(nn.Module):
     to clear cached results.
 
     It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :meth:`greatx.utils.wrapper`. 
+    hidden units (activation functions) using :func:`greatx.utils.wrapper`. 
 
     See Examples below:
 
@@ -58,8 +58,8 @@ class JKNet(nn.Module):
     def __init__(self,
                  in_channels: int,
                  out_channels: int,
-                 hids: list = [16]*3,
-                 acts: list = ['relu']*3,
+                 hids: list = [16] * 3,
+                 acts: list = ['relu'] * 3,
                  dropout: float = 0.5,
                  mode: str = 'cat',
                  bn: bool = False,

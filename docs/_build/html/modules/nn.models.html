@@ -6,7 +6,7 @@
   <title>greatx.nn.models &mdash; GreatX 0.1.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/mytheme.css" type="text/css" />
-    <link rel="shortcut icon" href="../_static/greatx.png"/>
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -130,8 +130,14 @@
 </p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#greatx.nn.models.supervised.NLMLP" title="greatx.nn.models.supervised.NLMLP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NLMLP</span></code></a></p></td>
-<td><p><p>Non-Local Graph Neural Networks (NLGNN) with <code class="xref py py-class docutils literal notranslate"><span class="pre">MLP</span></code> as backbone from the <a class="reference external" href="https://ieeexplore.ieee.org/document/9645300">&quot;Non-Local Graph Neural Networks&quot;</a> paper (TPAMI'22)</p>
+<td><p><p>Non-Local Graph Neural Networks (NLGNN) with <a class="reference internal" href="#greatx.nn.models.supervised.MLP" title="greatx.nn.models.supervised.MLP"><code class="xref py py-class docutils literal notranslate"><span class="pre">MLP</span></code></a> as backbone from the <a class="reference external" href="https://ieeexplore.ieee.org/document/9645300">&quot;Non-Local Graph Neural Networks&quot;</a> paper (TPAMI'22)</p>
 </p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#greatx.nn.models.supervised.LogisticRegression" title="greatx.nn.models.supervised.LogisticRegression"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a></p></td>
+<td><p>Simple logistic regression model for self-supervised/unsupervised learning.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greatx.nn.models.supervised.MLP" title="greatx.nn.models.supervised.MLP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MLP</span></code></a></p></td>
+<td><p>Implementation of Multi-layer Perceptron (MLP) or Feed-forward Neural Network (FNN).</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#greatx.nn.models.supervised.MedianGCN" title="greatx.nn.models.supervised.MedianGCN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MedianGCN</span></code></a></p></td>
 <td><p>Graph Convolution Network (GCN) with median aggregation (MedianGCN) from the <a class="reference external" href="https://www.ijcai.org/proceedings/2021/310">&quot;Understanding Structural Vulnerability in Graph Convolutional Networks&quot;</a> paper (IJCAI'21)</p></td>
@@ -182,7 +188,7 @@ coefficients on the fly, by default True</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -260,7 +266,7 @@ cached version for further executions, by default True</p></li>
 <p>To accept a different graph as inputs, please call <a class="reference internal" href="#greatx.nn.models.supervised.SGC.cache_clear" title="greatx.nn.models.supervised.SGC.cache_clear"><code class="xref py py-meth docutils literal notranslate"><span class="pre">cache_clear()</span></code></a> first
 to clear cached results.</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -345,7 +351,7 @@ cached version for further executions, by default True</p></li>
 <p>To accept a different graph as inputs, please call <a class="reference internal" href="#greatx.nn.models.supervised.SSGC.cache_clear" title="greatx.nn.models.supervised.SSGC.cache_clear"><code class="xref py py-meth docutils literal notranslate"><span class="pre">cache_clear()</span></code></a> first
 to clear cached results.</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -423,7 +429,7 @@ registered hooks while the latter silently ignores them.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -505,7 +511,7 @@ cached version for further executions, by default False</p></li>
 <p>To accept a different graph as inputs, please call <code class="xref py py-meth docutils literal notranslate"><span class="pre">cache_clear()</span></code> first
 to clear cached results.</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -574,7 +580,7 @@ paper (KDD’20)</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -650,7 +656,7 @@ Jumping Knowledge Networks”</a> paper (ICML’18)</p>
 <p>To accept a different graph as inputs, please call <code class="xref py py-meth docutils literal notranslate"><span class="pre">cache_clear()</span></code> first
 to clear cached results.</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -709,7 +715,7 @@ coefficients on the fly, by default False</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -782,7 +788,7 @@ registered hooks while the latter silently ignores them.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -861,7 +867,7 @@ registered hooks while the latter silently ignores them.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -920,7 +926,7 @@ registered hooks while the latter silently ignores them.</p>
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.NLMLP">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NLMLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">hids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[32]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">['relu']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/nlgnn.html#NLMLP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.NLMLP" title="Permalink to this definition"></a></dt>
 <dd><p>Non-Local Graph Neural Networks (NLGNN) with
-<code class="xref py py-class docutils literal notranslate"><span class="pre">MLP</span></code> as backbone from the
+<a class="reference internal" href="#greatx.nn.models.supervised.MLP" title="greatx.nn.models.supervised.MLP"><code class="xref py py-class docutils literal notranslate"><span class="pre">MLP</span></code></a> as backbone from the
 <a class="reference external" href="https://ieeexplore.ieee.org/document/9645300">“Non-Local Graph Neural Networks”</a> paper (TPAMI’22)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -941,7 +947,7 @@ coefficients on the fly, by default True</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -997,6 +1003,127 @@ registered hooks while the latter silently ignores them.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="greatx.nn.models.supervised.LogisticRegression">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LogisticRegression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/mlp.html#LogisticRegression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.LogisticRegression" title="Permalink to this definition"></a></dt>
+<dd><p>Simple logistic regression model for
+self-supervised/unsupervised learning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>,</em>) – the input dimensions of model</p></li>
+<li><p><strong>out_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>,</em>) – the output dimensions of model</p></li>
+<li><p><strong>bias</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to use bias in the layers, by default True</p></li>
+<li><p><strong>below</strong> (<em>See Examples</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># LogisticRegression without hidden layer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#greatx.nn.models.supervised.MLP" title="greatx.nn.models.supervised.MLP"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.MLP</span></code></a></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="greatx.nn.models.supervised.LogisticRegression.reset_parameters">
+<span class="sig-name descname"><span class="pre">reset_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/mlp.html#LogisticRegression.reset_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.LogisticRegression.reset_parameters" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="greatx.nn.models.supervised.LogisticRegression.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/mlp.html#LogisticRegression.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.LogisticRegression.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="greatx.nn.models.supervised.LogisticRegression.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></em><a class="headerlink" href="#greatx.nn.models.supervised.LogisticRegression.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="greatx.nn.models.supervised.MLP">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">hids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">['relu']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/mlp.html#MLP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.MLP" title="Permalink to this definition"></a></dt>
+<dd><p>Implementation of Multi-layer Perceptron (MLP) or
+Feed-forward Neural Network (FNN).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>,</em>) – the input dimensions of model</p></li>
+<li><p><strong>out_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>,</em>) – the output dimensions of model</p></li>
+<li><p><strong>hids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>, </em><em>optional</em>) – the number of hidden units for each hidden layer, by default [16]</p></li>
+<li><p><strong>acts</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>, </em><em>optional</em>) – the activation function for each hidden layer, by default [‘relu’]</p></li>
+<li><p><strong>dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – the dropout ratio of model, by default 0.5</p></li>
+<li><p><strong>bias</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to use bias in the layers, by default True</p></li>
+<li><p><strong>bn</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to use <code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm1d</span></code> after the convolution layer, by default False</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is convenient to extend the number of layers with different or the same
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+<p>See Examples below:</p>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># MLP with one hidden layer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># MLP with two hidden layers</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">acts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="s1">&#39;elu&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># MLP with two hidden layers, without activation at the first layer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">acts</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;relu&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># MLP with very deep architectures, each layer has elu as activation function</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span><span class="o">*</span><span class="mi">8</span><span class="p">,</span> <span class="n">acts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;elu&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#greatx.nn.models.supervised.LogisticRegression" title="greatx.nn.models.supervised.LogisticRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.LogisticRegression</span></code></a></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="greatx.nn.models.supervised.MLP.reset_parameters">
+<span class="sig-name descname"><span class="pre">reset_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/mlp.html#MLP.reset_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.MLP.reset_parameters" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="greatx.nn.models.supervised.MLP.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/mlp.html#MLP.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.MLP.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="greatx.nn.models.supervised.MLP.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></em><a class="headerlink" href="#greatx.nn.models.supervised.MLP.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.MedianGCN">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MedianGCN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">hids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">['relu']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/median_gcn.html#MedianGCN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.MedianGCN" title="Permalink to this definition"></a></dt>
 <dd><p>Graph Convolution Network (GCN) with
@@ -1021,7 +1148,7 @@ coefficients on the fly, by default False</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1094,7 +1221,7 @@ Against Adversarial Attacks”</a> paper (KDD’19)</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1174,7 +1301,7 @@ paper (NeurIPS’21)</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1253,7 +1380,7 @@ on the l2 ball of radius λ1., by default True</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1340,7 +1467,7 @@ and will use the cached version for further executions, by default False</p></li
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1418,7 +1545,7 @@ from the <a class="reference external" href="https://arxiv.org/abs/2011.09643">�
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1501,7 +1628,7 @@ Defending Graph Neural Networks against Adversarial Attacks”</a> paper (NeurIP
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1571,7 +1698,7 @@ coefficients on the fly, by default True</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-meth docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1631,14 +1758,57 @@ registered hooks while the latter silently ignores them.</p>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#greatx.nn.models.unsupervised.DGI" title="greatx.nn.models.unsupervised.DGI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DGI</span></code></a></p></td>
-<td><p></p></td>
+<td><p>Deep Graph Infomax (DGI) from the <a class="reference external" href="https://arxiv.org/abs/1809.10341">&quot;Deep Graph Infomax&quot;</a> paper (ICLR'19)</p></td>
 </tr>
 </tbody>
 </table>
 <span class="target" id="module-greatx.nn.models.unsupervised"></span><dl class="py class">
 <dt class="sig sig-object py" id="greatx.nn.models.unsupervised.DGI">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DGI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">hids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[512]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">['prelu']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/unsupervised/dgi.html#DGI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.unsupervised.DGI" title="Permalink to this definition"></a></dt>
-<dd><dl class="py method">
+<dd><p>Deep Graph Infomax (DGI) from the
+<a class="reference external" href="https://arxiv.org/abs/1809.10341">“Deep Graph Infomax”</a> paper (ICLR’19)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>,</em>) – the input dimensions of model</p></li>
+<li><p><strong>hids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>, </em><em>optional</em>) – the number of hidden units for each hidden layer, by default [512]</p></li>
+<li><p><strong>acts</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>, </em><em>optional</em>) – the activation function for each hidden layer, by default [‘prelu’]</p></li>
+<li><p><strong>dropout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – the dropout ratio of model, by default 0.0</p></li>
+<li><p><strong>bias</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to use bias in the layers, by default True</p></li>
+<li><p><strong>bn</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to use <code class="xref py py-class docutils literal notranslate"><span class="pre">BatchNorm1d</span></code> after the convolution layer, by default False</p></li>
+<li><p><strong>normalize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to compute symmetric normalization
+coefficients on the fly, by default True</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is convenient to extend the number of layers with different or the same
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+<p>See Examples below:</p>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># DGI with one hidden layer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">DGI</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># DGI with two hidden layers</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">DGI</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">acts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="s1">&#39;elu&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># DGI with two hidden layers, without activation at the first layer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">DGI</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">acts</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;relu&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># DGI with very deep architectures, each layer has elu as activation function</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">DGI</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">hids</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span><span class="o">*</span><span class="mi">8</span><span class="p">,</span> <span class="n">acts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;elu&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Reference:</p>
+<ul class="simple">
+<li><p>Author’s code: <a class="reference external" href="https://github.com/PetarV-/DGI">https://github.com/PetarV-/DGI</a></p></li>
+</ul>
+<dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.unsupervised.DGI.corruption">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">corruption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/unsupervised/dgi.html#DGI.corruption"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.unsupervised.DGI.corruption" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>

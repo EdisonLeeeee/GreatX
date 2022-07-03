@@ -6,7 +6,7 @@
   <title>greatx.nn.models.unsupervised.dgi &mdash; GreatX 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/css/mytheme.css" type="text/css" />
-    <link rel="shortcut icon" href="../../../../../_static/greatx.png"/>
+    <link rel="shortcut icon" href="../../../../../_static/favicon.png"/>
   <!--[if lt IE 9]>
     <script src="../../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -91,11 +91,12 @@
 
 
 <span class="k">class</span> <span class="nc">Discriminator</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">n_hidden</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">in_channels</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">uniform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">tensor</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">uniform</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">tensor</span><span class="p">):</span>
         <span class="n">bound</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">tensor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">tensor</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="o">-</span><span class="n">bound</span><span class="p">,</span> <span class="n">bound</span><span class="p">)</span>
@@ -110,6 +111,54 @@
 
 
 <div class="viewcode-block" id="DGI"><a class="viewcode-back" href="../../../../../modules/nn.models.html#greatx.nn.models.unsupervised.DGI">[docs]</a><span class="k">class</span> <span class="nc">DGI</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Deep Graph Infomax (DGI) from the </span>
+<span class="sd">    `&quot;Deep Graph Infomax&quot;</span>
+<span class="sd">    &lt;https://arxiv.org/abs/1809.10341&gt;`_ paper (ICLR&#39;19)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    in_channels : int, </span>
+<span class="sd">        the input dimensions of model</span>
+<span class="sd">    hids : list, optional</span>
+<span class="sd">        the number of hidden units for each hidden layer, by default [512]</span>
+<span class="sd">    acts : list, optional</span>
+<span class="sd">        the activation function for each hidden layer, by default [&#39;prelu&#39;]</span>
+<span class="sd">    dropout : float, optional</span>
+<span class="sd">        the dropout ratio of model, by default 0.0</span>
+<span class="sd">    bias : bool, optional</span>
+<span class="sd">        whether to use bias in the layers, by default True</span>
+<span class="sd">    bn: bool, optional</span>
+<span class="sd">        whether to use :class:`BatchNorm1d` after the convolution layer, by default False         </span>
+<span class="sd">    normalize : bool, optional</span>
+<span class="sd">        whether to compute symmetric normalization</span>
+<span class="sd">        coefficients on the fly, by default True        </span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    It is convenient to extend the number of layers with different or the same</span>
+<span class="sd">    hidden units (activation functions) using :func:`greatx.utils.wrapper`. </span>
+
+<span class="sd">    See Examples below:</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; # DGI with one hidden layer</span>
+<span class="sd">    &gt;&gt;&gt; model = DGI(100)</span>
+
+<span class="sd">    &gt;&gt;&gt; # DGI with two hidden layers</span>
+<span class="sd">    &gt;&gt;&gt; model = DGI(100, hids=[32, 16], acts=[&#39;relu&#39;, &#39;elu&#39;])</span>
+
+<span class="sd">    &gt;&gt;&gt; # DGI with two hidden layers, without activation at the first layer</span>
+<span class="sd">    &gt;&gt;&gt; model = DGI(100, hids=[32, 16], acts=[None, &#39;relu&#39;])</span>
+
+<span class="sd">    &gt;&gt;&gt; # DGI with very deep architectures, each layer has elu as activation function</span>
+<span class="sd">    &gt;&gt;&gt; model = DGI(100, hids=[16]*8, acts=[&#39;elu&#39;])</span>
+
+<span class="sd">    Reference:</span>
+
+<span class="sd">    * Author&#39;s code: https://github.com/PetarV-/DGI</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="nd">@wrapper</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">in_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>

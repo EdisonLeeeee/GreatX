@@ -19,7 +19,7 @@ extensions = [
 
 html_theme = 'pyg_sphinx_theme'
 html_logo = '../../imgs/greatx.png'
-html_favicon = '../../imgs/greatx.png'
+html_favicon = '../../imgs/favicon.png'
 
 add_module_names = False
 autodoc_member_order = 'bysource'

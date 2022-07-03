@@ -35,7 +35,7 @@
 # ❓ What is Reliability on Graphs?
 ![threats](./imgs/threats.png)
 
-It means reliability/robustness against the following threats:
+It refers to robustness against the following threats:
 + Inherent noise
 + Distribution Shift
 + Adversarial Attacks
@@ -177,7 +177,7 @@ In detail, the following methods are currently implemented:
 #### Unsupervised/Self-supervise
 | Methods | Descriptions                                                                          | Examples                                                                                                |
 | ------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| **DGI** | *Veličković et al.* [Deep Graph Infomax](https://arxiv.org/abs/1809.10341), *ICLR'17* | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/unsupervised/dgi.py) |
+| **DGI** | *Veličković et al.* [Deep Graph Infomax](https://arxiv.org/abs/1809.10341), *ICLR'19* | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/unsupervised/dgi.py) |
 
 ### Techniques Against Adversarial Attacks
 

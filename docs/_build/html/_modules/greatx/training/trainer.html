@@ -6,7 +6,7 @@
   <title>greatx.training.trainer &mdash; GreatX 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/mytheme.css" type="text/css" />
-    <link rel="shortcut icon" href="../../../_static/greatx.png"/>
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -89,7 +89,7 @@
 <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
 <span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
 <span class="kn">from</span> <span class="nn">greatx.training.callbacks</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Callback</span><span class="p">,</span> <span class="n">CallbackList</span><span class="p">,</span> <span class="n">Optimizer</span><span class="p">,</span>
-                                         <span class="n">Scheduler</span><span class="p">)</span>
+                                       <span class="n">Scheduler</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
 <span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
@@ -118,18 +118,18 @@
 <span class="sd">    Data(x=[2485, 1433], edge_index=[2, 10138], y=[2485])</span>
 
 <span class="sd">    &gt;&gt;&gt; # simple training</span>
-<span class="sd">    &gt;&gt;&gt; trainer.fit({&#39;data&#39;: data, &#39;mask&#39;: train_mask})</span>
+<span class="sd">    &gt;&gt;&gt; trainer.fit({&#39;data&#39;: data, &#39;mask&#39;: your_train_mask})</span>
 
 <span class="sd">    &gt;&gt;&gt; # train with model picking</span>
 <span class="sd">    &gt;&gt;&gt; from greatx.training import ModelCheckpoint</span>
 <span class="sd">    &gt;&gt;&gt; cb = ModelCheckpoint(&#39;my_ckpt&#39;, monitor=&#39;val_acc&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; trainer.fit({&#39;data&#39;: data, &#39;mask&#39;: train_mask},</span>
-<span class="sd">    {&#39;data&#39;: data, &#39;mask&#39;: val_mask}, callbacks=[cb])    </span>
+<span class="sd">    &gt;&gt;&gt; trainer.fit({&#39;data&#39;: data, &#39;mask&#39;: your_train_mask},</span>
+<span class="sd">    ... {&#39;data&#39;: data, &#39;mask&#39;: your_val_mask}, callbacks=[cb])    </span>
 
 <span class="sd">    &gt;&gt;&gt; # get training logs</span>
 <span class="sd">    &gt;&gt;&gt; history = trainer.model.history</span>
 
-<span class="sd">    &gt;&gt;&gt; trainer.evaluate({&#39;data&#39;: data, &#39;mask&#39;: data.test_mask}) # evaluation</span>
+<span class="sd">    &gt;&gt;&gt; trainer.evaluate({&#39;data&#39;: data, &#39;mask&#39;: your_test_mask}) # evaluation</span>
 
 <span class="sd">    &gt;&gt;&gt; predict = trainer.predict({&#39;data&#39;: data, &#39;mask&#39;: your_mask}) # prediction</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -138,10 +138,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
-        <span class="n">cfg</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;lr&quot;</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
-        <span class="n">cfg</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;weight_decay&quot;</span><span class="p">,</span> <span class="mf">5e-4</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">BunchDict</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cfg</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Received extra configuration: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;lr&quot;</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;weight_decay&quot;</span><span class="p">,</span> <span class="mf">5e-4</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_optimizer</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_scheduler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">)</span>
 

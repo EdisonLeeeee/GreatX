@@ -47,7 +47,7 @@ class TAGConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.TAGCN`       
+    :class:`greatx.nn.models.supervised.TAGCN`       
 
     """
 
@@ -65,7 +65,7 @@ class TAGConv(nn.Module):
         self.add_self_loops = add_self_loops
         self.normalize = normalize
 
-        self.lin = Linear(in_channels * (K+1), out_channels, bias=bias,
+        self.lin = Linear(in_channels * (K + 1), out_channels, bias=bias,
                           weight_initializer='glorot')
 
         self.reset_parameters()

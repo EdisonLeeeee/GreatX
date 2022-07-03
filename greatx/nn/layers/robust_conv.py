@@ -46,7 +46,7 @@ class RobustConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.RobustGCN`       
+    :class:`greatx.nn.models.supervised.RobustGCN`       
     """
 
     def __init__(self, in_channels: int, out_channels: int,

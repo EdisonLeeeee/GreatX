@@ -5,7 +5,7 @@ from greatx.training import Trainer
 
 
 class SATTrainer(Trainer):
-    """Custom trainer for :class:`greatx.nn.models.SAT`
+    """Custom trainer for :class:`greatx.nn.models.supervised.SAT`
 
     Parameters
     ----------

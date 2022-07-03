@@ -68,7 +68,7 @@ class GCNConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.GCN`         
+    :class:`greatx.nn.models.supervised.GCN`         
     """
 
     def __init__(self, in_channels: int, out_channels: int,

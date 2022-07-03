@@ -39,7 +39,7 @@ class AdaptiveConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.AirGNN`     
+    :class:`greatx.nn.models.supervised.AirGNN`     
     """
 
     def __init__(self,

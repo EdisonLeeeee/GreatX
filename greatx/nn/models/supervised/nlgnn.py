@@ -54,8 +54,8 @@ class NLGCN(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.NLMLP`    
-    :class:`greatx.nn.models.NLGAT`  
+    :class:`greatx.nn.models.supervised.NLMLP`    
+    :class:`greatx.nn.models.supervised.NLGAT`  
 
     Reference:
 
@@ -176,8 +176,8 @@ class NLMLP(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.NLGCN`    
-    :class:`greatx.nn.models.NLGAT`    
+    :class:`greatx.nn.models.supervised.NLGCN`    
+    :class:`greatx.nn.models.supervised.NLGAT`    
 
     Reference:
 
@@ -295,8 +295,8 @@ class NLGAT(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.NLGCN`    
-    :class:`greatx.nn.models.NLMLP`    
+    :class:`greatx.nn.models.supervised.NLGCN`    
+    :class:`greatx.nn.models.supervised.NLMLP`    
 
     Reference:
 

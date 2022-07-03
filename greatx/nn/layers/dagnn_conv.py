@@ -44,7 +44,7 @@ class DAGNNConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.DAGNN`       
+    :class:`greatx.nn.models.supervised.DAGNN`       
     """
 
     def __init__(self, in_channels: int, out_channels: int = 1, K: int = 1,

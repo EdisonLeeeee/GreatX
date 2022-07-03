@@ -32,7 +32,7 @@ class GNNGUARD(nn.Module):
     See also
     --------
     :class:`greatx.defense.GNNGUARD`      
-    :class:`greatx.nn.models.GCN`      
+    :class:`greatx.nn.models.supervised.GCN`      
 
     Note
     ----

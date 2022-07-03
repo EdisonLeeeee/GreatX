@@ -7,7 +7,7 @@ from torch_geometric.utils import degree
 import torch
 
 from greatx import Surrogate
-from greatx.nn.models import SGC, GCN
+from greatx.nn.models.supervised import SGC, GCN
 from greatx.utils import remove_edges
 
 
@@ -15,7 +15,7 @@ class UniversalDefense(torch.nn.Module):
     r"""Base class for graph universal defense
     from the `"Graph Universal Adversarial Defense"
     <https://arxiv.org/abs/2204.09803>`_ paper (arXiv'22)
-    
+
     """
 
     def __init__(self, device: str = "cpu"):
@@ -185,7 +185,7 @@ class DegreeGUARD(UniversalDefense):
     based on node degrees from the `"Graph Universal 
     Adversarial Defense"
     <https://arxiv.org/abs/2204.09803>`_ paper (arXiv'22)
-    
+
     Parameters
     ----------
     data : Data

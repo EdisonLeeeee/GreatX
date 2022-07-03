@@ -6,7 +6,7 @@ from greatx import training
 
 
 def get_trainer(model: Union[str, torch.nn.Module]) -> training.trainer.Trainer:
-    """Get the default trainer using str or a model in :class:`greatx.nn.models`
+    """Get the default trainer using str or a model in :class:`greatx.nn.models.supervised`
 
     Parameters
     ----------

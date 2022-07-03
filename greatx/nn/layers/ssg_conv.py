@@ -53,7 +53,7 @@ class SSGConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.SSGC`   
+    :class:`greatx.nn.models.supervised.SSGC`   
     """
 
     _cached_x: Optional[Tensor]
@@ -118,7 +118,7 @@ class SSGConv(nn.Module):
                     x = spmm(x, edge_index, edge_weight)
                 else:
                     x = edge_index @ x
-                x_out = x_out + (1 - self.alpha)/self.K * x
+                x_out = x_out + (1 - self.alpha) / self.K * x
 
             if self.cached:
                 self._cached_x = x_out

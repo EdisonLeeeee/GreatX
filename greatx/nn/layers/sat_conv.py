@@ -44,7 +44,7 @@ class SATConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.SAT`       
+    :class:`greatx.nn.models.supervised.SAT`       
     """
 
     def __init__(self, in_channels: int, out_channels: int,

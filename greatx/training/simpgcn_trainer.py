@@ -3,7 +3,7 @@ from greatx.training import Trainer
 
 
 class SimPGCNTrainer(Trainer):
-    """Custom trainer for :class:`greatx.nn.models.SimPGCN`
+    """Custom trainer for :class:`greatx.nn.models.supervised.SimPGCN`
 
     Parameters
     ----------

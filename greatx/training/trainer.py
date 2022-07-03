@@ -57,7 +57,7 @@ class Trainer:
         self.cfg = BunchDict(cfg)
 
         if cfg:
-            print("Received extra configuration: " + str(self.cfg))
+            print("Received extra configuration:\n" + str(self.cfg))
 
         self.cfg.setdefault("lr", 1e-2)
         self.cfg.setdefault("weight_decay", 5e-4)

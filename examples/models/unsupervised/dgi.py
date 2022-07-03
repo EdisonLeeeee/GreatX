@@ -17,10 +17,10 @@ device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cp
 # ================================================================== #
 #                 Self-supervised Learning                           #
 # ================================================================== #
-model = DGI(dataset.num_features)
+model = DGI(dataset.num_features, 512)
 trainer = DGITrainer(model, device=device, lr=0.001, weight_decay=0.)
 es = EarlyStopping(monitor='loss', patience=20)
-trainer.fit({'data': data}, epochs=200, callbacks=[es])
+trainer.fit({'data': data}, epochs=500, callbacks=[es])
 
 # ================================================================== #
 #                   Get node embedding                               #
@@ -35,5 +35,5 @@ LR = LogisticRegression(embedding.size(1), dataset.num_classes)
 LR_trainer = MLPTrainer(LR, device=device, weight_decay=0.)
 ckp = ModelCheckpoint('model.pth', monitor='val_acc')
 LR_trainer.fit({'x': embedding, 'y': data.y, 'mask': data.train_mask},
-               {'x': embedding, 'y': data.y, 'mask': data.val_mask}, callbacks=[ckp], epochs=1000)
+               {'x': embedding, 'y': data.y, 'mask': data.val_mask}, callbacks=[ckp], epochs=200)
 LR_trainer.evaluate({'x': embedding, 'y': data.y, 'mask': data.test_mask})

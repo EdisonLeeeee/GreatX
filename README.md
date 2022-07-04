@@ -1,4 +1,4 @@
-# **GreatX**: A Graph Reliability Toolbox
+# **GreatX**: Graph Reliability Toolbox
 
 <p align="center">
   <img width = "600" height = "150" src="https://github.com/EdisonLeeeee/GreatX/blob/master/imgs/greatx.png" alt="banner"/>

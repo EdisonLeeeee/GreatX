@@ -65,7 +65,7 @@ def drop_edge(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
     mask = torch.bernoulli(mask).to(torch.bool)
     edge_index = edge_index[:, ~mask]
     if edge_weight is not None:
-        edge_weight = edge_weight[:, ~mask]
+        edge_weight = edge_weight[~mask]
     return edge_index, edge_weight
 
 

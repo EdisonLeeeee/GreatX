@@ -237,7 +237,9 @@ def drop_path(edge_index: Tensor,
     n_id, e_id = torch.ops.torch_cluster.random_walk(
         rowptr, col, start, walk_length, p, q)
     mask = row.new_ones(row.size(0), dtype=torch.bool)
-    mask[e_id.view(-1)] = False
+    
+    if e_id.numel() > 0:
+        mask[e_id.view(-1)] = False
 
     if edge_weight is not None:
         edge_weight = edge_weight[mask]

@@ -7,7 +7,7 @@ from torch_geometric.nn.conv.gcn_conv import gcn_norm
 from torch_geometric.nn.dense.linear import Linear
 from torch_geometric.nn.inits import zeros
 from torch_geometric.typing import Adj, OptTensor
-from torch_geometric.utils import remove_self_loops, add_self_loops, sort_edge_index
+from torch_geometric.utils import remove_self_loops, add_self_loops, coalesce
 from torch_sparse import SparseTensor
 
 try:
@@ -126,7 +126,7 @@ class SoftMedianConv(nn.Module):
             if edge_weight is None:
                 edge_weight = x.new_ones(edge_index.size(1))
 
-            edge_index, edge_weight = sort_edge_index(edge_index, edge_weight)
+            edge_index, edge_weight = coalesce(edge_index, edge_weight)
 
             # cache edges
             if self.cached:

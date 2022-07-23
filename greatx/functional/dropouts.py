@@ -1,5 +1,6 @@
 from typing import Optional, Tuple, Union
 
+import copy
 import torch
 from torch import Tensor
 try:
@@ -134,7 +135,8 @@ def drop_path(edge_index: Tensor,
               p: float = 1, q: float = 1,
               training: bool = True,
               num_nodes: int = None,
-              by: str = 'degree') -> Tuple[Tensor, Tensor]:
+              by: str = 'uniform',
+              return_dropped: bool = False) -> Tuple[Tensor, Tensor]:
     """DropPath: a structured form of :class:`greatx.functional.drop_edge`.
     From the `"MaskGAE: Masked Graph Modeling Meets 
     Graph Autoencoders" <https://arxiv.org/abs/2205.10053>`_
@@ -166,7 +168,12 @@ def drop_path(edge_index: Tensor,
         number of total nodes in the graph, by default None
     by : str, optional
         sampling root nodes uniformly :obj:`uniform` or 
-        by degree distribution :obj:`degree`, by default 'degree'
+        by degree distribution :obj:`degree`, by default 'uniform'
+    return_dropped : bool, optional
+        whether to return dropped paths: 
+        * if :obj:`True`: return (`edge_index`, `edge_weight`, `dropped_paths`)
+        * if :obj:`False`: return (`edge_index`, `edge_weight`)
+        by default 'False'        
 
     Returns
     -------
@@ -209,12 +216,9 @@ def drop_path(edge_index: Tensor,
     deg = degree(row, num_nodes=num_nodes, dtype=torch.float)
 
     if isinstance(r, (int, float)):
-        if r < 0. or r > 1.:
+        if r <= 0. or r > 1.:
             raise ValueError(f'Root node sampling ratio `r` has to be between 0 and 1 '
                              f'(got {r}')
-        if r == 0.:
-            return edge_index, edge_weight
-
         num_starts = int(r * num_nodes)
         if by == 'degree':
             prob = deg / deg.sum()
@@ -236,6 +240,8 @@ def drop_path(edge_index: Tensor,
 
     n_id, e_id = torch.ops.torch_cluster.random_walk(
         rowptr, col, start, walk_length, p, q)
+    e_id = e_id[e_id > 0]
+    
     mask = row.new_ones(row.size(0), dtype=torch.bool)
     
     if e_id.numel() > 0:
@@ -243,4 +249,8 @@ def drop_path(edge_index: Tensor,
 
     if edge_weight is not None:
         edge_weight = edge_weight[mask]
-    return edge_index[:, mask], edge_weight
+        
+    if return_dropped:
+        return edge_index[:, mask], edge_weight, edge_index[:, ~mask]
+    else:
+        return edge_index[:, mask], edge_weight

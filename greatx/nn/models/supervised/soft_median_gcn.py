@@ -29,7 +29,7 @@ class SoftMedianGCN(nn.Module):
         whether to compute symmetric normalization
         coefficients on the fly, by default False             
     row_normalize : bool, optional
-        whether to perform row-normalization on the fly, by default True           
+        whether to perform row-normalization on the fly, by default False           
     cached : bool, optional
         whether the layer will cache
         the computation of :math:`(\mathbf{\hat{D}}^{-1/2} \mathbf{\hat{A}}

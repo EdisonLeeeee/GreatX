@@ -61,6 +61,7 @@ class Trainer:
 
         self.cfg.setdefault("lr", 1e-2)
         self.cfg.setdefault("weight_decay", 5e-4)
+        self.cfg.setdefault("empty_cache", False)
 
         self.optimizer = self.config_optimizer()
         self.scheduler = self.config_scheduler(self.optimizer)
@@ -97,6 +98,7 @@ class Trainer:
         {'data': data, 'mask': val_mask}, callbacks=[cb])           
         """
 
+        empty_cache = self.cfg['empty_cache']
         model = self.model.to(self.device)
         model.stop_training = False
         validation = val_inputs is not None
@@ -113,6 +115,8 @@ class Trainer:
         callbacks.on_train_begin()
         try:
             for epoch in range(epochs):
+                if empty_cache and self.device.type.startswith('cuda'):
+                    torch.cuda.empty_cache()
                 callbacks.on_epoch_begin(epoch)
                 train_logs = self.train_step(train_inputs)
                 logs.update(train_logs)

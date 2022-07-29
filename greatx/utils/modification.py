@@ -1,5 +1,3 @@
-
-
 import torch
 from torch import Tensor
 import scipy.sparse as sp
@@ -26,6 +24,9 @@ def add_edges(edge_index: Tensor, edges_to_add: Tensor,
     Tensor
         the graph instance :obj:`edge_index` with edges added.
     """
+    if edges_to_add.size(1) == 0:
+        return edge_index
+    
     if symmetric:
         edges_to_add = torch.cat([edges_to_add, edges_to_add.flip(0)], dim=1)
 
@@ -54,26 +55,33 @@ def remove_edges(edge_index: Tensor, edges_to_remove: Tensor, symmetric: bool = 
     Tensor
         the graph instance :obj:`edge_index` with edges removed.
     """
+    
+    if edges_to_remove.size(1) == 0:
+        return edge_index
+    
     device = edge_index.device
     if symmetric:
         edges_to_remove = torch.cat(
             [edges_to_remove, edges_to_remove.flip(0)], dim=1)
     edges_to_remove = edges_to_remove.to(edge_index)
 
-    # it's not intuitive to remove edges from a graph represented as `edge_index`
-    edge_weight_remove = torch.zeros(edges_to_remove.size(1)) - 1e5
-    edge_weight = torch.cat(
-        [torch.ones(edge_index.size(1)), edge_weight_remove], dim=0)
-    edge_index = torch.cat([edge_index, edges_to_remove], dim=1).cpu().numpy()
-    adj_matrix = sp.csr_matrix(
-        (edge_weight.cpu().numpy(), (edge_index[0], edge_index[1])))
-    adj_matrix.data[adj_matrix.data < 0] = 0.
+    num_nodes = max(edge_index.max().item(), edges_to_remove.max().item()) + 1
+    adj_matrix = to_scipy_sparse_matrix(edge_index, num_nodes=num_nodes).tocsr(copy=False)
+
+    row, col = edges_to_remove.cpu().numpy()
+    adj_matrix = adj_matrix.tolil(copy=True)
+    adj_matrix[(row, col)] = 0
+    adj_matrix = adj_matrix.tocsr(copy=False)
     adj_matrix.eliminate_zeros()
+
     edge_index, _ = from_scipy_sparse_matrix(adj_matrix)
+    edge_index = sort_edge_index(edge_index)
     return edge_index.to(device)
 
 
-def flip_edges(edge_index: Tensor, edges_to_flip: Tensor, symmetric: bool = True) -> Tensor:
+def flip_edges(edge_index: Tensor, 
+               edges_to_flip: Tensor, 
+               symmetric: bool = True) -> Tensor:
     """Flip edges from the graph denoted as :obj:`edge_index`. 
 
     Parameters
@@ -92,5 +100,30 @@ def flip_edges(edge_index: Tensor, edges_to_flip: Tensor, symmetric: bool = True
     Tensor
         the graph instance :obj:`edge_index` with edges flipped.
     """
-    # TODO
-    raise NotImplementedError
+    
+    if edges_to_flip.size(1) == 0:
+        return edge_index
+    
+    device = edge_index.device
+    if symmetric:
+        edges_to_flip = torch.cat(
+            [edges_to_flip, edges_to_flip.flip(0)], dim=1)
+        
+    edges_to_flip = edges_to_flip.to(edge_index)
+    
+    num_nodes = max(edge_index.max().item(), edges_to_flip.max().item()) + 1
+    adj_matrix = to_scipy_sparse_matrix(edge_index, num_nodes=num_nodes).tocsr(copy=False)
+    
+    row, col = edges_to_flip.cpu().numpy()
+    data = adj_matrix[(row, col)].A
+    data[data > 0.] = 1.
+    data[data < 0.] = 0.
+
+    adj_matrix = adj_matrix.tolil(copy=True)
+    adj_matrix[(row, col)] = 1. - data
+    adj_matrix = adj_matrix.tocsr(copy=False)
+    adj_matrix.eliminate_zeros()
+
+    edge_index, _ = from_scipy_sparse_matrix(adj_matrix)
+    edge_index = sort_edge_index(edge_index)
+    return edge_index.to(device)

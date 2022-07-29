@@ -116,10 +116,11 @@ def median_reduce(x: Tensor, edge_index: Tensor, edge_weight: OptTensor = None) 
     if edge_weight is not None:
         x_j = x_j * edge_weight[ix].unsqueeze(-1)
 
-    dense_x, mask = to_dense_batch(x_j, col)
+    dense_x, mask = to_dense_batch(x_j, col, batch_size=x.size(0))
     h = x_j.new_zeros(dense_x.size(0), dense_x.size(-1))
     deg = mask.sum(dim=1)
     for i in deg.unique():
+        if i == 0: continue
         deg_mask = deg == i
         h[deg_mask] = dense_x[deg_mask, :i].median(dim=1).values
     return h

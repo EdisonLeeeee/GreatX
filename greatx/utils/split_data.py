@@ -16,7 +16,7 @@ def split_nodes(labels: Tensor, *,
 
     Parameters
     ----------
-    labels : Tensor
+    labels : torch.Tensor
         the labels of the nodes.
     train : float, optional
         the percentage of the training set, by default 0.1

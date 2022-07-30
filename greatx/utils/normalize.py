@@ -15,7 +15,7 @@ def normalize(feat: Tensor, norm: str = "standardize",
 
     Parameters
     ----------
-    feat : Tensor
+    feat : torch.Tensor
         node feature matrix with shape [N, D]
     norm : Optional[str], optional
         how to normalize feature matrix, including
@@ -32,7 +32,7 @@ def normalize(feat: Tensor, norm: str = "standardize",
 
     Returns
     -------
-    feat : Tensor
+    feat : torch.Tensor
         normalized feature matrix
     """
     if norm not in ("linearize", "arctan", "tanh", "standardize", "none"):

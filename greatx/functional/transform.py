@@ -13,7 +13,7 @@ def to_sparse_tensor(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
 
     Parameters
     ----------
-    edge_index : Tensor
+    edge_index : torch.Tensor
         edge index with shape [2, M]
     edge_weight : Optional[Tensor], optional
         edge weight with shape [M], by default None
@@ -41,7 +41,7 @@ def to_dense_adj(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
 
     Parameters
     ----------
-    edge_index : Tensor
+    edge_index : torch.Tensor
         edge index with shape [2, M]
     edge_weight : Optional[Tensor], optional
         edge weight with shape [M], by default None

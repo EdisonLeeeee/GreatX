@@ -12,9 +12,9 @@ def spmm(x: Tensor, edge_index: Tensor,
 
     Parameters
     ----------
-    x : Tensor
+    x : torch.Tensor
         the input dense 2D-matrix
-    edge_index : Tensor
+    edge_index : torch.Tensor
         the location of the non-zeros elements in the sparse matrix,
         denoted as :obj:`edge_index` with shape [2, M]
     edge_weight : Optional[Tensor], optional

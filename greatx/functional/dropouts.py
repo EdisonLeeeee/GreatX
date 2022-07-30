@@ -22,7 +22,7 @@ def drop_edge(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
 
     Parameters
     ----------
-    edge_index : Tensor
+    edge_index : torch.Tensor
         the input edge index
     edge_weight : Optional[Tensor], optional
         the input edge weight, by default None
@@ -81,7 +81,7 @@ def drop_node(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
 
     Parameters
     ----------
-    edge_index : Tensor
+    edge_index : torch.Tensor
         the input edge index
     edge_weight : Optional[Tensor], optional
         the input edge weight, by default None
@@ -145,7 +145,7 @@ def drop_path(edge_index: Tensor,
 
     Parameters
     ----------
-    edge_index : Tensor
+    edge_index : torch.Tensor
         the input edge index
     edge_weight : Optional[Tensor], optional
         the input edge weight, by default None
@@ -241,15 +241,15 @@ def drop_path(edge_index: Tensor,
     n_id, e_id = torch.ops.torch_cluster.random_walk(
         rowptr, col, start, walk_length, p, q)
     e_id = e_id[e_id > 0]
-    
+
     mask = row.new_ones(row.size(0), dtype=torch.bool)
-    
+
     if e_id.numel() > 0:
         mask[e_id.view(-1)] = False
 
     if edge_weight is not None:
         edge_weight = edge_weight[mask]
-        
+
     if return_dropped:
         return edge_index[:, mask], edge_weight, edge_index[:, ~mask]
     else:

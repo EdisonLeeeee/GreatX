@@ -258,7 +258,7 @@ class LikelihoodFilterTensor:
 
     Parameters
     ----------
-    degree : Tensor
+    degree : torch.Tensor
         the degree of the nodes in the graph
     ll_cutoff : float, optional
         likelihood cutoff, by default 0.004       

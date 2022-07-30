@@ -10,11 +10,16 @@ def overlap(edge_index1: Tensor, edge_index2: Tensor,
 
     Parameters
     ----------
-    edge_index1 (Tensor) : edges indices of a graph
+    edge_index1 : torch.Tensor
+        edges indices of a graph
         a graph
-    edge_index2 (Tensor) : edges indices of another graph
+    edge_index2 : torch.Tensor
+        edges indices of another graph
         another graph
-    on (str) : compute overlap on `edge` or `node`, by default edge
+    on : str, optional
+        compute overlap on `edge` or `node`, by default edge, by default 'edge'
+    symmetric : bool, optional
+        whether the computed overlap is symetric, by default False
 
     Returns
     -------

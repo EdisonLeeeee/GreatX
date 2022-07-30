@@ -165,10 +165,10 @@ class GFAttack(TargetedAttacker):
         ----------
         A : sp.csr_matrix
             the graph adjacency matrix
-        x_mean : Tensor
-        eig_vals : Tensor
+        x_mean : torch.Tensor
+        eig_vals : torch.Tensor
             the eigen value
-        eig_vec : Tensor
+        eig_vec : torch.Tensor
             the eigen vector
         candidate_edges : np.ndarray
             the candidate_edges to be selected

@@ -25,7 +25,7 @@ trainer.fit({'data': data, 'mask': splits.train_nodes},
             {'data': data, 'mask': splits.val_nodes}, callbacks=[ckp])
 trainer.evaluate({'data': data, 'mask': splits.test_nodes})
 
-defense = 'DegreeGUARD'
+defense = 'GUARD'
 
 if defense == "GUARD":
     surrogate = GCN(dataset.num_features, dataset.num_classes,
@@ -33,8 +33,7 @@ if defense == "GUARD":
     surrogate_trainer = Trainer(surrogate, device=device)
     ckp = ModelCheckpoint('guard.pth', monitor='val_acc')
     trainer.fit({'data': data, 'mask': splits.train_nodes},
-                {'data': data, 'mask': splits.val_nodes}, callbacks=[ckp])
-    trainer.evaluate({'data': data, 'mask': splits.test_nodes})
+                {'data': data, 'mask': splits.val_nodes}, callbacks=[ckp], verbose=0)
     guard = GUARD(data, device=device)
     guard.setup_surrogate(surrogate, data.y[splits.train_nodes])
 elif defense == "RandomGUARD":

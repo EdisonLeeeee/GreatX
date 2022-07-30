@@ -87,7 +87,7 @@ class UniversalDefense(torch.nn.Module):
             the top-k anchor nodes
         """
         assert k > 0
-        return self._anchors[:k]
+        return self._anchors[:k].to(self.device)
 
     def patch(self, k=50) -> Tensor:
         """Return the universal patch of the defensive perturbation
@@ -146,6 +146,7 @@ class GUARD(UniversalDefense, Surrogate):
         self.data = data
         self.alpha = alpha
         self.batch_size = batch_size
+        self.influence_score = None
         self.deg = degree(data.edge_index[0],
                           num_nodes=data.num_nodes, dtype=torch.float)
 
@@ -162,9 +163,9 @@ class GUARD(UniversalDefense, Surrogate):
             if W is None:
                 W = para.detach()
             else:
-                W = W @ para.detach()
+                W = para.detach() @ W
 
-        W = self.data.x.to(self.device) @ W
+        W = self.data.x.to(self.device) @ W.t()
         d = self.deg.clamp(min=1).to(self.device)
 
         loader = DataLoader(victim_labels, pin_memory=False,
@@ -174,9 +175,9 @@ class GUARD(UniversalDefense, Surrogate):
         I = 0.
         for y in loader:
             I += W[:, y].sum(1)
-        I = (w_max - I / victim_labels.size(0)) / \
-            d.pow(self.alpha)  # node importance
+        I = (w_max - I / victim_labels.size(0)) / d.pow(self.alpha)  # node importance
         self._anchors = torch.argsort(I, descending=True)
+        self.influence_score = I
         return self
 
 

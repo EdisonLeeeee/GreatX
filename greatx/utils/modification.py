@@ -1,3 +1,4 @@
+import copy
 import torch
 from torch import Tensor
 import scipy.sparse as sp
@@ -127,3 +128,12 @@ def flip_edges(edge_index: Tensor,
     edge_index, _ = from_scipy_sparse_matrix(adj_matrix)
     edge_index = sort_edge_index(edge_index)
     return edge_index.to(device)
+
+def flip_graph(data, edges_to_flip, 
+               symmetric: bool = True):
+    
+    data = copy.copy(data)
+    data.edge_index = flip_edges(data.edge_index, edges_to_flip, symmetric=symmetric)
+    data.edge_weight = None
+    data.adj_t = None
+    return data

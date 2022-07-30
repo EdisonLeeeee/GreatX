@@ -99,7 +99,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    feat : Tensor</span>
+<span class="sd">    feat : torch.Tensor</span>
 <span class="sd">        node feature matrix with shape [N, D]</span>
 <span class="sd">    norm : Optional[str], optional</span>
 <span class="sd">        how to normalize feature matrix, including</span>
@@ -116,7 +116,7 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    feat : Tensor</span>
+<span class="sd">    feat : torch.Tensor</span>
 <span class="sd">        normalized feature matrix</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">norm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;linearize&quot;</span><span class="p">,</span> <span class="s2">&quot;arctan&quot;</span><span class="p">,</span> <span class="s2">&quot;tanh&quot;</span><span class="p">,</span> <span class="s2">&quot;standardize&quot;</span><span class="p">,</span> <span class="s2">&quot;none&quot;</span><span class="p">):</span>

@@ -82,11 +82,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for greatx.utils.modification</h1><div class="highlight"><pre>
-<span></span>
-
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
 <span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="n">sort_edge_index</span><span class="p">,</span> <span class="n">to_scipy_sparse_matrix</span><span class="p">,</span> <span class="n">from_scipy_sparse_matrix</span>
 
 
@@ -96,7 +96,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    edge_index : Tensor</span>
+<span class="sd">    edge_index : torch.Tensor</span>
 <span class="sd">        the graph instance where edges will be removed from.</span>
 <span class="sd">    edges_to_add : torch.Tensor</span>
 <span class="sd">        shape [2, M], the edges to be added into the graph.</span>
@@ -110,6 +110,9 @@
 <span class="sd">    Tensor</span>
 <span class="sd">        the graph instance :obj:`edge_index` with edges added.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">edges_to_add</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">edge_index</span>
+
     <span class="k">if</span> <span class="n">symmetric</span><span class="p">:</span>
         <span class="n">edges_to_add</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">edges_to_add</span><span class="p">,</span> <span class="n">edges_to_add</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="mi">0</span><span class="p">)],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
@@ -124,7 +127,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    edge_index : Tensor</span>
+<span class="sd">    edge_index : torch.Tensor</span>
 <span class="sd">        the graph instance where edges will be removed from.</span>
 <span class="sd">    edges_to_remove : torch.Tensor</span>
 <span class="sd">        shape [2, M], the edges to be removed in the graph.</span>
@@ -138,31 +141,39 @@
 <span class="sd">    Tensor</span>
 <span class="sd">        the graph instance :obj:`edge_index` with edges removed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">edges_to_remove</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">edge_index</span>
+
     <span class="n">device</span> <span class="o">=</span> <span class="n">edge_index</span><span class="o">.</span><span class="n">device</span>
     <span class="k">if</span> <span class="n">symmetric</span><span class="p">:</span>
         <span class="n">edges_to_remove</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
             <span class="p">[</span><span class="n">edges_to_remove</span><span class="p">,</span> <span class="n">edges_to_remove</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="mi">0</span><span class="p">)],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">edges_to_remove</span> <span class="o">=</span> <span class="n">edges_to_remove</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">edge_index</span><span class="p">)</span>
 
-    <span class="c1"># it&#39;s not intuitive to remove edges from a graph represented as `edge_index`</span>
-    <span class="n">edge_weight_remove</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">edges_to_remove</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="mf">1e5</span>
-    <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">edge_index</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="n">edge_weight_remove</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">edge_index</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edges_to_remove</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-    <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">(</span>
-        <span class="p">(</span><span class="n">edge_weight</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="p">(</span><span class="n">edge_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge_index</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
-    <span class="n">adj_matrix</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">adj_matrix</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">num_nodes</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">edge_index</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">edges_to_remove</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">to_scipy_sparse_matrix</span><span class="p">(</span>
+        <span class="n">edge_index</span><span class="p">,</span> <span class="n">num_nodes</span><span class="o">=</span><span class="n">num_nodes</span><span class="p">)</span><span class="o">.</span><span class="n">tocsr</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">edges_to_remove</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">adj_matrix</span><span class="o">.</span><span class="n">tolil</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">adj_matrix</span><span class="p">[(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">adj_matrix</span><span class="o">.</span><span class="n">tocsr</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">adj_matrix</span><span class="o">.</span><span class="n">eliminate_zeros</span><span class="p">()</span>
+
     <span class="n">edge_index</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">from_scipy_sparse_matrix</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">)</span>
+    <span class="n">edge_index</span> <span class="o">=</span> <span class="n">sort_edge_index</span><span class="p">(</span><span class="n">edge_index</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">edge_index</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="flip_edges"><a class="viewcode-back" href="../../../modules/utils.html#greatx.utils.flip_edges">[docs]</a><span class="k">def</span> <span class="nf">flip_edges</span><span class="p">(</span><span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edges_to_flip</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+<div class="viewcode-block" id="flip_edges"><a class="viewcode-back" href="../../../modules/utils.html#greatx.utils.flip_edges">[docs]</a><span class="k">def</span> <span class="nf">flip_edges</span><span class="p">(</span><span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+               <span class="n">edges_to_flip</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+               <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Flip edges from the graph denoted as :obj:`edge_index`. </span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    edge_index : Tensor</span>
+<span class="sd">    edge_index : torch.Tensor</span>
 <span class="sd">        the graph instance where edges will be flipped from.</span>
 <span class="sd">    edges_to_flip : torch.Tensor</span>
 <span class="sd">        shape [2, M], the edges to be flipped in the graph.</span>
@@ -176,8 +187,68 @@
 <span class="sd">    Tensor</span>
 <span class="sd">        the graph instance :obj:`edge_index` with edges flipped.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># TODO</span>
-    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+    <span class="k">if</span> <span class="n">edges_to_flip</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">edge_index</span>
+
+    <span class="n">device</span> <span class="o">=</span> <span class="n">edge_index</span><span class="o">.</span><span class="n">device</span>
+    <span class="k">if</span> <span class="n">symmetric</span><span class="p">:</span>
+        <span class="n">edges_to_flip</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">edges_to_flip</span><span class="p">,</span> <span class="n">edges_to_flip</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="mi">0</span><span class="p">)],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">edges_to_flip</span> <span class="o">=</span> <span class="n">edges_to_flip</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">edge_index</span><span class="p">)</span>
+
+    <span class="n">num_nodes</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">edge_index</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">edges_to_flip</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">to_scipy_sparse_matrix</span><span class="p">(</span>
+        <span class="n">edge_index</span><span class="p">,</span> <span class="n">num_nodes</span><span class="o">=</span><span class="n">num_nodes</span><span class="p">)</span><span class="o">.</span><span class="n">tocsr</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">edges_to_flip</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">adj_matrix</span><span class="p">[(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)]</span><span class="o">.</span><span class="n">A</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">data</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mf">0.</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+
+    <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">adj_matrix</span><span class="o">.</span><span class="n">tolil</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">adj_matrix</span><span class="p">[(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">-</span> <span class="n">data</span>
+    <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">adj_matrix</span><span class="o">.</span><span class="n">tocsr</span><span class="p">(</span><span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">adj_matrix</span><span class="o">.</span><span class="n">eliminate_zeros</span><span class="p">()</span>
+
+    <span class="n">edge_index</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">from_scipy_sparse_matrix</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">)</span>
+    <span class="n">edge_index</span> <span class="o">=</span> <span class="n">sort_edge_index</span><span class="p">(</span><span class="n">edge_index</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">edge_index</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="flip_graph"><a class="viewcode-back" href="../../../modules/utils.html#greatx.utils.flip_graph">[docs]</a><span class="k">def</span> <span class="nf">flip_graph</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">edges_to_flip</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+               <span class="n">symmetric</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Flip edges from the graph denoted as :obj:`data`. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    edge_index : Data</span>
+<span class="sd">        the graph instance where edges will be flipped from.</span>
+<span class="sd">    edges_to_flip : torch.Tensor</span>
+<span class="sd">        shape [2, M], the edges to be flipped in the graph.</span>
+<span class="sd">    symmetric : bool</span>
+<span class="sd">        whether the output graph is symmetric, if True,</span>
+<span class="sd">        it would flip the edges from the graph by:</span>
+<span class="sd">        :obj:`edges_to_flip = torch.cat([edges_to_flip, edges_to_flip.flip(0)], dim=1)`</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Data</span>
+<span class="sd">        the graph instance :obj:`data` with edges flipped.</span>
+
+<span class="sd">    NOTE</span>
+<span class="sd">    ----</span>
+<span class="sd">    We currently don&#39;t support a weigher graph and this function will </span>
+<span class="sd">    automatically set :attr:`edge_weight` and :attr:`adj_t` as :obj:`None`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span> <span class="o">=</span> <span class="n">flip_edges</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edges_to_flip</span><span class="p">,</span> <span class="n">symmetric</span><span class="o">=</span><span class="n">symmetric</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">edge_weight</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">adj_t</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">data</span></div>
 </pre></div>
 
            </div>

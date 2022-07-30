@@ -94,11 +94,16 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    edge_index1 (Tensor) : edges indices of a graph</span>
+<span class="sd">    edge_index1 : torch.Tensor</span>
+<span class="sd">        edges indices of a graph</span>
 <span class="sd">        a graph</span>
-<span class="sd">    edge_index2 (Tensor) : edges indices of another graph</span>
+<span class="sd">    edge_index2 : torch.Tensor</span>
+<span class="sd">        edges indices of another graph</span>
 <span class="sd">        another graph</span>
-<span class="sd">    on (str) : compute overlap on `edge` or `node`, by default edge</span>
+<span class="sd">    on : str, optional</span>
+<span class="sd">        compute overlap on `edge` or `node`, by default edge, by default &#39;edge&#39;</span>
+<span class="sd">    symmetric : bool, optional</span>
+<span class="sd">        whether the computed overlap is symetric, by default False</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>

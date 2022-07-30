@@ -141,10 +141,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">BunchDict</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">cfg</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Received extra configuration: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Received extra configuration:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;lr&quot;</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;weight_decay&quot;</span><span class="p">,</span> <span class="mf">5e-4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;empty_cache&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_optimizer</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_scheduler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">)</span>
@@ -181,6 +182,7 @@
 <span class="sd">        {&#39;data&#39;: data, &#39;mask&#39;: val_mask}, callbacks=[cb])           </span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="n">empty_cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;empty_cache&#39;</span><span class="p">]</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
         <span class="n">model</span><span class="o">.</span><span class="n">stop_training</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">validation</span> <span class="o">=</span> <span class="n">val_inputs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -197,6 +199,8 @@
         <span class="n">callbacks</span><span class="o">.</span><span class="n">on_train_begin</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">empty_cache</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">):</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
                 <span class="n">callbacks</span><span class="o">.</span><span class="n">on_epoch_begin</span><span class="p">(</span><span class="n">epoch</span><span class="p">)</span>
                 <span class="n">train_logs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_step</span><span class="p">(</span><span class="n">train_inputs</span><span class="p">)</span>
                 <span class="n">logs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">train_logs</span><span class="p">)</span>

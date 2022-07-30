@@ -171,7 +171,7 @@
 <span class="sd">            the top-k anchor nodes</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">0</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_anchors</span><span class="p">[:</span><span class="n">k</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_anchors</span><span class="p">[:</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="UniversalDefense.patch"><a class="viewcode-back" href="../../../modules/defense.html#greatx.defense.UniversalDefense.patch">[docs]</a>    <span class="k">def</span> <span class="nf">patch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the universal patch of the defensive perturbation</span>
@@ -230,6 +230,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">influence_score</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">deg</span> <span class="o">=</span> <span class="n">degree</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                           <span class="n">num_nodes</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
 
@@ -246,9 +247,9 @@
             <span class="k">if</span> <span class="n">W</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">W</span> <span class="o">=</span> <span class="n">para</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">W</span> <span class="o">=</span> <span class="n">W</span> <span class="o">@</span> <span class="n">para</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+                <span class="n">W</span> <span class="o">=</span> <span class="n">para</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span> <span class="o">@</span> <span class="n">W</span>
 
-        <span class="n">W</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">@</span> <span class="n">W</span>
+        <span class="n">W</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="o">@</span> <span class="n">W</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
         <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deg</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
         <span class="n">loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">victim_labels</span><span class="p">,</span> <span class="n">pin_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -258,9 +259,9 @@
         <span class="n">I</span> <span class="o">=</span> <span class="mf">0.</span>
         <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">loader</span><span class="p">:</span>
             <span class="n">I</span> <span class="o">+=</span> <span class="n">W</span><span class="p">[:,</span> <span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">I</span> <span class="o">=</span> <span class="p">(</span><span class="n">w_max</span> <span class="o">-</span> <span class="n">I</span> <span class="o">/</span> <span class="n">victim_labels</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">/</span> \
-            <span class="n">d</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>  <span class="c1"># node importance</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="p">(</span><span class="n">w_max</span> <span class="o">-</span> <span class="n">I</span> <span class="o">/</span> <span class="n">victim_labels</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="n">d</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>  <span class="c1"># node importance</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_anchors</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">descending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">influence_score</span> <span class="o">=</span> <span class="n">I</span>
         <span class="k">return</span> <span class="bp">self</span></div></div>
 
 

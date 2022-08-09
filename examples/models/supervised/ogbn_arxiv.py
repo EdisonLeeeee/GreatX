@@ -9,7 +9,7 @@ from greatx.training.callbacks import ModelCheckpoint
 from greatx.utils import split_nodes, BunchDict
 
 dataset = PygNodePropPredDataset(root='~/data/pygdata', name=f'ogbn-arxiv', 
-                                 transform=T.ToUndirected())
+                                 transform=T.Compose([T.ToUndirected(), T.ToSparseTensor()]))
 data = dataset[0]
 splits = dataset.get_idx_split()
 

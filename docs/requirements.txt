@@ -3,7 +3,7 @@ https://data.pyg.org/whl/torch-1.9.0%2Bcpu/torch_scatter-2.0.7-cp38-cp38-linux_x
 https://data.pyg.org/whl/torch-1.9.0%2Bcpu/torch_sparse-0.6.10-cp38-cp38-linux_x86_64.whl
 https://data.pyg.org/whl/torch-1.9.0%2Bcpu/torch_cluster-1.5.9-cp38-cp38-linux_x86_64.whl
 git+https://github.com/pyg-team/pyg_sphinx_theme.git
-torch_geometric==2.0.4
+torch_geometric>=2.0.4
 numpy==1.18.5
 scikit_learn==1.0.2
 scipy==1.7.3

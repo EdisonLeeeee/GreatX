@@ -148,7 +148,7 @@ class SVDPurification(BaseTransform):
 
         # using transposed matrix instead
         data.adj_t = torch.as_tensor(
-            adj_matrix.T, dtype=torch.float, device=device)
+            adj_matrix.A.T, dtype=torch.float, device=device)
         if self.remove_edge_index:
             del data.edge_index, data.edge_weight
         else:
@@ -216,7 +216,7 @@ class EigenDecomposition(BaseTransform):
 
         # using transposed matrix instead
         data.adj_t = torch.as_tensor(
-            adj_matrix.T, dtype=torch.float, device=device)
+            adj_matrix.A.T, dtype=torch.float, device=device)
 
         if self.remove_edge_index:
             del data.edge_index, data.edge_weight

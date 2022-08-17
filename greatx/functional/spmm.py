@@ -39,13 +39,13 @@ def spmm(x: Tensor, edge_index: Tensor,
     >>> # which is equivalent to:
     >>> A = torch.zeros(5,5)
     >>> A[edge_index[0], edge_index[1]] = 1.0
-    >>> torch.mm(A,x)
+    >>> torch.mm(A,t(),x)
     """
     row, col = edge_index[0], edge_index[1]
     x = x if x.dim() > 1 else x.unsqueeze(-1)
 
-    out = x[col]
+    out = x[row]
     if edge_weight is not None:
         out = out * edge_weight.unsqueeze(-1)
-    out = scatter(out, row, dim=0, dim_size=x.size(0), reduce=reduce)
+    out = scatter(out, col, dim=0, dim_size=x.size(0), reduce=reduce)
     return out

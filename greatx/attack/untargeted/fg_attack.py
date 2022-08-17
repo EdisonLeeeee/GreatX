@@ -28,7 +28,7 @@ class FGAttack(UntargetedAttacker, Surrogate):
     name : Optional[str], optional
         name of the attacker, if None, it would be :obj:`__class__.__name__`, 
         by default None
-    kwargs : additional arguments of :class:`greatx.attack.Attacker`,
+    kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
 
     Raises
     ------
@@ -37,27 +37,29 @@ class FGAttack(UntargetedAttacker, Surrogate):
 
     Example
     -------
-    >>> from greatx.dataset import GraphDataset
-    >>> import torch_geometric.transforms as T
+    .. code-block:: python
 
-    >>> dataset = GraphDataset(root='~/data/pygdata', name='cora', 
+        from greatx.dataset import GraphDataset
+        import torch_geometric.transforms as T
+
+        dataset = GraphDataset(root='~/data/pygdata', name='cora', 
                           transform=T.LargestConnectedComponents())
-    >>> data = dataset[0]
+        data = dataset[0]
 
-    >>> surrogate_model = ... # train your surrogate model
+        surrogate_model = ... # train your surrogate model
 
-    >>> from greatx.attack.untargeted import FGAttack
-    >>> attacker = FGAttack(data)
-    >>> attacker.setup_surrogate(surrogate_model)
-    >>> attacker.reset()
-    >>> attacker.attack(0.05) # attack with 0.05% of edge perturbations
-    >>> attacker.data() # get attacked graph
+        from greatx.attack.untargeted import FGAttack
+        attacker = FGAttack(data)
+        attacker.setup_surrogate(surrogate_model)
+        attacker.reset()
+        attacker.attack(0.05) # attack with 0.05% of edge perturbations
+        attacker.data() # get attacked graph
 
-    >>> attacker.edge_flips() # get edge flips after attack
+        attacker.edge_flips() # get edge flips after attack
 
-    >>> attacker.added_edges() # get added edges after attack
+        attacker.added_edges() # get added edges after attack
 
-    >>> attacker.removed_edges() # get removed edges after attack      
+        attacker.removed_edges() # get removed edges after attack      
 
     Note
     ----

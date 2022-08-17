@@ -42,7 +42,7 @@ class SimPGCN(nn.Module):
     Note
     ----
     It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`greatx.utils.wrapper`. 
+    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
 
     See Examples below:
 
@@ -142,6 +142,7 @@ class SimPGCN(nn.Module):
         return self
 
     def forward(self, x, edge_index, edge_weight=None):
+        """"""
 
         if self._adj_knn is None:
             self._adj_knn = adj_knn = knn_graph(x)

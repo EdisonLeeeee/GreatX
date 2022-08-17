@@ -159,7 +159,7 @@
 <td><p>Similarity Preserving Graph Convolution Network (SimPGCN) from the <a class="reference external" href="https://arxiv.org/abs/2011.09643">&quot;Node Similarity Preserving Graph Convolutional Networks&quot;</a> paper (WSDM'21)</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#greatx.nn.models.supervised.GNNGUARD" title="greatx.nn.models.supervised.GNNGUARD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GNNGUARD</span></code></a></p></td>
-<td><p>Graph Convolution Network (GCN) with <a class="reference internal" href="defense.html#greatx.defense.GNNGUARD" title="greatx.defense.GNNGUARD"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.defense.GNNGUARD</span></code></a> from the <a class="reference external" href="https://arxiv.org/abs/2006.08149">&quot;GNNGUARD: Defending Graph Neural Networks against Adversarial Attacks&quot;</a> paper (NeurIPS'20)</p></td>
+<td><p>Graph Convolution Network (GCN) with <a class="reference internal" href="defense.html#greatx.defense.GNNGUARD" title="greatx.defense.GNNGUARD"><code class="xref py py-class docutils literal notranslate"><span class="pre">GNNGUARD</span></code></a> from the <a class="reference external" href="https://arxiv.org/abs/2006.08149">&quot;GNNGUARD: Defending Graph Neural Networks against Adversarial Attacks&quot;</a> paper (NeurIPS'20)</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#greatx.nn.models.supervised.SAT" title="greatx.nn.models.supervised.SAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SAT</span></code></a></p></td>
 <td><p>Graph Convolution Network with Spectral Adversarial Training (SAT) from the <a class="reference external" href="https://arxiv.org">&quot;Spectral Adversarial Training for Robust Graph Neural Network&quot;</a> paper (arXiv'22)</p></td>
@@ -189,7 +189,7 @@ coefficients on the fly, by default True</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -211,7 +211,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.GCNConv" title="greatx.nn.layers.GCNConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.layers.GCNConv</span></code></a></p>
+<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.GCNConv" title="greatx.nn.layers.GCNConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">GCNConv</span></code></a></p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.GCN.reset_parameters">
@@ -221,16 +221,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.GCN.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/gcn.html#GCN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.GCN.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.GCN.training">
@@ -267,7 +258,7 @@ cached version for further executions, by default True</p></li>
 <p>To accept a different graph as inputs, please call <a class="reference internal" href="#greatx.nn.models.supervised.SGC.cache_clear" title="greatx.nn.models.supervised.SGC.cache_clear"><code class="xref py py-meth docutils literal notranslate"><span class="pre">cache_clear()</span></code></a> first
 to clear cached results.</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -289,7 +280,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.SGConv" title="greatx.nn.layers.SGConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.layers.SGConv</span></code></a></p>
+<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.SGConv" title="greatx.nn.layers.SGConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">SGConv</span></code></a></p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.SGC.reset_parameters">
@@ -305,16 +296,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.SGC.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/sgc.html#SGC.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.SGC.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.SGC.training">
@@ -352,7 +334,7 @@ cached version for further executions, by default True</p></li>
 <p>To accept a different graph as inputs, please call <a class="reference internal" href="#greatx.nn.models.supervised.SSGC.cache_clear" title="greatx.nn.models.supervised.SSGC.cache_clear"><code class="xref py py-meth docutils literal notranslate"><span class="pre">cache_clear()</span></code></a> first
 to clear cached results.</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -374,7 +356,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.SSGConv" title="greatx.nn.layers.SSGConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.layers.SSGConv</span></code></a></p>
+<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.SSGConv" title="greatx.nn.layers.SSGConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">SSGConv</span></code></a></p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.SSGC.reset_parameters">
@@ -390,16 +372,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.SSGC.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/ssgc.html#SSGC.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.SSGC.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.SSGC.training">
@@ -430,7 +403,7 @@ registered hooks while the latter silently ignores them.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -464,16 +437,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.GAT.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/gat.html#GAT.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.GAT.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.GAT.training">
@@ -512,7 +476,7 @@ cached version for further executions, by default False</p></li>
 <p>To accept a different graph as inputs, please call <code class="xref py py-meth docutils literal notranslate"><span class="pre">cache_clear()</span></code> first
 to clear cached results.</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -540,16 +504,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.APPNP.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/appnp.html#APPNP.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.APPNP.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.APPNP.training">
@@ -581,7 +536,7 @@ paper (KDD’20)</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -603,7 +558,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.DAGNNConv" title="greatx.nn.layers.DAGNNConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.layers.DAGNNConv</span></code></a></p>
+<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.DAGNNConv" title="greatx.nn.layers.DAGNNConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">DAGNNConv</span></code></a></p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.DAGNN.reset_parameters">
@@ -613,16 +568,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.DAGNN.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/dagnn.html#DAGNN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.DAGNN.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.DAGNN.training">
@@ -657,7 +603,7 @@ Jumping Knowledge Networks”</a> paper (ICML’18)</p>
 <p>To accept a different graph as inputs, please call <code class="xref py py-meth docutils literal notranslate"><span class="pre">cache_clear()</span></code> first
 to clear cached results.</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -716,7 +662,7 @@ coefficients on the fly, by default False</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -738,7 +684,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.layers.TAGCNConv</span></code></p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">TAGCNConv</span></code></p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.TAGCN.reset_parameters">
@@ -748,16 +694,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.TAGCN.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/tagcn.html#TAGCN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.TAGCN.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.TAGCN.training">
@@ -789,7 +726,7 @@ registered hooks while the latter silently ignores them.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -811,8 +748,8 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#greatx.nn.models.supervised.NLMLP" title="greatx.nn.models.supervised.NLMLP"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.NLMLP</span></code></a>
-<a class="reference internal" href="#greatx.nn.models.supervised.NLGAT" title="greatx.nn.models.supervised.NLGAT"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.NLGAT</span></code></a></p>
+<p><a class="reference internal" href="#greatx.nn.models.supervised.NLMLP" title="greatx.nn.models.supervised.NLMLP"><code class="xref py py-class docutils literal notranslate"><span class="pre">NLMLP</span></code></a>
+<a class="reference internal" href="#greatx.nn.models.supervised.NLGAT" title="greatx.nn.models.supervised.NLGAT"><code class="xref py py-class docutils literal notranslate"><span class="pre">NLGAT</span></code></a></p>
 <p>Reference:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/divelab/Non-Local-GNN">https://github.com/divelab/Non-Local-GNN</a></p></li>
@@ -826,16 +763,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.NLGCN.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/nlgnn.html#NLGCN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.NLGCN.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.NLGCN.training">
@@ -868,7 +796,7 @@ registered hooks while the latter silently ignores them.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -890,8 +818,8 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#greatx.nn.models.supervised.NLGCN" title="greatx.nn.models.supervised.NLGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.NLGCN</span></code></a>
-<a class="reference internal" href="#greatx.nn.models.supervised.NLMLP" title="greatx.nn.models.supervised.NLMLP"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.NLMLP</span></code></a></p>
+<p><a class="reference internal" href="#greatx.nn.models.supervised.NLGCN" title="greatx.nn.models.supervised.NLGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">NLGCN</span></code></a>
+<a class="reference internal" href="#greatx.nn.models.supervised.NLMLP" title="greatx.nn.models.supervised.NLMLP"><code class="xref py py-class docutils literal notranslate"><span class="pre">NLMLP</span></code></a></p>
 <p>Reference:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/divelab/Non-Local-GNN">https://github.com/divelab/Non-Local-GNN</a></p></li>
@@ -905,16 +833,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.NLGAT.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/nlgnn.html#NLGAT.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.NLGAT.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.NLGAT.training">
@@ -948,7 +867,7 @@ coefficients on the fly, by default True</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -970,8 +889,8 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#greatx.nn.models.supervised.NLGCN" title="greatx.nn.models.supervised.NLGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.NLGCN</span></code></a>
-<a class="reference internal" href="#greatx.nn.models.supervised.NLGAT" title="greatx.nn.models.supervised.NLGAT"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.NLGAT</span></code></a></p>
+<p><a class="reference internal" href="#greatx.nn.models.supervised.NLGCN" title="greatx.nn.models.supervised.NLGCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">NLGCN</span></code></a>
+<a class="reference internal" href="#greatx.nn.models.supervised.NLGAT" title="greatx.nn.models.supervised.NLGAT"><code class="xref py py-class docutils literal notranslate"><span class="pre">NLGAT</span></code></a></p>
 <p>Reference:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/divelab/Non-Local-GNN">https://github.com/divelab/Non-Local-GNN</a></p></li>
@@ -985,16 +904,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.NLMLP.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/nlgnn.html#NLMLP.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.NLMLP.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.NLMLP.training">
@@ -1025,7 +935,7 @@ self-supervised/unsupervised learning.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#greatx.nn.models.supervised.MLP" title="greatx.nn.models.supervised.MLP"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.MLP</span></code></a></p>
+<p><a class="reference internal" href="#greatx.nn.models.supervised.MLP" title="greatx.nn.models.supervised.MLP"><code class="xref py py-class docutils literal notranslate"><span class="pre">MLP</span></code></a></p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.LogisticRegression.reset_parameters">
@@ -1035,16 +945,7 @@ self-supervised/unsupervised learning.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.LogisticRegression.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/mlp.html#LogisticRegression.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.LogisticRegression.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.LogisticRegression.training">
@@ -1074,7 +975,7 @@ Feed-forward Neural Network (FNN).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1096,7 +997,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#greatx.nn.models.supervised.LogisticRegression" title="greatx.nn.models.supervised.LogisticRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.LogisticRegression</span></code></a></p>
+<p><a class="reference internal" href="#greatx.nn.models.supervised.LogisticRegression" title="greatx.nn.models.supervised.LogisticRegression"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogisticRegression</span></code></a></p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.MLP.reset_parameters">
@@ -1106,16 +1007,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.MLP.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/mlp.html#MLP.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.MLP.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.MLP.training">
@@ -1149,7 +1041,7 @@ coefficients on the fly, by default False</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1171,7 +1063,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.MedianConv" title="greatx.nn.layers.MedianConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.layers.MedianConv</span></code></a></p>
+<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.MedianConv" title="greatx.nn.layers.MedianConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">MedianConv</span></code></a></p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.MedianGCN.reset_parameters">
@@ -1181,16 +1073,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.MedianGCN.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/median_gcn.html#MedianGCN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.MedianGCN.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.MedianGCN.training">
@@ -1222,7 +1105,7 @@ Against Adversarial Attacks”</a> paper (KDD’19)</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1244,7 +1127,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.RobustConv" title="greatx.nn.layers.RobustConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.layers.RobustConv</span></code></a></p>
+<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.RobustConv" title="greatx.nn.layers.RobustConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">RobustConv</span></code></a></p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.RobustGCN.reset_parameters">
@@ -1260,16 +1143,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.RobustGCN.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/robust_gcn.html#RobustGCN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.RobustGCN.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.RobustGCN.training">
@@ -1302,7 +1176,7 @@ paper (NeurIPS’21)</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1324,7 +1198,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.AdaptiveConv" title="greatx.nn.layers.AdaptiveConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.layers.AdaptiveConv</span></code></a></p>
+<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.AdaptiveConv" title="greatx.nn.layers.AdaptiveConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">AdaptiveConv</span></code></a></p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.AirGNN.reset_parameters">
@@ -1334,16 +1208,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.AirGNN.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/air_gnn.html#AirGNN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.AirGNN.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.AirGNN.training">
@@ -1381,7 +1246,7 @@ on the l2 ball of radius λ1., by default True</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1403,7 +1268,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.layers.ElasticGNN</span></code></p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">ElasticGNN</span></code></p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.ElasticGNN.reset_parameters">
@@ -1419,16 +1284,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.ElasticGNN.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/elastic_gnn.html#ElasticGNN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.ElasticGNN.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.ElasticGNN.training">
@@ -1468,7 +1324,7 @@ and will use the cached version for further executions, by default False</p></li
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1490,7 +1346,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.SoftMedianConv" title="greatx.nn.layers.SoftMedianConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.layers.SoftMedianConv</span></code></a></p>
+<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.SoftMedianConv" title="greatx.nn.layers.SoftMedianConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">SoftMedianConv</span></code></a></p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.SoftMedianGCN.reset_parameters">
@@ -1506,16 +1362,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.SoftMedianGCN.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/soft_median_gcn.html#SoftMedianGCN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.SoftMedianGCN.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.SoftMedianGCN.training">
@@ -1546,7 +1393,7 @@ from the <a class="reference external" href="https://arxiv.org/abs/2011.09643">�
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1580,16 +1427,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.SimPGCN.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/simp_gcn.html#SimPGCN.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.SimPGCN.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.SimPGCN.regression_loss">
@@ -1607,7 +1445,7 @@ registered hooks while the latter silently ignores them.</p>
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.GNNGUARD">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GNNGUARD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">hids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[16]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">['relu']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/gnnguard.html#GNNGUARD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.GNNGUARD" title="Permalink to this definition"></a></dt>
 <dd><p>Graph Convolution Network (GCN) with
-<a class="reference internal" href="defense.html#greatx.defense.GNNGUARD" title="greatx.defense.GNNGUARD"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.defense.GNNGUARD</span></code></a> from the <a class="reference external" href="https://arxiv.org/abs/2006.08149">“GNNGUARD:
+<a class="reference internal" href="defense.html#greatx.defense.GNNGUARD" title="greatx.defense.GNNGUARD"><code class="xref py py-class docutils literal notranslate"><span class="pre">GNNGUARD</span></code></a> from the <a class="reference external" href="https://arxiv.org/abs/2006.08149">“GNNGUARD:
 Defending Graph Neural Networks against Adversarial Attacks”</a> paper (NeurIPS’20)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1624,12 +1462,12 @@ Defending Graph Neural Networks against Adversarial Attacks”</a> paper (NeurIP
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="defense.html#greatx.defense.GNNGUARD" title="greatx.defense.GNNGUARD"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.defense.GNNGUARD</span></code></a>, <a class="reference internal" href="#greatx.nn.models.supervised.GCN" title="greatx.nn.models.supervised.GCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.models.supervised.GCN</span></code></a></p>
+<p><a class="reference internal" href="defense.html#greatx.defense.GNNGUARD" title="greatx.defense.GNNGUARD"><code class="xref py py-class docutils literal notranslate"><span class="pre">GNNGUARD</span></code></a>, <a class="reference internal" href="#greatx.nn.models.supervised.GCN" title="greatx.nn.models.supervised.GCN"><code class="xref py py-class docutils literal notranslate"><span class="pre">GCN</span></code></a></p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1657,16 +1495,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.GNNGUARD.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/gnnguard.html#GNNGUARD.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.GNNGUARD.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.GNNGUARD.training">
@@ -1699,7 +1528,7 @@ coefficients on the fly, by default True</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1721,7 +1550,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.SATConv" title="greatx.nn.layers.SATConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">greatx.nn.layers.SATConv</span></code></a></p>
+<p><a class="reference internal" href="nn.layers.html#greatx.nn.layers.SATConv" title="greatx.nn.layers.SATConv"><code class="xref py py-class docutils literal notranslate"><span class="pre">SATConv</span></code></a></p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.SAT.reset_parameters">
@@ -1731,16 +1560,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.SAT.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/supervised/sat.html#SAT.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.supervised.SAT.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.supervised.SAT.training">
@@ -1785,7 +1605,7 @@ coefficients on the fly, by default True</p></li>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">greatx.utils.wrapper()</span></code></a>.</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
 <p>See Examples below:</p>
 </div>
 <p class="rubric">Examples</p>
@@ -1827,16 +1647,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <dl class="py method">
 <dt class="sig sig-object py" id="greatx.nn.models.unsupervised.DGI.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/unsupervised/dgi.html#DGI.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.unsupervised.DGI.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.nn.models.unsupervised.DGI.training">

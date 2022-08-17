@@ -39,7 +39,7 @@ class AdaptiveConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.supervised.AirGNN`     
+    :class:`~greatx.nn.models.supervised.AirGNN`     
     """
 
     def __init__(self,
@@ -59,6 +59,7 @@ class AdaptiveConv(nn.Module):
 
     def forward(self, x: Tensor, edge_index: Adj,
                 edge_weight: OptTensor = None) -> Tensor:
+        """"""
 
         is_edge_like = is_edge_index(edge_index)
 

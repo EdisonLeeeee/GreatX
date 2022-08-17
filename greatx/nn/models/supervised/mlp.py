@@ -30,7 +30,7 @@ class MLP(nn.Module):
     Note
     ----
     It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`greatx.utils.wrapper`. 
+    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
 
     See Examples below:
 
@@ -50,7 +50,7 @@ class MLP(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.supervised.LogisticRegression`    
+    :class:`~greatx.nn.models.supervised.LogisticRegression`    
 
     """
 
@@ -84,6 +84,7 @@ class MLP(nn.Module):
         self.lin.reset_parameters()
 
     def forward(self, x):
+        """"""
         return self.lin(x)
 
 
@@ -109,7 +110,7 @@ class LogisticRegression(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.supervised.MLP`            
+    :class:`~greatx.nn.models.supervised.MLP`            
     """
 
     def __init__(self, in_channels: int, out_channels: int, bias: bool = True):
@@ -121,4 +122,5 @@ class LogisticRegression(nn.Module):
         zeros(self.lin.bias)
 
     def forward(self, x):
+        """"""
         return self.lin(x)

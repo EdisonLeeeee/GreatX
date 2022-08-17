@@ -40,7 +40,7 @@ class ElasticGNN(nn.Module):
     Note
     ----
     It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`greatx.utils.wrapper`. 
+    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
 
     See Examples below:
 
@@ -60,7 +60,7 @@ class ElasticGNN(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.layers.ElasticGNN`    
+    :class:`~greatx.nn.layers.ElasticGNN`    
 
     """
 
@@ -110,5 +110,6 @@ class ElasticGNN(nn.Module):
         return self
 
     def forward(self, x, edge_index, edge_weight=None):
+        """"""
         x = self.lin(x)
         return self.prop(x, edge_index, edge_weight)

@@ -3,7 +3,7 @@ from greatx.training import Trainer
 
 
 class DGITrainer(Trainer):
-    """Custom trainer for :class:`greatx.nn.models.unsupervised.DGI`
+    """Custom trainer for :class:`~greatx.nn.models.unsupervised.DGI`
 
     Parameters
     ----------
@@ -35,12 +35,14 @@ class DGITrainer(Trainer):
         adj_t = getattr(data, 'adj_t', None)
 
         if adj_t is None:
-            postive, negative = model(data.x, data.edge_index, data.edge_weight)
+            postive, negative = model(
+                data.x, data.edge_index, data.edge_weight)
         else:
             postive, negative = model(data.x, adj_t)
 
         loss = F.binary_cross_entropy_with_logits(postive, postive.new_ones(postive.size(0))) + \
-            F.binary_cross_entropy_with_logits(negative, negative.new_zeros(negative.size(0)))
+            F.binary_cross_entropy_with_logits(
+                negative, negative.new_zeros(negative.size(0)))
 
         loss.backward()
         self.callbacks.on_train_batch_end(0)

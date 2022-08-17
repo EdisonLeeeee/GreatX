@@ -5,7 +5,7 @@ from greatx.training import Trainer
 
 
 class SATTrainer(Trainer):
-    """Custom trainer for :class:`greatx.nn.models.supervised.SAT`
+    """Custom trainer for :class:`~greatx.nn.models.supervised.SAT`
 
     Parameters
     ----------
@@ -17,7 +17,7 @@ class SATTrainer(Trainer):
 
     Note
     ----
-    :class:`greatx.training.SATTrainer` accepts the following additional arguments:   
+    :class:`~greatx.training.SATTrainer` accepts the following additional arguments:   
 
     * :obj:`eps_U`: scale of perturbation on eigenvectors
     * :obj:`eps_V`: scale of perturbation on eigenvalues

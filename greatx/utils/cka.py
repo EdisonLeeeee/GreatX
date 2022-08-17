@@ -43,15 +43,17 @@ class CKA:
 
     Example
     -------
-    >>> data = ... # get your graph
-    >>> m1 = ... # get your model1
-    >>> m2 = ... # get your model2
-    >>> cka = CKA(m1, m2)
-    >>> cka.compare(data)
-    >>> cka.plot_results()    
+    .. code-block:: python
+
+        data = ... # get your graph
+        m1 = ... # get your model1
+        m2 = ... # get your model2
+        cka = CKA(m1, m2)
+        cka.compare(data)
+        cka.plot_results()    
 
     Reference:
-    
+
     * Paper: https://arxiv.org/abs/2010.15327
     * Code: https://github.com/AntixK/PyTorch-Model-Compare
     """

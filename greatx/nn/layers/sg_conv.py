@@ -51,7 +51,7 @@ class SGConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.supervised.SGC`    
+    :class:`~greatx.nn.models.supervised.SGC`    
     """
 
     _cached_x: Optional[Tensor]
@@ -87,6 +87,7 @@ class SGConv(nn.Module):
 
     def forward(self, x: Tensor, edge_index: Adj,
                 edge_weight: OptTensor = None) -> Tensor:
+        """"""
 
         cache = self._cached_x
         is_edge_like = is_edge_index(edge_index)

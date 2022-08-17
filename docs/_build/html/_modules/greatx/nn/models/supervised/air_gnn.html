@@ -117,7 +117,7 @@
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
 <span class="sd">    It is convenient to extend the number of layers with different or the same</span>
-<span class="sd">    hidden units (activation functions) using :func:`greatx.utils.wrapper`. </span>
+<span class="sd">    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. </span>
 
 <span class="sd">    See Examples below:</span>
 
@@ -137,7 +137,7 @@
 
 <span class="sd">    See also</span>
 <span class="sd">    --------</span>
-<span class="sd">    :class:`greatx.nn.layers.AdaptiveConv`    </span>
+<span class="sd">    :class:`~greatx.nn.layers.AdaptiveConv`    </span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -177,6 +177,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">lin</span><span class="o">.</span><span class="n">reset_parameters</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AirGNN.forward"><a class="viewcode-back" href="../../../../../modules/nn.models.html#greatx.nn.models.supervised.AirGNN.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">prop</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">)</span></div></div>
 </pre></div>

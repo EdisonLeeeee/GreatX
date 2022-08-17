@@ -22,6 +22,7 @@ class Discriminator(nn.Module):
         self.uniform(size, self.weight)
 
     def forward(self, x, summary):
+        """"""
         x = torch.matmul(x, torch.matmul(self.weight, summary))
         return x
 
@@ -52,7 +53,7 @@ class DGI(nn.Module):
     Note
     ----
     It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`greatx.utils.wrapper`. 
+    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
 
     See Examples below:
 
@@ -116,11 +117,14 @@ class DGI(nn.Module):
         return z
 
     def forward(self, x, edge_index, edge_weight=None):
+        """"""
         z1 = self.encode(x, edge_index, edge_weight)  # view1
         z2 = self.encode(self.corruption(x), edge_index, edge_weight)  # view2
         summary = torch.sigmoid(z1.mean(dim=0))  # global
 
-        pos = self.discriminator(z1, summary).squeeze()  # global-local contrasting
-        neg = self.discriminator(z2, summary).squeeze()  # global-local contrasting
+        # global-local contrasting
+        pos = self.discriminator(z1, summary).squeeze()
+        # global-local contrasting
+        neg = self.discriminator(z2, summary).squeeze()
 
         return pos, neg

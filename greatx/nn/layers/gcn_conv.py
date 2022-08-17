@@ -68,7 +68,7 @@ class GCNConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.supervised.GCN`         
+    :class:`~greatx.nn.models.supervised.GCN`         
     """
 
     def __init__(self, in_channels: int, out_channels: int,
@@ -100,6 +100,7 @@ class GCNConv(nn.Module):
 
     def forward(self, x: Tensor, edge_index: Adj,
                 edge_weight: OptTensor = None) -> Tensor:
+        """"""
 
         x = self.lin(x)
         is_edge_like = is_edge_index(edge_index)

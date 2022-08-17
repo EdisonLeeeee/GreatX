@@ -112,7 +112,7 @@
 <span class="sd">    name : Optional[str], optional</span>
 <span class="sd">        name of the attacker, if None, it would be :obj:`__class__.__name__`, </span>
 <span class="sd">        by default None</span>
-<span class="sd">    kwargs : additional arguments of :class:`greatx.attack.Attacker`,</span>
+<span class="sd">    kwargs : additional arguments of :class:`~greatx.attack.Attacker`,</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
@@ -121,27 +121,29 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from greatx.dataset import GraphDataset</span>
-<span class="sd">    &gt;&gt;&gt; import torch_geometric.transforms as T</span>
+<span class="sd">    .. code-block:: python</span>
 
-<span class="sd">    &gt;&gt;&gt; dataset = GraphDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
+<span class="sd">        from greatx.dataset import GraphDataset</span>
+<span class="sd">        import torch_geometric.transforms as T</span>
+
+<span class="sd">        dataset = GraphDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
 <span class="sd">                          transform=T.LargestConnectedComponents())</span>
-<span class="sd">    &gt;&gt;&gt; data = dataset[0]</span>
+<span class="sd">        data = dataset[0]</span>
 
-<span class="sd">    &gt;&gt;&gt; surrogate_model = ... # train your surrogate model</span>
+<span class="sd">        surrogate_model = ... # train your surrogate model</span>
 
-<span class="sd">    &gt;&gt;&gt; from greatx.attack.untargeted import FGAttack</span>
-<span class="sd">    &gt;&gt;&gt; attacker = FGAttack(data)</span>
-<span class="sd">    &gt;&gt;&gt; attacker.setup_surrogate(surrogate_model)</span>
-<span class="sd">    &gt;&gt;&gt; attacker.reset()</span>
-<span class="sd">    &gt;&gt;&gt; attacker.attack(0.05) # attack with 0.05% of edge perturbations</span>
-<span class="sd">    &gt;&gt;&gt; attacker.data() # get attacked graph</span>
+<span class="sd">        from greatx.attack.untargeted import FGAttack</span>
+<span class="sd">        attacker = FGAttack(data)</span>
+<span class="sd">        attacker.setup_surrogate(surrogate_model)</span>
+<span class="sd">        attacker.reset()</span>
+<span class="sd">        attacker.attack(0.05) # attack with 0.05% of edge perturbations</span>
+<span class="sd">        attacker.data() # get attacked graph</span>
 
-<span class="sd">    &gt;&gt;&gt; attacker.edge_flips() # get edge flips after attack</span>
+<span class="sd">        attacker.edge_flips() # get edge flips after attack</span>
 
-<span class="sd">    &gt;&gt;&gt; attacker.added_edges() # get added edges after attack</span>
+<span class="sd">        attacker.added_edges() # get added edges after attack</span>
 
-<span class="sd">    &gt;&gt;&gt; attacker.removed_edges() # get removed edges after attack      </span>
+<span class="sd">        attacker.removed_edges() # get removed edges after attack      </span>
 
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>

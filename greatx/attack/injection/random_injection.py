@@ -12,30 +12,32 @@ class RandomInjection(InjectionAttacker):
 
     Example
     -------
-    >>> from greatx.dataset import GraphDataset
-    >>> import torch_geometric.transforms as T
+    .. code-block:: python
 
-    >>> dataset = GraphDataset(root='~/data/pygdata', name='cora', 
+        from greatx.dataset import GraphDataset
+        import torch_geometric.transforms as T
+
+        dataset = GraphDataset(root='~/data/pygdata', name='cora', 
                           transform=T.LargestConnectedComponents())
-    >>> data = dataset[0]
+        data = dataset[0]
 
 
-    >>> from greatx.attack.injection import RandomInjection
-    >>> attacker = RandomInjection(data)
+        from greatx.attack.injection import RandomInjection
+        attacker = RandomInjection(data)
 
-    >>> attacker.reset()
-    >>> attacker.attack(10, feat_limits=(0, 1))  # injecting 10 nodes for continuous features
+        attacker.reset()
+        attacker.attack(10, feat_limits=(0, 1))  # injecting 10 nodes for continuous features
 
-    >>> attacker.reset()
-    >>> attacker.attack(10, feat_budgets=10)  # injecting 10 nodes for binary features    
+        attacker.reset()
+        attacker.attack(10, feat_budgets=10)  # injecting 10 nodes for binary features    
 
-    >>> attacker.data() # get attacked graph
+        attacker.data() # get attacked graph
 
-    >>> attacker.injected_nodes() # get injected nodes after attack
+        attacker.injected_nodes() # get injected nodes after attack
 
-    >>> attacker.injected_edges() # get injected edges after attack
+        attacker.injected_edges() # get injected edges after attack
 
-    >>> attacker.injected_feats() # get injected features after attack   
+        attacker.injected_feats() # get injected features after attack   
 
     Note
     ----

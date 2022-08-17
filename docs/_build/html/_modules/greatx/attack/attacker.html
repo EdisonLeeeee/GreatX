@@ -109,7 +109,7 @@
 <span class="sd">    name : Optional[str], optional</span>
 <span class="sd">        name of the attacker, if None, it would be :obj:`__class__.__name__`, </span>
 <span class="sd">        by default None</span>
-<span class="sd">    kwargs : additional arguments of :class:`greatx.attack.Attacker`,</span>
+<span class="sd">    kwargs : additional arguments of :class:`~greatx.attack.Attacker`,</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
@@ -120,11 +120,13 @@
 <span class="sd">    --------</span>
 <span class="sd">    For example, the attacker model should be defined as follows:</span>
 
-<span class="sd">    &gt;&gt;&gt; from greatx.attacker import Attacker</span>
-<span class="sd">    &gt;&gt;&gt; attacker = Attacker(data, device=&#39;cuda&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; attacker.reset() # reset states</span>
-<span class="sd">    &gt;&gt;&gt; attacker.attack(attack_arguments) # attack</span>
-<span class="sd">    &gt;&gt;&gt; attacker.data() # get the attacked graph denoted as PyG-like Data</span>
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from greatx.attacker import Attacker</span>
+<span class="sd">        attacker = Attacker(data, device=&#39;cuda&#39;)</span>
+<span class="sd">        attacker.reset() # reset states</span>
+<span class="sd">        attacker.attack(attack_arguments) # attack</span>
+<span class="sd">        attacker.data() # get the attacked graph denoted as PyG-like Data</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_max_perturbations</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
@@ -234,7 +236,7 @@
 
 <span class="sd">        Example</span>
 <span class="sd">        -------</span>
-<span class="sd">        &gt;&gt;&gt; attacker.set_max_perturbations(10)</span>
+<span class="sd">            attacker.set_max_perturbations(10)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">max_perturbations</span><span class="p">,</span> <span class="n">Number</span><span class="p">),</span> <span class="n">max_perturbations</span>

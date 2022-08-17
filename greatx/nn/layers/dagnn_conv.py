@@ -44,7 +44,7 @@ class DAGNNConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.supervised.DAGNN`       
+    :class:`~greatx.nn.models.supervised.DAGNN`       
     """
 
     def __init__(self, in_channels: int, out_channels: int = 1, K: int = 1,
@@ -67,6 +67,7 @@ class DAGNNConv(nn.Module):
 
     def forward(self, x: Tensor, edge_index: Adj,
                 edge_weight: OptTensor = None) -> Tensor:
+        """"""
 
         is_edge_like = is_edge_index(edge_index)
 

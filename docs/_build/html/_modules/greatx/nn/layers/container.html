@@ -154,6 +154,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_para_required</span> <span class="o">=</span> <span class="n">para_required</span>
 
 <div class="viewcode-block" id="Sequential.forward"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.Sequential.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
         <span class="n">loc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loc</span>
         <span class="k">assert</span> <span class="n">loc</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span>

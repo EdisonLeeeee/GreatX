@@ -8,7 +8,7 @@ from greatx.utils import wrapper
 
 class GNNGUARD(nn.Module):
     r"""Graph Convolution Network (GCN) with 
-    :class:`greatx.defense.GNNGUARD` from the `"GNNGUARD: 
+    :class:`~greatx.defense.GNNGUARD` from the `"GNNGUARD: 
     Defending Graph Neural Networks against Adversarial Attacks"
     <https://arxiv.org/abs/2006.08149>`_ paper (NeurIPS'20)
 
@@ -31,13 +31,13 @@ class GNNGUARD(nn.Module):
 
     See also
     --------
-    :class:`greatx.defense.GNNGUARD`      
-    :class:`greatx.nn.models.supervised.GCN`      
+    :class:`~greatx.defense.GNNGUARD`      
+    :class:`~greatx.nn.models.supervised.GCN`      
 
     Note
     ----
     It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`greatx.utils.wrapper`. 
+    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
 
     See Examples below:
 
@@ -91,6 +91,7 @@ class GNNGUARD(nn.Module):
         self.conv.reset_parameters()
 
     def forward(self, x, edge_index, edge_weight=None):
+        """"""
         for layer in self.conv:
             if isinstance(layer, GNNGUARDLayer):
                 edge_index, edge_weight = layer(x, edge_index)

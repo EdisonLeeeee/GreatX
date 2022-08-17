@@ -20,25 +20,27 @@ class LGCBackdoor(BackdoorAttacker):
 
     Example
     -------
-    >>> from greatx.dataset import GraphDataset
-    >>> import torch_geometric.transforms as T
+    .. code-block:: python
 
-    >>> dataset = GraphDataset(root='~/data/pygdata', name='cora', 
+        from greatx.dataset import GraphDataset
+        import torch_geometric.transforms as T
+
+        dataset = GraphDataset(root='~/data/pygdata', name='cora', 
                           transform=T.LargestConnectedComponents())
-    >>> data = dataset[0]
+        data = dataset[0]
 
-    >>> surrogate_model = ... # train your surrogate model
+        surrogate_model = ... # train your surrogate model
 
-    >>> from greatx.attack.backdoor import LGCBackdoor
-    >>> attacker.setup_surrogate(surrogate_model)
-    >>> attacker = LGCBackdoor(data)
+        from greatx.attack.backdoor import LGCBackdoor
+        attacker.setup_surrogate(surrogate_model)
+        attacker = LGCBackdoor(data)
 
-    >>> attacker.reset()
-    >>> attacker.attack(num_budgets=50, target_class=0)
+        attacker.reset()
+        attacker.attack(num_budgets=50, target_class=0)
 
-    >>> attacker.data() # get attacked graph
+        attacker.data() # get attacked graph
 
-    >>> attacker.trigger() # get trigger node
+        attacker.trigger() # get trigger node
 
     Note
     ----
@@ -94,25 +96,25 @@ class FGBackdoor(BackdoorAttacker, Surrogate):
 
     Example
     -------
-    >>> from greatx.dataset import GraphDataset
-    >>> import torch_geometric.transforms as T
+        from greatx.dataset import GraphDataset
+        import torch_geometric.transforms as T
 
-    >>> dataset = GraphDataset(root='~/data/pygdata', name='cora', 
+        dataset = GraphDataset(root='~/data/pygdata', name='cora', 
                           transform=T.LargestConnectedComponents())
-    >>> data = dataset[0]
+        data = dataset[0]
 
-    >>> surrogate_model = ... # train your surrogate model
+        surrogate_model = ... # train your surrogate model
 
-    >>> from greatx.attack.backdoor import FGBackdoor
-    >>> attacker.setup_surrogate(surrogate_model)
-    >>> attacker = FGBackdoor(data)
+        from greatx.attack.backdoor import FGBackdoor
+        attacker.setup_surrogate(surrogate_model)
+        attacker = FGBackdoor(data)
 
-    >>> attacker.reset()
-    >>> attacker.attack(num_budgets=50, target_class=0)
+        attacker.reset()
+        attacker.attack(num_budgets=50, target_class=0)
 
-    >>> attacker.data() # get attacked graph
+        attacker.data() # get attacked graph
 
-    >>> attacker.trigger() # get trigger node
+        attacker.trigger() # get trigger node
 
     Note
     ----

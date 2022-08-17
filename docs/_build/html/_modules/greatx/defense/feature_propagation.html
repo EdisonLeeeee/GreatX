@@ -93,6 +93,7 @@
 <span class="kn">from</span> <span class="nn">torch_geometric.transforms</span> <span class="kn">import</span> <span class="n">BaseTransform</span>
 <span class="kn">from</span> <span class="nn">greatx.functional</span> <span class="kn">import</span> <span class="n">spmm</span>
 
+
 <div class="viewcode-block" id="FeaturePropagation"><a class="viewcode-back" href="../../../modules/defense.html#greatx.defense.FeaturePropagation">[docs]</a><span class="k">class</span> <span class="nc">FeaturePropagation</span><span class="p">(</span><span class="n">BaseTransform</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Implementation of FeaturePropagation</span>
 <span class="sd">    from the `&quot;On the Unreasonable Effectiveness </span>
@@ -112,21 +113,24 @@
 <span class="sd">        coefficients on the fly, by default True</span>
 <span class="sd">    add_self_loops : bool, optional</span>
 <span class="sd">        whether to add self-loops to the input graph, by default True</span>
-<span class="sd">        </span>
+
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; data = ... # PyG-like data</span>
-<span class="sd">    &gt;&gt;&gt; data = FeaturePropagation(num_iterations=40)(data)</span>
-<span class="sd">    </span>
-<span class="sd">    &gt;&gt;&gt; # missing_mask is a mask `[num_nodes, num_features]` indicating where the feature is missing</span>
-<span class="sd">    &gt;&gt;&gt; data = FeaturePropagation(missing_mask=missing_mask)(data)</span>
-<span class="sd">        </span>
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        data = ... # PyG-like data</span>
+<span class="sd">        data = FeaturePropagation(num_iterations=40)(data)</span>
+
+<span class="sd">        # missing_mask is a mask `[num_nodes, num_features]` indicating where the feature is missing</span>
+<span class="sd">        data = FeaturePropagation(missing_mask=missing_mask)(data)</span>
+
 <span class="sd">    Reference:</span>
-<span class="sd">    </span>
+
 <span class="sd">    * https://github.com/twitter-research/feature-propagation</span>
-<span class="sd">        </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> 
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span>
                  <span class="n">missing_mask</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">normalize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                  <span class="n">add_self_loops</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
@@ -137,8 +141,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">add_self_loops</span> <span class="o">=</span> <span class="n">add_self_loops</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
-            
-        <span class="c1"># out is inizialized to 0 for missing values. However, </span>
+
+        <span class="c1"># out is inizialized to 0 for missing values. However,</span>
         <span class="c1"># its initialization does not matter for the final</span>
         <span class="c1"># value at convergence</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">x</span>
@@ -152,15 +156,15 @@
             <span class="n">out</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
 
         <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_weight</span>
-        
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_self_loops</span><span class="p">:</span>
             <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">add_self_loops</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">)</span>
-            
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">:</span>
             <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">gcn_norm</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
-                                            <span class="n">improved</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                            <span class="n">add_self_loops</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                            <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+                                               <span class="n">improved</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                               <span class="n">add_self_loops</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                               <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_iterations</span><span class="p">):</span>
             <span class="c1"># Diffuse current features</span>
             <span class="n">out</span> <span class="o">=</span> <span class="n">spmm</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">)</span>
@@ -168,7 +172,7 @@
                 <span class="c1"># Reset original known features</span>
                 <span class="n">out</span><span class="p">[</span><span class="n">known_feature_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">known_feature_mask</span><span class="p">]</span>
         <span class="n">data</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">out</span>
-        
+
         <span class="k">return</span> <span class="n">data</span></div>
 </pre></div>
 

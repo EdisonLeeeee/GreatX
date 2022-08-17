@@ -32,7 +32,7 @@ class DAGNN(nn.Module):
     Note
     ----
     It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`greatx.utils.wrapper`. 
+    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
 
     See Examples below:
 
@@ -52,7 +52,7 @@ class DAGNN(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.layers.DAGNNConv`    
+    :class:`~greatx.nn.layers.DAGNNConv`    
 
     """
 
@@ -91,5 +91,6 @@ class DAGNN(nn.Module):
         self.lin.reset_parameters()
 
     def forward(self, x, edge_index, edge_weight=None):
+        """"""
         x = self.lin(x)
         return self.prop(x, edge_index, edge_weight)

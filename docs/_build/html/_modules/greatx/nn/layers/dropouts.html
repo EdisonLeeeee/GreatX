@@ -114,13 +114,15 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from greatx.nn.layers import DropEdge</span>
-<span class="sd">    &gt;&gt;&gt; edge_index = torch.LongTensor([[1, 2], [3,4]])</span>
-<span class="sd">    &gt;&gt;&gt; DropEdge(p=0.5)(edge_index)      </span>
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from greatx.nn.layers import DropEdge</span>
+<span class="sd">        edge_index = torch.LongTensor([[1, 2], [3,4]])</span>
+<span class="sd">        DropEdge(p=0.5)(edge_index)      </span>
 
 <span class="sd">    See also</span>
 <span class="sd">    --------</span>
-<span class="sd">    :class:`greatx.functional.drop_edge`</span>
+<span class="sd">    :class:`~greatx.functional.drop_edge`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">):</span>
@@ -128,6 +130,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
 
 <div class="viewcode-block" id="DropEdge.forward"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.DropEdge.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">drop_edge</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span></div></div>
 
 
@@ -150,13 +153,15 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from greatx.nn.layers import DropNode</span>
-<span class="sd">    &gt;&gt;&gt; edge_index = torch.LongTensor([[1, 2], [3,4]])</span>
-<span class="sd">    &gt;&gt;&gt; DropNode(p=0.5)(edge_index)          </span>
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from greatx.nn.layers import DropNode</span>
+<span class="sd">        edge_index = torch.LongTensor([[1, 2], [3,4]])</span>
+<span class="sd">        DropNode(p=0.5)(edge_index)          </span>
 
 <span class="sd">    See also</span>
 <span class="sd">    --------</span>
-<span class="sd">    :class:`greatx.functional.drop_node`    </span>
+<span class="sd">    :class:`~greatx.functional.drop_node`    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">):</span>
@@ -164,11 +169,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">p</span>
 
 <div class="viewcode-block" id="DropNode.forward"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.DropNode.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">drop_node</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="DropPath"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.DropPath">[docs]</a><span class="k">class</span> <span class="nc">DropPath</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;DropPath: a structured form of :class:`greatx.functional.drop_edge`.</span>
+    <span class="sd">&quot;&quot;&quot;DropPath: a structured form of :class:`~greatx.functional.drop_edge`.</span>
 <span class="sd">    From the `&quot;MaskGAE: Masked Graph Modeling Meets </span>
 <span class="sd">    Graph Autoencoders&quot; &lt;https://arxiv.org/abs/2205.10053&gt;`_</span>
 <span class="sd">    paper (arXiv&#39;22)</span>
@@ -210,15 +216,17 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from greatx.nn.layers import DropPath</span>
-<span class="sd">    &gt;&gt;&gt; edge_index = torch.LongTensor([[1, 2], [3,4]])</span>
-<span class="sd">    &gt;&gt;&gt; DropPath(r=0.5)(edge_index)   </span>
+<span class="sd">    .. code-block:: python</span>
 
-<span class="sd">    &gt;&gt;&gt; DropPath(r=torch.tensor([1,2]))(edge_index) # specify root nodes           </span>
+<span class="sd">        from greatx.nn.layers import DropPath</span>
+<span class="sd">        edge_index = torch.LongTensor([[1, 2], [3,4]])</span>
+<span class="sd">        DropPath(r=0.5)(edge_index)   </span>
+
+<span class="sd">        DropPath(r=torch.tensor([1,2]))(edge_index) # specify root nodes           </span>
 
 <span class="sd">    See also</span>
 <span class="sd">    --------</span>
-<span class="sd">    :class:`greatx.functional.drop_path`        </span>
+<span class="sd">    :class:`~greatx.functional.drop_path`        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
@@ -237,6 +245,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">by</span> <span class="o">=</span> <span class="n">by</span>
 
 <div class="viewcode-block" id="DropPath.forward"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.DropPath.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">drop_path</span><span class="p">(</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">,</span>
                          <span class="n">num_nodes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">by</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span></div></div>
 </pre></div>

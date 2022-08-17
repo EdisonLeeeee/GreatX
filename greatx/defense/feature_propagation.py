@@ -9,6 +9,7 @@ from torch_geometric.data import Data
 from torch_geometric.transforms import BaseTransform
 from greatx.functional import spmm
 
+
 class FeaturePropagation(BaseTransform):
     r"""Implementation of FeaturePropagation
     from the `"On the Unreasonable Effectiveness 
@@ -28,21 +29,24 @@ class FeaturePropagation(BaseTransform):
         coefficients on the fly, by default True
     add_self_loops : bool, optional
         whether to add self-loops to the input graph, by default True
-        
+
     Example
     -------
-    >>> data = ... # PyG-like data
-    >>> data = FeaturePropagation(num_iterations=40)(data)
-    
-    >>> # missing_mask is a mask `[num_nodes, num_features]` indicating where the feature is missing
-    >>> data = FeaturePropagation(missing_mask=missing_mask)(data)
-        
+    .. code-block:: python
+
+        data = ... # PyG-like data
+        data = FeaturePropagation(num_iterations=40)(data)
+
+        # missing_mask is a mask `[num_nodes, num_features]` indicating where the feature is missing
+        data = FeaturePropagation(missing_mask=missing_mask)(data)
+
     Reference:
-    
+
     * https://github.com/twitter-research/feature-propagation
-        
+
     """
-    def __init__(self, num_iterations: int = 40, 
+
+    def __init__(self, num_iterations: int = 40,
                  missing_mask: Optional[Tensor] = None,
                  normalize: bool = True,
                  add_self_loops: bool = True):
@@ -53,8 +57,8 @@ class FeaturePropagation(BaseTransform):
         self.add_self_loops = add_self_loops
 
     def __call__(self, data: Data) -> Data:
-            
-        # out is inizialized to 0 for missing values. However, 
+
+        # out is inizialized to 0 for missing values. However,
         # its initialization does not matter for the final
         # value at convergence
         x = data.x
@@ -68,15 +72,15 @@ class FeaturePropagation(BaseTransform):
             out = x.clone()
 
         edge_index, edge_weight = data.edge_index, data.edge_weight
-        
+
         if self.add_self_loops:
             edge_index, edge_weight = add_self_loops(edge_index, edge_weight)
-            
+
         if self.normalize:
             edge_index, edge_weight = gcn_norm(edge_index, edge_weight, x.size(0),
-                                            improved=False,
-                                            add_self_loops=False,
-                                            dtype=x.dtype)
+                                               improved=False,
+                                               add_self_loops=False,
+                                               dtype=x.dtype)
         for _ in range(self.num_iterations):
             # Diffuse current features
             out = spmm(out, edge_index, edge_weight)
@@ -84,5 +88,5 @@ class FeaturePropagation(BaseTransform):
                 # Reset original known features
                 out[known_feature_mask] = x[known_feature_mask]
         data.x = out
-        
+
         return data

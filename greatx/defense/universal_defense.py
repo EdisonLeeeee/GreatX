@@ -127,18 +127,20 @@ class GUARD(UniversalDefense, Surrogate):
 
     Example
     -------
-    >>> surrogate = GCN(dataset.num_features, dataset.num_classes, bias=False, acts=None)
-    >>> surrogate_trainer = Trainer(surrogate, device=device)
-    >>> ckp = ModelCheckpoint('guard.pth', monitor='val_acc')
-    >>> trainer.fit({'data': data, 'mask': splits.train_nodes}, 
-                {'data': data, 'mask': splits.val_nodes}, callbacks=[ckp])
-    >>> trainer.evaluate({'data': data, 'mask': splits.test_nodes})
+    .. code-block:: python
 
-    >>> guard = GUARD(data, device=device)
-    >>> guard.setup_surrogate(surrogate, data.y[splits.train_nodes])
-    >>> target_node = 1
-    >>> perturbed_data = ... # Other PyG-like Data
-    >>> guard(perturbed_data, target_node, k=50)
+        surrogate = GCN(dataset.num_features, dataset.num_classes, bias=False, acts=None)
+        surrogate_trainer = Trainer(surrogate, device=device)
+        ckp = ModelCheckpoint('guard.pth', monitor='val_acc')
+        trainer.fit({'data': data, 'mask': splits.train_nodes}, 
+                {'data': data, 'mask': splits.val_nodes}, callbacks=[ckp])
+        trainer.evaluate({'data': data, 'mask': splits.test_nodes})
+
+        guard = GUARD(data, device=device)
+        guard.setup_surrogate(surrogate, data.y[splits.train_nodes])
+        target_node = 1
+        perturbed_data = ... # Other PyG-like Data
+        guard(perturbed_data, target_node, k=50)
     """
 
     def __init__(self, data: Data, alpha: float = 2, batch_size: int = 512, device: str = "cpu"):
@@ -175,7 +177,8 @@ class GUARD(UniversalDefense, Surrogate):
         I = 0.
         for y in loader:
             I += W[:, y].sum(1)
-        I = (w_max - I / victim_labels.size(0)) / d.pow(self.alpha)  # node importance
+        I = (w_max - I / victim_labels.size(0)) / \
+            d.pow(self.alpha)  # node importance
         self._anchors = torch.argsort(I, descending=True)
         self.influence_score = I
         return self
@@ -198,11 +201,11 @@ class DegreeGUARD(UniversalDefense):
 
     Example
     -------
-    >>> data = ... # PyG-like Data
-    >>> guard = DegreeGUARD(data))
-    >>> target_node = 1
-    >>> perturbed_data = ... # Other PyG-like Data
-    >>> guard(perturbed_data, target_node, k=50)
+        data = ... # PyG-like Data
+        guard = DegreeGUARD(data))
+        target_node = 1
+        perturbed_data = ... # Other PyG-like Data
+        guard(perturbed_data, target_node, k=50)
     """
 
     def __init__(self, data: Data, descending: bool = False, device: str = "cpu"):
@@ -227,11 +230,11 @@ class RandomGUARD(UniversalDefense):
 
     Example
     -------
-    >>> data = ... # PyG-like Data
-    >>> guard = RandomGUARD(data)
-    >>> target_node = 1
-    >>> perturbed_data = ... # Other PyG-like Data
-    >>> guard(perturbed_data, target_node, k=50)
+        data = ... # PyG-like Data
+        guard = RandomGUARD(data)
+        target_node = 1
+        perturbed_data = ... # Other PyG-like Data
+        guard(perturbed_data, target_node, k=50)
     """
 
     def __init__(self, data: Data, device: str = "cpu"):

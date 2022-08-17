@@ -44,13 +44,15 @@ def drop_edge(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
 
     Example
     -------
-    >>> from greatx.functional import drop_edge
-    >>> edge_index = torch.LongTensor([[1, 2], [3,4]])
-    >>> drop_edge(edge_index, p=0.5)      
+    .. code-block:: python
+
+        from greatx.functional import drop_edge
+        edge_index = torch.LongTensor([[1, 2], [3,4]])
+        drop_edge(edge_index, p=0.5)      
 
     See also
     --------
-    :class:`greatx.nn.layers.DropEdge`         
+    :class:`~greatx.nn.layers.DropEdge`         
     """
 
     if p < 0. or p > 1.:
@@ -103,13 +105,15 @@ def drop_node(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
 
     Example
     -------
-    >>> from greatx.functional import drop_node
-    >>> edge_index = torch.LongTensor([[1, 2], [3,4]])
-    >>> drop_node(edge_index, p=0.5)
+    .. code-block:: python
+
+        from greatx.functional import drop_node
+        edge_index = torch.LongTensor([[1, 2], [3,4]])
+        drop_node(edge_index, p=0.5)
 
     See also
     --------
-    :class:`greatx.nn.layers.DropNode`   
+    :class:`~greatx.nn.layers.DropNode`   
     """
 
     if p < 0. or p > 1.:
@@ -137,7 +141,7 @@ def drop_path(edge_index: Tensor,
               num_nodes: int = None,
               by: str = 'uniform',
               return_dropped: bool = False) -> Tuple[Tensor, Tensor]:
-    """DropPath: a structured form of :class:`greatx.functional.drop_edge`.
+    """DropPath: a structured form of :class:`~greatx.functional.drop_edge`.
     From the `"MaskGAE: Masked Graph Modeling Meets 
     Graph Autoencoders" <https://arxiv.org/abs/2205.10053>`_
     paper (arXiv'22)
@@ -191,16 +195,18 @@ def drop_path(edge_index: Tensor,
 
     Example
     -------
-    >>> from greatx.functional import drop_path
-    >>> edge_index = torch.LongTensor([[1, 2], [3,4]])
-    >>> drop_path(edge_index, r=0.5)   
+    .. code-block:: python
 
-    >>> drop_path(edge_index, r=torch.tensor([1,2])) # specify root nodes   
+        from greatx.functional import drop_path
+        edge_index = torch.LongTensor([[1, 2], [3,4]])
+        drop_path(edge_index, r=0.5)   
+
+        drop_path(edge_index, r=torch.tensor([1,2])) # specify root nodes   
 
 
     See also
     --------
-    :class:`greatx.nn.layers.DropPath`      
+    :class:`~greatx.nn.layers.DropPath`      
     """
 
     if torch_cluster is None:

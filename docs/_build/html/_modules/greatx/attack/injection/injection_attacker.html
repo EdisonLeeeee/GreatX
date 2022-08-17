@@ -101,28 +101,37 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; attacker = InjectionAttacker(data)</span>
-<span class="sd">    &gt;&gt;&gt; attacker.reset()</span>
-<span class="sd">    # inject 10 nodes, where each nodes has 2 edges</span>
-<span class="sd">    &gt;&gt;&gt; attacker.attack(num_budgets=10, num_edges_local=2) </span>
-<span class="sd">    # inject 10 nodes, with 100 edges in total</span>
-<span class="sd">    &gt;&gt;&gt; attacker.attack(num_budgets=10, num_edges_global=100) </span>
-<span class="sd">    # inject 10 nodes, where each nodes has 2 edges, </span>
-<span class="sd">    # the features of injected nodes lies in [0,1]</span>
-<span class="sd">    &gt;&gt;&gt; attacker.attack(num_budgets=10, num_edges_local=2, feat_limits=(0,1)) </span>
-<span class="sd">    &gt;&gt;&gt; attacker.attack(num_budgets=10, num_edges_local=2, feat_limits={&#39;min&#39;: 0, &#39;max&#39;:1}) </span>
-<span class="sd">    # inject 10 nodes, where each nodes has 2 edges, </span>
-<span class="sd">    # the features of injected each node has 10 nonzero elements</span>
-<span class="sd">    &gt;&gt;&gt; attacker.attack(num_budgets=10, num_edges_local=2, feat_budgets=10) </span>
+<span class="sd">    .. code-block:: python</span>
 
-<span class="sd">    # get injected nodes</span>
-<span class="sd">    &gt;&gt;&gt; attacker.injected_nodes()</span>
-<span class="sd">    # get injected edges</span>
-<span class="sd">    &gt;&gt;&gt; attacker.injected_edges()</span>
-<span class="sd">    # get injected nodes&#39; features</span>
-<span class="sd">    &gt;&gt;&gt; attacker.injected_feats()</span>
-<span class="sd">    # get perturbed graph</span>
-<span class="sd">    &gt;&gt;&gt; attacker.data()</span>
+<span class="sd">        attacker = InjectionAttacker(data)</span>
+<span class="sd">        attacker.reset()</span>
+
+<span class="sd">        # inject 10 nodes, where each nodes has 2 edges</span>
+<span class="sd">        attacker.attack(num_budgets=10, num_edges_local=2) </span>
+
+<span class="sd">        # inject 10 nodes, with 100 edges in total</span>
+<span class="sd">        attacker.attack(num_budgets=10, num_edges_global=100) </span>
+
+<span class="sd">        # inject 10 nodes, where each nodes has 2 edges, </span>
+<span class="sd">        # and the features of injected nodes lies in [0,1]</span>
+<span class="sd">        attacker.attack(num_budgets=10, num_edges_local=2, feat_limits=(0,1)) </span>
+<span class="sd">        attacker.attack(num_budgets=10, num_edges_local=2, feat_limits={&#39;min&#39;: 0, &#39;max&#39;:1}) </span>
+
+<span class="sd">        # inject 10 nodes, where each nodes has 2 edges, </span>
+<span class="sd">        # and the features of injected each node has 10 nonzero elements</span>
+<span class="sd">        attacker.attack(num_budgets=10, num_edges_local=2, feat_budgets=10) </span>
+
+<span class="sd">        # get injected nodes</span>
+<span class="sd">        attacker.injected_nodes()</span>
+
+<span class="sd">        # get injected edges</span>
+<span class="sd">        attacker.injected_edges()</span>
+
+<span class="sd">        # get injected nodes&#39; features</span>
+<span class="sd">        attacker.injected_feats()</span>
+
+<span class="sd">        # get perturbed graph</span>
+<span class="sd">        attacker.data()</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="InjectionAttacker.reset"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.injection.InjectionAttacker.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;InjectionAttacker&quot;</span><span class="p">:</span>

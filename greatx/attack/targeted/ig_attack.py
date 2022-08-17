@@ -30,7 +30,7 @@ class IGAttack(TargetedAttacker, Surrogate):
     name : Optional[str], optional
         name of the attacker, if None, it would be :obj:`__class__.__name__`, 
         by default None
-    kwargs : additional arguments of :class:`greatx.attack.Attacker`,
+    kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
 
     Raises
     ------
@@ -39,31 +39,33 @@ class IGAttack(TargetedAttacker, Surrogate):
 
     Example
     -------
-    >>> from greatx.dataset import GraphDataset
-    >>> import torch_geometric.transforms as T
+    .. code-block:: python
 
-    >>> dataset = GraphDataset(root='~/data/pygdata', name='cora', 
+        from greatx.dataset import GraphDataset
+        import torch_geometric.transforms as T
+
+        dataset = GraphDataset(root='~/data/pygdata', name='cora', 
                           transform=T.LargestConnectedComponents())
-    >>> data = dataset[0]
+        data = dataset[0]
 
-    >>> surrogate_model = ... # train your surrogate model
+        surrogate_model = ... # train your surrogate model
 
-    >>> from greatx.attack.targeted import IGAttack
-    >>> attacker = IGAttack(data)
-    >>> attacker.setup_surrogate(surrogate_model)
-    >>> attacker.reset()
-    >>> attacker.attack(target=1) # attacking target node `1` with default budget set as node degree
+        from greatx.attack.targeted import IGAttack
+        attacker = IGAttack(data)
+        attacker.setup_surrogate(surrogate_model)
+        attacker.reset()
+        attacker.attack(target=1) # attacking target node `1` with default budget set as node degree
 
-    >>> attacker.reset()
-    >>> attacker.attack(target=1, num_budgets=1) # attacking target node `1` with budget set as 1
+        attacker.reset()
+        attacker.attack(target=1, num_budgets=1) # attacking target node `1` with budget set as 1
 
-    >>> attacker.data() # get attacked graph
+        attacker.data() # get attacked graph
 
-    >>> attacker.edge_flips() # get edge flips after attack
+        attacker.edge_flips() # get edge flips after attack
 
-    >>> attacker.added_edges() # get added edges after attack
+        attacker.added_edges() # get added edges after attack
 
-    >>> attacker.removed_edges() # get removed edges after attack        
+        attacker.removed_edges() # get removed edges after attack        
 
     Note
     ----

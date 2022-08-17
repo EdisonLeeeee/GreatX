@@ -29,17 +29,21 @@ def spmm(x: Tensor, edge_index: Tensor,
 
     Example
     -------
-    >>> import torch
-    >>> from greatx.functional import spmm
+    .. code-block:: python
 
-    >>> x = torch.randn(5,2)
-    >>> edge_index = torch.LongTensor([[1,2], [3,4]])
-    >>> spmm(x, edge_index, reduce='sum')
+        import torch
+        from greatx.functional import spmm
 
-    >>> # which is equivalent to:
-    >>> A = torch.zeros(5,5)
-    >>> A[edge_index[0], edge_index[1]] = 1.0
-    >>> torch.mm(A,t(),x)
+        x = torch.randn(5,2)
+        edge_index = torch.LongTensor([[1,2], [3,4]])
+        out1 = spmm(x, edge_index, reduce='sum')
+
+        # which is equivalent to:
+        A = torch.zeros(5,5)
+        A[edge_index[0], edge_index[1]] = 1.0
+        out2 = torch.mm(A,t(),x)
+
+        assert torch.allclose(out1, out2)
     """
     row, col = edge_index[0], edge_index[1]
     x = x if x.dim() > 1 else x.unsqueeze(-1)

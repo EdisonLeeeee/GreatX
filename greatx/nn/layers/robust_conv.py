@@ -46,7 +46,7 @@ class RobustConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.supervised.RobustGCN`       
+    :class:`~greatx.nn.models.supervised.RobustGCN`       
     """
 
     def __init__(self, in_channels: int, out_channels: int,
@@ -83,6 +83,7 @@ class RobustConv(nn.Module):
 
     def forward(self, x: Union[Tensor, OptPairTensor], edge_index: Adj,
                 edge_weight: OptTensor = None) -> Tensor:
+        """"""
 
         if isinstance(x, Tensor):
             x_mean = x_var = x

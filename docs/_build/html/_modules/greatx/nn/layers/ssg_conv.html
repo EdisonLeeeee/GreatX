@@ -137,7 +137,7 @@
 
 <span class="sd">    See also</span>
 <span class="sd">    --------</span>
-<span class="sd">    :class:`greatx.nn.models.supervised.SSGC`   </span>
+<span class="sd">    :class:`~greatx.nn.models.supervised.SSGC`   </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_cached_x</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span>
@@ -177,6 +177,7 @@
 
 <div class="viewcode-block" id="SSGConv.forward"><a class="viewcode-back" href="../../../../modules/nn.layers.html#greatx.nn.layers.SSGConv.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Adj</span><span class="p">,</span>
                 <span class="n">edge_weight</span><span class="p">:</span> <span class="n">OptTensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
 
         <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_x</span>
         <span class="n">is_edge_like</span> <span class="o">=</span> <span class="n">is_edge_index</span><span class="p">(</span><span class="n">edge_index</span><span class="p">)</span>

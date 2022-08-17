@@ -145,7 +145,7 @@
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
 <span class="sd">    :class:`CosinePurification` is an extension of</span>
-<span class="sd">    :class:`greatx.defense.JaccardPurification` for dealing with</span>
+<span class="sd">    :class:`~greatx.defense.JaccardPurification` for dealing with</span>
 <span class="sd">    continuous node features.</span>
 
 <span class="sd">    Parameters</span>
@@ -229,8 +229,10 @@
         <span class="n">adj_matrix</span> <span class="o">=</span> <span class="n">svd</span><span class="p">(</span><span class="n">adj_matrix</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">,</span>
                          <span class="n">threshold</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span>
                          <span class="n">binaryzation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">binaryzation</span><span class="p">)</span>
+
+        <span class="c1"># using transposed matrix instead</span>
         <span class="n">data</span><span class="o">.</span><span class="n">adj_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span>
-            <span class="n">adj_matrix</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">adj_matrix</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_edge_index</span><span class="p">:</span>
             <span class="k">del</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_weight</span>
         <span class="k">else</span><span class="p">:</span>
@@ -249,7 +251,7 @@
 <span class="sd">    Eigen Decomposition reconstruction on</span>
 <span class="sd">    the adjacency matrix.</span>
 
-<span class="sd">    :class:`EigenDecomposition` is similar to :class:`greatx.defense.SVDPurification`</span>
+<span class="sd">    :class:`EigenDecomposition` is similar to :class:`~greatx.defense.SVDPurification`</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -296,8 +298,9 @@
 
         <span class="n">data</span><span class="o">.</span><span class="n">V</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">U</span> <span class="o">=</span> <span class="n">V</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">U</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 
+        <span class="c1"># using transposed matrix instead</span>
         <span class="n">data</span><span class="o">.</span><span class="n">adj_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span>
-            <span class="n">adj_matrix</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+            <span class="n">adj_matrix</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_edge_index</span><span class="p">:</span>
             <span class="k">del</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_weight</span>

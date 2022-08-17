@@ -41,7 +41,7 @@ class SSGC(nn.Module):
     to clear cached results.
 
     It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`greatx.utils.wrapper`. 
+    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
 
     See Examples below:
 
@@ -61,7 +61,7 @@ class SSGC(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.layers.SSGConv`        
+    :class:`~greatx.nn.layers.SSGConv`        
 
     """
 
@@ -119,4 +119,5 @@ class SSGC(nn.Module):
         return self
 
     def forward(self, x, edge_index, edge_weight=None):
+        """"""
         return self.conv(x, edge_index, edge_weight)

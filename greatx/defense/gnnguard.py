@@ -25,6 +25,7 @@ class GNNGUARD(torch.nn.Module):
         self.add_self_loops = add_self_loops
 
     def forward(self, x, edge_index):
+        """"""
 
         row, col = edge_index
         A = x[row]

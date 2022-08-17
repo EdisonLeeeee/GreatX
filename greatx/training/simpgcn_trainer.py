@@ -3,7 +3,7 @@ from greatx.training import Trainer
 
 
 class SimPGCNTrainer(Trainer):
-    """Custom trainer for :class:`greatx.nn.models.supervised.SimPGCN`
+    """Custom trainer for :class:`~greatx.nn.models.supervised.SimPGCN`
 
     Parameters
     ----------
@@ -15,7 +15,7 @@ class SimPGCNTrainer(Trainer):
 
     Note
     ----
-    :class:`greatx.training.SimPGCNTrainer` accepts the following additional arguments:   
+    :class:`~greatx.training.SimPGCNTrainer` accepts the following additional arguments:   
 
     * :obj:`lambda_`: trade-off parameter for regression loss
 

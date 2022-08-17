@@ -126,7 +126,7 @@
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
 <span class="sd">    It is convenient to extend the number of layers with different or the same</span>
-<span class="sd">    hidden units (activation functions) using :func:`greatx.utils.wrapper`. </span>
+<span class="sd">    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. </span>
 
 <span class="sd">    See Examples below:</span>
 
@@ -226,6 +226,7 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="SimPGCN.forward"><a class="viewcode-back" href="../../../../../modules/nn.models.html#greatx.nn.models.supervised.SimPGCN.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adj_knn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_adj_knn</span> <span class="o">=</span> <span class="n">adj_knn</span> <span class="o">=</span> <span class="n">knn_graph</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>

@@ -47,7 +47,7 @@ class TAGConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.supervised.TAGCN`       
+    :class:`~greatx.nn.models.supervised.TAGCN`       
 
     """
 
@@ -75,6 +75,7 @@ class TAGConv(nn.Module):
 
     def forward(self, x: Tensor, edge_index: Adj,
                 edge_weight: OptTensor = None) -> Tensor:
+        """"""
 
         is_edge_like = is_edge_index(edge_index)
 

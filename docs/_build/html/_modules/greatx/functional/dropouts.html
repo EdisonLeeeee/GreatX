@@ -128,13 +128,15 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from greatx.functional import drop_edge</span>
-<span class="sd">    &gt;&gt;&gt; edge_index = torch.LongTensor([[1, 2], [3,4]])</span>
-<span class="sd">    &gt;&gt;&gt; drop_edge(edge_index, p=0.5)      </span>
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from greatx.functional import drop_edge</span>
+<span class="sd">        edge_index = torch.LongTensor([[1, 2], [3,4]])</span>
+<span class="sd">        drop_edge(edge_index, p=0.5)      </span>
 
 <span class="sd">    See also</span>
 <span class="sd">    --------</span>
-<span class="sd">    :class:`greatx.nn.layers.DropEdge`         </span>
+<span class="sd">    :class:`~greatx.nn.layers.DropEdge`         </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.</span> <span class="ow">or</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="mf">1.</span><span class="p">:</span>
@@ -187,13 +189,15 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from greatx.functional import drop_node</span>
-<span class="sd">    &gt;&gt;&gt; edge_index = torch.LongTensor([[1, 2], [3,4]])</span>
-<span class="sd">    &gt;&gt;&gt; drop_node(edge_index, p=0.5)</span>
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        from greatx.functional import drop_node</span>
+<span class="sd">        edge_index = torch.LongTensor([[1, 2], [3,4]])</span>
+<span class="sd">        drop_node(edge_index, p=0.5)</span>
 
 <span class="sd">    See also</span>
 <span class="sd">    --------</span>
-<span class="sd">    :class:`greatx.nn.layers.DropNode`   </span>
+<span class="sd">    :class:`~greatx.nn.layers.DropNode`   </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.</span> <span class="ow">or</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="mf">1.</span><span class="p">:</span>
@@ -221,7 +225,7 @@
               <span class="n">num_nodes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
               <span class="n">by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;uniform&#39;</span><span class="p">,</span>
               <span class="n">return_dropped</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;DropPath: a structured form of :class:`greatx.functional.drop_edge`.</span>
+    <span class="sd">&quot;&quot;&quot;DropPath: a structured form of :class:`~greatx.functional.drop_edge`.</span>
 <span class="sd">    From the `&quot;MaskGAE: Masked Graph Modeling Meets </span>
 <span class="sd">    Graph Autoencoders&quot; &lt;https://arxiv.org/abs/2205.10053&gt;`_</span>
 <span class="sd">    paper (arXiv&#39;22)</span>
@@ -275,16 +279,18 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from greatx.functional import drop_path</span>
-<span class="sd">    &gt;&gt;&gt; edge_index = torch.LongTensor([[1, 2], [3,4]])</span>
-<span class="sd">    &gt;&gt;&gt; drop_path(edge_index, r=0.5)   </span>
+<span class="sd">    .. code-block:: python</span>
 
-<span class="sd">    &gt;&gt;&gt; drop_path(edge_index, r=torch.tensor([1,2])) # specify root nodes   </span>
+<span class="sd">        from greatx.functional import drop_path</span>
+<span class="sd">        edge_index = torch.LongTensor([[1, 2], [3,4]])</span>
+<span class="sd">        drop_path(edge_index, r=0.5)   </span>
+
+<span class="sd">        drop_path(edge_index, r=torch.tensor([1,2])) # specify root nodes   </span>
 
 
 <span class="sd">    See also</span>
 <span class="sd">    --------</span>
-<span class="sd">    :class:`greatx.nn.layers.DropPath`      </span>
+<span class="sd">    :class:`~greatx.nn.layers.DropPath`      </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">torch_cluster</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

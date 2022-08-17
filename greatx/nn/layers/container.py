@@ -70,6 +70,7 @@ class Sequential(nn.Sequential):
         self._para_required = para_required
 
     def forward(self, *inputs, **kwargs):
+        """"""
         loc = self.loc
         assert loc <= len(inputs)
         output = inputs[loc]

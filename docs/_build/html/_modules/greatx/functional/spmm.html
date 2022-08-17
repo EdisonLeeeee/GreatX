@@ -113,25 +113,29 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; import torch</span>
-<span class="sd">    &gt;&gt;&gt; from greatx.functional import spmm</span>
+<span class="sd">    .. code-block:: python</span>
 
-<span class="sd">    &gt;&gt;&gt; x = torch.randn(5,2)</span>
-<span class="sd">    &gt;&gt;&gt; edge_index = torch.LongTensor([[1,2], [3,4]])</span>
-<span class="sd">    &gt;&gt;&gt; spmm(x, edge_index, reduce=&#39;sum&#39;)</span>
+<span class="sd">        import torch</span>
+<span class="sd">        from greatx.functional import spmm</span>
 
-<span class="sd">    &gt;&gt;&gt; # which is equivalent to:</span>
-<span class="sd">    &gt;&gt;&gt; A = torch.zeros(5,5)</span>
-<span class="sd">    &gt;&gt;&gt; A[edge_index[0], edge_index[1]] = 1.0</span>
-<span class="sd">    &gt;&gt;&gt; torch.mm(A,x)</span>
+<span class="sd">        x = torch.randn(5,2)</span>
+<span class="sd">        edge_index = torch.LongTensor([[1,2], [3,4]])</span>
+<span class="sd">        out1 = spmm(x, edge_index, reduce=&#39;sum&#39;)</span>
+
+<span class="sd">        # which is equivalent to:</span>
+<span class="sd">        A = torch.zeros(5,5)</span>
+<span class="sd">        A[edge_index[0], edge_index[1]] = 1.0</span>
+<span class="sd">        out2 = torch.mm(A,t(),x)</span>
+
+<span class="sd">        assert torch.allclose(out1, out2)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">edge_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="n">out</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">edge_weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">*</span> <span class="n">edge_weight</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">scatter</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim_size</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">reduce</span><span class="o">=</span><span class="n">reduce</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">scatter</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim_size</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">reduce</span><span class="o">=</span><span class="n">reduce</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>
 </pre></div>
 

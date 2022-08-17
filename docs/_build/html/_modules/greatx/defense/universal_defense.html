@@ -211,18 +211,20 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; surrogate = GCN(dataset.num_features, dataset.num_classes, bias=False, acts=None)</span>
-<span class="sd">    &gt;&gt;&gt; surrogate_trainer = Trainer(surrogate, device=device)</span>
-<span class="sd">    &gt;&gt;&gt; ckp = ModelCheckpoint(&#39;guard.pth&#39;, monitor=&#39;val_acc&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; trainer.fit({&#39;data&#39;: data, &#39;mask&#39;: splits.train_nodes}, </span>
-<span class="sd">                {&#39;data&#39;: data, &#39;mask&#39;: splits.val_nodes}, callbacks=[ckp])</span>
-<span class="sd">    &gt;&gt;&gt; trainer.evaluate({&#39;data&#39;: data, &#39;mask&#39;: splits.test_nodes})</span>
+<span class="sd">    .. code-block:: python</span>
 
-<span class="sd">    &gt;&gt;&gt; guard = GUARD(data, device=device)</span>
-<span class="sd">    &gt;&gt;&gt; guard.setup_surrogate(surrogate, data.y[splits.train_nodes])</span>
-<span class="sd">    &gt;&gt;&gt; target_node = 1</span>
-<span class="sd">    &gt;&gt;&gt; perturbed_data = ... # Other PyG-like Data</span>
-<span class="sd">    &gt;&gt;&gt; guard(perturbed_data, target_node, k=50)</span>
+<span class="sd">        surrogate = GCN(dataset.num_features, dataset.num_classes, bias=False, acts=None)</span>
+<span class="sd">        surrogate_trainer = Trainer(surrogate, device=device)</span>
+<span class="sd">        ckp = ModelCheckpoint(&#39;guard.pth&#39;, monitor=&#39;val_acc&#39;)</span>
+<span class="sd">        trainer.fit({&#39;data&#39;: data, &#39;mask&#39;: splits.train_nodes}, </span>
+<span class="sd">                {&#39;data&#39;: data, &#39;mask&#39;: splits.val_nodes}, callbacks=[ckp])</span>
+<span class="sd">        trainer.evaluate({&#39;data&#39;: data, &#39;mask&#39;: splits.test_nodes})</span>
+
+<span class="sd">        guard = GUARD(data, device=device)</span>
+<span class="sd">        guard.setup_surrogate(surrogate, data.y[splits.train_nodes])</span>
+<span class="sd">        target_node = 1</span>
+<span class="sd">        perturbed_data = ... # Other PyG-like Data</span>
+<span class="sd">        guard(perturbed_data, target_node, k=50)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">):</span>
@@ -259,7 +261,8 @@
         <span class="n">I</span> <span class="o">=</span> <span class="mf">0.</span>
         <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">loader</span><span class="p">:</span>
             <span class="n">I</span> <span class="o">+=</span> <span class="n">W</span><span class="p">[:,</span> <span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">I</span> <span class="o">=</span> <span class="p">(</span><span class="n">w_max</span> <span class="o">-</span> <span class="n">I</span> <span class="o">/</span> <span class="n">victim_labels</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="n">d</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>  <span class="c1"># node importance</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="p">(</span><span class="n">w_max</span> <span class="o">-</span> <span class="n">I</span> <span class="o">/</span> <span class="n">victim_labels</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">/</span> \
+            <span class="n">d</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span>  <span class="c1"># node importance</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_anchors</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">descending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">influence_score</span> <span class="o">=</span> <span class="n">I</span>
         <span class="k">return</span> <span class="bp">self</span></div></div>
@@ -282,11 +285,11 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; data = ... # PyG-like Data</span>
-<span class="sd">    &gt;&gt;&gt; guard = DegreeGUARD(data))</span>
-<span class="sd">    &gt;&gt;&gt; target_node = 1</span>
-<span class="sd">    &gt;&gt;&gt; perturbed_data = ... # Other PyG-like Data</span>
-<span class="sd">    &gt;&gt;&gt; guard(perturbed_data, target_node, k=50)</span>
+<span class="sd">        data = ... # PyG-like Data</span>
+<span class="sd">        guard = DegreeGUARD(data))</span>
+<span class="sd">        target_node = 1</span>
+<span class="sd">        perturbed_data = ... # Other PyG-like Data</span>
+<span class="sd">        guard(perturbed_data, target_node, k=50)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">descending</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">):</span>
@@ -311,11 +314,11 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; data = ... # PyG-like Data</span>
-<span class="sd">    &gt;&gt;&gt; guard = RandomGUARD(data)</span>
-<span class="sd">    &gt;&gt;&gt; target_node = 1</span>
-<span class="sd">    &gt;&gt;&gt; perturbed_data = ... # Other PyG-like Data</span>
-<span class="sd">    &gt;&gt;&gt; guard(perturbed_data, target_node, k=50)</span>
+<span class="sd">        data = ... # PyG-like Data</span>
+<span class="sd">        guard = RandomGUARD(data)</span>
+<span class="sd">        target_node = 1</span>
+<span class="sd">        perturbed_data = ... # Other PyG-like Data</span>
+<span class="sd">        guard(perturbed_data, target_node, k=50)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span><span class="p">):</span>

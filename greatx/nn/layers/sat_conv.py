@@ -44,7 +44,7 @@ class SATConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.supervised.SAT`       
+    :class:`~greatx.nn.models.supervised.SAT`       
     """
 
     def __init__(self, in_channels: int, out_channels: int,
@@ -71,6 +71,7 @@ class SATConv(nn.Module):
         self.lin.reset_parameters()
 
     def forward(self, x: Tensor, U: Tensor, V: Optional[Tensor] = None):
+        """"""
         # NOTE: torch_sparse.SparseTensor is not supported
         is_edge_like = is_edge_index(U)
         x = self.lin(x)

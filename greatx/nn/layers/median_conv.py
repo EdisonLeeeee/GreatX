@@ -45,7 +45,7 @@ class MedianConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.supervised.MedianGCN`       
+    :class:`~greatx.nn.models.supervised.MedianGCN`       
     """
 
     def __init__(self, in_channels: int, out_channels: int,
@@ -75,6 +75,7 @@ class MedianConv(nn.Module):
 
     def forward(self, x: Tensor, edge_index: Adj,
                 edge_weight: OptTensor = None) -> Tensor:
+        """"""
 
         x = self.lin(x)
 
@@ -120,7 +121,8 @@ def median_reduce(x: Tensor, edge_index: Tensor, edge_weight: OptTensor = None) 
     h = x_j.new_zeros(dense_x.size(0), dense_x.size(-1))
     deg = mask.sum(dim=1)
     for i in deg.unique():
-        if i == 0: continue
+        if i == 0:
+            continue
         deg_mask = deg == i
         h[deg_mask] = dense_x[deg_mask, :i].median(dim=1).values
     return h

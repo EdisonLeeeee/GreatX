@@ -25,7 +25,7 @@ class Attacker(torch.nn.Module):
     name : Optional[str], optional
         name of the attacker, if None, it would be :obj:`__class__.__name__`, 
         by default None
-    kwargs : additional arguments of :class:`greatx.attack.Attacker`,
+    kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
 
     Raises
     ------
@@ -36,11 +36,13 @@ class Attacker(torch.nn.Module):
     --------
     For example, the attacker model should be defined as follows:
 
-    >>> from greatx.attacker import Attacker
-    >>> attacker = Attacker(data, device='cuda')
-    >>> attacker.reset() # reset states
-    >>> attacker.attack(attack_arguments) # attack
-    >>> attacker.data() # get the attacked graph denoted as PyG-like Data
+    .. code-block:: python
+
+        from greatx.attacker import Attacker
+        attacker = Attacker(data, device='cuda')
+        attacker.reset() # reset states
+        attacker.attack(attack_arguments) # attack
+        attacker.data() # get the attacked graph denoted as PyG-like Data
 
     """
     _max_perturbations: Union[float, int] = 0
@@ -150,7 +152,7 @@ class Attacker(torch.nn.Module):
 
         Example
         -------
-        >>> attacker.set_max_perturbations(10)
+            attacker.set_max_perturbations(10)
         """
 
         assert isinstance(max_perturbations, Number), max_perturbations

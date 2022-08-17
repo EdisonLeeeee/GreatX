@@ -60,7 +60,7 @@ class SoftMedianConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.supervised.SoftMedianGCN`   
+    :class:`~greatx.nn.models.supervised.SoftMedianGCN`   
     """
     _cached_edges: Optional[Tuple[Tensor, Tensor]] = None
 
@@ -103,6 +103,7 @@ class SoftMedianConv(nn.Module):
 
     def forward(self, x: Tensor, edge_index: Adj,
                 edge_weight: OptTensor = None) -> Tensor:
+        """"""
 
         x = self.lin(x)
 

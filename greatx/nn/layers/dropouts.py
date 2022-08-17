@@ -30,13 +30,15 @@ class DropEdge(nn.Module):
 
     Example
     -------
-    >>> from greatx.nn.layers import DropEdge
-    >>> edge_index = torch.LongTensor([[1, 2], [3,4]])
-    >>> DropEdge(p=0.5)(edge_index)      
+    .. code-block:: python
+
+        from greatx.nn.layers import DropEdge
+        edge_index = torch.LongTensor([[1, 2], [3,4]])
+        DropEdge(p=0.5)(edge_index)      
 
     See also
     --------
-    :class:`greatx.functional.drop_edge`
+    :class:`~greatx.functional.drop_edge`
     """
 
     def __init__(self, p: float = 0.5):
@@ -44,6 +46,7 @@ class DropEdge(nn.Module):
         self.p = p
 
     def forward(self, edge_index: Tensor, edge_weight: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
+        """"""
         return drop_edge(edge_index, edge_weight, self.p, training=self.training)
 
 
@@ -66,13 +69,15 @@ class DropNode(nn.Module):
 
     Example
     -------
-    >>> from greatx.nn.layers import DropNode
-    >>> edge_index = torch.LongTensor([[1, 2], [3,4]])
-    >>> DropNode(p=0.5)(edge_index)          
+    .. code-block:: python
+
+        from greatx.nn.layers import DropNode
+        edge_index = torch.LongTensor([[1, 2], [3,4]])
+        DropNode(p=0.5)(edge_index)          
 
     See also
     --------
-    :class:`greatx.functional.drop_node`    
+    :class:`~greatx.functional.drop_node`    
     """
 
     def __init__(self, p: float = 0.5):
@@ -80,11 +85,12 @@ class DropNode(nn.Module):
         self.p = p
 
     def forward(self, edge_index: Tensor, edge_weight: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
+        """"""
         return drop_node(edge_index, edge_weight, self.p, training=self.training)
 
 
 class DropPath(nn.Module):
-    """DropPath: a structured form of :class:`greatx.functional.drop_edge`.
+    """DropPath: a structured form of :class:`~greatx.functional.drop_edge`.
     From the `"MaskGAE: Masked Graph Modeling Meets 
     Graph Autoencoders" <https://arxiv.org/abs/2205.10053>`_
     paper (arXiv'22)
@@ -126,15 +132,17 @@ class DropPath(nn.Module):
 
     Example
     -------
-    >>> from greatx.nn.layers import DropPath
-    >>> edge_index = torch.LongTensor([[1, 2], [3,4]])
-    >>> DropPath(r=0.5)(edge_index)   
+    .. code-block:: python
 
-    >>> DropPath(r=torch.tensor([1,2]))(edge_index) # specify root nodes           
+        from greatx.nn.layers import DropPath
+        edge_index = torch.LongTensor([[1, 2], [3,4]])
+        DropPath(r=0.5)(edge_index)   
+
+        DropPath(r=torch.tensor([1,2]))(edge_index) # specify root nodes           
 
     See also
     --------
-    :class:`greatx.functional.drop_path`        
+    :class:`~greatx.functional.drop_path`        
     """
 
     def __init__(self, r: float = 0.5,
@@ -153,5 +161,6 @@ class DropPath(nn.Module):
         self.by = by
 
     def forward(self, edge_index: Tensor, edge_weight: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
+        """"""
         return drop_path(edge_index, edge_weight, r=self.r, p=self.p, q=self.q,
                          num_nodes=self.num_nodes, by=self.by, training=self.training)

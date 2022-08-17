@@ -34,7 +34,7 @@ class NLGCN(nn.Module):
     Note
     ----
     It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`greatx.utils.wrapper`. 
+    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
 
     See Examples below:
 
@@ -54,8 +54,8 @@ class NLGCN(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.supervised.NLMLP`    
-    :class:`greatx.nn.models.supervised.NLGAT`  
+    :class:`~greatx.nn.models.supervised.NLMLP`    
+    :class:`~greatx.nn.models.supervised.NLGAT`  
 
     Reference:
 
@@ -94,8 +94,10 @@ class NLGCN(nn.Module):
         self.conv = Sequential(*conv)
 
         self.proj = nn.Linear(out_channels, 1)
-        self.conv1d_1 = nn.Conv1d(out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
-        self.conv1d_2 = nn.Conv1d(out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
+        self.conv1d_1 = nn.Conv1d(
+            out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
+        self.conv1d_2 = nn.Conv1d(
+            out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
         self.lin = nn.Linear(2 * out_channels, out_channels)
         self.conv1d_dropout = nn.Dropout(dropout)
 
@@ -107,18 +109,22 @@ class NLGCN(nn.Module):
         self.lin.reset_parameters()
 
     def forward(self, x, edge_index, edge_weight=None):
+        """"""
         x1 = self.conv(x, edge_index, edge_weight)
         g_score = self.proj(x1)  # [num_nodes, 1]
         g_score_sorted, sort_idx = torch.sort(g_score, dim=0)
         _, inverse_idx = torch.sort(sort_idx, dim=0)
 
         sorted_x = g_score_sorted * x1[sort_idx].squeeze()
-        sorted_x = torch.transpose(sorted_x, 0, 1).unsqueeze(0)  # [1, dataset.num_classes, num_nodes]
+        sorted_x = torch.transpose(sorted_x, 0, 1).unsqueeze(
+            0)  # [1, dataset.num_classes, num_nodes]
         sorted_x = self.conv1d_1(sorted_x).relu()
         sorted_x = self.conv1d_dropout(sorted_x)
         sorted_x = self.conv1d_2(sorted_x)
-        sorted_x = torch.transpose(sorted_x.squeeze(), 0, 1)  # [num_nodes, dataset.num_classes]
-        x2 = sorted_x[inverse_idx].squeeze()  # [num_nodes, dataset.num_classes]
+        # [num_nodes, dataset.num_classes]
+        sorted_x = torch.transpose(sorted_x.squeeze(), 0, 1)
+        # [num_nodes, dataset.num_classes]
+        x2 = sorted_x[inverse_idx].squeeze()
 
         out = torch.cat([x1, x2], dim=1)
         out = self.lin(out)
@@ -156,7 +162,7 @@ class NLMLP(nn.Module):
     Note
     ----
     It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`greatx.utils.wrapper`. 
+    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
 
     See Examples below:
 
@@ -176,8 +182,8 @@ class NLMLP(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.supervised.NLGCN`    
-    :class:`greatx.nn.models.supervised.NLGAT`    
+    :class:`~greatx.nn.models.supervised.NLGCN`    
+    :class:`~greatx.nn.models.supervised.NLGAT`    
 
     Reference:
 
@@ -214,8 +220,10 @@ class NLMLP(nn.Module):
         self.conv = Sequential(*conv)
 
         self.proj = nn.Linear(out_channels, 1)
-        self.conv1d_1 = nn.Conv1d(out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
-        self.conv1d_2 = nn.Conv1d(out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
+        self.conv1d_1 = nn.Conv1d(
+            out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
+        self.conv1d_2 = nn.Conv1d(
+            out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
         self.lin = nn.Linear(2 * out_channels, out_channels)
         self.conv1d_dropout = nn.Dropout(dropout)
 
@@ -227,18 +235,22 @@ class NLMLP(nn.Module):
         self.lin.reset_parameters()
 
     def forward(self, x, edge_index=None, edge_weight=None):
+        """"""
         x1 = self.conv(x)
         g_score = self.proj(x1)  # [num_nodes, 1]
         g_score_sorted, sort_idx = torch.sort(g_score, dim=0)
         _, inverse_idx = torch.sort(sort_idx, dim=0)
 
         sorted_x = g_score_sorted * x1[sort_idx].squeeze()
-        sorted_x = torch.transpose(sorted_x, 0, 1).unsqueeze(0)  # [1, dataset.num_classes, num_nodes]
+        sorted_x = torch.transpose(sorted_x, 0, 1).unsqueeze(
+            0)  # [1, dataset.num_classes, num_nodes]
         sorted_x = self.conv1d_1(sorted_x).relu()
         sorted_x = self.conv1d_dropout(sorted_x)
         sorted_x = self.conv1d_2(sorted_x)
-        sorted_x = torch.transpose(sorted_x.squeeze(), 0, 1)  # [num_nodes, dataset.num_classes]
-        x2 = sorted_x[inverse_idx].squeeze()  # [num_nodes, dataset.num_classes]
+        # [num_nodes, dataset.num_classes]
+        sorted_x = torch.transpose(sorted_x.squeeze(), 0, 1)
+        # [num_nodes, dataset.num_classes]
+        x2 = sorted_x[inverse_idx].squeeze()
 
         out = torch.cat([x1, x2], dim=1)
         out = self.lin(out)
@@ -275,7 +287,7 @@ class NLGAT(nn.Module):
     Note
     ----
     It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`greatx.utils.wrapper`. 
+    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
 
     See Examples below:
 
@@ -295,8 +307,8 @@ class NLGAT(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.supervised.NLGCN`    
-    :class:`greatx.nn.models.supervised.NLMLP`    
+    :class:`~greatx.nn.models.supervised.NLGCN`    
+    :class:`~greatx.nn.models.supervised.NLMLP`    
 
     Reference:
 
@@ -342,8 +354,10 @@ class NLGAT(nn.Module):
         self.conv = Sequential(*conv)
 
         self.proj = nn.Linear(out_channels, 1)
-        self.conv1d_1 = nn.Conv1d(out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
-        self.conv1d_2 = nn.Conv1d(out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
+        self.conv1d_1 = nn.Conv1d(
+            out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
+        self.conv1d_2 = nn.Conv1d(
+            out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
         self.lin = nn.Linear(2 * out_channels, out_channels)
         self.conv1d_dropout = nn.Dropout(dropout)
 
@@ -355,18 +369,22 @@ class NLGAT(nn.Module):
         self.lin.reset_parameters()
 
     def forward(self, x, edge_index=None, edge_weight=None):
+        """"""
         x1 = self.conv(x, edge_index, edge_weight)
         g_score = self.proj(x1)  # [num_nodes, 1]
         g_score_sorted, sort_idx = torch.sort(g_score, dim=0)
         _, inverse_idx = torch.sort(sort_idx, dim=0)
 
         sorted_x = g_score_sorted * x1[sort_idx].squeeze()
-        sorted_x = torch.transpose(sorted_x, 0, 1).unsqueeze(0)  # [1, dataset.num_classes, num_nodes]
+        sorted_x = torch.transpose(sorted_x, 0, 1).unsqueeze(
+            0)  # [1, dataset.num_classes, num_nodes]
         sorted_x = self.conv1d_1(sorted_x).relu()
         sorted_x = self.conv1d_dropout(sorted_x)
         sorted_x = self.conv1d_2(sorted_x)
-        sorted_x = torch.transpose(sorted_x.squeeze(), 0, 1)  # [num_nodes, dataset.num_classes]
-        x2 = sorted_x[inverse_idx].squeeze()  # [num_nodes, dataset.num_classes]
+        # [num_nodes, dataset.num_classes]
+        sorted_x = torch.transpose(sorted_x.squeeze(), 0, 1)
+        # [num_nodes, dataset.num_classes]
+        x2 = sorted_x[inverse_idx].squeeze()
 
         out = torch.cat([x1, x2], dim=1)
         out = self.lin(out)

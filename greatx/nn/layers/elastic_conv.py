@@ -94,7 +94,7 @@ class ElasticConv(nn.Module):
 
     See also
     --------
-    :class:`greatx.nn.models.supervised.ElasticGNN`       
+    :class:`~greatx.nn.models.supervised.ElasticGNN`       
     """
 
     _cached_inc: Optional[SparseTensor] = None  # incident matrix
@@ -130,6 +130,7 @@ class ElasticConv(nn.Module):
 
     def forward(self, x: Tensor, edge_index: Adj,
                 edge_weight: OptTensor = None) -> Tensor:
+        """"""
 
         if self.normalize:
             if torch.is_tensor(edge_index):

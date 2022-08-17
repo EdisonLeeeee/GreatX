@@ -61,7 +61,7 @@ class CosinePurification(BaseTransform):
     Note
     ----
     :class:`CosinePurification` is an extension of
-    :class:`greatx.defense.JaccardPurification` for dealing with
+    :class:`~greatx.defense.JaccardPurification` for dealing with
     continuous node features.
 
     Parameters
@@ -167,7 +167,7 @@ class EigenDecomposition(BaseTransform):
     Eigen Decomposition reconstruction on
     the adjacency matrix.
 
-    :class:`EigenDecomposition` is similar to :class:`greatx.defense.SVDPurification`
+    :class:`EigenDecomposition` is similar to :class:`~greatx.defense.SVDPurification`
 
     Parameters
     ----------

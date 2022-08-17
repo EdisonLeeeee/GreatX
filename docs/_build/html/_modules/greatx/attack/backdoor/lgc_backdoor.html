@@ -104,25 +104,27 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from greatx.dataset import GraphDataset</span>
-<span class="sd">    &gt;&gt;&gt; import torch_geometric.transforms as T</span>
+<span class="sd">    .. code-block:: python</span>
 
-<span class="sd">    &gt;&gt;&gt; dataset = GraphDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
+<span class="sd">        from greatx.dataset import GraphDataset</span>
+<span class="sd">        import torch_geometric.transforms as T</span>
+
+<span class="sd">        dataset = GraphDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
 <span class="sd">                          transform=T.LargestConnectedComponents())</span>
-<span class="sd">    &gt;&gt;&gt; data = dataset[0]</span>
+<span class="sd">        data = dataset[0]</span>
 
-<span class="sd">    &gt;&gt;&gt; surrogate_model = ... # train your surrogate model</span>
+<span class="sd">        surrogate_model = ... # train your surrogate model</span>
 
-<span class="sd">    &gt;&gt;&gt; from greatx.attack.backdoor import LGCBackdoor</span>
-<span class="sd">    &gt;&gt;&gt; attacker.setup_surrogate(surrogate_model)</span>
-<span class="sd">    &gt;&gt;&gt; attacker = LGCBackdoor(data)</span>
+<span class="sd">        from greatx.attack.backdoor import LGCBackdoor</span>
+<span class="sd">        attacker.setup_surrogate(surrogate_model)</span>
+<span class="sd">        attacker = LGCBackdoor(data)</span>
 
-<span class="sd">    &gt;&gt;&gt; attacker.reset()</span>
-<span class="sd">    &gt;&gt;&gt; attacker.attack(num_budgets=50, target_class=0)</span>
+<span class="sd">        attacker.reset()</span>
+<span class="sd">        attacker.attack(num_budgets=50, target_class=0)</span>
 
-<span class="sd">    &gt;&gt;&gt; attacker.data() # get attacked graph</span>
+<span class="sd">        attacker.data() # get attacked graph</span>
 
-<span class="sd">    &gt;&gt;&gt; attacker.trigger() # get trigger node</span>
+<span class="sd">        attacker.trigger() # get trigger node</span>
 
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
@@ -178,25 +180,25 @@
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
-<span class="sd">    &gt;&gt;&gt; from greatx.dataset import GraphDataset</span>
-<span class="sd">    &gt;&gt;&gt; import torch_geometric.transforms as T</span>
+<span class="sd">        from greatx.dataset import GraphDataset</span>
+<span class="sd">        import torch_geometric.transforms as T</span>
 
-<span class="sd">    &gt;&gt;&gt; dataset = GraphDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
+<span class="sd">        dataset = GraphDataset(root=&#39;~/data/pygdata&#39;, name=&#39;cora&#39;, </span>
 <span class="sd">                          transform=T.LargestConnectedComponents())</span>
-<span class="sd">    &gt;&gt;&gt; data = dataset[0]</span>
+<span class="sd">        data = dataset[0]</span>
 
-<span class="sd">    &gt;&gt;&gt; surrogate_model = ... # train your surrogate model</span>
+<span class="sd">        surrogate_model = ... # train your surrogate model</span>
 
-<span class="sd">    &gt;&gt;&gt; from greatx.attack.backdoor import FGBackdoor</span>
-<span class="sd">    &gt;&gt;&gt; attacker.setup_surrogate(surrogate_model)</span>
-<span class="sd">    &gt;&gt;&gt; attacker = FGBackdoor(data)</span>
+<span class="sd">        from greatx.attack.backdoor import FGBackdoor</span>
+<span class="sd">        attacker.setup_surrogate(surrogate_model)</span>
+<span class="sd">        attacker = FGBackdoor(data)</span>
 
-<span class="sd">    &gt;&gt;&gt; attacker.reset()</span>
-<span class="sd">    &gt;&gt;&gt; attacker.attack(num_budgets=50, target_class=0)</span>
+<span class="sd">        attacker.reset()</span>
+<span class="sd">        attacker.attack(num_budgets=50, target_class=0)</span>
 
-<span class="sd">    &gt;&gt;&gt; attacker.data() # get attacked graph</span>
+<span class="sd">        attacker.data() # get attacked graph</span>
 
-<span class="sd">    &gt;&gt;&gt; attacker.trigger() # get trigger node</span>
+<span class="sd">        attacker.trigger() # get trigger node</span>
 
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>

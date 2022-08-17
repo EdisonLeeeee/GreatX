@@ -29,7 +29,7 @@ class Metattack(UntargetedAttacker, Surrogate):
     name : Optional[str], optional
         name of the attacker, if None, it would be :obj:`__class__.__name__`, 
         by default None
-    kwargs : additional arguments of :class:`greatx.attack.Attacker`,
+    kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
 
     Raises
     ------
@@ -38,27 +38,29 @@ class Metattack(UntargetedAttacker, Surrogate):
 
     Example
     -------
-    >>> from greatx.dataset import GraphDataset
-    >>> import torch_geometric.transforms as T
+    .. code-block:: python
 
-    >>> dataset = GraphDataset(root='~/data/pygdata', name='cora', 
-                          transform=T.LargestConnectedComponents())
-    >>> data = dataset[0]
+        from greatx.dataset import GraphDataset
+        import torch_geometric.transforms as T
 
-    >>> surrogate_model = ... # train your surrogate model
+        dataset = GraphDataset(root='~/data/pygdata', name='cora', 
+                            transform=T.LargestConnectedComponents())
+        data = dataset[0]
 
-    >>> from greatx.attack.untargeted import Metattack
-    >>> attacker = Metattack(data)
-    >>> attacker.setup_surrogate(surrogate_model)
-    >>> attacker.reset()
-    >>> attacker.attack(0.05) # attack with 0.05% of edge perturbations
-    >>> attacker.data() # get attacked graph
+        surrogate_model = ... # train your surrogate model
 
-    >>> attacker.edge_flips() # get edge flips after attack
+        from greatx.attack.untargeted import Metattack
+        attacker = Metattack(data)
+        attacker.setup_surrogate(surrogate_model)
+        attacker.reset()
+        attacker.attack(0.05) # attack with 0.05% of edge perturbations
+        attacker.data() # get attacked graph
 
-    >>> attacker.added_edges() # get added edges after attack
+        attacker.edge_flips() # get edge flips after attack
 
-    >>> attacker.removed_edges() # get removed edges after attack
+        attacker.added_edges() # get added edges after attack
+
+        attacker.removed_edges() # get removed edges after attack
 
     Note
     ----
@@ -147,6 +149,7 @@ class Metattack(UntargetedAttacker, Surrogate):
             self.w_velocities[i] = self.w_velocities[i].detach()
 
     def forward(self, adj, x):
+        """"""
         h = x
         for w in self.weights[:-1]:
             h = adj @ (h @ w)

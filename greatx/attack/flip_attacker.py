@@ -26,7 +26,7 @@ class FlipAttacker(Attacker):
     name : Optional[str], optional
         name of the attacker, if None, it would be :obj:`__class__.__name__`, 
         by default None
-    kwargs : additional arguments of :class:`greatx.attack.Attacker`,
+    kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
 
     Raises
     ------
@@ -35,7 +35,7 @@ class FlipAttacker(Attacker):
 
     Note
     ----
-    :class:`greatx.attack.FlipAttacker` is a base class for graph modification attacks (GMA).
+    :class:`~greatx.attack.FlipAttacker` is a base class for graph modification attacks (GMA).
     """
 
     def reset(self) -> "FlipAttacker":

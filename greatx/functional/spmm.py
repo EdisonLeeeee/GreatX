@@ -114,7 +114,7 @@ def scatter_sample_median(x: Tensor, edge_index: Tensor,
     size = int(deg.float().mean().item())
     nodes = torch.arange(num_nodes)
     targets, neighbors, e_id = neighbor_sampler_cpu(
-        colptr, row, nodes, size, replace)
+        colptr.cpu(), row.cpu(), nodes, size, replace)
 
     x_j = x[neighbors]
 

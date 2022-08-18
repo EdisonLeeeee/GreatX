@@ -24,6 +24,12 @@ class MedianConv(nn.Module):
         dimensions of int samples
     out_channels : int
         dimensions of output samples
+    reduce : str
+        aggregation function, including {'median', 'sample_median'},
+        where :obj:`median` uses the exact median as the aggregation function,
+        while :obj:`sample_median` appropriates the median with a fixed set
+        of sampled nodes. :obj:`sample_median` is much faster and 
+        more scalable than :obj:`median`. By default, :obj:`median` is used.
     add_self_loops : bool, optional
         whether to add self-loops to the input graph, by default True
     normalize : bool, optional
@@ -48,16 +54,19 @@ class MedianConv(nn.Module):
     :class:`~greatx.nn.models.supervised.MedianGCN`       
     """
 
-    def __init__(self, in_channels: int, out_channels: int,
+    def __init__(self, in_channels: int, out_channels: int, reduce: str = 'median',
                  add_self_loops: bool = True, normalize: bool = False,
                  bias: bool = True):
 
         super().__init__()
 
+        assert reduce in ('median', 'sample_median')
+
         self.in_channels = in_channels
         self.out_channels = out_channels
         self.add_self_loops = add_self_loops
         self.normalize = normalize
+        self.reduce = reduce
 
         self.lin = Linear(in_channels, out_channels, bias=False,
                           weight_initializer='glorot')
@@ -93,7 +102,7 @@ class MedianConv(nn.Module):
                                                improved=False,
                                                add_self_loops=False, dtype=x.dtype)
 
-        out = spmm(x, edge_index, edge_weight, reduce='median')
+        out = spmm(x, edge_index, edge_weight, reduce=self.reduce)
 
         if self.bias is not None:
             out += self.bias

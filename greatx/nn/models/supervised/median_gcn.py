@@ -22,6 +22,12 @@ class MedianGCN(nn.Module):
         the number of hidden units for each hidden layer, by default [16]
     acts : list, optional
         the activation function for each hidden layer, by default ['relu']
+    reduce : str
+        aggregation function, including {'median', 'sample_median'},
+        where :obj:`median` uses the exact median as the aggregation function,
+        while :obj:`sample_median` appropriates the median with a fixed set
+        of sampled nodes. :obj:`sample_median` is much faster and 
+        more scalable than :obj:`median`. By default, :obj:`median` is used.
     dropout : float, optional
         the dropout ratio of model, by default 0.5
     bias : bool, optional
@@ -53,6 +59,9 @@ class MedianGCN(nn.Module):
     >>> # MedianGCN with very deep architectures, each layer has elu as activation function
     >>> model = MedianGCN(100, 10, hids=[16]*8, acts=['elu'])
 
+    >>> # MedianGCN with sample median aggregation
+    >>> model = MedianGCN(100, 10, reduce='sample_median')
+
     See also
     --------
     :class:`~greatx.nn.layers.MedianConv`    
@@ -65,6 +74,7 @@ class MedianGCN(nn.Module):
                  out_channels: int,
                  hids: list = [16],
                  acts: list = ['relu'],
+                 reduce: str = 'median',
                  dropout: float = 0.5,
                  bn: bool = False,
                  normalize: bool = False,
@@ -78,14 +88,15 @@ class MedianGCN(nn.Module):
             conv.append(MedianConv(in_channels,
                                    hid,
                                    bias=bias,
-                                   normalize=normalize))
+                                   normalize=normalize,
+                                   reduce=reduce))
             if bn:
                 conv.append(nn.BatchNorm1d(hid))
             conv.append(activations.get(act))
             conv.append(nn.Dropout(dropout))
             in_channels = hid
         conv.append(MedianConv(in_channels, out_channels,
-                    bias=bias, normalize=normalize))
+                    bias=bias, normalize=normalize, reduce=reduce))
         self.conv = Sequential(*conv)
 
     def reset_parameters(self):

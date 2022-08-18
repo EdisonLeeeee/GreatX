@@ -2,7 +2,7 @@ import torch
 from torch import Tensor
 from torch_scatter import scatter
 from torch_geometric.typing import OptTensor, Adj
-from torch_geometric.utils import to_dense_batch
+from torch_geometric.utils import to_dense_batch, sort_edge_index, degree
 
 
 def spmm(x: Tensor, edge_index: Tensor,
@@ -26,6 +26,7 @@ def spmm(x: Tensor, edge_index: Tensor,
         * :obj:`max`
         * :obj:`min`
         * :obj:`median`
+        * :obj:`sample_median`
         by default :obj:'sum'
 
     Returns
@@ -54,8 +55,10 @@ def spmm(x: Tensor, edge_index: Tensor,
 
     if reduce == 'median':
         return scatter_median(x, edge_index, edge_weight)
+    elif reduce == 'sample_median':
+        return scatter_sample_median(x, edge_index, edge_weight)
 
-    row, col = edge_index[0], edge_index[1]
+    row, col = edge_index
     x = x if x.dim() > 1 else x.unsqueeze(-1)
 
     out = x[row]
@@ -67,7 +70,6 @@ def spmm(x: Tensor, edge_index: Tensor,
 
 def scatter_median(x: Tensor, edge_index: Tensor, edge_weight: OptTensor = None) -> Tensor:
     # NOTE: `to_dense_batch` requires the `index` is sorted by column
-    # TODO: is there any elegant way to avoid `argsort`?
     ix = torch.argsort(edge_index[1])
     edge_index = edge_index[:, ix]
     row, col = edge_index
@@ -85,3 +87,38 @@ def scatter_median(x: Tensor, edge_index: Tensor, edge_weight: OptTensor = None)
         deg_mask = deg == i
         h[deg_mask] = dense_x[deg_mask, :i].median(dim=1).values
     return h
+
+
+def scatter_sample_median(x: Tensor, edge_index: Tensor,
+                          edge_weight: OptTensor = None) -> Tensor:
+    """Approximating the median aggregation with fixed set of neighborhood sampling."""
+
+    try:
+        from glcore import neighbor_sampler_cpu
+    except ModuleNotFoundError:
+        raise ModuleNotFoundError("`scatter_sample_median` requires glcore which is not installed, please refer to "
+                                  "'https://github.com/EdisonLeeeee/glcore' for more information.")
+
+    if edge_weight is not None:
+        edge_index, edge_weight = sort_edge_index(
+            edge_index, edge_weight, sort_by_row=False)
+    else:
+        edge_index = sort_edge_index(
+            edge_index, sort_by_row=False)
+
+    row, col = edge_index
+    num_nodes = x.size(0)
+    deg = degree(col, dtype=torch.long, num_nodes=num_nodes)
+    colptr = torch.cat([deg.new_zeros(1), deg.cumsum(dim=0)], dim=0)
+    replace = True
+    size = int(deg.float().mean().item())
+    nodes = torch.arange(num_nodes)
+    targets, neighbors, e_id = neighbor_sampler_cpu(
+        colptr, row, nodes, size, replace)
+
+    x_j = x[neighbors]
+
+    if edge_weight is not None:
+        x_j = x_j * edge_weight[e_id].unsqueeze(-1)
+
+    return x_j.view(num_nodes, size, -1).median(dim=1).values

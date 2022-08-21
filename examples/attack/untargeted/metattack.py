@@ -16,12 +16,14 @@ dataset = GraphDataset(root='~/data/pygdata', name='cora',
 data = dataset[0]
 splits = split_nodes(data.y, random_state=15)
 set_seed(123)
-device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+device = torch.device(
+    'cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 # ================================================================== #
 #                      Before Attack                                 #
 # ================================================================== #
-trainer_before = Trainer(GCN(dataset.num_features, dataset.num_classes), device=device)
+trainer_before = Trainer(
+    GCN(data.x.size(-1), data.y.max().item() + 1), device=device)
 ckp = ModelCheckpoint('model_before.pth', monitor='val_acc')
 trainer_before.fit({'data': data, 'mask': splits.train_nodes},
                    {'data': data, 'mask': splits.val_nodes}, callbacks=[ckp])
@@ -40,14 +42,17 @@ attacker.attack(0.05)
 # ================================================================== #
 #                      After evasion Attack                          #
 # ================================================================== #
-logs = trainer_before.evaluate({'data': attacker.data(), 'mask': splits.test_nodes})
+logs = trainer_before.evaluate(
+    {'data': attacker.data(), 'mask': splits.test_nodes})
 print(f"After evasion attack\n {logs}")
 # ================================================================== #
 #                      After poisoning Attack                        #
 # ================================================================== #
-trainer_after = Trainer(GCN(dataset.num_features, dataset.num_classes), device=device)
+trainer_after = Trainer(
+    GCN(data.x.size(-1), data.y.max().item() + 1), device=device)
 ckp = ModelCheckpoint('model_after.pth', monitor='val_acc')
 trainer_after.fit({'data': attacker.data(), 'mask': splits.train_nodes},
                   {'data': attacker.data(), 'mask': splits.val_nodes}, callbacks=[ckp])
-logs = trainer_after.evaluate({'data': attacker.data(), 'mask': splits.test_nodes})
+logs = trainer_after.evaluate(
+    {'data': attacker.data(), 'mask': splits.test_nodes})
 print(f"After poisoning attack\n {logs}")

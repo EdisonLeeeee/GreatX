@@ -23,7 +23,7 @@ device = torch.device(
 #                      Before Attack                                 #
 # ================================================================== #
 trainer_before = Trainer(
-    GCN(dataset.num_features, dataset.num_classes), device=device)
+    GCN(data.x.size(-1), data.y.max().item() + 1), device=device)
 ckp = ModelCheckpoint('model_before.pth', monitor='val_acc')
 trainer_before.fit({'data': data, 'mask': splits.train_nodes},
                    {'data': data, 'mask': splits.val_nodes}, callbacks=[ckp])
@@ -48,7 +48,7 @@ print(f"After evasion attack\n {logs}")
 #                      After poisoning Attack                        #
 # ================================================================== #
 trainer_after = Trainer(
-    GCN(dataset.num_features, dataset.num_classes), device=device)
+    GCN(data.x.size(-1), data.y.max().item() + 1), device=device)
 ckp = ModelCheckpoint('model_after.pth', monitor='val_acc')
 trainer_after.fit({'data': attacker.data(), 'mask': splits.train_nodes},
                   {'data': attacker.data(), 'mask': splits.val_nodes}, callbacks=[ckp])

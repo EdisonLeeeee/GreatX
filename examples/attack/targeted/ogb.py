@@ -19,7 +19,8 @@ splits = BunchDict(train_nodes=splits['train'],
                    test_nodes=splits['test'])
 
 set_seed(123)
-device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+device = torch.device(
+    'cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 # ================================================================== #
 #                     Attack Setting                                 #
@@ -31,14 +32,17 @@ width = 5
 # ================================================================== #
 #                      Before Attack                                 #
 # ================================================================== #
-trainer_before = Trainer(SGC(dataset.num_features, dataset.num_classes), device=device, lr=0.1, weight_decay=1e-5)
+trainer_before = Trainer(SGC(data.x.size(-1), data.y.max().item() + 1),
+                         device=device, lr=0.1, weight_decay=1e-5)
 ckp = ModelCheckpoint('model_before.pth', monitor='val_acc')
 trainer_before.fit({'data': data, 'mask': splits.train_nodes},
                    {'data': data, 'mask': splits.val_nodes}, callbacks=[ckp])
 trainer_before.cache_clear()
 output = trainer_before.predict({'data': data, 'mask': target})
-print(f"Before attack (target_label={target_label})\n {np.round(output.tolist(), 2)}")
-print('-' * target_label * width + '----👆' + '-' * max(dataset.num_classes - target_label - 1, 0) * width)
+print(
+    f"Before attack (target_label={target_label})\n {np.round(output.tolist(), 2)}")
+print('-' * target_label * width + '----👆' + '-' *
+      max(dataset.num_classes - target_label - 1, 0) * width)
 
 # ================================================================== #
 #                      Attacking                                     #
@@ -52,18 +56,23 @@ attacker.attack(target)
 #                      After evasion Attack                          #
 # ================================================================== #
 output = trainer_before.predict({'data': attacker.data(), 'mask': target})
-print(f"After evasion attack (target_label={target_label})\n {np.round(output.tolist(), 2)}")
-print('-' * target_label * width + '----👆' + '-' * max(dataset.num_classes - target_label - 1, 0) * width)
+print(
+    f"After evasion attack (target_label={target_label})\n {np.round(output.tolist(), 2)}")
+print('-' * target_label * width + '----👆' + '-' *
+      max(dataset.num_classes - target_label - 1, 0) * width)
 
 # ================================================================== #
 #                      After poisoning Attack                        #
 # ================================================================== #
-trainer_after = Trainer(SGC(dataset.num_features, dataset.num_classes), device=device)
+trainer_after = Trainer(
+    SGC(data.x.size(-1), data.y.max().item() + 1), device=device)
 ckp = ModelCheckpoint('model_after.pth', monitor='val_acc')
 trainer_after.fit({'data': attacker.data(), 'mask': splits.train_nodes},
                   {'data': attacker.data(), 'mask': splits.val_nodes}, callbacks=[ckp])
 trainer_after.cache_clear()
 output = trainer_after.predict({'data': attacker.data(), 'mask': target})
 
-print(f"After poisoning attack (target_label={target_label})\n {np.round(output.tolist(), 2)}")
-print('-' * target_label * width + '----👆' + '-' * max(dataset.num_classes - target_label - 1, 0) * width)
+print(
+    f"After poisoning attack (target_label={target_label})\n {np.round(output.tolist(), 2)}")
+print('-' * target_label * width + '----👆' + '-' *
+      max(dataset.num_classes - target_label - 1, 0) * width)

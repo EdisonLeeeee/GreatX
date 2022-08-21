@@ -82,7 +82,7 @@ from greatx.training import Trainer
 from torch_geometric.datasets import Planetoid
 dataset = Planetoid(root='.', name='Cora') # Any PyG dataset is available!
 data = dataset[0]
-model = GCN(dataset.num_features, dataset.num_classes)
+model = GCN(data.x.size(-1), data.y.max().item() + 1)
 trainer = Trainer(model, device='cuda:0')
 trainer.fit({'data': data, 'mask': data.train_mask})
 trainer.evaluate({'data': data, 'mask': data.test_mask})
@@ -194,7 +194,7 @@ In detail, the following methods are currently implemented:
 | **SVDPurification**     | *Entezari et al.* [All You Need Is Low (Rank): Defending Against Adversarial Attacks on Graphs](https://arxiv.org/abs/1903.01610), *WSDM'20*                                                                                                | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/defense/gcn_svd.py)                   |
 | **GNNGUARD**            | *Zhang et al.* [GNNGUARD: Defending Graph Neural Networks against Adversarial Attacks](https://arxiv.org/abs/2006.08149), *NeurIPS'20*                                                                                                      | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/defense/gnn_guard.py)                 |
 | **GUARD**               | *Li et al.* [GUARD: Graph Universal Adversarial Defense](https://arxiv.org/abs/2204.09803), *arXiv'22*                                                                                                                                      | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/defense/universal_defense.py)         |
-| **RTGCN**               | *Wu et al.* [Robust Tensor Graph Convolutional Networks via T-SVD based Graph Augmentation](https://dl.acm.org/doi/abs/10.1145/3534678.3539436), *arXiv'22*                                                                                                                                      | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/model/supervised/rt_gcn.py)         |
+| **RTGCN**               | *Wu et al.* [Robust Tensor Graph Convolutional Networks via T-SVD based Graph Augmentation](https://dl.acm.org/doi/abs/10.1145/3534678.3539436), *arXiv'22*                                                                                 | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/model/supervised/rt_gcn.py)           |
 
 More details of literatures and the official codes can be found at [Awesome Graph Adversarial Learning](https://github.com/gitgiter/Graph-Adversarial-Learning).
 

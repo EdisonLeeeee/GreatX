@@ -15,10 +15,11 @@ data = dataset[0]
 splits = split_nodes(data.y, random_state=15)
 
 set_seed(123)
-device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-model = MedianGCN(dataset.num_features, dataset.num_classes)
+device = torch.device(
+    'cuda') if torch.cuda.is_available() else torch.device('cpu')
+model = MedianGCN(data.x.size(-1), data.y.max().item() + 1)
 # use sample_median
-# model = MedianGCN(dataset.num_features, dataset.num_classes, reduce='sample_median')
+# model = MedianGCN(data.x.size(-1), data.y.max().item() + 1, reduce='sample_median')
 trainer = Trainer(model, device=device)
 ckp = ModelCheckpoint('model.pth', monitor='val_acc')
 trainer.fit({'data': data, 'mask': splits.train_nodes},

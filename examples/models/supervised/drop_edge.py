@@ -22,8 +22,9 @@ data = dataset[0]
 splits = split_nodes(data.y, random_state=15)
 
 set_seed(123)
-device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-model = GCN(dataset.num_features, dataset.num_classes)
+device = torch.device(
+    'cuda') if torch.cuda.is_available() else torch.device('cpu')
+model = GCN(data.x.size(-1), data.y.max().item() + 1)
 hook = model.register_forward_pre_hook(drop_hook)
 # hook.remove() # remove hook
 trainer = Trainer(model, device=device)

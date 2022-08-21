@@ -11,8 +11,9 @@ dataset = Planetoid(root='~/data/pygdata', name='Cora')
 data = dataset[0]
 
 set_seed(123)
-device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-model = GCN(dataset.num_features, dataset.num_classes)
+device = torch.device(
+    'cuda') if torch.cuda.is_available() else torch.device('cpu')
+model = GCN(data.x.size(-1), data.y.max().item() + 1)
 trainer = Trainer(model, device=device)
 ckp = ModelCheckpoint('model.pth', monitor='val_acc')
 trainer.fit({'data': data, 'mask': data.train_mask},

@@ -1,3 +1,4 @@
+from greatx.attack.backdoor import FGBackdoor
 import torch
 import torch_geometric.transforms as T
 
@@ -19,12 +20,13 @@ data = dataset[0]
 splits = split_nodes(data.y, random_state=15)
 
 set_seed(123)
-device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+device = torch.device(
+    'cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 # ================================================================== #
 #                      Before Attack                                 #
 # ================================================================== #
-model = GCN(dataset.num_features, dataset.num_classes)
+model = GCN(data.x.size(-1), data.y.max().item() + 1)
 trainer = Trainer(model, device=device)
 ckp = ModelCheckpoint('model.pth', monitor='val_acc')
 trainer.fit({'data': data, 'mask': splits.train_nodes},
@@ -39,7 +41,6 @@ print(f"{count/data.num_nodes:.2%} of nodes are classified as class {target_clas
 # ================================================================== #
 #                      Attacking                                     #
 # ================================================================== #
-from greatx.attack.backdoor import FGBackdoor
 
 attacker = FGBackdoor(data, device=device)
 attacker.setup_surrogate(model)

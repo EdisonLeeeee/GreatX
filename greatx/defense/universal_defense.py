@@ -129,7 +129,7 @@ class GUARD(UniversalDefense, Surrogate):
     -------
     .. code-block:: python
 
-        surrogate = GCN(dataset.num_features, dataset.num_classes, bias=False, acts=None)
+        surrogate = GCN(data.x.size(-1), data.y.max().item() + 1, bias=False, acts=None)
         surrogate_trainer = Trainer(surrogate, device=device)
         ckp = ModelCheckpoint('guard.pth', monitor='val_acc')
         trainer.fit({'data': data, 'mask': splits.train_nodes}, 

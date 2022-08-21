@@ -98,6 +98,7 @@ class TensorLinear(nn.Module):
             self.bias.data.uniform_(-stdv, stdv)
 
     def forward(self, x):
+        """"""
         out = torch.einsum('ijk,kr->ijr', x, self.weight).squeeze()
         if self.bias is not None:
             out += self.bias

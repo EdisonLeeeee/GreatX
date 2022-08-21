@@ -201,6 +201,8 @@ class DegreeGUARD(UniversalDefense):
 
     Example
     -------
+    .. code-block:: python
+
         data = ... # PyG-like Data
         guard = DegreeGUARD(data))
         target_node = 1
@@ -230,6 +232,8 @@ class RandomGUARD(UniversalDefense):
 
     Example
     -------
+    .. code-block:: python
+
         data = ... # PyG-like Data
         guard = RandomGUARD(data)
         target_node = 1

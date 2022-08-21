@@ -453,11 +453,13 @@ Adversarial Defense”</a> paper (arXiv’22)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>data = … # PyG-like Data
-guard = DegreeGUARD(data))
-target_node = 1
-perturbed_data = … # Other PyG-like Data
-guard(perturbed_data, target_node, k=50)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># PyG-like Data</span>
+<span class="n">guard</span> <span class="o">=</span> <span class="n">DegreeGUARD</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<span class="n">target_node</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">perturbed_data</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># Other PyG-like Data</span>
+<span class="n">guard</span><span class="p">(</span><span class="n">perturbed_data</span><span class="p">,</span> <span class="n">target_node</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.defense.DegreeGUARD.training">
 <span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></em><a class="headerlink" href="#greatx.defense.DegreeGUARD.training" title="Permalink to this definition"></a></dt>
@@ -480,11 +482,13 @@ Adversarial Defense”</a> paper (arXiv’22)</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<p>data = … # PyG-like Data
-guard = RandomGUARD(data)
-target_node = 1
-perturbed_data = … # Other PyG-like Data
-guard(perturbed_data, target_node, k=50)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># PyG-like Data</span>
+<span class="n">guard</span> <span class="o">=</span> <span class="n">RandomGUARD</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">target_node</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">perturbed_data</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># Other PyG-like Data</span>
+<span class="n">guard</span><span class="p">(</span><span class="n">perturbed_data</span><span class="p">,</span> <span class="n">target_node</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="greatx.defense.RandomGUARD.training">
 <span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></em><a class="headerlink" href="#greatx.defense.RandomGUARD.training" title="Permalink to this definition"></a></dt>

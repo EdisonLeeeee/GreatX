@@ -20,7 +20,7 @@ Package API
    :caption: Package Reference
    
    modules/root
-   modules/dataset
+   modules/datasets
    modules/attack
    modules/defense
    modules/nn.layers

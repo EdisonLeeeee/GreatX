@@ -47,7 +47,7 @@
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules/root.html">greatx</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/dataset.html">greatx.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/datasets.html">greatx.datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/attack.html">greatx.attack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/defense.html">greatx.defense</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/nn.layers.html">greatx.nn.layers</a></li>
@@ -184,7 +184,9 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/attack.html#greatx.attack.Attacker">Attacker (class in greatx.attack)</a>
 </li>
-      <li><a href="modules/dataset.html#greatx.dataset.GraphDataset.available_datasets">available_datasets() (GraphDataset static method)</a>
+      <li><a href="modules/defense.html#greatx.defense.TSVD.augmentation">augmentation() (TSVD method)</a>
+</li>
+      <li><a href="modules/datasets.html#greatx.datasets.GraphDataset.available_datasets">available_datasets() (GraphDataset static method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -400,6 +402,8 @@
 </li>
       <li><a href="modules/defense.html#greatx.defense.FeaturePropagation">FeaturePropagation (class in greatx.defense)</a>
 </li>
+      <li><a href="modules/nn.layers.html#greatx.nn.layers.TensorGCNConv.fft_product">fft_product() (TensorGCNConv static method)</a>
+</li>
       <li><a href="modules/attack.html#greatx.attack.targeted.FGAttack">FGAttack (class in greatx.attack.targeted)</a>
 
       <ul>
@@ -473,6 +477,8 @@
 </li>
         <li><a href="modules/nn.models.html#greatx.nn.models.supervised.RobustGCN.forward">(RobustGCN method)</a>
 </li>
+        <li><a href="modules/nn.models.html#greatx.nn.models.supervised.RTGCN.forward">(RTGCN method)</a>
+</li>
         <li><a href="modules/nn.models.html#greatx.nn.models.supervised.SAT.forward">(SAT method)</a>
 </li>
         <li><a href="modules/nn.layers.html#greatx.nn.layers.SATConv.forward">(SATConv method)</a>
@@ -496,6 +502,10 @@
         <li><a href="modules/nn.models.html#greatx.nn.models.supervised.TAGCN.forward">(TAGCN method)</a>
 </li>
         <li><a href="modules/nn.layers.html#greatx.nn.layers.TAGConv.forward">(TAGConv method)</a>
+</li>
+        <li><a href="modules/nn.layers.html#greatx.nn.layers.TensorGCNConv.forward">(TensorGCNConv method)</a>
+</li>
+        <li><a href="modules/nn.layers.html#greatx.nn.layers.TensorLinear.forward">(TensorLinear method)</a>
 </li>
         <li><a href="modules/defense.html#greatx.defense.UniversalDefense.forward">(UniversalDefense method)</a>
 </li>
@@ -572,7 +582,7 @@
       </ul></li>
       <li><a href="modules/attack.html#greatx.attack.targeted.Nettack.gradient_wrt_x">gradient_wrt_x() (Nettack method)</a>
 </li>
-      <li><a href="modules/dataset.html#greatx.dataset.GraphDataset">GraphDataset (class in greatx.dataset)</a>
+      <li><a href="modules/datasets.html#greatx.datasets.GraphDataset">GraphDataset (class in greatx.datasets)</a>
 </li>
       <li>
     greatx.attack
@@ -612,10 +622,10 @@
 </li>
       </ul></li>
       <li>
-    greatx.dataset
+    greatx.datasets
 
       <ul>
-        <li><a href="modules/dataset.html#module-greatx.dataset">module</a>
+        <li><a href="modules/datasets.html#module-greatx.datasets">module</a>
 </li>
       </ul></li>
       <li>
@@ -802,7 +812,7 @@
 </li>
         <li><a href="modules/attack.html#module-greatx.attack.untargeted">greatx.attack.untargeted</a>
 </li>
-        <li><a href="modules/dataset.html#module-greatx.dataset">greatx.dataset</a>
+        <li><a href="modules/datasets.html#module-greatx.datasets">greatx.datasets</a>
 </li>
         <li><a href="modules/defense.html#module-greatx.defense">greatx.defense</a>
 </li>
@@ -988,6 +998,8 @@
 </li>
         <li><a href="modules/nn.models.html#greatx.nn.models.supervised.RobustGCN.reset_parameters">(RobustGCN method)</a>
 </li>
+        <li><a href="modules/nn.models.html#greatx.nn.models.supervised.RTGCN.reset_parameters">(RTGCN method)</a>
+</li>
         <li><a href="modules/nn.models.html#greatx.nn.models.supervised.SAT.reset_parameters">(SAT method)</a>
 </li>
         <li><a href="modules/nn.layers.html#greatx.nn.layers.SATConv.reset_parameters">(SATConv method)</a>
@@ -1012,6 +1024,10 @@
 </li>
         <li><a href="modules/nn.layers.html#greatx.nn.layers.TAGConv.reset_parameters">(TAGConv method)</a>
 </li>
+        <li><a href="modules/nn.layers.html#greatx.nn.layers.TensorGCNConv.reset_parameters">(TensorGCNConv method)</a>
+</li>
+        <li><a href="modules/nn.layers.html#greatx.nn.layers.TensorLinear.reset_parameters">(TensorLinear method)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -1020,6 +1036,8 @@
       <li><a href="modules/nn.models.html#greatx.nn.models.supervised.RobustGCN">RobustGCN (class in greatx.nn.models.supervised)</a>
 </li>
       <li><a href="modules/training.html#greatx.training.RobustGCNTrainer">RobustGCNTrainer (class in greatx.training)</a>
+</li>
+      <li><a href="modules/nn.models.html#greatx.nn.models.supervised.RTGCN">RTGCN (class in greatx.nn.models.supervised)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1143,6 +1161,10 @@
 </li>
       <li><a href="modules/attack.html#greatx.attack.targeted.TargetedAttacker">TargetedAttacker (class in greatx.attack.targeted)</a>
 </li>
+      <li><a href="modules/nn.layers.html#greatx.nn.layers.TensorGCNConv">TensorGCNConv (class in greatx.nn.layers)</a>
+</li>
+      <li><a href="modules/nn.layers.html#greatx.nn.layers.TensorLinear">TensorLinear (class in greatx.nn.layers)</a>
+</li>
       <li><a href="modules/training.html#greatx.training.DGITrainer.test">test() (DGITrainer method)</a>
 </li>
       <li><a href="modules/training.html#greatx.training.MLPTrainer.test_step">test_step() (MLPTrainer method)</a>
@@ -1152,6 +1174,8 @@
 </li>
       </ul></li>
       <li><a href="modules/functional.html#greatx.functional.to_dense_adj">to_dense_adj() (in module greatx.functional)</a>
+</li>
+      <li><a href="modules/functional.html#greatx.functional.to_sparse_adj">to_sparse_adj() (in module greatx.functional)</a>
 </li>
       <li><a href="modules/functional.html#greatx.functional.to_sparse_tensor">to_sparse_tensor() (in module greatx.functional)</a>
 </li>
@@ -1230,6 +1254,8 @@
 </li>
         <li><a href="modules/nn.models.html#greatx.nn.models.supervised.RobustGCN.training">(RobustGCN attribute)</a>
 </li>
+        <li><a href="modules/nn.models.html#greatx.nn.models.supervised.RTGCN.training">(RTGCN attribute)</a>
+</li>
         <li><a href="modules/nn.models.html#greatx.nn.models.supervised.SAT.training">(SAT attribute)</a>
 </li>
         <li><a href="modules/nn.layers.html#greatx.nn.layers.SATConv.training">(SATConv attribute)</a>
@@ -1246,12 +1272,18 @@
 </li>
         <li><a href="modules/nn.layers.html#greatx.nn.layers.TAGConv.training">(TAGConv attribute)</a>
 </li>
+        <li><a href="modules/nn.layers.html#greatx.nn.layers.TensorGCNConv.training">(TensorGCNConv attribute)</a>
+</li>
+        <li><a href="modules/nn.layers.html#greatx.nn.layers.TensorLinear.training">(TensorLinear attribute)</a>
+</li>
         <li><a href="modules/defense.html#greatx.defense.UniversalDefense.training">(UniversalDefense attribute)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules/attack.html#greatx.attack.backdoor.BackdoorAttacker.trigger">trigger() (BackdoorAttacker method)</a>
+</li>
+      <li><a href="modules/defense.html#greatx.defense.TSVD">TSVD (class in greatx.defense)</a>
 </li>
   </ul></td>
 </tr></table>

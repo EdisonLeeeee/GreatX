@@ -47,7 +47,7 @@
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/root.html">greatx</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/dataset.html">greatx.dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules/datasets.html">greatx.datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">greatx.attack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/defense.html">greatx.defense</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/nn.layers.html">greatx.nn.layers</a></li>
@@ -82,15 +82,15 @@
            <div itemprop="articleBody">
              
   <h1>Source code for greatx.functional.spmm</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
-<span class="kn">import</span> <span class="nn">torch</span>
+<span></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
 <span class="kn">from</span> <span class="nn">torch_scatter</span> <span class="kn">import</span> <span class="n">scatter</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.typing</span> <span class="kn">import</span> <span class="n">OptTensor</span><span class="p">,</span> <span class="n">Adj</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="n">to_dense_batch</span><span class="p">,</span> <span class="n">sort_edge_index</span><span class="p">,</span> <span class="n">degree</span>
 
 
-<span class="c1"># @torch.jit.script</span>
 <div class="viewcode-block" id="spmm"><a class="viewcode-back" href="../../../modules/functional.html#greatx.functional.spmm">[docs]</a><span class="k">def</span> <span class="nf">spmm</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
-         <span class="n">edge_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="n">edge_weight</span><span class="p">:</span> <span class="n">OptTensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
          <span class="n">reduce</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;sum&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Sparse matrix multiplication using :class:`torch_scatter`.</span>
 
@@ -104,7 +104,14 @@
 <span class="sd">    edge_weight : Optional[Tensor], optional</span>
 <span class="sd">        the edge weight of the sparse matrix, by default None</span>
 <span class="sd">    reduce : str, optional</span>
-<span class="sd">        reduction of the sparse matrix multiplication, by default &#39;sum&#39;</span>
+<span class="sd">        reduction of the sparse matrix multiplication, including:</span>
+<span class="sd">        * :obj:`mean`</span>
+<span class="sd">        * :obj:`sum`</span>
+<span class="sd">        * :obj:`max`</span>
+<span class="sd">        * :obj:`min`</span>
+<span class="sd">        * :obj:`median`</span>
+<span class="sd">        * :obj:`sample_median`</span>
+<span class="sd">        by default :obj:&#39;sum&#39;</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -129,7 +136,13 @@
 
 <span class="sd">        assert torch.allclose(out1, out2)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">edge_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edge_index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">reduce</span> <span class="o">==</span> <span class="s1">&#39;median&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">scatter_median</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">reduce</span> <span class="o">==</span> <span class="s1">&#39;sample_median&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">scatter_sample_median</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">)</span>
+
+    <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">edge_index</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">dim</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="n">out</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
@@ -137,6 +150,62 @@
         <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">*</span> <span class="n">edge_weight</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">scatter</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dim_size</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">reduce</span><span class="o">=</span><span class="n">reduce</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>
+
+
+<span class="k">def</span> <span class="nf">scatter_median</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">:</span> <span class="n">OptTensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+    <span class="c1"># NOTE: `to_dense_batch` requires the `index` is sorted by column</span>
+    <span class="n">ix</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">edge_index</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">edge_index</span> <span class="o">=</span> <span class="n">edge_index</span><span class="p">[:,</span> <span class="n">ix</span><span class="p">]</span>
+    <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">edge_index</span>
+    <span class="n">x_j</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">edge_weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">x_j</span> <span class="o">=</span> <span class="n">x_j</span> <span class="o">*</span> <span class="n">edge_weight</span><span class="p">[</span><span class="n">ix</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">dense_x</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">to_dense_batch</span><span class="p">(</span><span class="n">x_j</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">x_j</span><span class="o">.</span><span class="n">new_zeros</span><span class="p">(</span><span class="n">dense_x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">dense_x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">deg</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">deg</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">deg_mask</span> <span class="o">=</span> <span class="n">deg</span> <span class="o">==</span> <span class="n">i</span>
+        <span class="n">h</span><span class="p">[</span><span class="n">deg_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">dense_x</span><span class="p">[</span><span class="n">deg_mask</span><span class="p">,</span> <span class="p">:</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">return</span> <span class="n">h</span>
+
+
+<span class="k">def</span> <span class="nf">scatter_sample_median</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
+                          <span class="n">edge_weight</span><span class="p">:</span> <span class="n">OptTensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Approximating the median aggregation with fixed set of neighborhood sampling.&quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">glcore</span> <span class="kn">import</span> <span class="n">neighbor_sampler_cpu</span>
+    <span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ModuleNotFoundError</span><span class="p">(</span><span class="s2">&quot;`scatter_sample_median` requires glcore which is not installed, please refer to &quot;</span>
+                                  <span class="s2">&quot;&#39;https://github.com/EdisonLeeeee/glcore&#39; for more information.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">edge_weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span> <span class="o">=</span> <span class="n">sort_edge_index</span><span class="p">(</span>
+            <span class="n">edge_index</span><span class="p">,</span> <span class="n">edge_weight</span><span class="p">,</span> <span class="n">sort_by_row</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">edge_index</span> <span class="o">=</span> <span class="n">sort_edge_index</span><span class="p">(</span>
+            <span class="n">edge_index</span><span class="p">,</span> <span class="n">sort_by_row</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">row</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">edge_index</span>
+    <span class="n">num_nodes</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">deg</span> <span class="o">=</span> <span class="n">degree</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">,</span> <span class="n">num_nodes</span><span class="o">=</span><span class="n">num_nodes</span><span class="p">)</span>
+    <span class="n">colptr</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">deg</span><span class="o">.</span><span class="n">new_zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">deg</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">replace</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">deg</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">)</span>
+    <span class="n">targets</span><span class="p">,</span> <span class="n">neighbors</span><span class="p">,</span> <span class="n">e_id</span> <span class="o">=</span> <span class="n">neighbor_sampler_cpu</span><span class="p">(</span>
+        <span class="n">colptr</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">row</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">replace</span><span class="p">)</span>
+
+    <span class="n">x_j</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">neighbors</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">edge_weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">x_j</span> <span class="o">=</span> <span class="n">x_j</span> <span class="o">*</span> <span class="n">edge_weight</span><span class="p">[</span><span class="n">e_id</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">x_j</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
 </pre></div>
 
            </div>

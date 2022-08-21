@@ -2,11 +2,7 @@ import math
 import torch
 from torch import nn
 from torch import Tensor
-from torch_geometric.nn.conv.gcn_conv import gcn_norm
-from torch_geometric.nn.dense.linear import Linear
-from torch_geometric.nn.inits import zeros
-from torch_geometric.typing import Adj, OptTensor
-from torch_sparse import SparseTensor
+
 
 class TensorGCNConv(nn.Module):
     r"""The rotbust tensor graph convolutional operator from 
@@ -32,7 +28,8 @@ class TensorGCNConv(nn.Module):
     :class:`~greatx.nn.models.supervised.RTGCN`         
     """
 
-    def __init__(self, in_channels: int, out_channels: int, num_nodes: int, num_channels: int, bias: bool = True):
+    def __init__(self, in_channels: int, out_channels: int,
+                 num_nodes: int, num_channels: int, bias: bool = True):
         super().__init__()
 
         self.in_channels = in_channels
@@ -43,8 +40,8 @@ class TensorGCNConv(nn.Module):
                                                 out_channels,
                                                 num_channels))
         if bias:
-            self.bias = nn.Parameter(torch.Tensor(num_nodes, 
-                                                  out_channels, 
+            self.bias = nn.Parameter(torch.Tensor(num_nodes,
+                                                  out_channels,
                                                   num_channels))
         else:
             self.register_parameter('bias', None)

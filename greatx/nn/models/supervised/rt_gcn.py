@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 
 from greatx.nn.layers import TensorGCNConv, TensorLinear, Sequential, activations
@@ -57,7 +56,7 @@ class RTGCN(nn.Module):
                  in_channels: int,
                  out_channels: int,
                  num_nodes: int,
-                 num_channels: int = 5,
+                 num_channels: int,
                  hids: list = [16],
                  acts: list = ['relu'],
                  dropout: float = 0.5,
@@ -70,10 +69,10 @@ class RTGCN(nn.Module):
         assert len(hids) == len(acts)
         for hid, act in zip(hids, acts):
             conv.append(TensorGCNConv(in_channels,
-                                hid,
+                                      hid,
                                       num_nodes=num_nodes,
                                       num_channels=num_channels,
-                                bias=bias))
+                                      bias=bias))
             if bn:
                 conv.append(nn.BatchNorm1d(hid))
             conv.append(activations.get(act))
@@ -82,12 +81,13 @@ class RTGCN(nn.Module):
         conv.append(TensorGCNConv(in_channels, out_channels,
                                   num_nodes=num_nodes, num_channels=num_channels,
                     bias=bias))
-        conv.append(TensorLinear(out_channels, num_nodes=num_nodes, num_channels=num_channels, bias=bias))
+        conv.append(TensorLinear(out_channels, num_nodes=num_nodes,
+                    num_channels=num_channels, bias=bias))
         self.conv = Sequential(*conv)
 
     def reset_parameters(self):
         self.conv.reset_parameters()
-        
+
     def forward(self, x, adjs):
         """"""
         return self.conv(x, adjs)

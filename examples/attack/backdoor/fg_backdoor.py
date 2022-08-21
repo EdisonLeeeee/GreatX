@@ -4,7 +4,7 @@ import torch_geometric.transforms as T
 
 from tqdm import tqdm
 from greatx import set_seed
-from greatx.dataset import GraphDataset
+from greatx.datasets import GraphDataset
 from greatx.nn.models import GCN
 from greatx.training import Trainer
 from greatx.training.callbacks import ModelCheckpoint

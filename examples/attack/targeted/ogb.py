@@ -2,7 +2,7 @@ import torch
 import numpy as np
 import torch_geometric.transforms as T
 
-from greatx.dataset import GraphDataset
+from greatx.datasets import GraphDataset
 from greatx import set_seed
 from greatx.nn.models import GCN, SGC
 from greatx.training import Trainer

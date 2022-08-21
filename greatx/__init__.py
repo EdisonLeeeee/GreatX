@@ -6,7 +6,8 @@ from . import utils
 from . import nn
 from . import functional
 from . import attack
+from . import datasets
 
 __all__ = ['__version__', 'set_seed', 'is_edge_index', 'Surrogate',
-           'dataset', 'attack', 'defense',
+           'datasets', 'attack', 'defense',
            'training', 'nn', 'functional', 'utils']

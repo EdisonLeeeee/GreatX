@@ -1,7 +1,7 @@
 import torch
 import torch_geometric.transforms as T
 
-from greatx.dataset import GraphDataset
+from greatx.datasets import GraphDataset
 from greatx import set_seed
 from greatx.nn.models import SGC
 from greatx.training import Trainer

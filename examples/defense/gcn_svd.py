@@ -1,7 +1,7 @@
 import torch
 import torch_geometric.transforms as T
 
-from greatx.dataset import GraphDataset
+from greatx.datasets import GraphDataset
 from greatx import set_seed
 from greatx.nn.models import GCN
 from greatx.training import Trainer
@@ -17,7 +17,8 @@ data = dataset[0]
 splits = split_nodes(data.y, random_state=15)
 
 set_seed(123)
-device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+device = torch.device(
+    'cuda') if torch.cuda.is_available() else torch.device('cpu')
 model = GCN(data.x.size(-1), data.y.max().item() + 1)
 trainer = Trainer(model, device=device)
 ckp = ModelCheckpoint('model.pth', monitor='val_acc')

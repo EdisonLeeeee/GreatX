@@ -18,10 +18,12 @@ from .soft_median_gcn import SoftMedianGCN
 from .simp_gcn import SimPGCN
 from .gnnguard import GNNGUARD
 from .sat import SAT
+from .rt_gcn import RTGCN
+
 
 classes = __all__ = ["GCN", "SGC", "SSGC", "GAT", "APPNP", "DAGNN",
                      "JKNet", "TAGCN", "NLGCN", "NLGAT", "NLMLP",
                      "LogisticRegression", "MLP",
                      "MedianGCN", "RobustGCN", "AirGNN",
                      "ElasticGNN", "SoftMedianGCN", "SimPGCN",
-                     "GNNGUARD", "SAT"]
+                     "GNNGUARD", "SAT", "RTGCN"]

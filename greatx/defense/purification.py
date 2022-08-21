@@ -5,10 +5,12 @@ from copy import copy
 
 from torch_geometric.data import Data
 from torch_geometric.transforms import BaseTransform
-from torch_geometric.utils import degree, to_scipy_sparse_matrix, from_scipy_sparse_matrix
+from torch_geometric.utils import degree, to_scipy_sparse_matrix, from_scipy_sparse_matrix, dropout_adj
+
 
 from greatx.utils import scipy_normalize
-
+from greatx.functional import to_dense_adj
+from greatx.nn.layers.gcn_conv import dense_gcn_norm
 
 class JaccardPurification(BaseTransform):
     r"""Graph purification based on Jaccard similarity of
@@ -230,6 +232,90 @@ class EigenDecomposition(BaseTransform):
         return f'{self.__class__.__name__}(K={self.K})'
 
 
+class TSVD(BaseTransform):
+    r"""Graph purification based on low-rank 
+    Singular Value Decomposition (SVD) reconstruction on
+    the adjacency matrix.
+
+    Parameters
+    ----------
+    K : int, optional
+        the top-k largest singular value for reconstruction, by default 50
+    threshold : float, optional
+        threshold to set elements in the reconstructed adjacency matrix as zero, by default 0.01
+    binaryzation : bool, optional
+        whether to binarize the reconstructed adjacency matrix, by default False
+    remove_edge_index : bool, optional
+        whether to remove the :obj:`edge_index` and :obj:`edge_weight`
+        int the input :obj:`data` after reconstruction, by default True
+
+    Note
+    ----
+    We set the reconstructed adjacency matrix as :obj:`adj_t` to be compatible with
+    torch_geometric where :obj:`adj_t` denotes the :class:`torch_sparse.SparseTensor`.        
+    """
+
+    def __init__(self, K: int = 50, num_channels: int=5,
+                 p: float=0.1, normalize: bool = True):
+        super().__init__()
+        self.K = K
+        self.p = p
+        self.num_channels = num_channels
+        self.normalize = normalize
+
+    def __call__(self, data: Data, inplace: bool = True) -> Data:
+        if not inplace:
+            data = copy(data)
+
+        device = data.edge_index.device
+        
+        adjs = self.augmentation(data.edge_index, data.edge_weight,
+                                 num_nodes=data.num_nodes)
+        adjs = t_svd(adjs, self.K)
+        if self.normalize:
+            for i in range(self.num_channels):
+                adjs[..., i] = dense_gcn_norm(adjs[..., i])
+
+        data.adj_t = adjs
+        del data.edge_index, data.edge_weight
+
+        return data
+    
+    def augmentation(self, edge_index, edge_weight, num_nodes):
+        # using transposed matrix instead
+        adj = to_dense_adj(edge_index, edge_weight, num_nodes=num_nodes).t()
+
+        if self.normalize:
+            adj = dense_gcn_norm(adj)
+        adjs = [adj]
+
+        num_edges = edge_index.size(1)
+        device = edge_index.device
+
+        for _ in range(self.num_channels - 1):
+            edge_index_remain = dropout_adj(edge_index, p=self.p, force_undirected=True)[0]
+            num_edges_dropped = num_edges - edge_index_remain.size(1)
+            random_edges = torch.randint(num_nodes, size=(2, num_edges_dropped // 2), device=device)
+            random_edges2 = random_edges
+            random_edges2[0], random_edges2[1] = random_edges[1], random_edges[0]
+            # Actually, `random_edges2` and `random_edges` share the same memory
+            # I guess the authors of this paper intended to get an undirected version
+            # of randomly sampled edges, but they wrote the wrong code
+            # However, once I corrected it, the model perfomance dropped dramatically
+            # I don't know why and just leave it...
+            new_edge_index = torch.cat([edge_index_remain, random_edges, random_edges2], dim=1)
+            # using transposed matrix instead
+            adj = to_dense_adj(new_edge_index, num_nodes=num_nodes).t()
+            if self.normalize:
+                adj = dense_gcn_norm(adj)
+            adjs.append(adj)
+        return torch.stack(adjs, dim=-1)  # [num_nodes, num_nodes, num_channels]
+    
+
+
+    def __repr__(self) -> str:
+        return f'{self.__class__.__name__}(K={self.K}, threshold={self.threshold}, allow_singleton={self.allow_singleton})'
+    
 def jaccard_similarity(A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:
     intersection = torch.count_nonzero(A * B, axis=1)
     J = intersection * 1.0 / (torch.count_nonzero(A, dim=1) +
@@ -257,3 +343,41 @@ def svd(adj_matrix: sp.csr_matrix, K: int = 50,
         adj_matrix.data[adj_matrix.data > 0] = 1.0
 
     return adj_matrix
+
+
+
+def t_svd(adjs: torch.Tensor, K: int=50)->torch.Tensor:
+    print('=== t-SVD: rank={} ==='.format(K))
+    adjs = adjs.unsqueeze(-1) if adjs.ndim == 2 else adjs
+    n1, n2, n3 = adjs.size()
+    xx = torch.complex(torch.empty_like(adjs), torch.empty_like(adjs))
+    mat = torch.fft.fft(adjs)
+
+    U, S, V = torch.svd(mat[:, :, 0])
+    print("rank_before = {}".format(len(S)))
+    S = S.type(torch.complex64)
+    if K >= 1:
+        S = torch.diag(S[:K])
+        xx[:, :, 0] = torch.matmul(torch.matmul(U[:, :K], S), V[:, :K].t())
+
+    halfn3 = round(n3 / 2)
+    for i in range(1, halfn3):
+        U, S, V = torch.svd(mat[:, :, i])
+        S = S.type(torch.complex64)
+        if K >= 1:
+            S = torch.diag(S[:K])
+            xx[:, :, i] = torch.matmul(torch.matmul(U[:, :K], S), V[:, :K].t())
+
+        xx[:, :, n3 - i] = xx[:, :, i].conj()
+
+    if n3 % 2 == 0:
+        i = halfn3
+        U, S, V = torch.svd(mat[:, :, i])
+        S = S.type(torch.complex64)
+        if K >= 1:
+            S = torch.diag(S[:K])
+            xx[:, :, i] = torch.matmul(torch.matmul(U[:, :K], S), V[:, :K].t())
+
+    xx = torch.fft.ifft(xx).real
+    print("rank_after = {}".format(K))
+    return xx

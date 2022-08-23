@@ -8,6 +8,7 @@ from tqdm import tqdm
 from greatx.surrogate import Surrogate
 from greatx.utils import singleton_mask
 from greatx.functional import to_dense_adj
+from greatx.nn.models import GCN
 from greatx.nn.layers.gcn_conv import dense_gcn_norm
 from greatx.attack.untargeted.untargeted_attacker import UntargetedAttacker
 
@@ -85,7 +86,9 @@ class Metattack(UntargetedAttacker, Surrogate):
                 "Invalid argument `lambda_`, allowed values [0: (meta-self), 1: (meta-train), 0.5: (meta-both)]."
             )
 
-        Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps)
+        Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps, 
+                                  freeze=False,
+                                  required=GCN)
 
         labeled_nodes = torch.LongTensor(labeled_nodes).to(self.device)
         unlabeled_nodes = torch.LongTensor(unlabeled_nodes).to(self.device)

@@ -10,11 +10,11 @@ class MissingFeature(BaseTransform):
     of Feature propagation in Learning 
     on Graphs with Missing Node Features"
     <https://arxiv.org/abs/2111.12128>`_ paper (ICLR'21)
-    
+
     :class:`MissingFeature` generates missing feature mask 
     indicating whether each feature is present or missing.
     according differemt stractegies.
-    
+
     Parameters
     ----------
     missing_rate : float, optional
@@ -32,14 +32,14 @@ class MissingFeature(BaseTransform):
         value to fill missing features, by default float("nan")    
 
     Reference:
-    
+
     * https://github.com/twitter-research/feature-propagation
-        
+
     """
 
-    def __init__(self, missing_rate: float = 0.5, 
-                 missing_type: str = 'uniform', 
-                 missing_value : float = float("nan")):
+    def __init__(self, missing_rate: float = 0.5,
+                 missing_type: str = 'uniform',
+                 missing_value: float = float("nan")):
         assert missing_type in ("uniform", "structural"), missing_type
         assert missing_rate < 1, missing_rate
         self.missing_rate = missing_rate
@@ -47,13 +47,15 @@ class MissingFeature(BaseTransform):
         self.missing_value = missing_value
 
     def __call__(self, data: Data) -> Data:
-            
+
         num_nodes, num_features = data.x.size()
         if self.missing_type == "structural":  # either remove all of a nodes features or none
-            missing_mask = torch.bernoulli(torch.Tensor([1 - self.missing_rate]).repeat(num_nodes)).bool().unsqueeze(1).repeat(1, num_features)
+            missing_mask = torch.bernoulli(torch.Tensor([self.missing_rate]).repeat(
+                num_nodes)).bool().unsqueeze(1).repeat(1, num_features)
         else:
-            missing_mask = torch.bernoulli(torch.Tensor([1 - self.missing_rate]).repeat(num_nodes, num_features)).bool()
-            
+            missing_mask = torch.bernoulli(torch.Tensor(
+                [self.missing_rate]).repeat(num_nodes, num_features)).bool()
+
         data.missing_mask = missing_mask
         data.x[missing_mask] = self.missing_value
         return data

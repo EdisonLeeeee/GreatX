@@ -48,7 +48,7 @@ def spmm(x: Tensor, edge_index: Tensor,
         # which is equivalent to:
         A = torch.zeros(5,5)
         A[edge_index[0], edge_index[1]] = 1.0
-        out2 = torch.mm(A,t(),x)
+        out2 = torch.mm(A.t(),x)
 
         assert torch.allclose(out1, out2)
     """

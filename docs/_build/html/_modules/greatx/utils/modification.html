@@ -46,7 +46,6 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/root.html">greatx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/datasets.html">greatx.datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">greatx.attack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/defense.html">greatx.defense</a></li>
@@ -83,11 +82,13 @@
              
   <h1>Source code for greatx.utils.modification</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
-<span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
-<span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="n">sort_edge_index</span><span class="p">,</span> <span class="n">to_scipy_sparse_matrix</span><span class="p">,</span> <span class="n">from_scipy_sparse_matrix</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">from_scipy_sparse_matrix</span><span class="p">,</span> <span class="n">sort_edge_index</span><span class="p">,</span>
+                                   <span class="n">to_scipy_sparse_matrix</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="add_edges"><a class="viewcode-back" href="../../../modules/utils.html#greatx.utils.add_edges">[docs]</a><span class="k">def</span> <span class="nf">add_edges</span><span class="p">(</span><span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edges_to_add</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>

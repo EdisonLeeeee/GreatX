@@ -46,7 +46,6 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/root.html">greatx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/datasets.html">greatx.datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">greatx.attack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/defense.html">greatx.defense</a></li>
@@ -84,9 +83,9 @@
   <h1>Source code for greatx.functional.spmm</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.typing</span> <span class="kn">import</span> <span class="n">Adj</span><span class="p">,</span> <span class="n">OptTensor</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="n">degree</span><span class="p">,</span> <span class="n">sort_edge_index</span><span class="p">,</span> <span class="n">to_dense_batch</span>
 <span class="kn">from</span> <span class="nn">torch_scatter</span> <span class="kn">import</span> <span class="n">scatter</span>
-<span class="kn">from</span> <span class="nn">torch_geometric.typing</span> <span class="kn">import</span> <span class="n">OptTensor</span><span class="p">,</span> <span class="n">Adj</span>
-<span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="n">to_dense_batch</span><span class="p">,</span> <span class="n">sort_edge_index</span><span class="p">,</span> <span class="n">degree</span>
 
 
 <div class="viewcode-block" id="spmm"><a class="viewcode-back" href="../../../modules/functional.html#greatx.functional.spmm">[docs]</a><span class="k">def</span> <span class="nf">spmm</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
@@ -132,7 +131,7 @@
 <span class="sd">        # which is equivalent to:</span>
 <span class="sd">        A = torch.zeros(5,5)</span>
 <span class="sd">        A[edge_index[0], edge_index[1]] = 1.0</span>
-<span class="sd">        out2 = torch.mm(A,t(),x)</span>
+<span class="sd">        out2 = torch.mm(A.t(),x)</span>
 
 <span class="sd">        assert torch.allclose(out1, out2)</span>
 <span class="sd">    &quot;&quot;&quot;</span>

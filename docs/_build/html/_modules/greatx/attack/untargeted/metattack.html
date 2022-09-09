@@ -46,7 +46,6 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/root.html">greatx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/datasets.html">greatx.datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/attack.html">greatx.attack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">greatx.defense</a></li>
@@ -89,11 +88,12 @@
 <span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">init</span>
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
-<span class="kn">from</span> <span class="nn">greatx.surrogate</span> <span class="kn">import</span> <span class="n">Surrogate</span>
-<span class="kn">from</span> <span class="nn">greatx.utils</span> <span class="kn">import</span> <span class="n">singleton_mask</span>
+<span class="kn">from</span> <span class="nn">greatx.attack.untargeted.untargeted_attacker</span> <span class="kn">import</span> <span class="n">UntargetedAttacker</span>
 <span class="kn">from</span> <span class="nn">greatx.functional</span> <span class="kn">import</span> <span class="n">to_dense_adj</span>
 <span class="kn">from</span> <span class="nn">greatx.nn.layers.gcn_conv</span> <span class="kn">import</span> <span class="n">dense_gcn_norm</span>
-<span class="kn">from</span> <span class="nn">greatx.attack.untargeted.untargeted_attacker</span> <span class="kn">import</span> <span class="n">UntargetedAttacker</span>
+<span class="kn">from</span> <span class="nn">greatx.nn.models</span> <span class="kn">import</span> <span class="n">GCN</span>
+<span class="kn">from</span> <span class="nn">greatx.nn.models.surrogate</span> <span class="kn">import</span> <span class="n">Surrogate</span>
+<span class="kn">from</span> <span class="nn">greatx.utils</span> <span class="kn">import</span> <span class="n">singleton_mask</span>
 
 
 <div class="viewcode-block" id="Metattack"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.untargeted.Metattack">[docs]</a><span class="k">class</span> <span class="nc">Metattack</span><span class="p">(</span><span class="n">UntargetedAttacker</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>
@@ -169,7 +169,9 @@
                 <span class="s2">&quot;Invalid argument `lambda_`, allowed values [0: (meta-self), 1: (meta-train), 0.5: (meta-both)].&quot;</span>
             <span class="p">)</span>
 
-        <span class="n">Surrogate</span><span class="o">.</span><span class="n">setup_surrogate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surrogate</span><span class="o">=</span><span class="n">surrogate</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">)</span>
+        <span class="n">Surrogate</span><span class="o">.</span><span class="n">setup_surrogate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">surrogate</span><span class="o">=</span><span class="n">surrogate</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span>
+                                  <span class="n">freeze</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                  <span class="n">required</span><span class="o">=</span><span class="n">GCN</span><span class="p">)</span>
 
         <span class="n">labeled_nodes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">labeled_nodes</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
         <span class="n">unlabeled_nodes</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">unlabeled_nodes</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>

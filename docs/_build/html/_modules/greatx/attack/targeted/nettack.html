@@ -46,7 +46,6 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/root.html">greatx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/datasets.html">greatx.datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/attack.html">greatx.attack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">greatx.defense</a></li>
@@ -89,12 +88,12 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
 <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
-<span class="kn">from</span> <span class="nn">greatx</span> <span class="kn">import</span> <span class="n">Surrogate</span>
 <span class="kn">from</span> <span class="nn">greatx.attack.targeted.targeted_attacker</span> <span class="kn">import</span> <span class="n">TargetedAttacker</span>
-<span class="kn">from</span> <span class="nn">greatx.utils</span> <span class="kn">import</span> <span class="n">singleton_filter</span><span class="p">,</span> <span class="n">scipy_normalize</span><span class="p">,</span> <span class="n">LikelihoodFilter</span>
+<span class="kn">from</span> <span class="nn">greatx.nn.models.surrogate</span> <span class="kn">import</span> <span class="n">Surrogate</span>
+<span class="kn">from</span> <span class="nn">greatx.utils</span> <span class="kn">import</span> <span class="n">LikelihoodFilter</span><span class="p">,</span> <span class="n">scipy_normalize</span><span class="p">,</span> <span class="n">singleton_filter</span>
 
 
 <div class="viewcode-block" id="Nettack"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.targeted.Nettack">[docs]</a><span class="k">class</span> <span class="nc">Nettack</span><span class="p">(</span><span class="n">TargetedAttacker</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>

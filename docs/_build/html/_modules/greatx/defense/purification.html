@@ -46,7 +46,6 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/root.html">greatx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/datasets.html">greatx.datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">greatx.attack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/defense.html">greatx.defense</a></li>
@@ -82,19 +81,21 @@
            <div itemprop="articleBody">
              
   <h1>Source code for greatx.defense.purification</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
-<span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
 
+<span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.transforms</span> <span class="kn">import</span> <span class="n">BaseTransform</span>
-<span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="n">degree</span><span class="p">,</span> <span class="n">to_scipy_sparse_matrix</span><span class="p">,</span> <span class="n">from_scipy_sparse_matrix</span><span class="p">,</span> <span class="n">dropout_adj</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">degree</span><span class="p">,</span> <span class="n">dropout_adj</span><span class="p">,</span>
+                                   <span class="n">from_scipy_sparse_matrix</span><span class="p">,</span>
+                                   <span class="n">to_scipy_sparse_matrix</span><span class="p">)</span>
 
-
-<span class="kn">from</span> <span class="nn">greatx.utils</span> <span class="kn">import</span> <span class="n">scipy_normalize</span>
 <span class="kn">from</span> <span class="nn">greatx.functional</span> <span class="kn">import</span> <span class="n">to_dense_adj</span>
 <span class="kn">from</span> <span class="nn">greatx.nn.layers.gcn_conv</span> <span class="kn">import</span> <span class="n">dense_gcn_norm</span>
+<span class="kn">from</span> <span class="nn">greatx.utils</span> <span class="kn">import</span> <span class="n">scipy_normalize</span>
+
 
 <div class="viewcode-block" id="JaccardPurification"><a class="viewcode-back" href="../../../modules/defense.html#greatx.defense.JaccardPurification">[docs]</a><span class="k">class</span> <span class="nc">JaccardPurification</span><span class="p">(</span><span class="n">BaseTransform</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Graph purification based on Jaccard similarity of</span>

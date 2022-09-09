@@ -50,12 +50,12 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="root.html">greatx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="datasets.html">greatx.datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="attack.html">greatx.attack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="defense.html">greatx.defense</a></li>
 <li class="toctree-l1"><a class="reference internal" href="nn.layers.html">greatx.nn.layers</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">greatx.nn.models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-greatx.nn.models.surrogate">greatx.nn.models.surrogate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#greatx-nn-models-supervised">greatx.nn.models.supervised</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#greatx-nn-models-unsupervised">greatx.nn.models.unsupervised</a></li>
 </ul>
@@ -91,6 +91,101 @@
              
   <section id="greatx-nn-models">
 <h1>greatx.nn.models<a class="headerlink" href="#greatx-nn-models" title="Permalink to this heading"></a></h1>
+<section id="module-greatx.nn.models.surrogate">
+<span id="greatx-nn-models-surrogate"></span><h2>greatx.nn.models.surrogate<a class="headerlink" href="#module-greatx.nn.models.surrogate" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="greatx.nn.models.surrogate.Surrogate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Surrogate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/surrogate.html#Surrogate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.surrogate.Surrogate" title="Permalink to this definition"></a></dt>
+<dd><p>Base class for attacker or defenders that require
+a surrogate model for estimating labels or computing
+gradient information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the device of a model to use for, by default “cpu”</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="greatx.nn.models.surrogate.Surrogate.setup_surrogate">
+<span class="sig-name descname"><span class="pre">setup_surrogate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surrogate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pytorch.org/docs/master/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch vmaster (1.13.0a0+gitf23a1cf ))"><span class="pre">Module</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freeze</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.10)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://pytorch.org/docs/master/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch vmaster (1.13.0a0+gitf23a1cf ))"><span class="pre">Module</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.10)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://pytorch.org/docs/master/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch vmaster (1.13.0a0+gitf23a1cf ))"><span class="pre">Module</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#greatx.nn.models.surrogate.Surrogate" title="greatx.nn.models.surrogate.Surrogate"><span class="pre">Surrogate</span></a></span></span><a class="reference internal" href="../_modules/greatx/nn/models/surrogate.html#Surrogate.setup_surrogate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.surrogate.Surrogate.setup_surrogate" title="Permalink to this definition"></a></dt>
+<dd><p>Method used to initialize the (trained) surrogate model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surrogate</strong> (<em>Module</em>) – the input surrogate module</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – temperature used for softmax activation, by default 1.0</p></li>
+<li><p><strong>freeze</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to freeze the model’s parameters to save time, by default True</p></li>
+<li><p><strong>required</strong> (<em>Union</em><em>[</em><em>Module</em><em>, </em><em>Tuple</em><em>[</em><em>Module</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – which class(es) of the surrogate model are required, by default None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the class itself</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#greatx.nn.models.surrogate.Surrogate" title="greatx.nn.models.surrogate.Surrogate">Surrogate</a></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <a class="reference external" href="https://pytorch.org/docs/master/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch vmaster (1.13.0a0+gitf23a1cf ))"><code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></a></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.10)"><strong>RuntimeError</strong></a> – if the surrogate model is not an instance of <code class="xref py py-obj docutils literal notranslate"><span class="pre">required</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="greatx.nn.models.surrogate.Surrogate.estimate_self_training_labels">
+<span class="sig-name descname"><span class="pre">estimate_self_training_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.13.0a0+gitf23a1cf ))"><span class="pre">Tensor</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://pytorch.org/docs/master/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.13.0a0+gitf23a1cf ))"><span class="pre">Tensor</span></a></span></span><a class="reference internal" href="../_modules/greatx/nn/models/surrogate.html#Surrogate.estimate_self_training_labels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.surrogate.Surrogate.estimate_self_training_labels" title="Permalink to this definition"></a></dt>
+<dd><p>Estimate the labels of nodes using the trained surrogate model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nodes</strong> (<em>Optional</em><em>[</em><em>Tensor</em><em>]</em><em>, </em><em>optional</em>) – the input nodes, if None, it would be all nodes in the graph,
+by default None</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the labels of the input nodes.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="greatx.nn.models.surrogate.Surrogate.freeze_surrogate">
+<span class="sig-name descname"><span class="pre">freeze_surrogate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#greatx.nn.models.surrogate.Surrogate" title="greatx.nn.models.surrogate.Surrogate"><span class="pre">Surrogate</span></a></span></span><a class="reference internal" href="../_modules/greatx/nn/models/surrogate.html#Surrogate.freeze_surrogate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.surrogate.Surrogate.freeze_surrogate" title="Permalink to this definition"></a></dt>
+<dd><p>Freezie the parameters of the surrogate model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the class itself</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#greatx.nn.models.surrogate.Surrogate" title="greatx.nn.models.surrogate.Surrogate">Surrogate</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="greatx.nn.models.surrogate.Surrogate.defrozen_surrogate">
+<span class="sig-name descname"><span class="pre">defrozen_surrogate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#greatx.nn.models.surrogate.Surrogate" title="greatx.nn.models.surrogate.Surrogate"><span class="pre">Surrogate</span></a></span></span><a class="reference internal" href="../_modules/greatx/nn/models/surrogate.html#Surrogate.defrozen_surrogate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.surrogate.Surrogate.defrozen_surrogate" title="Permalink to this definition"></a></dt>
+<dd><p>Defrozen the parameters of the surrogate model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the class itself</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#greatx.nn.models.surrogate.Surrogate" title="greatx.nn.models.surrogate.Surrogate">Surrogate</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="greatx.nn.models.surrogate.Surrogate.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></em><a class="headerlink" href="#greatx.nn.models.surrogate.Surrogate.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="greatx-nn-models-supervised">
 <h2>greatx.nn.models.supervised<a class="headerlink" href="#greatx-nn-models-supervised" title="Permalink to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">

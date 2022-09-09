@@ -46,7 +46,6 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/root.html">greatx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/datasets.html">greatx.datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/attack.html">greatx.attack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">greatx.defense</a></li>
@@ -91,8 +90,9 @@
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
 <span class="kn">from</span> <span class="nn">torch.autograd</span> <span class="kn">import</span> <span class="n">grad</span>
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
-<span class="kn">from</span> <span class="nn">greatx</span> <span class="kn">import</span> <span class="n">Surrogate</span>
+
 <span class="kn">from</span> <span class="nn">greatx.attack.injection.injection_attacker</span> <span class="kn">import</span> <span class="n">InjectionAttacker</span>
+<span class="kn">from</span> <span class="nn">greatx.nn.models.surrogate</span> <span class="kn">import</span> <span class="n">Surrogate</span>
 
 
 <div class="viewcode-block" id="AdvInjection"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.injection.AdvInjection">[docs]</a><span class="k">class</span> <span class="nc">AdvInjection</span><span class="p">(</span><span class="n">InjectionAttacker</span><span class="p">,</span> <span class="n">Surrogate</span><span class="p">):</span>

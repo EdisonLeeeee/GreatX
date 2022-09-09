@@ -46,7 +46,6 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/root.html">greatx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/datasets.html">greatx.datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">greatx.attack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/defense.html">greatx.defense</a></li>
@@ -85,14 +84,13 @@
 <span></span><span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
-<span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
-<span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="n">degree</span><span class="p">,</span> <span class="n">to_scipy_sparse_matrix</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
 <span class="kn">import</span> <span class="nn">torch</span>
-
-<span class="kn">from</span> <span class="nn">greatx</span> <span class="kn">import</span> <span class="n">set_seed</span>
+<span class="kn">from</span> <span class="nn">torch_geometric</span> <span class="kn">import</span> <span class="n">seed_everything</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
+<span class="kn">from</span> <span class="nn">torch_geometric.utils</span> <span class="kn">import</span> <span class="n">degree</span><span class="p">,</span> <span class="n">to_scipy_sparse_matrix</span>
 
 
 <div class="viewcode-block" id="Attacker"><a class="viewcode-back" href="../../../modules/attack.html#greatx.attack.Attacker">[docs]</a><span class="k">class</span> <span class="nc">Attacker</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
@@ -167,7 +165,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">num_feats</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nodes_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">))</span>
 
-        <span class="n">set_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">seed_everything</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_reset</span> <span class="o">=</span> <span class="kc">False</span>
 

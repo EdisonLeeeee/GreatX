@@ -46,7 +46,6 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/root.html">greatx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/datasets.html">greatx.datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">greatx.attack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/defense.html">greatx.defense</a></li>
@@ -83,7 +82,6 @@
              
   <h1>Source code for greatx.utils.missing_feature</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">torch</span>
-
 <span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.transforms</span> <span class="kn">import</span> <span class="n">BaseTransform</span>
 
@@ -94,11 +92,11 @@
 <span class="sd">    of Feature propagation in Learning </span>
 <span class="sd">    on Graphs with Missing Node Features&quot;</span>
 <span class="sd">    &lt;https://arxiv.org/abs/2111.12128&gt;`_ paper (ICLR&#39;21)</span>
-<span class="sd">    </span>
+
 <span class="sd">    :class:`MissingFeature` generates missing feature mask </span>
 <span class="sd">    indicating whether each feature is present or missing.</span>
 <span class="sd">    according differemt stractegies.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    missing_rate : float, optional</span>
@@ -116,14 +114,14 @@
 <span class="sd">        value to fill missing features, by default float(&quot;nan&quot;)    </span>
 
 <span class="sd">    Reference:</span>
-<span class="sd">    </span>
+
 <span class="sd">    * https://github.com/twitter-research/feature-propagation</span>
-<span class="sd">        </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">missing_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> 
-                 <span class="n">missing_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;uniform&#39;</span><span class="p">,</span> 
-                 <span class="n">missing_value</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">missing_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+                 <span class="n">missing_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;uniform&#39;</span><span class="p">,</span>
+                 <span class="n">missing_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)):</span>
         <span class="k">assert</span> <span class="n">missing_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;structural&quot;</span><span class="p">),</span> <span class="n">missing_type</span>
         <span class="k">assert</span> <span class="n">missing_rate</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">missing_rate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">missing_rate</span> <span class="o">=</span> <span class="n">missing_rate</span>
@@ -131,13 +129,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">missing_value</span> <span class="o">=</span> <span class="n">missing_value</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
-            
+
         <span class="n">num_nodes</span><span class="p">,</span> <span class="n">num_features</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">missing_type</span> <span class="o">==</span> <span class="s2">&quot;structural&quot;</span><span class="p">:</span>  <span class="c1"># either remove all of a nodes features or none</span>
-            <span class="n">missing_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">bernoulli</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">([</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">missing_rate</span><span class="p">])</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">))</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_features</span><span class="p">)</span>
+            <span class="n">missing_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">bernoulli</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">missing_rate</span><span class="p">])</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span>
+                <span class="n">num_nodes</span><span class="p">))</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_features</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">missing_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">bernoulli</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">([</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">missing_rate</span><span class="p">])</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">num_features</span><span class="p">))</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span>
-            
+            <span class="n">missing_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">bernoulli</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">missing_rate</span><span class="p">])</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">,</span> <span class="n">num_features</span><span class="p">))</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span>
+
         <span class="n">data</span><span class="o">.</span><span class="n">missing_mask</span> <span class="o">=</span> <span class="n">missing_mask</span>
         <span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">missing_mask</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">missing_value</span>
         <span class="k">return</span> <span class="n">data</span></div>

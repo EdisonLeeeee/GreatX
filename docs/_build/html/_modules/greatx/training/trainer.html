@@ -46,7 +46,6 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules/root.html">greatx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/datasets.html">greatx.datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/attack.html">greatx.attack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules/defense.html">greatx.defense</a></li>
@@ -88,12 +87,13 @@
 <span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
 <span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
-<span class="kn">from</span> <span class="nn">greatx.training.callbacks</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Callback</span><span class="p">,</span> <span class="n">CallbackList</span><span class="p">,</span> <span class="n">Optimizer</span><span class="p">,</span>
-                                       <span class="n">Scheduler</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
 <span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.loader</span> <span class="kn">import</span> <span class="n">DataLoader</span> <span class="k">as</span> <span class="n">PyGLoader</span>
+
+<span class="kn">from</span> <span class="nn">greatx.training.callbacks</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Callback</span><span class="p">,</span> <span class="n">CallbackList</span><span class="p">,</span> <span class="n">Optimizer</span><span class="p">,</span>
+                                       <span class="n">Scheduler</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">greatx.utils</span> <span class="kn">import</span> <span class="n">BunchDict</span><span class="p">,</span> <span class="n">Progbar</span>
 
 

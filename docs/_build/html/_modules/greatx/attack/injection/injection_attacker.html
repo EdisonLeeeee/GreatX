@@ -46,7 +46,6 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules/root.html">greatx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/datasets.html">greatx.datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/attack.html">greatx.attack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules/defense.html">greatx.defense</a></li>
@@ -82,17 +81,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for greatx.attack.injection.injection_attacker</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span>
-<span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
-
 <span class="kn">from</span> <span class="nn">torch_geometric.data</span> <span class="kn">import</span> <span class="n">Data</span>
+
 <span class="kn">from</span> <span class="nn">greatx.attack.attacker</span> <span class="kn">import</span> <span class="n">Attacker</span>
-<span class="kn">from</span> <span class="nn">greatx.utils</span> <span class="kn">import</span> <span class="n">add_edges</span><span class="p">,</span> <span class="n">BunchDict</span>
+<span class="kn">from</span> <span class="nn">greatx.utils</span> <span class="kn">import</span> <span class="n">BunchDict</span><span class="p">,</span> <span class="n">add_edges</span>
 
 
 <div class="viewcode-block" id="InjectionAttacker"><a class="viewcode-back" href="../../../../modules/attack.html#greatx.attack.injection.InjectionAttacker">[docs]</a><span class="k">class</span> <span class="nc">InjectionAttacker</span><span class="p">(</span><span class="n">Attacker</span><span class="p">):</span>

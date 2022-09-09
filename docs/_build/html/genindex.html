@@ -46,7 +46,6 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules/root.html">greatx</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/datasets.html">greatx.datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/attack.html">greatx.attack</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules/defense.html">greatx.defense</a></li>
@@ -310,7 +309,7 @@
         <li><a href="modules/attack.html#greatx.attack.injection.InjectionAttacker.data">(InjectionAttacker method)</a>
 </li>
       </ul></li>
-      <li><a href="modules/root.html#greatx.surrogate.Surrogate.defrozen_surrogate">defrozen_surrogate() (Surrogate method)</a>
+      <li><a href="modules/nn.models.html#greatx.nn.models.surrogate.Surrogate.defrozen_surrogate">defrozen_surrogate() (Surrogate method)</a>
 </li>
       <li><a href="modules/defense.html#greatx.defense.DegreeGUARD">DegreeGUARD (class in greatx.defense)</a>
 </li>
@@ -368,7 +367,7 @@
 </li>
       <li><a href="modules/nn.models.html#greatx.nn.models.unsupervised.DGI.encode">encode() (DGI method)</a>
 </li>
-      <li><a href="modules/root.html#greatx.surrogate.Surrogate.estimate_self_training_labels">estimate_self_training_labels() (Surrogate method)</a>
+      <li><a href="modules/nn.models.html#greatx.nn.models.surrogate.Surrogate.estimate_self_training_labels">estimate_self_training_labels() (Surrogate method)</a>
 </li>
       <li><a href="modules/training.html#greatx.training.Trainer.evaluate">evaluate() (Trainer method)</a>
 </li>
@@ -512,7 +511,7 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="modules/root.html#greatx.surrogate.Surrogate.freeze_surrogate">freeze_surrogate() (Surrogate method)</a>
+      <li><a href="modules/nn.models.html#greatx.nn.models.surrogate.Surrogate.freeze_surrogate">freeze_surrogate() (Surrogate method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -591,6 +590,8 @@
         <li><a href="modules/attack.html#module-greatx.attack">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     greatx.attack.backdoor
 
@@ -598,8 +599,6 @@
         <li><a href="modules/attack.html#module-greatx.attack.backdoor">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     greatx.attack.injection
 
@@ -657,17 +656,17 @@
 </li>
       </ul></li>
       <li>
+    greatx.nn.models.surrogate
+
+      <ul>
+        <li><a href="modules/nn.models.html#module-greatx.nn.models.surrogate">module</a>
+</li>
+      </ul></li>
+      <li>
     greatx.nn.models.unsupervised
 
       <ul>
         <li><a href="modules/nn.models.html#module-greatx.nn.models.unsupervised">module</a>
-</li>
-      </ul></li>
-      <li>
-    greatx.surrogate
-
-      <ul>
-        <li><a href="modules/root.html#module-greatx.surrogate">module</a>
 </li>
       </ul></li>
       <li>
@@ -682,20 +681,6 @@
 
       <ul>
         <li><a href="modules/utils.html#module-greatx.utils">module</a>
-</li>
-      </ul></li>
-      <li>
-    greatx.utils.check
-
-      <ul>
-        <li><a href="modules/root.html#module-greatx.utils.check">module</a>
-</li>
-      </ul></li>
-      <li>
-    greatx.utils.seed
-
-      <ul>
-        <li><a href="modules/root.html#module-greatx.utils.seed">module</a>
 </li>
       </ul></li>
       <li><a href="modules/defense.html#greatx.defense.GUARD">GUARD (class in greatx.defense)</a>
@@ -731,8 +716,6 @@
       <li><a href="modules/attack.html#greatx.attack.injection.InjectionAttacker">InjectionAttacker (class in greatx.attack.injection)</a>
 </li>
       <li><a href="modules/attack.html#greatx.attack.untargeted.Metattack.inner_train">inner_train() (Metattack method)</a>
-</li>
-      <li><a href="modules/root.html#greatx.utils.check.is_edge_index">is_edge_index() (in module greatx.utils.check)</a>
 </li>
       <li><a href="modules/attack.html#greatx.attack.FlipAttacker.is_legal_edge">is_legal_edge() (FlipAttacker method)</a>
 
@@ -822,17 +805,13 @@
 </li>
         <li><a href="modules/nn.models.html#module-greatx.nn.models.supervised">greatx.nn.models.supervised</a>
 </li>
-        <li><a href="modules/nn.models.html#module-greatx.nn.models.unsupervised">greatx.nn.models.unsupervised</a>
+        <li><a href="modules/nn.models.html#module-greatx.nn.models.surrogate">greatx.nn.models.surrogate</a>
 </li>
-        <li><a href="modules/root.html#module-greatx.surrogate">greatx.surrogate</a>
+        <li><a href="modules/nn.models.html#module-greatx.nn.models.unsupervised">greatx.nn.models.unsupervised</a>
 </li>
         <li><a href="modules/training.html#module-greatx.training">greatx.training</a>
 </li>
         <li><a href="modules/utils.html#module-greatx.utils">greatx.utils</a>
-</li>
-        <li><a href="modules/root.html#module-greatx.utils.check">greatx.utils.check</a>
-</li>
-        <li><a href="modules/root.html#module-greatx.utils.seed">greatx.utils.seed</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1065,8 +1044,6 @@
 </li>
       <li><a href="modules/attack.html#greatx.attack.targeted.SGAttack.set_normalize">set_normalize() (SGAttack method)</a>
 </li>
-      <li><a href="modules/root.html#greatx.utils.seed.set_seed">set_seed() (in module greatx.utils.seed)</a>
-</li>
       <li><a href="modules/utils.html#greatx.utils.setup_logger">setup_logger() (in module greatx.utils)</a>
 </li>
       <li><a href="modules/attack.html#greatx.attack.untargeted.FGAttack.setup_surrogate">setup_surrogate() (FGAttack method)</a>
@@ -1090,7 +1067,7 @@
 </li>
         <li><a href="modules/attack.html#greatx.attack.targeted.SGAttack.setup_surrogate">(SGAttack method)</a>
 </li>
-        <li><a href="modules/root.html#greatx.surrogate.Surrogate.setup_surrogate">(Surrogate method)</a>
+        <li><a href="modules/nn.models.html#greatx.nn.models.surrogate.Surrogate.setup_surrogate">(Surrogate method)</a>
 </li>
       </ul></li>
       <li><a href="modules/attack.html#greatx.attack.targeted.SGAttack">SGAttack (class in greatx.attack.targeted)</a>
@@ -1145,7 +1122,7 @@
       </ul></li>
       <li><a href="modules/attack.html#greatx.attack.targeted.SGAttack.subgraph_processing">subgraph_processing() (SGAttack method)</a>
 </li>
-      <li><a href="modules/root.html#greatx.surrogate.Surrogate">Surrogate (class in greatx.surrogate)</a>
+      <li><a href="modules/nn.models.html#greatx.nn.models.surrogate.Surrogate">Surrogate (class in greatx.nn.models.surrogate)</a>
 </li>
       <li><a href="modules/defense.html#greatx.defense.SVDPurification">SVDPurification (class in greatx.defense)</a>
 </li>
@@ -1267,6 +1244,8 @@
         <li><a href="modules/nn.models.html#greatx.nn.models.supervised.SoftMedianGCN.training">(SoftMedianGCN attribute)</a>
 </li>
         <li><a href="modules/nn.models.html#greatx.nn.models.supervised.SSGC.training">(SSGC attribute)</a>
+</li>
+        <li><a href="modules/nn.models.html#greatx.nn.models.surrogate.Surrogate.training">(Surrogate attribute)</a>
 </li>
         <li><a href="modules/nn.models.html#greatx.nn.models.supervised.TAGCN.training">(TAGCN attribute)</a>
 </li>

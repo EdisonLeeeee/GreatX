@@ -11,6 +11,7 @@ from .overlap import overlap
 from .progbar import Progbar
 from .scipy_sparse import scipy_normalize
 from .split_data import split_nodes, split_nodes_by_classes
+from .check import is_edge_indexed
 
 classes = __all__ = ['Progbar', 'BunchDict', 'CKA', 'topk', 'wrapper',
                      'repeat', 'split_nodes', 'split_nodes_by_classes',
@@ -19,4 +20,4 @@ classes = __all__ = ['Progbar', 'BunchDict', 'CKA', 'topk', 'wrapper',
                      "LikelihoodFilter", "singleton_mask",
                      'add_edges', 'remove_edges', 'flip_edges', 'flip_graph',
                      'scipy_normalize', 'normalize',
-                     'overlap', 'ego_graph', 'MissingFeature']
+                     'overlap', 'ego_graph', 'MissingFeature', 'is_edge_indexed']

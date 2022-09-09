@@ -1,4 +1,3 @@
-import copy
 from typing import Optional, Tuple, Union
 
 import torch

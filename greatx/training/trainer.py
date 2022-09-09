@@ -173,7 +173,7 @@ class Trainer:
         loss.backward()
         self.callbacks.on_train_batch_end(0)
 
-        return dict(loss=loss.item(), acc=out.argmax(1).eq(y).float().mean().item())
+        return dict(loss=loss.item(), acc=out.argmax(-1).eq(y).float().mean().item())
 
     def evaluate(self, inputs: dict, verbose: Optional[int] = 1) -> BunchDict:
         """Simple evaluation step for `:attr:model`
@@ -237,7 +237,7 @@ class Trainer:
 
         loss = F.cross_entropy(out, y)
 
-        return dict(loss=loss.item(), acc=out.argmax(1).eq(y).float().mean().item())
+        return dict(loss=loss.item(), acc=out.argmax(-1).eq(y).float().mean().item())
 
     @torch.no_grad()
     def predict_step(self, inputs: dict) -> Tensor:

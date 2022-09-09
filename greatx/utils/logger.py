@@ -14,9 +14,9 @@ __all__ = ["setup_logger", "get_logger"]
 @functools.lru_cache(maxsize=None)
 def setup_logger(
     output: Optional[str] = None, distributed_rank: int = 0, *, mode: str = 'w',
-    color: bool = True, name: str = "greatx", abbrev_name: Optional[str] = None
+    color: bool = True, name: str = "GreaxX", abbrev_name: Optional[str] = None
 ):
-    """Initialize the greatx logger and set its verbosity level to "DEBUG".
+    """Initialize the GreaxX logger and set its verbosity level to "DEBUG".
 
     Parameters
     ----------
@@ -31,7 +31,7 @@ def setup_logger(
     color : bool, optional
         whether to use color when printing, by default True
     name : str, optional
-        the root module name of this logger, by default "greatx"
+        the root module name of this logger, by default "GreaxX"
     abbrev_name : Optional[str], optional
         an abbreviation of the module, to avoid long names in logs.
         Set to "" to not log the root module in logs.
@@ -112,13 +112,13 @@ def setup_logger(
     return logger
 
 
-def get_logger(name: str = "GreatX"):
+def get_logger(name: str = "GreaxX"):
     """Get a logger for a given name.
 
     Parameters
     ----------
     name : str, optional
-        name of the logger, by default "GreatX"
+        name of the logger, by default "GreaxX"
 
     Returns
     -------

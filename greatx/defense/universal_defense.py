@@ -6,7 +6,7 @@ from torch_geometric.data import Data
 from torch_geometric.utils import degree
 import torch
 
-from greatx import Surrogate
+from greatx.nn.models import Surrogate
 from greatx.nn.models.supervised import SGC, GCN
 from greatx.utils import remove_edges
 

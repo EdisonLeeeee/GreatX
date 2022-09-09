@@ -5,7 +5,7 @@ from torch.autograd import grad
 from torch.nn import init
 from tqdm import tqdm
 
-from greatx.surrogate import Surrogate
+from greatx.nn.models.surrogate import Surrogate
 from greatx.utils import singleton_mask
 from greatx.functional import to_dense_adj
 from greatx.nn.models import GCN
@@ -86,7 +86,7 @@ class Metattack(UntargetedAttacker, Surrogate):
                 "Invalid argument `lambda_`, allowed values [0: (meta-self), 1: (meta-train), 0.5: (meta-both)]."
             )
 
-        Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps, 
+        Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps,
                                   freeze=False,
                                   required=GCN)
 

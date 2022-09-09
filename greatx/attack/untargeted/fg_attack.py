@@ -7,7 +7,7 @@ from torch import Tensor
 from tqdm import tqdm
 
 from greatx.attack.untargeted.untargeted_attacker import UntargetedAttacker
-from greatx.surrogate import Surrogate
+from greatx.nn.models.surrogate import Surrogate
 from greatx.utils import singleton_mask
 from greatx.functional import to_dense_adj
 

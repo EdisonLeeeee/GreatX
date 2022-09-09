@@ -1,6 +1,14 @@
 greatx.nn.models
 ===================
 
+greatx.nn.models.surrogate
+------------------------------------------------
+
+.. currentmodule:: greatx.nn.models.surrogate
+
+.. automodule:: greatx.nn.models.surrogate
+    :members:
+    :undoc-members:
 
 greatx.nn.models.supervised
 ------------------------------------------------

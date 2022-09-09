@@ -1,7 +1,7 @@
 import torch
 import torch_geometric.transforms as T
 
-from greatx import set_seed
+
 from greatx.nn.models import GCN
 from greatx.training import Trainer
 from greatx.training.callbacks import ModelCheckpoint
@@ -10,7 +10,7 @@ from torch_geometric.datasets import Planetoid
 dataset = Planetoid(root='~/data/pygdata', name='Cora')
 data = dataset[0]
 
-set_seed(123)
+
 device = torch.device(
     'cuda') if torch.cuda.is_available() else torch.device('cpu')
 model = GCN(data.x.size(-1), data.y.max().item() + 1)

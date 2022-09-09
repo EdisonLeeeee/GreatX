@@ -8,7 +8,7 @@ from numba import njit
 from tqdm import tqdm
 from torch_geometric.data import Data
 
-from greatx import Surrogate
+from greatx.nn.models import Surrogate
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
 from greatx.utils import singleton_filter, scipy_normalize, LikelihoodFilter
 

@@ -2,7 +2,7 @@ import torch
 import torch_geometric.transforms as T
 
 from greatx.datasets import GraphDataset
-from greatx import set_seed
+
 from greatx.nn.models import SimPGCN
 from greatx.training import SimPGCNTrainer
 from greatx.training.callbacks import ModelCheckpoint
@@ -14,7 +14,7 @@ dataset = GraphDataset(root='~/data/pygdata', name='cora',
 data = dataset[0]
 splits = split_nodes(data.y, random_state=15)
 
-set_seed(123)
+
 device = torch.device(
     'cuda') if torch.cuda.is_available() else torch.device('cpu')
 model = SimPGCN(data.x.size(-1), data.y.max().item() + 1, hids=128)

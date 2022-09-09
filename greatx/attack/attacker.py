@@ -3,12 +3,11 @@ from numbers import Number
 from typing import Optional, Union
 from torch_geometric.data import Data
 from torch_geometric.utils import degree, to_scipy_sparse_matrix
+from torch_geometric import seed_everything
 
 import numpy as np
 import scipy.sparse as sp
 import torch
-
-from greatx import set_seed
 
 
 class Attacker(torch.nn.Module):
@@ -83,7 +82,8 @@ class Attacker(torch.nn.Module):
         self.num_feats = data.x.size(1)
         self.nodes_set = set(range(self.num_nodes))
 
-        set_seed(seed)
+        if seed is not None:
+            seed_everything(seed)
 
         self._is_reset = False
 

@@ -6,7 +6,7 @@ from torch.autograd import grad
 from tqdm import tqdm
 
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
-from greatx.surrogate import Surrogate
+from greatx.nn.models.surrogate import Surrogate
 from greatx.utils import singleton_mask
 from greatx.functional import to_dense_adj
 

@@ -10,7 +10,7 @@ from tqdm import tqdm
 from torch_geometric.utils import remove_self_loops, add_self_loops, degree
 from greatx.attack.backdoor.backdoor_attacker import BackdoorAttacker
 from greatx.functional import spmm
-from greatx import Surrogate
+from greatx.nn.models import Surrogate
 
 
 class LGCBackdoor(BackdoorAttacker):

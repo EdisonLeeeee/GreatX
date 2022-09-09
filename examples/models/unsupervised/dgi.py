@@ -1,7 +1,7 @@
 import torch
 import torch_geometric.transforms as T
 
-from greatx import set_seed
+
 from greatx.nn.models import DGI, LogisticRegression
 from greatx.training import DGITrainer, MLPTrainer
 from greatx.training.callbacks import ModelCheckpoint, EarlyStopping
@@ -11,8 +11,9 @@ dataset = Planetoid(root='~/data/pygdata', name='Cora',
                     transform=T.NormalizeFeatures())
 data = dataset[0]
 
-set_seed(123)
-device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+
+device = torch.device(
+    'cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 # ================================================================== #
 #                 Self-supervised Learning                           #

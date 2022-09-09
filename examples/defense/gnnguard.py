@@ -3,7 +3,7 @@ import numpy as np
 import torch_geometric.transforms as T
 
 from greatx.datasets import GraphDataset
-from greatx import set_seed
+
 from greatx.nn.models import GCN, GNNGUARD
 from greatx.training import Trainer
 from greatx.training.callbacks import ModelCheckpoint
@@ -15,7 +15,7 @@ dataset = GraphDataset(root='~/data/pygdata', name='cora',
 
 data = dataset[0]
 splits = split_nodes(data.y, random_state=15)
-set_seed(123)
+
 device = torch.device(
     'cuda') if torch.cuda.is_available() else torch.device('cpu')
 

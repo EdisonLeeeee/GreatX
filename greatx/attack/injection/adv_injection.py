@@ -7,7 +7,7 @@ import torch.nn.functional as F
 from torch import Tensor
 from torch.autograd import grad
 from tqdm import tqdm
-from greatx import Surrogate
+from greatx.nn.models import Surrogate
 from greatx.attack.injection.injection_attacker import InjectionAttacker
 
 

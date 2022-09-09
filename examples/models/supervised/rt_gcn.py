@@ -2,7 +2,7 @@ import torch
 import torch_geometric.transforms as T
 
 from greatx.datasets import GraphDataset
-from greatx import set_seed
+
 from greatx.nn.models import RTGCN
 from greatx.training import Trainer
 from greatx.training.callbacks import ModelCheckpoint
@@ -11,7 +11,7 @@ from greatx.defense import TSVD
 
 num_channels = 3
 svd_rank = 50
-set_seed(123)
+
 
 dataset = GraphDataset(root='~/data/pygdata', name='cora',
                        transform=T.Compose([T.LargestConnectedComponents(),

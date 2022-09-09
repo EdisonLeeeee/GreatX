@@ -1,5 +1,6 @@
-import torch
 import math
+
+import torch
 import torch.nn as nn
 
 from greatx.nn.layers import GCNConv, Sequential, activations

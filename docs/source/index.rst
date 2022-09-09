@@ -19,7 +19,6 @@ Package API
    :maxdepth: 4
    :caption: Package Reference
    
-   modules/root
    modules/datasets
    modules/attack
    modules/defense

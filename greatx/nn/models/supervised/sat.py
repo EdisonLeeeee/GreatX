@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 
-from greatx.utils import wrapper
 from greatx.nn.layers import SATConv, Sequential, activations
+from greatx.utils import wrapper
 
 
 class SAT(nn.Module):

@@ -5,8 +5,8 @@ import scipy.sparse as sp
 import torch
 from scipy import linalg
 from torch import Tensor
-from tqdm import tqdm
 from torch_geometric.data import Data
+from tqdm import tqdm
 
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
 from greatx.utils import singleton_filter

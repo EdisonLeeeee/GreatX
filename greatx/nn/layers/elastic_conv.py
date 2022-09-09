@@ -1,8 +1,7 @@
 from typing import Optional
 
 import torch
-from torch import nn
-from torch import Tensor
+from torch import Tensor, nn
 from torch_geometric.nn.conv.gcn_conv import gcn_norm
 from torch_geometric.typing import Adj, OptTensor
 from torch_geometric.utils import degree

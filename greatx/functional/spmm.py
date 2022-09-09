@@ -1,8 +1,8 @@
 import torch
 from torch import Tensor
+from torch_geometric.typing import Adj, OptTensor
+from torch_geometric.utils import degree, sort_edge_index, to_dense_batch
 from torch_scatter import scatter
-from torch_geometric.typing import OptTensor, Adj
-from torch_geometric.utils import to_dense_batch, sort_edge_index, degree
 
 
 def spmm(x: Tensor, edge_index: Tensor,

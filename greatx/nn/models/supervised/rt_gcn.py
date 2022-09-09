@@ -1,6 +1,7 @@
 import torch.nn as nn
 
-from greatx.nn.layers import TensorGCNConv, TensorLinear, Sequential, activations
+from greatx.nn.layers import (Sequential, TensorGCNConv, TensorLinear,
+                              activations)
 from greatx.utils import wrapper
 
 

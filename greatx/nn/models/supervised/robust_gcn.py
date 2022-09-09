@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from greatx.nn.layers import RobustConv, activations, Sequential
+from greatx.nn.layers import RobustConv, Sequential, activations
 from greatx.utils import wrapper
 
 

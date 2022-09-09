@@ -1,5 +1,6 @@
 import torch.nn as nn
-from greatx.nn.layers import activations, AdaptiveConv, Sequential
+
+from greatx.nn.layers import AdaptiveConv, Sequential, activations
 from greatx.utils import wrapper
 
 

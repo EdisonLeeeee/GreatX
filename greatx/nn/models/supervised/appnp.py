@@ -1,7 +1,7 @@
 import torch.nn as nn
 from torch_geometric.nn import APPNP as APPNPConv
 
-from greatx.nn.layers import activations, Sequential
+from greatx.nn.layers import Sequential, activations
 from greatx.utils import wrapper
 
 

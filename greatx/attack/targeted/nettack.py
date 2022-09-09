@@ -5,12 +5,12 @@ from typing import Optional
 import numpy as np
 import scipy.sparse as sp
 from numba import njit
-from tqdm import tqdm
 from torch_geometric.data import Data
+from tqdm import tqdm
 
-from greatx.nn.models import Surrogate
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
-from greatx.utils import singleton_filter, scipy_normalize, LikelihoodFilter
+from greatx.nn.models.surrogate import Surrogate
+from greatx.utils import LikelihoodFilter, scipy_normalize, singleton_filter
 
 
 class Nettack(TargetedAttacker, Surrogate):

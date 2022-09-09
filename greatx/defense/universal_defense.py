@@ -1,13 +1,13 @@
-from typing import Union
 from copy import copy
+from typing import Union
+
+import torch
 from torch import Tensor
 from torch.utils.data import DataLoader
 from torch_geometric.data import Data
 from torch_geometric.utils import degree
-import torch
 
-from greatx.nn.models import Surrogate
-from greatx.nn.models.supervised import SGC, GCN
+from greatx.nn.models.surrogate import Surrogate
 from greatx.utils import remove_edges
 
 
@@ -155,6 +155,7 @@ class GUARD(UniversalDefense, Surrogate):
     @torch.no_grad()
     def setup_surrogate(self, surrogate: torch.nn.Module,
                         victim_labels: Tensor) -> "GUARD":
+        from greatx.nn.models.supervised import GCN, SGC
 
         Surrogate.setup_surrogate(self, surrogate=surrogate,
                                   freeze=True, required=(SGC, GCN))

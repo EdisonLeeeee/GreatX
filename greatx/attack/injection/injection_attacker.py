@@ -1,14 +1,14 @@
-from functools import lru_cache
-from typing import Optional, Union, List
-
 from copy import copy
-import torch
-import numpy as np
-from torch import Tensor
+from functools import lru_cache
+from typing import List, Optional, Union
 
+import numpy as np
+import torch
+from torch import Tensor
 from torch_geometric.data import Data
+
 from greatx.attack.attacker import Attacker
-from greatx.utils import add_edges, BunchDict
+from greatx.utils import BunchDict, add_edges
 
 
 class InjectionAttacker(Attacker):

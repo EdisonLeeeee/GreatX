@@ -1,25 +1,23 @@
-from .gcn import GCN
-from .sgc import SGC
-from .ssgc import SSGC
-from .gat import GAT
+from .air_gnn import AirGNN
 from .appnp import APPNP
 from .dagnn import DAGNN
+from .elastic_gnn import ElasticGNN
+from .gat import GAT
+from .gcn import GCN
+from .gnnguard import GNNGUARD
 from .jknet import JKNet
-from .tagcn import TAGCN
-from .nlgnn import NLGCN, NLGAT, NLMLP
-from .mlp import LogisticRegression, MLP
-
 # defense models
 from .median_gcn import MedianGCN
+from .mlp import MLP, LogisticRegression
+from .nlgnn import NLGAT, NLGCN, NLMLP
 from .robust_gcn import RobustGCN
-from .air_gnn import AirGNN
-from .elastic_gnn import ElasticGNN
-from .soft_median_gcn import SoftMedianGCN
-from .simp_gcn import SimPGCN
-from .gnnguard import GNNGUARD
-from .sat import SAT
 from .rt_gcn import RTGCN
-
+from .sat import SAT
+from .sgc import SGC
+from .simp_gcn import SimPGCN
+from .soft_median_gcn import SoftMedianGCN
+from .ssgc import SSGC
+from .tagcn import TAGCN
 
 classes = __all__ = ["GCN", "SGC", "SSGC", "GAT", "APPNP", "DAGNN",
                      "JKNet", "TAGCN", "NLGCN", "NLGAT", "NLMLP",

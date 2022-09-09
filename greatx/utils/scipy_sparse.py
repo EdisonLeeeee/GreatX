@@ -1,5 +1,5 @@
-import scipy.sparse as sp
 import numpy as np
+import scipy.sparse as sp
 
 
 def scipy_normalize(adj_matrix: sp.csr_matrix,

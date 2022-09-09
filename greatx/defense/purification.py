@@ -1,16 +1,18 @@
-import torch
-import torch.nn.functional as F
-import scipy.sparse as sp
 from copy import copy
 
+import scipy.sparse as sp
+import torch
+import torch.nn.functional as F
 from torch_geometric.data import Data
 from torch_geometric.transforms import BaseTransform
-from torch_geometric.utils import degree, to_scipy_sparse_matrix, from_scipy_sparse_matrix, dropout_adj
+from torch_geometric.utils import (degree, dropout_adj,
+                                   from_scipy_sparse_matrix,
+                                   to_scipy_sparse_matrix)
 
-
-from greatx.utils import scipy_normalize
 from greatx.functional import to_dense_adj
 from greatx.nn.layers.gcn_conv import dense_gcn_norm
+from greatx.utils import scipy_normalize
+
 
 class JaccardPurification(BaseTransform):
     r"""Graph purification based on Jaccard similarity of

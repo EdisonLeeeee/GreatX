@@ -1,8 +1,9 @@
 from typing import Optional
+
 import torch
 from torch import Tensor
-from torch_sparse import SparseTensor
 from torch_geometric.utils.num_nodes import maybe_num_nodes
+from torch_sparse import SparseTensor
 
 __all__ = ['to_sparse_tensor', 'to_dense_adj']
 

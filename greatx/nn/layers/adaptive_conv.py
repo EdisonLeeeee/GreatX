@@ -1,13 +1,12 @@
 import torch
-from torch import nn
-from torch import Tensor
+from torch import Tensor, nn
 from torch_geometric.nn.conv.gcn_conv import gcn_norm
 from torch_geometric.typing import Adj, OptTensor
 from torch_sparse import SparseTensor
 
-from greatx import is_edge_index
 from greatx.functional import spmm
 from greatx.nn.layers.gcn_conv import dense_gcn_norm
+from greatx.utils.check import is_edge_index
 
 
 class AdaptiveConv(nn.Module):

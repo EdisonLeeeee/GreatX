@@ -4,7 +4,7 @@ import torch_geometric.transforms as T
 from ogb.nodeproppred import PygNodePropPredDataset
 
 from greatx.nn.models import GCN
-from greatx.training import Trainer
+from greatx.training.trainer import Trainer
 from greatx.training.callbacks import ModelCheckpoint
 from greatx.utils import split_nodes, BunchDict
 

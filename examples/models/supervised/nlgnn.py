@@ -3,7 +3,7 @@ import torch_geometric.transforms as T
 
 
 from greatx.nn.models import NLGCN, NLGAT, NLMLP
-from greatx.training import Trainer
+from greatx.training.trainer import Trainer
 from greatx.training.callbacks import ModelCheckpoint
 from greatx.utils import split_nodes
 from torch_geometric.datasets import Planetoid

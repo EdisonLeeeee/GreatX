@@ -1,14 +1,13 @@
 import torch
-from torch import nn
-from torch import Tensor
+from torch import Tensor, nn
 from torch_geometric.nn.conv.gcn_conv import gcn_norm
 from torch_geometric.nn.dense.linear import Linear
 from torch_geometric.nn.inits import zeros
 from torch_geometric.typing import Adj, OptTensor
 from torch_sparse import SparseTensor
 
-from greatx import is_edge_index
 from greatx.functional import spmm
+from greatx.utils.check import is_edge_index
 
 
 def dense_gcn_norm(adj: Tensor, improved: bool = False,

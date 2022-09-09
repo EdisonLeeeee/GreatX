@@ -1,4 +1,5 @@
 from typing import Any
+
 import torch
 
 
@@ -9,7 +10,7 @@ def is_edge_index(x: Any) -> bool:
 
     Example
     -------
-    >>> from greatx import is_edge_index
+    >>> from greatx.utils.check import is_edge_index
     >>> import torch
 
     >>> edges = torch.LongTensor([[1,2], [3,4]])

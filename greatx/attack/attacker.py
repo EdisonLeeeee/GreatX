@@ -1,13 +1,13 @@
 import abc
 from numbers import Number
 from typing import Optional, Union
-from torch_geometric.data import Data
-from torch_geometric.utils import degree, to_scipy_sparse_matrix
-from torch_geometric import seed_everything
 
 import numpy as np
 import scipy.sparse as sp
 import torch
+from torch_geometric import seed_everything
+from torch_geometric.data import Data
+from torch_geometric.utils import degree, to_scipy_sparse_matrix
 
 
 class Attacker(torch.nn.Module):

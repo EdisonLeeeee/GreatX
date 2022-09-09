@@ -2,17 +2,16 @@ from typing import Union
 
 import torch
 import torch.nn.functional as F
-from torch import nn
-from torch import Tensor
+from torch import Tensor, nn
 from torch_geometric.nn.conv.gcn_conv import gcn_norm
 from torch_geometric.nn.dense.linear import Linear
 from torch_geometric.nn.inits import zeros
-from torch_geometric.typing import Adj, OptTensor, OptPairTensor
+from torch_geometric.typing import Adj, OptPairTensor, OptTensor
 from torch_sparse import SparseTensor
 
 from greatx.functional import spmm
-from greatx import is_edge_index
 from greatx.nn.layers.gcn_conv import dense_gcn_norm
+from greatx.utils.check import is_edge_index
 
 
 class RobustConv(nn.Module):

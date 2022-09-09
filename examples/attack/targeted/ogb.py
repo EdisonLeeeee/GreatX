@@ -5,7 +5,7 @@ import torch_geometric.transforms as T
 from greatx.datasets import GraphDataset
 
 from greatx.nn.models import GCN, SGC
-from greatx.training import Trainer
+from greatx.training.trainer import Trainer
 from greatx.training.callbacks import ModelCheckpoint
 from greatx.utils import split_nodes, BunchDict
 from greatx.attack.targeted import SGAttack

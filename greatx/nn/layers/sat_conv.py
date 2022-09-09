@@ -1,17 +1,14 @@
 from typing import Optional
 
 import torch
-from torch import nn
-from torch import Tensor
-
-from torch_geometric.nn.dense.linear import Linear
+from torch import Tensor, nn
 from torch_geometric.nn.conv.gcn_conv import gcn_norm
+from torch_geometric.nn.dense.linear import Linear
 from torch_geometric.utils import add_self_loops
 
-
-from greatx import is_edge_index
 from greatx.functional import spmm
 from greatx.nn.layers.gcn_conv import dense_gcn_norm
+from greatx.utils.check import is_edge_index
 
 
 class SATConv(nn.Module):

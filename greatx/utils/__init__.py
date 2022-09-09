@@ -1,16 +1,16 @@
 from .bunchdict import BunchDict
-from .filter import *
-from .normalize import normalize
-from .functions import repeat, topk, wrapper
-from .logger import get_logger, setup_logger
-from .progbar import Progbar
-from .split_data import split_nodes, split_nodes_by_classes
 from .cka import CKA
 from .ego_graph import ego_graph
-from .overlap import overlap
-from .modification import remove_edges, add_edges, flip_edges, flip_graph
-from .scipy_sparse import scipy_normalize
+from .filter import *
+from .functions import repeat, topk, wrapper
+from .logger import get_logger, setup_logger
 from .missing_feature import MissingFeature
+from .modification import add_edges, flip_edges, flip_graph, remove_edges
+from .normalize import normalize
+from .overlap import overlap
+from .progbar import Progbar
+from .scipy_sparse import scipy_normalize
+from .split_data import split_nodes, split_nodes_by_classes
 
 classes = __all__ = ['Progbar', 'BunchDict', 'CKA', 'topk', 'wrapper',
                      'repeat', 'split_nodes', 'split_nodes_by_classes',

@@ -1,7 +1,7 @@
 import torch.nn as nn
 from torch.nn import Linear
 
-from greatx.nn.layers import Sequential, activations, DAGNNConv
+from greatx.nn.layers import DAGNNConv, Sequential, activations
 from greatx.utils import wrapper
 
 

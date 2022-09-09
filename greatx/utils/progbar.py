@@ -1,8 +1,8 @@
-from typing import Optional, Union, Tuple, List
 import os
 import sys
 import time
 from numbers import Number
+from typing import List, Optional, Tuple, Union
 
 import numpy as np
 

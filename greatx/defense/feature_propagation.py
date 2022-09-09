@@ -2,11 +2,11 @@ from typing import Optional
 
 import torch
 from torch import Tensor
-from torch_geometric.utils import add_self_loops
-from torch_geometric.nn.conv.gcn_conv import gcn_norm
-
 from torch_geometric.data import Data
+from torch_geometric.nn.conv.gcn_conv import gcn_norm
 from torch_geometric.transforms import BaseTransform
+from torch_geometric.utils import add_self_loops
+
 from greatx.functional import spmm
 
 

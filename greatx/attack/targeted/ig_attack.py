@@ -1,16 +1,16 @@
 from typing import Optional
 
-import torch
 import numpy as np
+import torch
 import torch.nn.functional as F
-from tqdm import tqdm
 from torch.autograd import grad
 from torch_geometric.data import Data
+from tqdm import tqdm
 
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
+from greatx.functional import to_dense_adj
 from greatx.nn.models.surrogate import Surrogate
 from greatx.utils import singleton_filter
-from greatx.functional import to_dense_adj
 
 
 class IGAttack(TargetedAttacker, Surrogate):

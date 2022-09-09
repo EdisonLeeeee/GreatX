@@ -1,8 +1,7 @@
-import torch
 import torch.nn as nn
 
-from greatx.nn.layers import GCNConv, Sequential, activations
 from greatx.defense import GNNGUARD as GNNGUARDLayer
+from greatx.nn.layers import GCNConv, Sequential, activations
 from greatx.utils import wrapper
 
 

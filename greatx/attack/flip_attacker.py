@@ -1,15 +1,15 @@
 import warnings
-import numpy as np
-import torch
-
+from copy import copy
 from functools import lru_cache
 from typing import Optional, Union
-from copy import copy
+
+import numpy as np
+import torch
 from torch import Tensor
 from torch_geometric.data import Data
 
 from greatx.attack.attacker import Attacker
-from greatx.utils import BunchDict, remove_edges, add_edges
+from greatx.utils import BunchDict, add_edges, remove_edges
 
 
 class FlipAttacker(Attacker):

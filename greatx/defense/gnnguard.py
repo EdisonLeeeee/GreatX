@@ -1,8 +1,7 @@
 import torch
 import torch.nn.functional as F
-
 from sklearn.preprocessing import normalize
-from torch_geometric.utils import to_scipy_sparse_matrix, add_self_loops
+from torch_geometric.utils import add_self_loops, to_scipy_sparse_matrix
 
 
 class GNNGUARD(torch.nn.Module):

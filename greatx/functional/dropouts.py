@@ -1,14 +1,15 @@
+import copy
 from typing import Optional, Tuple, Union
 
-import copy
 import torch
 from torch import Tensor
+
 try:
     import torch_cluster
 except ImportError:
     torch_cluster = None
 
-from torch_geometric.utils import subgraph, degree
+from torch_geometric.utils import degree, subgraph
 from torch_geometric.utils.num_nodes import maybe_num_nodes
 
 

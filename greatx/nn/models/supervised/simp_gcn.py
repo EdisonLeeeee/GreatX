@@ -3,13 +3,12 @@ from typing import Optional
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
 from torch import Tensor
 from torch_geometric.nn.dense.linear import Linear
-from torch_geometric.nn.inits import zeros, glorot
+from torch_geometric.nn.inits import glorot, zeros
 from torch_geometric.typing import Adj, OptTensor
-from torch_sparse import SparseTensor
 from torch_geometric.utils import coalesce
+from torch_sparse import SparseTensor
 
 from greatx.nn.layers import GCNConv, activations
 from greatx.utils import wrapper

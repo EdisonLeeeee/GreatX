@@ -1,14 +1,12 @@
 import torch
-from torch import nn
-from torch import Tensor
-
+from torch import Tensor, nn
 from torch_geometric.nn.conv.gcn_conv import gcn_norm
 from torch_geometric.nn.dense.linear import Linear
-from torch_geometric.typing import OptTensor, Adj
 from torch_geometric.nn.inits import zeros
-
-from torch_geometric.utils import remove_self_loops, add_self_loops
+from torch_geometric.typing import Adj, OptTensor
+from torch_geometric.utils import add_self_loops, remove_self_loops
 from torch_sparse import SparseTensor
+
 from greatx.functional import spmm
 
 

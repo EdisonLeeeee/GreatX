@@ -1,6 +1,6 @@
 import torch.nn as nn
 
-from greatx.nn.layers import SoftMedianConv, Sequential, activations
+from greatx.nn.layers import Sequential, SoftMedianConv, activations
 from greatx.utils import wrapper
 
 

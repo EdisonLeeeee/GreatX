@@ -1,7 +1,7 @@
 import torch.nn as nn
 
+from greatx.nn.layers import Sequential, SSGConv, activations
 from greatx.utils import wrapper
-from greatx.nn.layers import SSGConv, Sequential, activations
 
 
 class SSGC(nn.Module):

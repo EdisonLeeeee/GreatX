@@ -1,12 +1,12 @@
-from typing import Callable, Optional, List
+import os.path as osp
+from typing import Callable, List, Optional
 
-import torch
 import numpy as np
 import scipy.sparse as sp
-import os.path as osp
-from torch_geometric.utils import remove_self_loops, to_undirected
-from torch_geometric.data import Data, InMemoryDataset, download_url
+import torch
 from sklearn.preprocessing import LabelEncoder
+from torch_geometric.data import Data, InMemoryDataset, download_url
+from torch_geometric.utils import remove_self_loops, to_undirected
 
 
 def load_npz(file_name: str) -> Data:

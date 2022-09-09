@@ -4,12 +4,13 @@ from typing import Any, Callable, List, Optional, Union
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from greatx.training.callbacks import (Callback, CallbackList, Optimizer,
-                                       Scheduler)
 from torch import Tensor
 from torch.utils.data import DataLoader
 from torch_geometric.data import Data
 from torch_geometric.loader import DataLoader as PyGLoader
+
+from greatx.training.callbacks import (Callback, CallbackList, Optimizer,
+                                       Scheduler)
 from greatx.utils import BunchDict, Progbar
 
 
@@ -26,7 +27,7 @@ class Trainer:
 
     Example
     -------
-    >>> from greatx.training import Trainer
+    >>> from greatx.training.trainer import Trainer
     >>> model = ... # your model
     >>> trainer = Trainer(model, device='cuda')
 

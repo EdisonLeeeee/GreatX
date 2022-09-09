@@ -1,5 +1,5 @@
-from typing import Optional, Union
 from copy import copy
+from typing import Optional, Union
 
 import torch
 from torch import Tensor

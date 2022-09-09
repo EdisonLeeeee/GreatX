@@ -8,8 +8,8 @@ from torch.autograd import grad
 from tqdm import tqdm
 
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
-from greatx.utils import ego_graph
 from greatx.nn.models.surrogate import Surrogate
+from greatx.utils import ego_graph
 
 SubGraph = namedtuple('SubGraph', ['edge_index', 'sub_edges', 'non_edges',
                                    'edge_weight', 'non_edge_weight', 'selfloop_weight'])

@@ -1,6 +1,6 @@
+import random
 from typing import Optional
 
-import random
 import numpy as np
 from tqdm import tqdm
 

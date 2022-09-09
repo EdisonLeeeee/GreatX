@@ -1,10 +1,10 @@
-import torch
-import torch.nn as nn
 from functools import partial
+from typing import Dict, List
 from warnings import warn
-from typing import List, Dict
 
 import matplotlib.pyplot as plt
+import torch
+import torch.nn as nn
 from mpl_toolkits import axes_grid1
 from torch_geometric.data import Data
 

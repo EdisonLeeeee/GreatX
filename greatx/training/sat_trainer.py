@@ -1,7 +1,8 @@
 import torch
 import torch.nn.functional as F
 from torch import Tensor
-from greatx.training import Trainer
+
+from greatx.training.trainer import Trainer
 
 
 class SATTrainer(Trainer):

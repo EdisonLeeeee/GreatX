@@ -1,5 +1,6 @@
 import torch.nn.functional as F
-from greatx.training import Trainer
+
+from greatx.training.trainer import Trainer
 
 
 class SimPGCNTrainer(Trainer):

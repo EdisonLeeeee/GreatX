@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from greatx.nn.layers import TAGConv, Sequential, activations
+from greatx.nn.layers import Sequential, TAGConv, activations
 from greatx.utils import wrapper
 
 

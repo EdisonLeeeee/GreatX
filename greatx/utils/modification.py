@@ -1,9 +1,11 @@
 import copy
+
+import scipy.sparse as sp
 import torch
 from torch import Tensor
-import scipy.sparse as sp
 from torch_geometric.data import Data
-from torch_geometric.utils import sort_edge_index, to_scipy_sparse_matrix, from_scipy_sparse_matrix
+from torch_geometric.utils import (from_scipy_sparse_matrix, sort_edge_index,
+                                   to_scipy_sparse_matrix)
 
 
 def add_edges(edge_index: Tensor, edges_to_add: Tensor,

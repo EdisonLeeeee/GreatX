@@ -5,12 +5,12 @@ from torch.autograd import grad
 from torch.nn import init
 from tqdm import tqdm
 
+from greatx.attack.untargeted.untargeted_attacker import UntargetedAttacker
+from greatx.functional import to_dense_adj
+from greatx.nn.layers.gcn_conv import dense_gcn_norm
+from greatx.nn.models import GCN
 from greatx.nn.models.surrogate import Surrogate
 from greatx.utils import singleton_mask
-from greatx.functional import to_dense_adj
-from greatx.nn.models import GCN
-from greatx.nn.layers.gcn_conv import dense_gcn_norm
-from greatx.attack.untargeted.untargeted_attacker import UntargetedAttacker
 
 
 class Metattack(UntargetedAttacker, Surrogate):

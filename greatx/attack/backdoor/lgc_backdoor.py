@@ -1,16 +1,16 @@
 import warnings
-from typing import Optional, Union, Tuple
+from typing import Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
+from torch_geometric.utils import add_self_loops, degree, remove_self_loops
 from tqdm import tqdm
 
-from torch_geometric.utils import remove_self_loops, add_self_loops, degree
 from greatx.attack.backdoor.backdoor_attacker import BackdoorAttacker
 from greatx.functional import spmm
-from greatx.nn.models import Surrogate
+from greatx.nn.models.surrogate import Surrogate
 
 
 class LGCBackdoor(BackdoorAttacker):

@@ -1,13 +1,11 @@
-from greatx.utils import CKA
 import torch
 import torch_geometric.transforms as T
 
 from greatx.datasets import GraphDataset
-
-from greatx.nn.models import GCN, GAT
-from greatx.training.trainer import Trainer
+from greatx.nn.models import GAT, GCN
 from greatx.training.callbacks import ModelCheckpoint
-from greatx.utils import split_nodes
+from greatx.training.trainer import Trainer
+from greatx.utils import CKA, split_nodes
 
 dataset = GraphDataset(root='~/data/pygdata', name='cora',
                        transform=T.LargestConnectedComponents())

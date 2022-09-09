@@ -36,7 +36,7 @@ class AirGNN(nn.Module):
     It is convenient to extend the number of layers with different or the same
     hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
 
-    See Examples below:
+    See Examples below.
 
     Examples
     --------

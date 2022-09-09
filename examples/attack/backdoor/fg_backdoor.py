@@ -1,13 +1,12 @@
-from greatx.attack.backdoor import FGBackdoor
 import torch
 import torch_geometric.transforms as T
-
 from tqdm import tqdm
 
+from greatx.attack.backdoor import FGBackdoor
 from greatx.datasets import GraphDataset
 from greatx.nn.models import GCN
-from greatx.training.trainer import Trainer
 from greatx.training.callbacks import ModelCheckpoint
+from greatx.training.trainer import Trainer
 from greatx.utils import split_nodes
 
 # ================================================================== #

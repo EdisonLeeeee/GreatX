@@ -20,15 +20,16 @@ class MissingFeature(BaseTransform):
         ratio of missing features, by default 0.5
     missing_type : str, optional
         type of strategies to generate missing 
-        feature mask. If `type`='uniform', then each feature of 
+        feature mask. If :obj:`type='uniform'`, then each feature of 
         each node is missing uniformly at random with probability 
-        :obj:`missing_rate`. Instead, if `type`='structural', 
+        :obj:`missing_rate`. Instead, if `type='structural'`, 
         either we observe all features for a node, 
         or we observe none. For each node
         there is a probability of :obj:`missing_rate` 
-        of not observing any feature, by default 'uniform'
+        of not observing any feature, by default :obj:`'uniform'`
     missing_value : float, optional
-        value to fill missing features, by default float("nan")    
+        value to fill missing features, by default :obj:`float("nan")`
+
 
     Reference:
 

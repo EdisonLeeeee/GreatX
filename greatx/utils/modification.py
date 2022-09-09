@@ -1,6 +1,5 @@
 import copy
 
-import scipy.sparse as sp
 import torch
 from torch import Tensor
 from torch_geometric.data import Data

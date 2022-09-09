@@ -1,14 +1,13 @@
-import torch
 import numpy as np
+import torch
 import torch_geometric.transforms as T
 
-from greatx.datasets import GraphDataset
-
-from greatx.nn.models import GCN
-from greatx.training.trainer import Trainer
-from greatx.training.callbacks import ModelCheckpoint
-from greatx.utils import split_nodes
 from greatx.attack.targeted import IGAttack
+from greatx.datasets import GraphDataset
+from greatx.nn.models import GCN
+from greatx.training.callbacks import ModelCheckpoint
+from greatx.training.trainer import Trainer
+from greatx.utils import split_nodes
 
 dataset = GraphDataset(root='~/data/pygdata', name='cora',
                        transform=T.LargestConnectedComponents())

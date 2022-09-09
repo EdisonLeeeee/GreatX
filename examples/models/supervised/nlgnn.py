@@ -1,12 +1,11 @@
 import torch
 import torch_geometric.transforms as T
-
-
-from greatx.nn.models import NLGCN, NLGAT, NLMLP
-from greatx.training.trainer import Trainer
-from greatx.training.callbacks import ModelCheckpoint
-from greatx.utils import split_nodes
 from torch_geometric.datasets import Planetoid
+
+from greatx.nn.models import NLGAT, NLGCN, NLMLP
+from greatx.training.callbacks import ModelCheckpoint
+from greatx.training.trainer import Trainer
+from greatx.utils import split_nodes
 
 dataset = Planetoid(root='~/data/pygdata', name='Cora')
 data = dataset[0]

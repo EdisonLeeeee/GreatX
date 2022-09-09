@@ -2,7 +2,6 @@ import torch
 import torch_geometric.transforms as T
 
 from greatx.datasets import GraphDataset
-
 from greatx.nn.models import SimPGCN
 from greatx.training import SimPGCNTrainer
 from greatx.training.callbacks import ModelCheckpoint

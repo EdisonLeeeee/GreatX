@@ -6,6 +6,12 @@ greatx.nn.models.surrogate
 
 .. currentmodule:: greatx.nn.models.surrogate
 
+.. autosummary::
+    :nosignatures:
+    {% for cls in greatx.nn.models.surrogate.classes %}
+      {{ cls }}
+    {% endfor %}
+
 .. automodule:: greatx.nn.models.surrogate
     :members:
     :undoc-members:

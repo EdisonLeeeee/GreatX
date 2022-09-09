@@ -1,11 +1,10 @@
 import torch
 import torch_geometric.transforms as T
-
+from torch_geometric.datasets import Planetoid
 
 from greatx.nn.models import GCN
-from greatx.training.trainer import Trainer
 from greatx.training.callbacks import ModelCheckpoint
-from torch_geometric.datasets import Planetoid
+from greatx.training.trainer import Trainer
 
 dataset = Planetoid(root='~/data/pygdata', name='Cora')
 data = dataset[0]

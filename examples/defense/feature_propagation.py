@@ -2,13 +2,11 @@ import torch
 import torch_geometric.transforms as T
 
 from greatx.datasets import GraphDataset
-
-from greatx.nn.models import GCN
-from greatx.training.trainer import Trainer
-from greatx.training.callbacks import ModelCheckpoint
-from greatx.utils import split_nodes, MissingFeature
 from greatx.defense import FeaturePropagation
-
+from greatx.nn.models import GCN
+from greatx.training.callbacks import ModelCheckpoint
+from greatx.training.trainer import Trainer
+from greatx.utils import MissingFeature, split_nodes
 
 dataset = GraphDataset(root='~/data/pygdata', name='cora',
                        transform=T.Compose([T.LargestConnectedComponents(),

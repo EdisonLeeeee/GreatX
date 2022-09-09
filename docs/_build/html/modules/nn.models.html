@@ -55,7 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="defense.html">greatx.defense</a></li>
 <li class="toctree-l1"><a class="reference internal" href="nn.layers.html">greatx.nn.layers</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">greatx.nn.models</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-greatx.nn.models.surrogate">greatx.nn.models.surrogate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#greatx-nn-models-surrogate">greatx.nn.models.surrogate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#greatx-nn-models-supervised">greatx.nn.models.supervised</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#greatx-nn-models-unsupervised">greatx.nn.models.unsupervised</a></li>
 </ul>
@@ -91,9 +91,20 @@
              
   <section id="greatx-nn-models">
 <h1>greatx.nn.models<a class="headerlink" href="#greatx-nn-models" title="Permalink to this heading"></a></h1>
-<section id="module-greatx.nn.models.surrogate">
-<span id="greatx-nn-models-surrogate"></span><h2>greatx.nn.models.surrogate<a class="headerlink" href="#module-greatx.nn.models.surrogate" title="Permalink to this heading"></a></h2>
-<dl class="py class">
+<section id="greatx-nn-models-surrogate">
+<h2>greatx.nn.models.surrogate<a class="headerlink" href="#greatx-nn-models-surrogate" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#greatx.nn.models.surrogate.Surrogate" title="greatx.nn.models.surrogate.Surrogate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Surrogate</span></code></a></p></td>
+<td><p>Base class for attacker or defenders that require a surrogate model for estimating labels or computing gradient information.</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-greatx.nn.models.surrogate"></span><dl class="py class">
 <dt class="sig sig-object py" id="greatx.nn.models.surrogate.Surrogate">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Surrogate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'cpu'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/nn/models/surrogate.html#Surrogate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.nn.models.surrogate.Surrogate" title="Permalink to this definition"></a></dt>
 <dd><p>Base class for attacker or defenders that require
@@ -288,7 +299,7 @@ coefficients on the fly, by default True</p></li>
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># GCN with one hidden layer</span>
@@ -357,7 +368,7 @@ cached version for further executions, by default True</p></li>
 to clear cached results.</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># SGC without hidden layer</span>
@@ -433,7 +444,7 @@ cached version for further executions, by default True</p></li>
 to clear cached results.</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># SSGC without hidden layer</span>
@@ -501,8 +512,8 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
-hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.
+See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># GAT with one hidden layer</span>
@@ -575,7 +586,7 @@ cached version for further executions, by default False</p></li>
 to clear cached results.</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># APPNP without hidden layer</span>
@@ -635,7 +646,7 @@ paper (KDD’20)</p>
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># DAGNN with one hidden layer</span>
@@ -702,7 +713,7 @@ Jumping Knowledge Networks”</a> paper (ICML’18)</p>
 to clear cached results.</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># JKNet with five hidden layers</span>
@@ -761,7 +772,7 @@ coefficients on the fly, by default False</p></li>
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># TAGCN with one hidden layer</span>
@@ -825,7 +836,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># NLGCN with one hidden layer</span>
@@ -895,7 +906,7 @@ hidden units (activation functions) using <a class="reference internal" href="ut
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># NLGAT with one hidden layer</span>
@@ -966,7 +977,7 @@ coefficients on the fly, by default True</p></li>
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># NLGCN with one hidden layer</span>
@@ -1022,7 +1033,7 @@ self-supervised/unsupervised learning.</p>
 <li><p><strong>in_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>,</em>) – the input dimensions of model</p></li>
 <li><p><strong>out_channels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>,</em>) – the output dimensions of model</p></li>
 <li><p><strong>bias</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to use bias in the layers, by default True</p></li>
-<li><p><strong>below</strong> (<em>See Examples</em>) – </p></li>
+<li><p><strong>below.</strong> (<em>See Examples</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -1074,7 +1085,7 @@ Feed-forward Neural Network (FNN).</p>
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># MLP with one hidden layer</span>
@@ -1145,7 +1156,7 @@ coefficients on the fly, by default False</p></li>
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># MedianGCN with one hidden layer</span>
@@ -1213,7 +1224,7 @@ Against Adversarial Attacks”</a> paper (KDD’19)</p>
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># RobustGCN with one hidden layer</span>
@@ -1284,7 +1295,7 @@ paper (NeurIPS’21)</p>
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># AirGNN with one hidden layer</span>
@@ -1354,7 +1365,7 @@ on the l2 ball of radius λ1., by default True</p></li>
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># ElasticGNN with one hidden layer</span>
@@ -1432,7 +1443,7 @@ and will use the cached version for further executions, by default False</p></li
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># SoftMedianGCN with one hidden layer</span>
@@ -1501,7 +1512,7 @@ from the <a class="reference external" href="https://arxiv.org/abs/2011.09643">�
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># SimPGCN with one hidden layer</span>
@@ -1575,7 +1586,7 @@ Defending Graph Neural Networks against Adversarial Attacks”</a> paper (NeurIP
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># GNNGUARD with one hidden layer</span>
@@ -1636,7 +1647,7 @@ coefficients on the fly, by default True</p></li>
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># SAT with one hidden layer</span>
@@ -1701,7 +1712,7 @@ via T-SVD based Graph Augmentation”</a> paper (KDD’22)</p>
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># RTGCN with one hidden layer</span>
@@ -1768,7 +1779,7 @@ coefficients on the fly, by default True</p></li>
 <p class="admonition-title">Note</p>
 <p>It is convenient to extend the number of layers with different or the same
 hidden units (activation functions) using <a class="reference internal" href="utils.html#greatx.utils.wrapper" title="greatx.utils.wrapper"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrapper()</span></code></a>.</p>
-<p>See Examples below:</p>
+<p>See Examples below.</p>
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># DGI with one hidden layer</span>

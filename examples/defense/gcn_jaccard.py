@@ -2,12 +2,11 @@ import torch
 import torch_geometric.transforms as T
 
 from greatx.datasets import GraphDataset
-
+from greatx.defense import CosinePurification, JaccardPurification
 from greatx.nn.models import GCN
-from greatx.training.trainer import Trainer
 from greatx.training.callbacks import ModelCheckpoint
+from greatx.training.trainer import Trainer
 from greatx.utils import split_nodes
-from greatx.defense import JaccardPurification, CosinePurification
 
 dataset = GraphDataset(root='~/data/pygdata', name='cora',
                        transform=T.Compose([T.LargestConnectedComponents(),

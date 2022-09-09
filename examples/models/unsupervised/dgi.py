@@ -1,11 +1,10 @@
 import torch
 import torch_geometric.transforms as T
-
+from torch_geometric.datasets import Planetoid
 
 from greatx.nn.models import DGI, LogisticRegression
 from greatx.training import DGITrainer, MLPTrainer
-from greatx.training.callbacks import ModelCheckpoint, EarlyStopping
-from torch_geometric.datasets import Planetoid
+from greatx.training.callbacks import EarlyStopping, ModelCheckpoint
 
 dataset = Planetoid(root='~/data/pygdata', name='Cora',
                     transform=T.NormalizeFeatures())

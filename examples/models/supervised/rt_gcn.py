@@ -2,12 +2,11 @@ import torch
 import torch_geometric.transforms as T
 
 from greatx.datasets import GraphDataset
-
-from greatx.nn.models import RTGCN
-from greatx.training.trainer import Trainer
-from greatx.training.callbacks import ModelCheckpoint
-from greatx.utils import split_nodes
 from greatx.defense import TSVD
+from greatx.nn.models import RTGCN
+from greatx.training.callbacks import ModelCheckpoint
+from greatx.training.trainer import Trainer
+from greatx.utils import split_nodes
 
 num_channels = 3
 svd_rank = 50

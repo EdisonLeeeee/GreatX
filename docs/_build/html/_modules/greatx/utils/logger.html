@@ -97,9 +97,9 @@
 <div class="viewcode-block" id="setup_logger"><a class="viewcode-back" href="../../../modules/utils.html#greatx.utils.setup_logger">[docs]</a><span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">setup_logger</span><span class="p">(</span>
     <span class="n">output</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">distributed_rank</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span>
-    <span class="n">color</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;greatx&quot;</span><span class="p">,</span> <span class="n">abbrev_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">color</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;GreaxX&quot;</span><span class="p">,</span> <span class="n">abbrev_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Initialize the greatx logger and set its verbosity level to &quot;DEBUG&quot;.</span>
+    <span class="sd">&quot;&quot;&quot;Initialize the GreaxX logger and set its verbosity level to &quot;DEBUG&quot;.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -114,7 +114,7 @@
 <span class="sd">    color : bool, optional</span>
 <span class="sd">        whether to use color when printing, by default True</span>
 <span class="sd">    name : str, optional</span>
-<span class="sd">        the root module name of this logger, by default &quot;greatx&quot;</span>
+<span class="sd">        the root module name of this logger, by default &quot;GreaxX&quot;</span>
 <span class="sd">    abbrev_name : Optional[str], optional</span>
 <span class="sd">        an abbreviation of the module, to avoid long names in logs.</span>
 <span class="sd">        Set to &quot;&quot; to not log the root module in logs.</span>
@@ -195,13 +195,13 @@
     <span class="k">return</span> <span class="n">logger</span></div>
 
 
-<div class="viewcode-block" id="get_logger"><a class="viewcode-back" href="../../../modules/utils.html#greatx.utils.get_logger">[docs]</a><span class="k">def</span> <span class="nf">get_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;GreatX&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="get_logger"><a class="viewcode-back" href="../../../modules/utils.html#greatx.utils.get_logger">[docs]</a><span class="k">def</span> <span class="nf">get_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;GreaxX&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get a logger for a given name.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    name : str, optional</span>
-<span class="sd">        name of the logger, by default &quot;GreatX&quot;</span>
+<span class="sd">        name of the logger, by default &quot;GreaxX&quot;</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>

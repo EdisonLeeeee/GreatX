@@ -115,7 +115,7 @@
 <td><p>Randomly split the training data by the number of nodes per classes.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#greatx.utils.setup_logger" title="greatx.utils.setup_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_logger</span></code></a></p></td>
-<td><p>Initialize the greatx logger and set its verbosity level to &quot;DEBUG&quot;.</p></td>
+<td><p>Initialize the GreaxX logger and set its verbosity level to &quot;DEBUG&quot;.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#greatx.utils.get_logger" title="greatx.utils.get_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_logger</span></code></a></p></td>
 <td><p>Get a logger for a given name.</p></td>
@@ -158,6 +158,9 @@
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#greatx.utils.MissingFeature" title="greatx.utils.MissingFeature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MissingFeature</span></code></a></p></td>
 <td><p>Implementation of <a class="reference internal" href="#greatx.utils.MissingFeature" title="greatx.utils.MissingFeature"><code class="xref py py-class docutils literal notranslate"><span class="pre">MissingFeature</span></code></a> from the <a class="reference external" href="https://arxiv.org/abs/2111.12128">&quot;On the Unreasonable Effectiveness of Feature propagation in Learning on Graphs with Missing Node Features&quot;</a> paper (ICLR'21)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#greatx.utils.is_edge_index" title="greatx.utils.is_edge_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_edge_index</span></code></a></p></td>
+<td><p>Check if the input <code class="xref py py-obj docutils literal notranslate"><span class="pre">x</span></code> is PyG-like <code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_index</span></code> with shape [2, M], where M is the number of edges.</p></td>
 </tr>
 </tbody>
 </table>
@@ -600,8 +603,8 @@ it would return the iterable object itself, by default None</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="greatx.utils.setup_logger">
-<span class="sig-name descname"><span class="pre">setup_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distributed_rank</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'greatx'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abbrev_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/utils/logger.html#setup_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.utils.setup_logger" title="Permalink to this definition"></a></dt>
-<dd><p>Initialize the greatx logger and set its verbosity level to “DEBUG”.</p>
+<span class="sig-name descname"><span class="pre">setup_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distributed_rank</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'GreaxX'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abbrev_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/utils/logger.html#setup_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.utils.setup_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize the GreaxX logger and set its verbosity level to “DEBUG”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -611,7 +614,7 @@ Otherwise, logs will be saved to <cite>output/log.txt</cite>.</p></li>
 <li><p><strong>distributed_rank</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – used for distributed training, by default 0</p></li>
 <li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – mode for the output file (if output is given), by default ‘w’.</p></li>
 <li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to use color when printing, by default True</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the root module name of this logger, by default “greatx”</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the root module name of this logger, by default “GreaxX”</p></li>
 <li><p><strong>abbrev_name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>, </em><em>optional</em>) – an abbreviation of the module, to avoid long names in logs.
 Set to “” to not log the root module in logs.
 By default, None.</p></li>
@@ -652,11 +655,11 @@ By default, None.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="greatx.utils.get_logger">
-<span class="sig-name descname"><span class="pre">get_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'GreatX'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/utils/logger.html#get_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.utils.get_logger" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'GreaxX'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/greatx/utils/logger.html#get_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.utils.get_logger" title="Permalink to this definition"></a></dt>
 <dd><p>Get a logger for a given name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – name of the logger, by default “GreatX”</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – name of the logger, by default “GreaxX”</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>a logger for the given name</p>
@@ -1039,19 +1042,41 @@ according differemt stractegies.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>missing_rate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – ratio of missing features, by default 0.5</p></li>
 <li><p><strong>missing_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – type of strategies to generate missing
-feature mask. If <cite>type`=’uniform’, then each feature of
+feature mask. If <code class="xref py py-obj docutils literal notranslate"><span class="pre">type='uniform'</span></code>, then each feature of
 each node is missing uniformly at random with probability
-:obj:`missing_rate</cite>. Instead, if <cite>type`=’structural’,
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">missing_rate</span></code>. Instead, if <cite>type=’structural’</cite>,
 either we observe all features for a node,
 or we observe none. For each node
-there is a probability of :obj:`missing_rate</cite>
-of not observing any feature, by default ‘uniform’</p></li>
-<li><p><strong>missing_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – value to fill missing features, by default float(“nan”)</p></li>
-<li><p><strong>Reference</strong> – </p></li>
-<li><p><strong>https</strong> (<em>*</em>) – </p></li>
+there is a probability of <code class="xref py py-obj docutils literal notranslate"><span class="pre">missing_rate</span></code>
+of not observing any feature, by default <code class="xref py py-obj docutils literal notranslate"><span class="pre">'uniform'</span></code></p></li>
+<li><p><strong>missing_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>optional</em>) – value to fill missing features, by default <code class="xref py py-obj docutils literal notranslate"><span class="pre">float(&quot;nan&quot;)</span></code></p></li>
 </ul>
 </dd>
 </dl>
+<p>Reference:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/twitter-research/feature-propagation">https://github.com/twitter-research/feature-propagation</a></p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="greatx.utils.is_edge_index">
+<span class="sig-name descname"><span class="pre">is_edge_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../_modules/greatx/utils/check.html#is_edge_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#greatx.utils.is_edge_index" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the input <code class="xref py py-obj docutils literal notranslate"><span class="pre">x</span></code> is PyG-like
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_index</span></code> with shape [2, M],
+where M is the number of edges.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">greatx.utils.check</span> <span class="kn">import</span> <span class="n">is_edge_index</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_edge_index</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_edge_index</span><span class="p">(</span><span class="n">edges</span><span class="o">.</span><span class="n">t</span><span class="p">()))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>

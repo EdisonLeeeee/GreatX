@@ -1,14 +1,13 @@
-import torch
 import numpy as np
+import torch
 import torch_geometric.transforms as T
+from ogb.nodeproppred import PygNodePropPredDataset
 
-from greatx.datasets import GraphDataset
-
-from greatx.nn.models import GCN, SGC
-from greatx.training.trainer import Trainer
-from greatx.training.callbacks import ModelCheckpoint
-from greatx.utils import split_nodes, BunchDict
 from greatx.attack.targeted import SGAttack
+from greatx.nn.models import GCN, SGC
+from greatx.training.callbacks import ModelCheckpoint
+from greatx.training.trainer import Trainer
+from greatx.utils import BunchDict, split_nodes
 
 dataset = PygNodePropPredDataset(root='~/data/pygdata', name=f'ogbn-arxiv',
                                  transform=T.ToUndirected())

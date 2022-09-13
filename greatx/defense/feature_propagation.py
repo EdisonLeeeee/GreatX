@@ -46,15 +46,13 @@ class FeaturePropagation(BaseTransform):
 
     """
 
-    def __init__(self, num_iterations: int = 40,
-                 missing_mask: Optional[Tensor] = None,
-                 normalize: bool = True,
-                 add_self_loops: bool = True):
+    def __init__(self, missing_mask: Optional[Tensor] = None,
+                 num_iterations: int = 40,
+                 normalize: bool = True):
         super().__init__()
-        self.num_iterations = num_iterations
         self.missing_mask = missing_mask
+        self.num_iterations = num_iterations
         self.normalize = normalize
-        self.add_self_loops = add_self_loops
 
     def __call__(self, data: Data) -> Data:
 
@@ -72,9 +70,6 @@ class FeaturePropagation(BaseTransform):
             out = x.clone()
 
         edge_index, edge_weight = data.edge_index, data.edge_weight
-
-        if self.add_self_loops:
-            edge_index, edge_weight = add_self_loops(edge_index, edge_weight)
 
         if self.normalize:
             edge_index, edge_weight = gcn_norm(edge_index, edge_weight, x.size(0),

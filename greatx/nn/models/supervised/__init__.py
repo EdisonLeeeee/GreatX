@@ -17,9 +17,10 @@ from .sgc import SGC
 from .simp_gcn import SimPGCN
 from .soft_median_gcn import SoftMedianGCN
 from .ssgc import SSGC
+from .dgc import DGC
 from .tagcn import TAGCN
 
-classes = __all__ = ["GCN", "SGC", "SSGC", "GAT", "APPNP", "DAGNN",
+classes = __all__ = ["GCN", "SGC", "SSGC", "DGC", "GAT", "APPNP", "DAGNN",
                      "JKNet", "TAGCN", "NLGCN", "NLGAT", "NLMLP",
                      "LogisticRegression", "MLP",
                      "MedianGCN", "RobustGCN", "AirGNN",

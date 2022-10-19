@@ -172,6 +172,7 @@ In detail, the following methods are currently implemented:
 | **JKNet**               | *Xu et al.*  [Representation Learning on Graphs with Jumping Knowledge Networks](https://arxiv.org/abs/1806.03536), *ICML'18*              | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/supervised/jknet.py) |
 | **TAGCN**               | *Du et al.*  [Topological Adaptive Graph Convolutional Networks](https://arxiv.org/abs/1806.03536), *arXiv'17*                             | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/supervised/tagcn.py) |
 | **SSGC**                | *Zhu et al.*  [Simple Spectral Graph Convolution](https://openreview.net/forum?id=CYO5T-YjWZV), *ICLR'21*                                  | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/supervised/ssgc.py)  |
+| **DGC**                 | *Wang et al.*  [Dissecting the Diffusion Process in Linear Graph  Convolutional Networks](https://arxiv.org/abs/2102.10739), *NeurIPS'21*  | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/supervised/dgc.py)   |
 | **NLGCN, NLMLP, NLGAT** | *Liu et al.*  [Non-Local Graph Neural Networks](https://ieeexplore.ieee.org/document/9645300), *TPAMI'22*                                  | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/supervised/nlgnn.py) |
 
 #### Unsupervised/Self-supervise

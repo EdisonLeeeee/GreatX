@@ -13,10 +13,11 @@ from .soft_median_conv import SoftMedianConv
 from .ssg_conv import SSGConv
 from .tag_conv import TAGConv
 from .tensor_conv import TensorGCNConv, TensorLinear
+from .dg_conv import DGConv
 
 classes = __all__ = ["Sequential", "DropEdge", "DropNode", "DropPath",
                      "GCNConv", "SGConv",
-                     "SSGConv", "DAGNNConv", "TAGConv",
+                     "SSGConv", "DGConv", "DAGNNConv", "TAGConv",
                      "MedianConv", "RobustConv", "AdaptiveConv",
-                     "ElasticConv", "SoftMedianConv", "SATConv", 
+                     "ElasticConv", "SoftMedianConv", "SATConv",
                      "TensorGCNConv", "TensorLinear"]

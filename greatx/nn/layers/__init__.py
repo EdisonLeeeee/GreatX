@@ -1,7 +1,7 @@
-from . import activations
 from .adaptive_conv import AdaptiveConv
 from .container import Sequential
 from .dagnn_conv import DAGNNConv
+from .dg_conv import DGConv
 from .dropouts import DropEdge, DropNode, DropPath
 from .elastic_conv import ElasticConv
 from .gcn_conv import GCNConv
@@ -13,11 +13,10 @@ from .soft_median_conv import SoftMedianConv
 from .ssg_conv import SSGConv
 from .tag_conv import TAGConv
 from .tensor_conv import TensorGCNConv, TensorLinear
-from .dg_conv import DGConv
 
-classes = __all__ = ["Sequential", "DropEdge", "DropNode", "DropPath",
-                     "GCNConv", "SGConv",
-                     "SSGConv", "DGConv", "DAGNNConv", "TAGConv",
-                     "MedianConv", "RobustConv", "AdaptiveConv",
-                     "ElasticConv", "SoftMedianConv", "SATConv",
-                     "TensorGCNConv", "TensorLinear"]
+classes = __all__ = [
+    "Sequential", "DropEdge", "DropNode", "DropPath", "GCNConv", "SGConv",
+    "SSGConv", "DGConv", "DAGNNConv", "TAGConv", "MedianConv", "RobustConv",
+    "AdaptiveConv", "ElasticConv", "SoftMedianConv", "SATConv",
+    "TensorGCNConv", "TensorLinear"
+]

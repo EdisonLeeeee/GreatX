@@ -8,7 +8,7 @@ from greatx.training.callbacks import ModelCheckpoint
 from greatx.training.trainer import Trainer
 from greatx.utils import MissingFeature, split_nodes
 
-dataset = GraphDataset(root='~/data/pygdata', name='cora',
+dataset = GraphDataset(root='~/data/pyg', name='cora',
                        transform=T.Compose([T.LargestConnectedComponents(),
                                             # here we generate 50% missing features
                                             MissingFeature(missing_rate=0.5)

@@ -14,7 +14,7 @@ def drop_hook(self, inputs):
     return (x, *drop_node(edge_index, edge_weight, num_nodes=x.size(0), p=0.2, training=self.training))
 
 
-dataset = GraphDataset(root='~/data/pygdata', name='cora',
+dataset = GraphDataset(root='~/data/pyg', name='cora',
                        transform=T.LargestConnectedComponents())
 
 data = dataset[0]

@@ -6,7 +6,7 @@ from greatx.nn.models import GCN
 from greatx.training.callbacks import ModelCheckpoint
 from greatx.training.trainer import Trainer
 
-dataset = Planetoid(root='~/data/pygdata', name='Cora')
+dataset = Planetoid(root='~/data/pyg', name='Cora')
 data = dataset[0]
 
 

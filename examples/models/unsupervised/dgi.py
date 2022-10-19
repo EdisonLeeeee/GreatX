@@ -6,7 +6,7 @@ from greatx.nn.models import DGI, LogisticRegression
 from greatx.training import DGITrainer, MLPTrainer
 from greatx.training.callbacks import EarlyStopping, ModelCheckpoint
 
-dataset = Planetoid(root='~/data/pygdata', name='Cora',
+dataset = Planetoid(root='~/data/pyg', name='Cora',
                     transform=T.NormalizeFeatures())
 data = dataset[0]
 

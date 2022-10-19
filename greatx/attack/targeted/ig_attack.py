@@ -44,7 +44,7 @@ class IGAttack(TargetedAttacker, Surrogate):
         from greatx.dataset import GraphDataset
         import torch_geometric.transforms as T
 
-        dataset = GraphDataset(root='~/data/pygdata', name='cora', 
+        dataset = GraphDataset(root='~/data/pyg', name='cora', 
                           transform=T.LargestConnectedComponents())
         data = dataset[0]
 

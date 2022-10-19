@@ -12,7 +12,7 @@ num_channels = 3
 svd_rank = 50
 
 
-dataset = GraphDataset(root='~/data/pygdata', name='cora',
+dataset = GraphDataset(root='~/data/pyg', name='cora',
                        transform=T.Compose([T.LargestConnectedComponents(),
                                             T.NormalizeFeatures(),
                                             TSVD(svd_rank, num_channels)]))

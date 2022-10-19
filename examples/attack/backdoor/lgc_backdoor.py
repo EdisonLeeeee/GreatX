@@ -12,7 +12,7 @@ from greatx.utils import split_nodes
 # ================================================================== #
 #                      Load datasets                                 #
 # ================================================================== #
-dataset = GraphDataset(root='~/data/pygdata', name='cora',
+dataset = GraphDataset(root='~/data/pyg', name='cora',
                        transform=T.LargestConnectedComponents())
 
 data = dataset[0]

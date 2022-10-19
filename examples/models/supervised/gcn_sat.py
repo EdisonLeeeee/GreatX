@@ -8,7 +8,7 @@ from greatx.training import SATTrainer
 from greatx.training.callbacks import ModelCheckpoint
 from greatx.utils import split_nodes
 
-dataset = GraphDataset(root='~/data/pygdata', name='cora',
+dataset = GraphDataset(root='~/data/pyg', name='cora',
                        transform=T.Compose([T.LargestConnectedComponents(),
                                             EigenDecomposition(35)]))
 

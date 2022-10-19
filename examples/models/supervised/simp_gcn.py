@@ -7,7 +7,7 @@ from greatx.training import SimPGCNTrainer
 from greatx.training.callbacks import ModelCheckpoint
 from greatx.utils import split_nodes
 
-dataset = GraphDataset(root='~/data/pygdata', name='cora',
+dataset = GraphDataset(root='~/data/pyg', name='cora',
                        transform=T.LargestConnectedComponents())
 
 data = dataset[0]

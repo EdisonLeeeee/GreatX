@@ -7,7 +7,7 @@ from greatx.training.callbacks import ModelCheckpoint
 from greatx.training.trainer import Trainer
 from greatx.utils import split_nodes
 
-dataset = Planetoid(root='~/data/pygdata', name='Cora')
+dataset = Planetoid(root='~/data/pyg', name='Cora')
 data = dataset[0]
 # use 60/20/20 splits according to the paper
 splits = split_nodes(data.y, train=0.6, val=0.2, test=0.2, random_state=15)

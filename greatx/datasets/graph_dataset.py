@@ -2,7 +2,6 @@ import os.path as osp
 from typing import Callable, List, Optional
 
 import numpy as np
-import scipy.sparse as sp
 import torch
 from sklearn.preprocessing import LabelEncoder
 from torch_geometric.data import Data, InMemoryDataset, download_url
@@ -22,7 +21,7 @@ def load_npz(file_name: str) -> Data:
 
         labels = loader['node_label']
         if labels.shape[0] != adj_matrix.shape[0]:
-            _labels = np.full((adj_matrix.shape[0] - labels.shape[0],), -1)
+            _labels = np.full((adj_matrix.shape[0] - labels.shape[0], ), -1)
             labels = np.hstack([labels, _labels])
 
         if np.unique(labels).shape[0] != labels.max() + 1:
@@ -41,10 +40,25 @@ def load_npz(file_name: str) -> Data:
     return Data(x=x, edge_index=edge_index, y=y)
 
 
-_DATASETS = {
-    'citeseer', 'citeseer_full', 'cora', 'cora_ml', 'cora_full', 'amazon_cs',
-    'amazon_photo', 'coauthor_cs', 'coauthor_phy', 'polblogs', 'karate_club',
-    'pubmed', 'flickr', 'blogcatalog', 'dblp', 'acm', 'uai', 'pdn',
+DATASETS = {
+    'citeseer',
+    'citeseer_full',
+    'cora',
+    'cora_ml',
+    'cora_full',
+    'amazon_cs',
+    'amazon_photo',
+    'coauthor_cs',
+    'coauthor_phy',
+    'polblogs',
+    'karate_club',
+    'pubmed',
+    'flickr',
+    'blogcatalog',
+    'dblp',
+    'acm',
+    'uai',
+    'pdn',
 }
 
 
@@ -62,13 +76,13 @@ class GraphDataset(InMemoryDataset):
     transform : Optional[Callable], optional
         A function/transform that takes in an
         :obj:`torch_geometric.data.Data` object and returns a transformed
-        version. The data object will be transformed before every access, 
+        version. The data object will be transformed before every access,
         by default None
     pre_transform : Optional[Callable], optional
         A function/transform that takes in
         an :obj:`torch_geometric.data.Data` object and returns a
         transformed version. The data object will be transformed before
-        being saved to disk, by default None    
+        being saved to disk, by default None
 
     Example
     -------
@@ -78,26 +92,32 @@ class GraphDataset(InMemoryDataset):
     >>> GraphDataset.available_datasets() # see all available datasets.
     ['cora', 'citeseer', 'pubmed', ...]
 
-    >>> dataset = GraphDataset(root='~/data/pyg', name='cora', 
+    >>> dataset = GraphDataset(root='~/data/pyg', name='cora',
                           transform=T.LargestConnectedComponents())
     >>> data = dataset[0] # there is only one graph
 
     Note
     ----
-    We follow the setting in :obj:`Nettack` from the: `"Adversarial Attacks on Neural Networks 
-    for Graph Data" <https://arxiv.org/abs/1805.07984>`_ paper, 
+    We follow the setting in :obj:`Nettack` from the:
+    `"Adversarial Attacks on Neural Networks
+    for Graph Data" <https://arxiv.org/abs/1805.07984>`_ paper,
     which considers the largest connected component for each graph.
 
-    For more details of these datasets, see https://github.com/EdisonLeeeee/GraphData
+    For more details of these datasets,
+    see https://github.com/EdisonLeeeee/GraphData
     """
 
-    url = 'https://github.com/EdisonLeeeee/GraphData/raw/master/datasets/{}.npz'
+    url = 'https://github.com/EdisonLeeeee/GraphData/raw/master/' + \
+        'datasets/{}.npz'
 
     def __init__(self, root: str, name: str,
                  transform: Optional[Callable] = None,
                  pre_transform: Optional[Callable] = None):
         self.name = name.lower()
-        assert self.name in _DATASETS
+        if self.name not in DATASETS:
+            raise ValueError(
+                f'Unknown dataset {name}. Please take a look at '
+                '`GraphDataset.available_datasets()` for more information.')
         super().__init__(root, transform, pre_transform)
         self.data, self.slices = torch.load(self.processed_paths[0])
 
@@ -130,7 +150,7 @@ class GraphDataset(InMemoryDataset):
     def available_datasets() -> List[str]:
         """Return all available datasets.
         """
-        return list(_DATASETS)
+        return list(DATASETS)
 
     def __repr__(self) -> str:
         return f'GreatX-{self.name.capitalize()}'

@@ -7,8 +7,8 @@ from torch_geometric.utils import (from_scipy_sparse_matrix, sort_edge_index,
                                    to_scipy_sparse_matrix)
 
 
-def add_edges(edge_index: Tensor, edges_to_add: Tensor,
-              symmetric: bool = True, sort_edges: bool = True) -> Tensor:
+def add_edges(edge_index: Tensor, edges_to_add: Tensor, symmetric: bool = True,
+              sort_edges: bool = True) -> Tensor:
     """Add edges to the graph denoted as :obj:`edge_index`.
 
     Parameters
@@ -19,8 +19,9 @@ def add_edges(edge_index: Tensor, edges_to_add: Tensor,
         shape [2, M], the edges to be added into the graph.
     symmetric : bool
         whether the output graph is symmetric, if True,
-        it would add the edges into the graph by:
-        :obj:`edges_to_add = torch.cat([edges_to_add, edges_to_add.flip(0)], dim=1)`
+        it will also append the reversed edges into the graph.
+    sort_edges : bool
+        whether to sort the output edges.
 
     Returns
     -------
@@ -35,12 +36,14 @@ def add_edges(edge_index: Tensor, edges_to_add: Tensor,
 
     edges_to_add = edges_to_add.to(edge_index)
     edge_index = torch.cat([edge_index, edges_to_add], dim=1)
-    edge_index = sort_edge_index(edge_index)
+    if sort_edges:
+        edge_index = sort_edge_index(edge_index)
     return edge_index
 
 
-def remove_edges(edge_index: Tensor, edges_to_remove: Tensor, symmetric: bool = True) -> Tensor:
-    """Remove edges from the graph denoted as :obj:`edge_index`. 
+def remove_edges(edge_index: Tensor, edges_to_remove: Tensor,
+                 symmetric: bool = True) -> Tensor:
+    """Remove edges from the graph denoted as :obj:`edge_index`.
 
     Parameters
     ----------
@@ -50,8 +53,7 @@ def remove_edges(edge_index: Tensor, edges_to_remove: Tensor, symmetric: bool = 
         shape [2, M], the edges to be removed in the graph.
     symmetric : bool
         whether the output graph is symmetric, if True,
-        it would remove the edges from the graph by:
-        :obj:`edges_to_remove = torch.cat([edges_to_remove, edges_to_remove.flip(0)], dim=1)`
+        it will also remove the reversed edges from the graph.
 
     Returns
     -------
@@ -69,8 +71,8 @@ def remove_edges(edge_index: Tensor, edges_to_remove: Tensor, symmetric: bool = 
     edges_to_remove = edges_to_remove.to(edge_index)
 
     num_nodes = max(edge_index.max().item(), edges_to_remove.max().item()) + 1
-    adj_matrix = to_scipy_sparse_matrix(
-        edge_index, num_nodes=num_nodes).tocsr(copy=False)
+    adj_matrix = to_scipy_sparse_matrix(edge_index,
+                                        num_nodes=num_nodes).tocsr(copy=False)
 
     row, col = edges_to_remove.cpu().numpy()
     adj_matrix = adj_matrix.tolil(copy=True)
@@ -83,10 +85,9 @@ def remove_edges(edge_index: Tensor, edges_to_remove: Tensor, symmetric: bool = 
     return edge_index.to(device)
 
 
-def flip_edges(edge_index: Tensor,
-               edges_to_flip: Tensor,
+def flip_edges(edge_index: Tensor, edges_to_flip: Tensor,
                symmetric: bool = True) -> Tensor:
-    """Flip edges from the graph denoted as :obj:`edge_index`. 
+    """Flip edges from the graph denoted as :obj:`edge_index`.
 
     Parameters
     ----------
@@ -96,8 +97,7 @@ def flip_edges(edge_index: Tensor,
         shape [2, M], the edges to be flipped in the graph.
     symmetric : bool
         whether the output graph is symmetric, if True,
-        it would flip the edges from the graph by:
-        :obj:`edges_to_flip = torch.cat([edges_to_flip, edges_to_flip.flip(0)], dim=1)`
+        it will also flip the reversed edges from the graph.
 
     Returns
     -------
@@ -116,8 +116,8 @@ def flip_edges(edge_index: Tensor,
     edges_to_flip = edges_to_flip.to(edge_index)
 
     num_nodes = max(edge_index.max().item(), edges_to_flip.max().item()) + 1
-    adj_matrix = to_scipy_sparse_matrix(
-        edge_index, num_nodes=num_nodes).tocsr(copy=False)
+    adj_matrix = to_scipy_sparse_matrix(edge_index,
+                                        num_nodes=num_nodes).tocsr(copy=False)
 
     row, col = edges_to_flip.cpu().numpy()
     data = adj_matrix[(row, col)].A
@@ -136,7 +136,7 @@ def flip_edges(edge_index: Tensor,
 
 def flip_graph(data: Data, edges_to_flip: Tensor,
                symmetric: bool = True) -> Data:
-    """Flip edges from the graph denoted as :obj:`data`. 
+    """Flip edges from the graph denoted as :obj:`data`.
 
     Parameters
     ----------
@@ -146,8 +146,7 @@ def flip_graph(data: Data, edges_to_flip: Tensor,
         shape [2, M], the edges to be flipped in the graph.
     symmetric : bool
         whether the output graph is symmetric, if True,
-        it would flip the edges from the graph by:
-        :obj:`edges_to_flip = torch.cat([edges_to_flip, edges_to_flip.flip(0)], dim=1)`
+        it will also flip the reversed edges from the graph.
 
     Returns
     -------
@@ -156,13 +155,13 @@ def flip_graph(data: Data, edges_to_flip: Tensor,
 
     NOTE
     ----
-    We currently don't support a weigher graph and this function will 
+    We currently don't support a weigher graph and this function will
     automatically set :attr:`edge_weight` and :attr:`adj_t` as :obj:`None`.
     """
 
     data = copy.copy(data)
-    data.edge_index = flip_edges(
-        data.edge_index, edges_to_flip, symmetric=symmetric)
+    data.edge_index = flip_edges(data.edge_index, edges_to_flip,
+                                 symmetric=symmetric)
     data.edge_weight = None
     data.adj_t = None
     return data

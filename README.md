@@ -9,29 +9,31 @@
 <p align=center>
   <a href="https://greatx.readthedocs.io/en/latest/">
     [Documentation]
-  </a>         
+  </a>
   |
   <a href="https://github.com/EdisonLeeeee/GreatX/blob/master/examples">
     [Examples]
-  </a>  
+  </a>
 </p>
 
 <p align=center>
   <a href="https://www.python.org/downloads/release/python-360/">
     <img src="https://img.shields.io/badge/Python->=3.6-3776AB?logo=python" alt="Python">
-  </a>    
+  </a>
   <a href="https://github.com/pytorch/pytorch">
     <img src="https://img.shields.io/badge/PyTorch->=1.8-FF6F00?logo=pytorch" alt="pytorch">
-  </a>   
+  </a>
   <a href="https://pypi.org/project/greatx/">
     <img src="https://badge.fury.io/py/greatx.svg" alt="pypi">
-  </a>       
+  </a>
   <a href="https://github.com/EdisonLeeeee/GreatX/blob/master/LICENSE">
     <img src="https://img.shields.io/github/license/EdisonLeeeee/GreatX" alt="license">
-    <img src="https://img.shields.io/badge/Contributions-Welcome-278ea5" alt="Contrib"/>    
-  </a>       
+  </a>
+  <a href="https://github.com/EdisonLeeeee/GreatX/blob/master/CONTRIBUTING.md">
+    <img src="https://img.shields.io/badge/Contributions-Welcome-278ea5" alt="Contrib"/>
+  </a>
 </p>
-                                                                   
+
 # ❓ What is Reliability on Graphs?
 ![threats](./imgs/threats.png)
 
@@ -48,7 +50,7 @@ For more details, please refer to our paper [**Recent Advances in Reliable Deep 
 - ~~June 9, 2022: GraphWar **v0.1.0** has been released. We also provide the [documentation](https://greatx.readthedocs.io/en/latest) along with numerous [examples](https://github.com/EdisonLeeeee/GreatX/blob/master/examples)~~ .
 - ~~May 27, 2022: GraphWar has been refactored with [PyTorch Geometric (PyG)](https://github.com/pyg-team/pytorch_geometric), old code based on [DGL](https://www.dgl.ai) can be found [here](https://github.com/EdisonLeeeee/GreatX/tree/dgl). We will soon release the first version of GreatX, stay tuned!~~
 
-NOTE: GreatX is still in the early stages and the API will likely continue to change. 
+NOTE: GreatX is still in the early stages and the API will likely continue to change.
 If you are interested in this project, don't hesitate to contact me or make a PR directly.
 # 🚀 Installation
 
@@ -92,7 +94,7 @@ trainer.evaluate({'data': data, 'mask': data.test_mask})
 ```python
 from greatx.attack.targeted import RandomAttack
 attacker = RandomAttack(data)
-attacker.attack(1, num_budgets=3) # attacking target node `1` with `3` edges 
+attacker.attack(1, num_budgets=3) # attacking target node `1` with `3` edges
 attacked_data = attacker.data()
 edge_flips = attacker.edge_flips()
 

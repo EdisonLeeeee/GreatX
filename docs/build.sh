@@ -1,1 +1,1 @@
-rm -rf _build/ && make html
+rm -rf build/ && make html

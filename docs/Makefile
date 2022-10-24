@@ -1,7 +1,7 @@
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = greatx
 SOURCEDIR     = source
-BUILDDIR      = _build
+BUILDDIR      = build
 
 .PHONY: help Makefile
 

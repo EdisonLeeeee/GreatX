@@ -13,4 +13,4 @@ To build the documentation:
    make html
    ```
 
-The documentation is now available to view by opening `docs/_build/html/index.html`.
+The documentation is now available to view by opening `docs/build/html/index.html`.

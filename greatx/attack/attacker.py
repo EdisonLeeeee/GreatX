@@ -11,7 +11,8 @@ from torch_geometric.utils import degree, to_scipy_sparse_matrix
 
 
 class Attacker(torch.nn.Module):
-    """Adversarial attacker for graph data. Note that this is an abstract class.
+    """Adversarial attacker for graph data.
+    Note that this is an abstract class.
 
     Parameters
     ----------
@@ -22,14 +23,14 @@ class Attacker(torch.nn.Module):
     seed : Optional[int], optional
         the random seed for reproducing the attack, by default None
     name : Optional[str], optional
-        name of the attacker, if None, it would be :obj:`__class__.__name__`, 
+        name of the attacker, if None, it would be :obj:`__class__.__name__`,
         by default None
     kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
 
     Raises
     ------
     TypeError
-        unexpected keyword argument in :obj:`kwargs`    
+        unexpected keyword argument in :obj:`kwargs`
 
     Examples
     --------
@@ -50,16 +51,16 @@ class Attacker(torch.nn.Module):
     _allow_singleton: bool = True
 
     def __init__(self, data: Data, device: str = "cpu",
-                 seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
+                 seed: Optional[int] = None, name: Optional[str] = None,
+                 **kwargs):
         """Initialization of an attacker model.
         """
 
         super().__init__()
 
         if kwargs:
-            raise TypeError(
-                f"Got an unexpected keyword argument '{next(iter(kwargs.keys()))}'."
-            )
+            raise TypeError("Got an unexpected keyword argument "
+                            f"'{next(iter(kwargs.keys()))}'.")
 
         assert isinstance(data, Data)
         assert data.x is not None
@@ -69,13 +70,13 @@ class Attacker(torch.nn.Module):
         self.device = torch.device(device)
         self.ori_data = data.to(self.device)
 
-        self.adjacency_matrix: sp.csr_matrix = to_scipy_sparse_matrix(data.edge_index,
-                                                                      num_nodes=data.num_nodes).tocsr()
+        self.adjacency_matrix: sp.csr_matrix = to_scipy_sparse_matrix(
+            data.edge_index, num_nodes=data.num_nodes).tocsr()
         self.name = name or self.__class__.__name__
         self.seed = seed
 
-        self._degree = degree(
-            data.edge_index[0], num_nodes=data.num_nodes, dtype=torch.float)
+        self._degree = degree(data.edge_index[0], num_nodes=data.num_nodes,
+                              dtype=torch.float)
 
         self.num_nodes = data.num_nodes
         self.num_edges = data.num_edges
@@ -88,14 +89,14 @@ class Attacker(torch.nn.Module):
         self._is_reset = False
 
     def reset(self):
-        """Reset attacker state. 
+        """Reset attacker state.
         Override this method in subclass to implement specific function."""
         self._is_reset = True
         return self
 
     @abc.abstractmethod
     def data(self) -> Data:
-        """Get the attacked graph denoted as PyG-like Data. 
+        """Get the attacked graph denoted as PyG-like Data.
 
         Raises
         ------
@@ -106,8 +107,9 @@ class Attacker(torch.nn.Module):
 
     @abc.abstractmethod
     def attack(self) -> "Attacker":
-        """Abstract method. 
-        The subclass must override this method to implement specific attack for itself.
+        """Abstract method.
+        The subclass must override this method to implement specific
+        attack for itself.
 
         Raises
         ------
@@ -123,23 +125,25 @@ class Attacker(torch.nn.Module):
         max_perturbations = max(max_perturbations, self.max_perturbations)
 
         if not isinstance(num_budgets, Number) or num_budgets <= 0:
-            raise ValueError(
-                f"'num_budgets' must be a positive scalar. but got '{num_budgets}'."
-            )
+            raise ValueError("'num_budgets' must be a positive scalar. "
+                             f"but got '{num_budgets}'.")
 
         if num_budgets > max_perturbations:
             raise ValueError(
-                f"'num_budgets' should be less than or equal the maximum allowed perturbations: {max_perturbations}."
-                "if you want to use larger budgets, you could set 'attacker.set_max_perturbations(a_larger_budget)'."
-            )
+                "'num_budgets' should be less than or equal "
+                f"the maximum allowed perturbations: {max_perturbations}."
+                "If you want to use a larger budget, you could set "
+                "'attacker.set_max_perturbations(a_larger_budget)'.")
 
-        if num_budgets < 1.:
+        if num_budgets < 1. or (isinstance(num_budgets, float)
+                                and num_budgets == 1.0):
             assert self._max_perturbations != np.inf
             num_budgets = max_perturbations * num_budgets
 
         return int(num_budgets)
 
-    def set_max_perturbations(self, max_perturbations: Union[float, int] = np.inf,
+    def set_max_perturbations(self, max_perturbations: Union[float,
+                                                             int] = np.inf,
                               verbose: bool = True) -> "Attacker":
         """Set the maximum number of allowed perturbations
 
@@ -197,7 +201,7 @@ class Attacker(torch.nn.Module):
         feat = self.feat
         # FIXME: (Jintang Li) this is quite time-consuming in large matrix
         # so I only check `10` rows of the matrix randomly.
-        feat = feat[torch.randint(0, feat.size(0), size=(10,))]
+        feat = feat[torch.randint(0, feat.size(0), size=(10, ))]
         if not torch.unique(feat).tolist() == [0, 1]:
             raise RuntimeError(
                 "Node feature matrix is required to be a 0-1 binary matrix.")

@@ -1,7 +1,5 @@
 from collections import OrderedDict
 
-from tabulate import tabulate
-
 
 class BunchDict(OrderedDict):
     """Container object for datasets
@@ -44,7 +42,6 @@ class BunchDict(OrderedDict):
     >>> b.a
     tensor([1, 2, 3])
     """
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -84,11 +81,10 @@ class BunchDict(OrderedDict):
         return self
 
     def __repr__(self) -> str:
+        from tabulate import tabulate
         table_headers = ["Names", "Objects"]
         items = tuple(map(prettify, self.items()))
-        table = tabulate(
-            items, headers=table_headers, tablefmt="fancy_grid"
-        )
+        table = tabulate(items, headers=table_headers, tablefmt="fancy_grid")
         return "Objects in BunchDict:\n" + table
 
     __str__ = __repr__

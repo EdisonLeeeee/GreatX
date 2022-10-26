@@ -7,8 +7,7 @@ from greatx.functional import drop_edge, drop_node, drop_path
 
 
 class DropEdge(nn.Module):
-    """
-    DropEdge: Sampling edge using a uniform distribution
+    """DropEdge: Sampling edge using a uniform distribution
     from the `"DropEdge: Towards Deep Graph Convolutional
     Networks on Node Classification" <https://arxiv.org/abs/1907.10903>`_
     paper (ICLR'20)
@@ -55,8 +54,7 @@ class DropEdge(nn.Module):
 
 
 class DropNode(nn.Module):
-    """
-    DropNode: Sampling node using a uniform distribution.
+    """DropNode: Sampling node using a uniform distribution.
     from the `"Graph Contrastive Learning
     with Augmentations" <https://arxiv.org/abs/2010.139023>`_
     paper (NeurIPS'20)
@@ -151,7 +149,7 @@ class DropPath(nn.Module):
     --------
     :class:`~greatx.functional.drop_path`
     """
-    def __init__(self, p: float = 0.3, walks_per_node: int = 1,
+    def __init__(self, p: float = 0.5, walks_per_node: int = 1,
                  walk_length: int = 3, num_nodes: Optional[int] = None,
                  start: str = 'node', is_sorted: bool = False):
         super().__init__()

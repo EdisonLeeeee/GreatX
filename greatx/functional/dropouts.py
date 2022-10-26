@@ -133,7 +133,7 @@ def drop_node(
 
 
 def drop_path(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
-              p: float = 0.3, walks_per_node: int = 1, walk_length: int = 3,
+              p: float = 0.5, walks_per_node: int = 1, walk_length: int = 3,
               num_nodes: Optional[int] = None, start: str = 'node',
               is_sorted: bool = False,
               training: bool = True) -> Tuple[Tensor, Optional[Tensor]]:

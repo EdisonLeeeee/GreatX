@@ -4,6 +4,7 @@ from warnings import warn
 
 import torch
 import torch.nn as nn
+from torch import Tensor
 from torch_geometric.data import Data
 
 
@@ -92,7 +93,8 @@ class CKA:
         self.model1.train(training)
         self.model2.train(training)
 
-    def _log_layer(self, model: str, name: str, out: torch.Tensor):
+    def _log_layer(self, model: str, name: str, layer: nn.Module, inp: Tensor,
+                   out: Tensor):
         if out.ndim != 2:
             # ignore those features that dimensions not equal to 2
             return
@@ -131,8 +133,7 @@ class CKA:
                     partial(self._log_layer, "model2", name))
 
     def _HSIC(self, K, L):
-        """
-        Computes the unbiased estimate of HSIC metric.
+        """Computes the unbiased estimate of HSIC metric.
         Reference: https://arxiv.org/pdf/2010.15327.pdf Eq (3)
         """
         N = K.shape[0]
@@ -167,8 +168,6 @@ class CKA:
 
         self.model1_features = {}
         self.model2_features = {}
-        self.model1.eval()
-        self.model2.eval()
 
         self.model1(data1.x, data1.edge_index, data1.edge_weight)
         self.model2(data2.x, data2.edge_index, data2.edge_weight)

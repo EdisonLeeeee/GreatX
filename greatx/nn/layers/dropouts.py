@@ -8,8 +8,8 @@ from greatx.functional import drop_edge, drop_node, drop_path
 
 class DropEdge(nn.Module):
     """
-    DropEdge: Sampling edge using a uniform distribution 
-    from the `"DropEdge: Towards Deep Graph Convolutional 
+    DropEdge: Sampling edge using a uniform distribution
+    from the `"DropEdge: Towards Deep Graph Convolutional
     Networks on Node Classification" <https://arxiv.org/abs/1907.10903>`_
     paper (ICLR'20)
 
@@ -20,7 +20,7 @@ class DropEdge(nn.Module):
 
     Returns
     -------
-    Tuple[Tensor, Tensor]
+    Tuple[Tensor, Optional[Tensor]]
         the output edge index and edge weight
 
     Raises
@@ -34,26 +34,30 @@ class DropEdge(nn.Module):
 
         from greatx.nn.layers import DropEdge
         edge_index = torch.LongTensor([[1, 2], [3,4]])
-        DropEdge(p=0.5)(edge_index)      
+        DropEdge(p=0.5)(edge_index)
 
     See also
     --------
     :class:`~greatx.functional.drop_edge`
     """
-
     def __init__(self, p: float = 0.5):
         super().__init__()
         self.p = p
 
-    def forward(self, edge_index: Tensor, edge_weight: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
+    def forward(
+        self,
+        edge_index: Tensor,
+        edge_weight: Optional[Tensor] = None,
+    ) -> Tuple[Tensor, Optional[Tensor]]:
         """"""
-        return drop_edge(edge_index, edge_weight, self.p, training=self.training)
+        return drop_edge(edge_index, edge_weight, self.p,
+                         training=self.training)
 
 
 class DropNode(nn.Module):
     """
     DropNode: Sampling node using a uniform distribution.
-    from the `"Graph Contrastive Learning 
+    from the `"Graph Contrastive Learning
     with Augmentations" <https://arxiv.org/abs/2010.139023>`_
     paper (NeurIPS'20)
 
@@ -64,7 +68,7 @@ class DropNode(nn.Module):
 
     Returns
     -------
-    Tuple[Tensor, Tensor]
+    Tuple[Tensor, Optional[Tensor]]
         the output edge index and edge weight
 
     Example
@@ -73,52 +77,55 @@ class DropNode(nn.Module):
 
         from greatx.nn.layers import DropNode
         edge_index = torch.LongTensor([[1, 2], [3,4]])
-        DropNode(p=0.5)(edge_index)          
+        DropNode(p=0.5)(edge_index)
 
     See also
     --------
-    :class:`~greatx.functional.drop_node`    
+    :class:`~greatx.functional.drop_node`
     """
-
     def __init__(self, p: float = 0.5):
         super().__init__()
         self.p = p
 
-    def forward(self, edge_index: Tensor, edge_weight: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
+    def forward(
+        self,
+        edge_index: Tensor,
+        edge_weight: Optional[Tensor] = None,
+    ) -> Tuple[Tensor, Optional[Tensor]]:
         """"""
-        return drop_node(edge_index, edge_weight, self.p, training=self.training)
+        return drop_node(edge_index, edge_weight, self.p,
+                         training=self.training)
 
 
 class DropPath(nn.Module):
     """DropPath: a structured form of :class:`~greatx.functional.drop_edge`.
-    From the `"MaskGAE: Masked Graph Modeling Meets 
+    From the `"MaskGAE: Masked Graph Modeling Meets
     Graph Autoencoders" <https://arxiv.org/abs/2205.10053>`_
     paper (arXiv'22)
 
 
     Parameters
     ----------
-    r : Optional[Union[float, Tensor]], optional
-        if :obj:`r` is integer value: the percentage of nodes in the graph that
-        chosen as root nodes to perform random walks, by default 0.5
-        if :obj:`r` is :class:`torch.Tensor`: a set of custom root nodes
+    p : Optional[Union[float, Tensor]], optional
+        * if :obj:`r` is a float value - the percentage of
+        nodes in the graph that chosen as root nodes to
+        perform random walks, by default 0.5
+        * if :obj:`r` is :class:`torch.Tensor`: a set of custom root nodes
     walks_per_node : int, optional
-        number of walks per node, by default 2
+        number of walks per node, by default 1
     walk_length : int, optional
-        number of walk length per node, by default 4
-    p : float, optional
-        :obj:`p` in random walks, by default 1
-    q : float, optional
-        :obj:`q` in random walks, by default 1
+        number of walk length per node, by default 3
     num_nodes : int, optional
         number of total nodes in the graph, by default None
-    by : str, optional
-        sampling root nodes uniformly :obj:`uniform` or 
-        by degree distribution :obj:`degree`, by default 'degree'
+    start : string, optional
+        the type of starting node chosen from node of edge,
+        by default 'node'
+    is_sorted : bool, optional
+        whether the input :obj:`edge_index` is sorted
 
     Returns
     -------
-    Tuple[Tensor, Tensor]
+    Tuple[Tensor, Optional[Tensor]]
         the output edge index and edge weight
 
     Raises
@@ -126,9 +133,9 @@ class DropPath(nn.Module):
     ImportError
         if :class:`torch_cluster` is not installed.
     ValueError
-        :obj:`r` is out of scope [0,1]
+        :obj:`p` is out of scope [0,1]
     ValueError
-        :obj:`r` is not integer value or a Tensor
+        :obj:`p` is not integer value or a Tensor
 
     Example
     -------
@@ -136,31 +143,33 @@ class DropPath(nn.Module):
 
         from greatx.nn.layers import DropPath
         edge_index = torch.LongTensor([[1, 2], [3,4]])
-        DropPath(r=0.5)(edge_index)   
+        DropPath(p=0.5)(edge_index)
 
-        DropPath(r=torch.tensor([1,2]))(edge_index) # specify root nodes           
+        DropPath(p=torch.tensor([1,2]))(edge_index) # specify root nodes
 
     See also
     --------
-    :class:`~greatx.functional.drop_path`        
+    :class:`~greatx.functional.drop_path`
     """
-
-    def __init__(self, r: float = 0.5,
-                 walks_per_node: int = 2,
-                 walk_length: int = 4,
-                 p: float = 1, q: float = 1,
-                 num_nodes: int = None,
-                 by: str = 'degree'):
+    def __init__(self, p: float = 0.3, walks_per_node: int = 1,
+                 walk_length: int = 3, num_nodes: Optional[int] = None,
+                 start: str = 'node', is_sorted: bool = False):
         super().__init__()
-        self.r = r
+        self.p = p
         self.walks_per_node = walks_per_node
         self, walk_length = walk_length
-        self.p = p
-        self.q = q
         self.num_nodes = num_nodes
-        self.by = by
+        self.start = start
+        self.is_sorted = is_sorted
 
-    def forward(self, edge_index: Tensor, edge_weight: Optional[Tensor] = None) -> Tuple[Tensor, Tensor]:
+    def forward(
+        self,
+        edge_index: Tensor,
+        edge_weight: Optional[Tensor] = None,
+    ) -> Tuple[Tensor, Optional[Tensor]]:
         """"""
-        return drop_path(edge_index, edge_weight, r=self.r, p=self.p, q=self.q,
-                         num_nodes=self.num_nodes, by=self.by, training=self.training)
+        return drop_path(edge_index, edge_weight, p=self.p,
+                         walks_per_node=self.walks_per_node,
+                         walk_length=self.walk_length,
+                         num_nodes=self.num_nodes, start=self.start,
+                         training=self.training)

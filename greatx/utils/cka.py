@@ -2,26 +2,13 @@ from functools import partial
 from typing import Dict, List
 from warnings import warn
 
-import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
-from mpl_toolkits import axes_grid1
 from torch_geometric.data import Data
 
 
-def add_colorbar(im, aspect=10, pad_fraction=0.5, **kwargs):
-    """Add a vertical color bar to an image plot."""
-    divider = axes_grid1.make_axes_locatable(im.axes)
-    width = axes_grid1.axes_size.AxesY(im.axes, aspect=1./aspect)
-    pad = axes_grid1.axes_size.Fraction(pad_fraction, width)
-    current_ax = plt.gca()
-    cax = divider.append_axes("right", size=width, pad=pad)
-    plt.sca(current_ax)
-    return im.axes.figure.colorbar(im, cax=cax, **kwargs)
-
-
 class CKA:
-    """Centered Kernel Alignment (CKA) metric, 
+    """Centered Kernel Alignment (CKA) metric,
     where the features of the networks are compared.
 
     Parameters
@@ -38,6 +25,9 @@ class CKA:
         List of layers to extract features from, by default None
     model2_layers : List[str], optional
         List of layers to extract features from, by default None
+    training : bool, optional
+        whether to set training mode (True) or evaluation
+        mode (False) for models. by default False.
     device : str, optional
         device to run the models, by default 'cpu'
 
@@ -50,21 +40,17 @@ class CKA:
         m2 = ... # get your model2
         cka = CKA(m1, m2)
         cka.compare(data)
-        cka.plot_results()    
+        cka.plot_results()
 
     Reference:
 
     * Paper: https://arxiv.org/abs/2010.15327
     * Code: https://github.com/AntixK/PyTorch-Model-Compare
     """
-
-    def __init__(self,
-                 model1: nn.Module,
-                 model2: nn.Module,
-                 model1_name: str = None,
-                 model2_name: str = None,
+    def __init__(self, model1: nn.Module, model2: nn.Module,
+                 model1_name: str = None, model2_name: str = None,
                  model1_layers: List[str] = None,
-                 model2_layers: List[str] = None,
+                 model2_layers: List[str] = None, training: bool = False,
                  device: str = 'cpu'):
         self.model1 = model1
         self.model2 = model2
@@ -85,7 +71,8 @@ class CKA:
             self.model2_info['Name'] = model2_name
 
         if self.model1_info['Name'] == self.model2_info['Name']:
-            warn(f"Both model have identical names - {self.model2_info['Name']}. "
+            warn("Both model have identical names - "
+                 f"{self.model2_info['Name']}. "
                  "It may cause confusion when interpreting the results. "
                  "Consider giving unique names to the models :)")
 
@@ -95,45 +82,27 @@ class CKA:
         self.model1_features = {}
         self.model2_features = {}
 
-        if len(list(model1.modules())) > 150 and model1_layers is None:
-            warn("Model 1 seems to have a lot of layers. "
-                 "Consider giving a list of layers whose features you are concerned with "
-                 "through the 'model1_layers' parameter. Your CPU/GPU will thank you :)")
-
         self.model1_layers = model1_layers
-
-        if len(list(model2.modules())) > 150 and model2_layers is None:
-            warn("Model 2 seems to have a lot of layers. "
-                 "Consider giving a list of layers whose features you are concerned with "
-                 "through the 'model2_layers' parameter. Your CPU/GPU will thank you :)")
-
         self.model2_layers = model2_layers
 
         self._insert_hooks()
         self.model1 = self.model1.to(self.device)
         self.model2 = self.model2.to(self.device)
 
-        self.model1.eval()
-        self.model2.eval()
+        self.model1.train(training)
+        self.model2.train(training)
 
-    def _log_layer(self,
-                   model: str,
-                   name: str,
-                   layer: nn.Module,
-                   inp: torch.Tensor,
-                   out: torch.Tensor):
+    def _log_layer(self, model: str, name: str, out: torch.Tensor):
         if out.ndim != 2:
             # ignore those features that dimensions not equal to 2
             return
 
         if model == "model1":
             self.model1_features[name] = out
-
         elif model == "model2":
             self.model2_features[name] = out
-
         else:
-            raise RuntimeError("Unknown model name for _log_layer.")
+            raise RuntimeError(f"Unknown model name `{model}`.")
 
     def _insert_hooks(self):
 
@@ -157,7 +126,6 @@ class CKA:
                     layer.register_forward_hook(
                         partial(self._log_layer, "model2", name))
             else:
-
                 self.model2_info['Layers'] += [name]
                 layer.register_forward_hook(
                     partial(self._log_layer, "model2", name))
@@ -177,9 +145,7 @@ class CKA:
         return result
 
     @torch.no_grad()
-    def compare(self,
-                data1: Data,
-                data2: Data = None) -> None:
+    def compare(self, data1: Data, data2: Data = None) -> None:
         """
         Computes the feature similarity between the models on the
         given datasets.
@@ -193,14 +159,11 @@ class CKA:
         """
         data1.to(self.device)
         if data2 is None:
-            warn(
-                "Data for Model 2 is not given. Using the same data for both models.")
+            warn("Data for Model 2 is not given. "
+                 "Using the same data for both models.")
             data2 = data1
         else:
             data2 = data2.to(self.device)
-
-#         self.model1_info['Dataset'] = dataloader1.dataset.__repr__().split('\n')[0]
-#         self.model2_info['Dataset'] = dataloader2.dataset.__repr__().split('\n')[0]
 
         self.model1_features = {}
         self.model2_features = {}
@@ -228,15 +191,18 @@ class CKA:
                 Y = feat2.flatten(1)
                 L = Y @ Y.t()
                 L.fill_diagonal_(0)
-                assert K.shape == L.shape, f"Feature shape mistach! {K.shape}, {L.shape}"
+                if K.shape != L.shape:
+                    raise RuntimeError(
+                        f"Feature shape mistach! {K.shape} and {L.shape}")
 
                 self.hsic_matrix[i, j, 1] += self._HSIC(K, L) / num_batches
                 self.hsic_matrix[i, j, 2] += self._HSIC(L, L) / num_batches
-        self.hsic_matrix = self.hsic_matrix[:, :, 1] / (self.hsic_matrix[:, :, 0].sqrt() *
-                                                        self.hsic_matrix[:, :, 2].sqrt())
+        self.hsic_matrix = self.hsic_matrix[:, :, 1] / (
+            self.hsic_matrix[:, :, 0].sqrt() *
+            self.hsic_matrix[:, :, 2].sqrt())
 
-        assert not torch.isnan(self.hsic_matrix).any(
-        ), "HSIC computation resulted in NANs"
+        assert not torch.isnan(
+            self.hsic_matrix).any(), "HSIC computation resulted in NANs"
         return self
 
     def export(self) -> Dict:
@@ -250,12 +216,10 @@ class CKA:
             "CKA": self.hsic_matrix,
             "model1_layers": self.model1_info['Layers'],
             "model2_layers": self.model2_info['Layers'],
-
         }
 
-    def plot_results(self,
-                     save_path: str = None,
-                     title: str = None):
+    def plot_results(self, save_path: str = None, title: str = None):
+        import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
         im = ax.imshow(self.hsic_matrix, origin='lower', cmap='magma')
         ax.set_xlabel(f"Layers of {self.model2_info['Name']}", fontsize=15)
@@ -265,7 +229,8 @@ class CKA:
             ax.set_title(f"{title}", fontsize=18)
         else:
             ax.set_title(
-                f"{self.model1_info['Name']} vs {self.model2_info['Name']}", fontsize=18)
+                f"{self.model1_info['Name']} vs {self.model2_info['Name']}",
+                fontsize=18)
 
         add_colorbar(im)
         plt.tight_layout()
@@ -274,3 +239,16 @@ class CKA:
             plt.savefig(save_path, dpi=300)
 
         plt.show()
+
+
+def add_colorbar(im, aspect=10, pad_fraction=0.5, **kwargs):
+    """Add a vertical color bar to an image plot."""
+    import matplotlib.pyplot as plt
+    from mpl_toolkits import axes_grid1
+    divider = axes_grid1.make_axes_locatable(im.axes)
+    width = axes_grid1.axes_size.AxesY(im.axes, aspect=1. / aspect)
+    pad = axes_grid1.axes_size.Fraction(pad_fraction, width)
+    current_ax = plt.gca()
+    cax = divider.append_axes("right", size=width, pad=pad)
+    plt.sca(current_ax)
+    return im.axes.figure.colorbar(im, cax=cax, **kwargs)

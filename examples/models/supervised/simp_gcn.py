@@ -5,8 +5,8 @@ import torch_geometric.transforms as T
 
 from greatx.datasets import GraphDataset
 from greatx.nn.models import SimPGCN
+from greatx.training import SimPGCNTrainer
 from greatx.training.callbacks import ModelCheckpoint
-from greatx.training.trainer import Trainer
 from greatx.utils import split_nodes
 
 dataset = 'Cora'
@@ -22,7 +22,7 @@ num_classes = data.y.max().item() + 1
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = SimPGCN(num_features, num_classes, hids=128)
-trainer = Trainer(model, device=device)
+trainer = SimPGCNTrainer(model, device=device)
 ckp = ModelCheckpoint('model.pth', monitor='val_acc')
 trainer.fit(data, mask=(splits.train_nodes, splits.val_nodes), callbacks=[ckp])
 trainer.evaluate(data, splits.test_nodes)

@@ -4,8 +4,8 @@ import torch
 from torch_geometric.datasets import Planetoid
 
 from greatx.nn.models import GCN
+from greatx.training import Trainer
 from greatx.training.callbacks import ModelCheckpoint
-from greatx.training.trainer import Trainer
 
 dataset = 'Cora'
 root = osp.join(osp.dirname(osp.realpath(__file__)), '../../..', 'data')

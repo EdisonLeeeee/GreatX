@@ -76,9 +76,9 @@ class Trainer:
         data : Union[Data, Tuple[Data, Data]]
             An instance or a tuple of
             :class:`torch_geometric.data.Data` denoting the graph.
-            It is used for `train_step` and `val_step`.
+            They are used for `train_step` and `val_step`, respectively.
         mask : Optional[Union[Tensor, Tuple[Tensor, Tensor]]]
-            node mask used for training and validation.
+            node masks used for training and validation.
         callbacks : Optional[Callback], optional
             callbacks used for training,
             see `greatx.training.callbacks`, by default None
@@ -149,7 +149,7 @@ class Trainer:
 
         return self
 
-    def train_step(self, data: Data, mask: Optional[Tensor]) -> dict:
+    def train_step(self, data: Data, mask: Optional[Tensor] = None) -> dict:
         """One-step training on the inputs.
 
         Parameters
@@ -188,7 +188,7 @@ class Trainer:
         return dict(loss=loss.item(),
                     acc=out.argmax(-1).eq(y).float().mean().item())
 
-    def evaluate(self, data: Data, mask: Optional[Tensor],
+    def evaluate(self, data: Data, mask: Optional[Tensor] = None,
                  verbose: Optional[int] = 1) -> BunchDict:
         """Simple evaluation step for `:attr:model`
 
@@ -221,7 +221,7 @@ class Trainer:
         return logs
 
     @torch.no_grad()
-    def test_step(self, data: Data, mask: Optional[Tensor]) -> dict:
+    def test_step(self, data: Data, mask: Optional[Tensor] = None) -> dict:
         """One-step evaluation on the inputs.
 
         Parameters
@@ -256,7 +256,8 @@ class Trainer:
         return dict(loss=loss.item(),
                     acc=out.argmax(-1).eq(y).float().mean().item())
 
-    def predict_step(self, data: Data, mask: Optional[Tensor]) -> Tensor:
+    def predict_step(self, data: Data,
+                     mask: Optional[Tensor] = None) -> Tensor:
         """One-step prediction on the inputs.
 
         Parameters
@@ -287,7 +288,7 @@ class Trainer:
 
     @torch.no_grad()
     def predict(
-        self, data: Data, mask: Optional[Tensor],
+        self, data: Data, mask: Optional[Tensor] = None,
         transform: Callable = torch.nn.Softmax(dim=-1)
     ) -> Tensor:
         """
@@ -333,11 +334,11 @@ class Trainer:
         return callbacks
 
     @property
-    def model(self):
+    def model(self) -> Optional[torch.nn.Module]:
         return self._model
 
     @model.setter
-    def model(self, m):
+    def model(self, m: Optional[torch.nn.Module]):
         assert m is None or isinstance(m, torch.nn.Module)
         self._model = m
 

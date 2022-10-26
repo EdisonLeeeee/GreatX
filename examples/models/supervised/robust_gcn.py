@@ -5,8 +5,8 @@ import torch_geometric.transforms as T
 
 from greatx.datasets import GraphDataset
 from greatx.nn.models import RobustGCN
+from greatx.training import RobustGCNTrainer
 from greatx.training.callbacks import ModelCheckpoint
-from greatx.training.trainer import RobustGCNTrainer
 from greatx.utils import split_nodes
 
 dataset = 'Cora'

@@ -1,6 +1,9 @@
+from typing import Optional
+
 import torch
 import torch.nn.functional as F
 from torch import Tensor
+from torch_geometric.data import Data
 
 from greatx.training.trainer import Trainer
 
@@ -14,11 +17,12 @@ class SATTrainer(Trainer):
         the model used for training
     device : Union[str, torch.device], optional
         the device used for training, by default 'cpu'
-    cfg : other keyword arguments, such as `lr` and `weight_decay`.   
+    cfg : other keyword arguments, such as `lr` and `weight_decay`.
 
     Note
     ----
-    :class:`~greatx.training.SATTrainer` accepts the following additional arguments:   
+    :class:`~greatx.training.SATTrainer` accepts the following
+    additional arguments:
 
     * :obj:`eps_U`: scale of perturbation on eigenvectors
     * :obj:`eps_V`: scale of perturbation on eigenvalues
@@ -26,33 +30,34 @@ class SATTrainer(Trainer):
     * :obj:`lambda_V`: trade-off parameters for eigenvalues-specific loss
 
     """
-
-    def train_step(self, inputs: dict) -> dict:
-        """One-step training on the input dataloader.
+    def train_step(self, data: Data, mask: Optional[Tensor] = None) -> dict:
+        """One-step training on the inputs.
 
         Parameters
         ----------
-        inputs : dict
+        data : Data
             the training data.
+        mask : Optional[Tensor]
+            the mask of training nodes.
 
         Returns
         -------
         dict
-            the output logs, including `loss` and `val_acc`, etc.
+            the output logs, including `loss` and `acc`, etc.
         """
         model = self.model
         self.callbacks.on_train_batch_begin(0)
         model.train()
 
+        # ===============================================================
         eps_U = self.cfg.get("eps_U", 0.1)
         eps_V = self.cfg.get("eps_V", 0.1)
         lamb_U = self.cfg.get("lamb_U", 0.5)
         lamb_V = self.cfg.get("lamb_V", 0.5)
 
-        data = inputs['data'].to(self.device)
-        mask = inputs.get('mask', None)
+        data = data.to(self.device)
+        y = data.y.squeeze()
         U, V = data.U, data.V
-        y = data.y
 
         U.requires_grad_()
         V.requires_grad_()
@@ -85,4 +90,5 @@ class SATTrainer(Trainer):
 
         loss.backward()
         self.callbacks.on_train_batch_end(0)
-        return dict(loss=loss.item(), acc=out.argmax(1).eq(y).float().mean().item())
+        return dict(loss=loss.item(),
+                    acc=out.argmax(1).eq(y).float().mean().item())

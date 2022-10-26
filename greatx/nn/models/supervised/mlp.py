@@ -7,14 +7,14 @@ from greatx.utils import wrapper
 
 
 class MLP(nn.Module):
-    r"""Implementation of Multi-layer Perceptron (MLP) or 
+    r"""Implementation of Multi-layer Perceptron (MLP) or
     Feed-forward Neural Network (FNN).
 
     Parameters
     ----------
-    in_channels : int, 
+    in_channels : int,
         the input dimensions of model
-    out_channels : int, 
+    out_channels : int,
         the output dimensions of model
     hids : list, optional
         the number of hidden units for each hidden layer, by default [16]
@@ -25,12 +25,13 @@ class MLP(nn.Module):
     bias : bool, optional
         whether to use bias in the layers, by default True
     bn: bool, optional
-        whether to use :class:`BatchNorm1d` after the convolution layer, by default False         
+        whether to use :class:`BatchNorm1d` after the Linear layer,
+        by default False
 
     Note
     ----
     It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
+    hidden units (activation functions) using :func:`~greatx.utils.wrapper`.
 
     See Examples below.
 
@@ -45,58 +46,49 @@ class MLP(nn.Module):
     >>> # MLP with two hidden layers, without activation at the first layer
     >>> model = MLP(100, 10, hids=[32, 16], acts=[None, 'relu'])
 
-    >>> # MLP with very deep architectures, each layer has elu as activation function
+    >>> # MLP with very deep architectures, each layer has elu as activation
     >>> model = MLP(100, 10, hids=[16]*8, acts=['elu'])
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.LogisticRegression`    
+    :class:`~greatx.nn.models.supervised.LogisticRegression`
 
     """
-
     @wrapper
-    def __init__(self,
-                 in_channels: int,
-                 out_channels: int,
-                 hids: list = [16],
-                 acts: list = ['relu'],
-                 dropout: float = 0.5,
-                 bias: bool = True,
-                 bn: bool = False):
+    def __init__(self, in_channels: int, out_channels: int, hids: list = [16],
+                 acts: list = ['relu'], dropout: float = 0.5,
+                 bias: bool = True, bn: bool = False):
 
         super().__init__()
 
         lin = []
         for hid, act in zip(hids, acts):
-            lin.append(nn.Linear(in_channels,
-                                 hid,
-                                 bias=bias))
+            lin.append(nn.Linear(in_channels, hid, bias=bias))
             if bn:
                 lin.append(nn.BatchNorm1d(hid))
             lin.append(activations.get(act))
             lin.append(nn.Dropout(dropout))
             in_channels = hid
-        lin.append(nn.Linear(in_channels, out_channels,
-                             bias=bias))
+        lin.append(nn.Linear(in_channels, out_channels, bias=bias))
         self.lin = Sequential(*lin)
 
     def reset_parameters(self):
         self.lin.reset_parameters()
 
-    def forward(self, x):
+    def forward(self, x, *args, **kwargs):
         """"""
         return self.lin(x)
 
 
 class LogisticRegression(nn.Module):
-    r"""Simple logistic regression model for 
+    r"""Simple logistic regression model for
     self-supervised/unsupervised learning.
 
     Parameters
     ----------
-    in_channels : int, 
+    in_channels : int,
         the input dimensions of model
-    out_channels : int, 
+    out_channels : int,
         the output dimensions of model
     bias : bool, optional
         whether to use bias in the layers, by default True
@@ -110,9 +102,8 @@ class LogisticRegression(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.MLP`            
+    :class:`~greatx.nn.models.supervised.MLP`
     """
-
     def __init__(self, in_channels: int, out_channels: int, bias: bool = True):
         super().__init__()
         self.lin = nn.Linear(in_channels, out_channels, bias=bias)
@@ -121,6 +112,6 @@ class LogisticRegression(nn.Module):
         torch.nn.init.xavier_uniform_(self.lin.weight.data)
         zeros(self.lin.bias)
 
-    def forward(self, x):
+    def forward(self, x, *args, **kwargs):
         """"""
         return self.lin(x)

@@ -24,7 +24,7 @@ install_requires = [
     'tqdm',
     'scipy',
     'numpy',
-    # 'tabulate',
+    'tabulate',
     'pandas',
     'termcolor',
     'scikit_learn',

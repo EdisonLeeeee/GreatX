@@ -6,8 +6,8 @@ import torch_geometric.transforms as T
 from greatx.datasets import GraphDataset
 from greatx.defense import EigenDecomposition
 from greatx.nn.models import SAT
+from greatx.training import SATTrainer
 from greatx.training.callbacks import ModelCheckpoint
-from greatx.training.trainer import SATTrainer
 from greatx.utils import split_nodes
 
 dataset = 'Cora'

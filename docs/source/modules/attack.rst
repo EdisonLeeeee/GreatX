@@ -6,7 +6,6 @@ Base Classes
 .. currentmodule:: greatx.attack
 
 .. autosummary::
-    :toctree: _autosummary
     :nosignatures:
     {% for cls in greatx.attack.classes %}
       {{ cls }}
@@ -23,7 +22,6 @@ Targeted Attacks
 .. currentmodule:: greatx.attack.targeted
 
 .. autosummary::
-    :toctree: _autosummary
     :nosignatures:
     {% for cls in greatx.attack.targeted.classes %}
       {{ cls }}
@@ -40,7 +38,6 @@ Untargeted Attacks
 .. currentmodule:: greatx.attack.untargeted
 
 .. autosummary::
-    :toctree: _autosummary
     :nosignatures:
     {% for cls in greatx.attack.untargeted.classes %}
       {{ cls }}
@@ -56,7 +53,6 @@ Injection Attacks
 .. currentmodule:: greatx.attack.injection
 
 .. autosummary::
-    :toctree: _autosummary
     :nosignatures:
     {% for cls in greatx.attack.injection.classes %}
       {{ cls }}
@@ -72,7 +68,6 @@ Backdoor Attacks
 .. currentmodule:: greatx.attack.backdoor
 
 .. autosummary::
-    :toctree: _autosummary
     :nosignatures:
     {% for cls in greatx.attack.backdoor.classes %}
       {{ cls }}

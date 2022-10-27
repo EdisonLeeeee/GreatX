@@ -54,7 +54,7 @@ class DropEdge(nn.Module):
 
 
 class DropNode(nn.Module):
-    """DropNode: Sampling node using a uniform distribution.
+    """DropNode: Sampling node using a uniform distribution
     from the `"Graph Contrastive Learning
     with Augmentations" <https://arxiv.org/abs/2010.139023>`_
     paper (NeurIPS'20)
@@ -96,8 +96,8 @@ class DropNode(nn.Module):
 
 
 class DropPath(nn.Module):
-    """DropPath: a structured form of :class:`~greatx.functional.drop_edge`.
-    From the `"MaskGAE: Masked Graph Modeling Meets
+    """DropPath: a structured form of :class:`~greatx.functional.drop_edge`
+    from the `"MaskGAE: Masked Graph Modeling Meets
     Graph Autoencoders" <https://arxiv.org/abs/2205.10053>`_
     paper (arXiv'22)
 
@@ -105,10 +105,12 @@ class DropPath(nn.Module):
     Parameters
     ----------
     p : Optional[Union[float, Tensor]], optional
-        * if :obj:`r` is a float value - the percentage of
+        If :obj:`p` is a float value - the percentage of
         nodes in the graph that chosen as root nodes to
-        perform random walks, by default 0.5
-        * if :obj:`r` is :class:`torch.Tensor`: a set of custom root nodes
+        perform random walks.
+        If :obj:`p` is :class:`torch.Tensor` - a set of
+        custom root nodes.
+        By default, :obj:`p=0.5`.
     walks_per_node : int, optional
         number of walks per node, by default 1
     walk_length : int, optional

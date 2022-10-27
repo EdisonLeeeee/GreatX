@@ -29,18 +29,29 @@ install_requires = [
     'termcolor',
     'scikit_learn',
     'matplotlib',
-    # 'networkx>=2.3',
-    # 'gensim>=3.8.0',
-    # 'numba>=0.46.0',
 ]
 
-setup_requires = ['pytest-runner']
-tests_require = ['pytest', 'pytest-cov']
+full_requires = [
+    'pandas',
+    'matplotlib',
+    'networkx>=2.3',
+    'numba>=0.46.0',
+    # 'gensim>=3.8.0',
+]
+
+test_requires = [
+    'pytest',
+    'pytest-cov',
+]
+
+dev_requires = test_requires + [
+    'pre-commit',
+]
 
 setup(
     name='greatx',
     version=VERSION,
-    description='Arms Race in Adversarial Graph Learning',
+    description='Graph reliability toolbox',
     author='Jintang Li',
     author_email='lijt55@mail2.sysu.edu.cn',
     long_description=open("README.md", encoding="utf-8").read(),
@@ -54,12 +65,14 @@ setup(
         'geometric-adversarial-learning',
         'graph-neural-networks',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     license="MIT LICENSE",
     install_requires=install_requires,
-    setup_requires=setup_requires,
-    tests_require=tests_require,
-    extras_require={'test': tests_require},
+    extras_require={
+        'full': full_requires,
+        'test': test_requires,
+        'dev': dev_requires,
+    },
     packages=find_packages(exclude=("examples", "imgs", "benchmark", "test")),
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -71,7 +84,6 @@ setup(
         "Operating System :: Microsoft :: Windows",
         "Operating System :: Unix",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
     ],

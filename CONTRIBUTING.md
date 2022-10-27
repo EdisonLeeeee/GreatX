@@ -36,7 +36,7 @@ To develop GreatX on your machine, here are some tips:
 4. Install GreatX in editable mode:
 
    ```bash
-   pip install -e "."
+   pip install -e ".[dev,full]"
    ```
 
    This mode will symlink the Python files from the current local source tree into the Python install. Hence, if you modify a Python file, you do not need to reinstall GreatX again and again.

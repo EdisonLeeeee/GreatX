@@ -1,26 +1,31 @@
+import os.path as osp
+
 import torch
-import torch_geometric.transforms as T
+from torch_geometric.data import Data
 from torch_geometric.datasets import Planetoid
 
 from greatx.nn.models import DGI, LogisticRegression
-from greatx.training import DGITrainer, MLPTrainer
+from greatx.training import DGITrainer, Trainer
 from greatx.training.callbacks import EarlyStopping, ModelCheckpoint
 
-dataset = Planetoid(root='~/data/pyg', name='Cora',
-                    transform=T.NormalizeFeatures())
+dataset = 'Cora'
+root = osp.join(osp.dirname(osp.realpath(__file__)), '../../..', 'data')
+dataset = Planetoid(root=root, name=dataset)
+
 data = dataset[0]
 
+num_features = data.x.size(-1)
+num_classes = data.y.max().item() + 1
 
-device = torch.device(
-    'cuda') if torch.cuda.is_available() else torch.device('cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # ================================================================== #
 #                 Self-supervised Learning                           #
 # ================================================================== #
-model = DGI(dataset.num_features, 512)
+model = DGI(num_features, 512)
 trainer = DGITrainer(model, device=device, lr=0.001, weight_decay=0.)
 es = EarlyStopping(monitor='loss', patience=20)
-trainer.fit({'data': data}, epochs=500, callbacks=[es])
+trainer.fit(data, epochs=500, callbacks=[es])
 
 # ================================================================== #
 #                   Get node embedding                               #
@@ -31,9 +36,10 @@ with torch.no_grad():
 # ================================================================== #
 #                    Linear evaluation                               #
 # ================================================================== #
-LR = LogisticRegression(embedding.size(1), dataset.num_classes)
-LR_trainer = MLPTrainer(LR, device=device, weight_decay=0.)
+LR = LogisticRegression(embedding.size(1), num_classes)
+LR_trainer = Trainer(LR, device=device, weight_decay=0.)
 ckp = ModelCheckpoint('model.pth', monitor='val_acc')
-LR_trainer.fit({'x': embedding, 'y': data.y, 'mask': data.train_mask},
-               {'x': embedding, 'y': data.y, 'mask': data.val_mask}, callbacks=[ckp], epochs=200)
-LR_trainer.evaluate({'x': embedding, 'y': data.y, 'mask': data.test_mask})
+emb = Data(x=embedding, y=data.y)
+LR_trainer.fit(emb, (data.train_mask, data.val_mask), callbacks=[ckp],
+               epochs=200)
+LR_trainer.evaluate(emb, data.test_mask)

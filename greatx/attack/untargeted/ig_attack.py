@@ -1,4 +1,4 @@
-from typing import Callable, Optional
+from typing import Optional
 
 import torch
 import torch.nn.functional as F
@@ -14,9 +14,9 @@ from greatx.utils import singleton_mask
 
 
 class IGAttack(UntargetedAttacker, Surrogate):
-    r"""Implementation of `IG-FGSM` attack from the: 
-    `"Adversarial Examples on Graph Data: Deep Insights 
-    into Attack and Defense" 
+    r"""Implementation of `IG-FGSM` attack from the:
+    `"Adversarial Examples on Graph Data: Deep Insights
+    into Attack and Defense"
     <https://arxiv.org/abs/1903.01610>`_ paper (IJCAI'19)
 
     Parameters
@@ -28,14 +28,14 @@ class IGAttack(UntargetedAttacker, Surrogate):
     seed : Optional[int], optional
         the random seed for reproducing the attack, by default None
     name : Optional[str], optional
-        name of the attacker, if None, it would be :obj:`__class__.__name__`, 
+        name of the attacker, if None, it would be :obj:`__class__.__name__`,
         by default None
     kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
 
     Raises
     ------
     TypeError
-        unexpected keyword argument in :obj:`kwargs`       
+        unexpected keyword argument in :obj:`kwargs`
 
     Example
     -------
@@ -44,8 +44,8 @@ class IGAttack(UntargetedAttacker, Surrogate):
         from greatx.dataset import GraphDataset
         import torch_geometric.transforms as T
 
-        dataset = GraphDataset(root='~/data/pyg', name='cora', 
-                          transform=T.LargestConnectedComponents())
+        dataset = GraphDataset(root='.', name='Cora',
+                                transform=T.LargestConnectedComponents())
         data = dataset[0]
 
         surrogate_model = ... # train your surrogate model
@@ -61,34 +61,38 @@ class IGAttack(UntargetedAttacker, Surrogate):
 
         attacker.added_edges() # get added edges after attack
 
-        attacker.removed_edges() # get removed edges after attack   
+        attacker.removed_edges() # get removed edges after attack
 
     Note
     ----
-    * In the paper, `IG-FGSM` attack was implemented for targeted attack, we adapt the codes for the non-targeted attack here.    
-    * Please remember to call :meth:`reset` before each attack. 
+    * In the paper, `IG-FGSM` attack was implemented for targeted attack,
+    we adapt the codes for the non-targeted attack here.
+    * Please remember to call :meth:`reset` before each attack.
     """
     # IGAttack can conduct feature attack
     _allow_feature_attack: bool = True
 
     def __init__(self, data: Data, device: str = "cpu",
-                 seed: Optional[int] = None, name: Optional[str] = None, **kwargs):
-        super().__init__(data=data, device=device, seed=seed, name=name, **kwargs)
+                 seed: Optional[int] = None, name: Optional[str] = None,
+                 **kwargs):
+        super().__init__(data=data, device=device, seed=seed, name=name,
+                         **kwargs)
 
         num_nodes, num_feats = self.num_nodes, self.num_feats
         self.nodes_set = set(range(num_nodes))
         self.feats_list = list(range(num_feats))
-        self.adj = to_dense_adj(self.edge_index,
-                                self.edge_weight,
+        self.adj = to_dense_adj(self.edge_index, self.edge_weight,
                                 num_nodes=self.num_nodes).to(self.device)
 
-    def setup_surrogate(self, surrogate: torch.nn.Module,
-                        victim_nodes: Tensor,
+    def setup_surrogate(self, surrogate: torch.nn.Module, victim_nodes: Tensor,
                         victim_labels: Optional[Tensor] = None, *,
                         eps: float = 1.0):
 
-        Surrogate.setup_surrogate(self, surrogate=surrogate,
-                                  eps=eps, freeze=True)
+        Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps,
+                                  freeze=True)
+
+        if victim_nodes.dtype == torch.bool:
+            victim_nodes = victim_nodes.nonzero().view(-1)
 
         self.victim_nodes = victim_nodes.to(self.device)
         if victim_labels is None:
@@ -96,26 +100,24 @@ class IGAttack(UntargetedAttacker, Surrogate):
         self.victim_labels = victim_labels.to(self.device)
         return self
 
-    def attack(self,
-               num_budgets=0.05, *,
-               steps=20,
-               structure_attack=True,
-               feature_attack=False,
-               disable=False):
+    def attack(self, num_budgets=0.05, *, steps=20, structure_attack=True,
+               feature_attack=False, disable=False):
 
         super().attack(num_budgets=num_budgets,
                        structure_attack=structure_attack,
                        feature_attack=feature_attack)
 
         if structure_attack:
-            link_importance = self.get_link_importance(steps, self.victim_nodes,
-                                                       self.victim_labels, disable=disable)
+            link_importance = self.get_link_importance(steps,
+                                                       self.victim_nodes,
+                                                       self.victim_labels,
+                                                       disable=disable)
             adj_score = self.structure_score(self.adj, link_importance)
 
         if feature_attack:
             self._check_feature_matrix_binary()
-            feature_importance = self.get_feature_importance(steps, self.victim_nodes,
-                                                             self.victim_labels, disable=disable)
+            feature_importance = self.get_feature_importance(
+                steps, self.victim_nodes, self.victim_labels, disable=disable)
             feat_score = self.feature_score(self.feat, feature_importance)
 
         if structure_attack and not feature_attack:
@@ -167,7 +169,8 @@ class IGAttack(UntargetedAttacker, Surrogate):
 
         return self
 
-    def get_link_importance(self, steps, victim_nodes, victim_labels, disable=False):
+    def get_link_importance(self, steps, victim_nodes, victim_labels,
+                            disable=False):
 
         adj = self.adj
         feat = self.feat
@@ -180,7 +183,7 @@ class IGAttack(UntargetedAttacker, Surrogate):
         for alpha in tqdm(torch.linspace(0., 1.0, steps + 1),
                           desc='Computing link importance...',
                           disable=disable):
-            ###### Compute integrated gradients for removing edges ######
+            # Compute integrated gradients for removing edges
             adj_diff = adj - baseline_remove
             adj_step = baseline_remove + alpha * adj_diff
             adj_step.requires_grad_()
@@ -188,7 +191,7 @@ class IGAttack(UntargetedAttacker, Surrogate):
             gradients += self.compute_structure_gradients(
                 adj_step, feat, victim_nodes, victim_labels)
 
-            ###### Compute integrated gradients for adding edges ######
+            # Compute integrated gradients for adding edges
             adj_diff = baseline_add - adj
             adj_step = baseline_add - alpha * adj_diff
             adj_step.requires_grad_()
@@ -198,7 +201,8 @@ class IGAttack(UntargetedAttacker, Surrogate):
 
         return gradients
 
-    def get_feature_importance(self, steps, victim_nodes, victim_labels, disable=False):
+    def get_feature_importance(self, steps, victim_nodes, victim_labels,
+                               disable=False):
 
         adj = self.adj
         feat = self.feat
@@ -211,7 +215,7 @@ class IGAttack(UntargetedAttacker, Surrogate):
         for alpha in tqdm(torch.linspace(0., 1.0, steps + 1),
                           desc='Computing feature importance...',
                           disable=disable):
-            ###### Compute integrated gradients for removing features ######
+            # Compute integrated gradients for removing features
             feat_diff = feat - baseline_remove
             feat_step = baseline_remove + alpha * feat_diff
             feat_step.requires_grad_()
@@ -219,7 +223,7 @@ class IGAttack(UntargetedAttacker, Surrogate):
             gradients += self.compute_feature_gradients(
                 adj, feat_step, victim_nodes, victim_labels)
 
-            ###### Compute integrated gradients for adding features ######
+            # Compute integrated gradients for adding features
             feat_diff = baseline_add - feat
             feat_step = baseline_add - alpha * feat_diff
             feat_step.requires_grad_()
@@ -244,13 +248,15 @@ class IGAttack(UntargetedAttacker, Surrogate):
         score -= score.min()
         return score.view(-1)
 
-    def compute_structure_gradients(self, adj_step, feat, victim_nodes, victim_labels):
+    def compute_structure_gradients(self, adj_step, feat, victim_nodes,
+                                    victim_labels):
 
         logit = self.surrogate(feat, adj_step)[victim_nodes] / self.eps
         loss = F.cross_entropy(logit, victim_labels)
         return grad(loss, adj_step, create_graph=False)[0]
 
-    def compute_feature_gradients(self, adj, feat_step, victim_nodes, victim_labels):
+    def compute_feature_gradients(self, adj, feat_step, victim_nodes,
+                                  victim_labels):
 
         logit = self.surrogate(feat_step, feat_step)[victim_nodes] / self.eps
         loss = F.cross_entropy(logit, victim_labels)

@@ -92,8 +92,7 @@ class GraphDataset(InMemoryDataset):
     >>> GraphDataset.available_datasets() # see all available datasets.
     ['cora', 'citeseer', 'pubmed', ...]
 
-    >>> dataset = GraphDataset(root='~/data/pyg', name='cora',
-                          transform=T.LargestConnectedComponents())
+    >>> dataset = GraphDataset(root='.', name='Cora')
     >>> data = dataset[0] # there is only one graph
 
     Note

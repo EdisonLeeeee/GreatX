@@ -1,12 +1,11 @@
 import torch
 from torch import Tensor
-from torch_geometric.typing import Adj, OptTensor
+from torch_geometric.typing import OptTensor
 from torch_geometric.utils import degree, sort_edge_index, to_dense_batch
 from torch_scatter import scatter
 
 
-def spmm(x: Tensor, edge_index: Tensor,
-         edge_weight: OptTensor = None,
+def spmm(x: Tensor, edge_index: Tensor, edge_weight: OptTensor = None,
          reduce: str = 'sum') -> Tensor:
     r"""Sparse matrix multiplication using :class:`torch_scatter`.
 
@@ -68,7 +67,8 @@ def spmm(x: Tensor, edge_index: Tensor,
     return out
 
 
-def scatter_median(x: Tensor, edge_index: Tensor, edge_weight: OptTensor = None) -> Tensor:
+def scatter_median(x: Tensor, edge_index: Tensor,
+                   edge_weight: OptTensor = None) -> Tensor:
     # NOTE: `to_dense_batch` requires the `index` is sorted by column
     ix = torch.argsort(edge_index[1])
     edge_index = edge_index[:, ix]
@@ -91,20 +91,23 @@ def scatter_median(x: Tensor, edge_index: Tensor, edge_weight: OptTensor = None)
 
 def scatter_sample_median(x: Tensor, edge_index: Tensor,
                           edge_weight: OptTensor = None) -> Tensor:
-    """Approximating the median aggregation with fixed set of neighborhood sampling."""
+    """Approximating the median aggregation with fixed set of
+    neighborhood sampling."""
 
     try:
         from glcore import neighbor_sampler_cpu
-    except ModuleNotFoundError:
-        raise ModuleNotFoundError("`scatter_sample_median` requires glcore which is not installed, please refer to "
-                                  "'https://github.com/EdisonLeeeee/glcore' for more information.")
+    except (ImportError, ModuleNotFoundError):
+        raise ModuleNotFoundError(
+            "`scatter_sample_median` requires glcore which "
+            "is not installed, please refer to "
+            "'https://github.com/EdisonLeeeee/glcore' "
+            "for more information.")
 
     if edge_weight is not None:
-        edge_index, edge_weight = sort_edge_index(
-            edge_index, edge_weight, sort_by_row=False)
+        edge_index, edge_weight = sort_edge_index(edge_index, edge_weight,
+                                                  sort_by_row=False)
     else:
-        edge_index = sort_edge_index(
-            edge_index, sort_by_row=False)
+        edge_index = sort_edge_index(edge_index, sort_by_row=False)
 
     row, col = edge_index
     num_nodes = x.size(0)
@@ -113,8 +116,8 @@ def scatter_sample_median(x: Tensor, edge_index: Tensor,
     replace = True
     size = int(deg.float().mean().item())
     nodes = torch.arange(num_nodes)
-    targets, neighbors, e_id = neighbor_sampler_cpu(
-        colptr.cpu(), row.cpu(), nodes, size, replace)
+    targets, neighbors, e_id = neighbor_sampler_cpu(colptr.cpu(), row.cpu(),
+                                                    nodes, size, replace)
 
     x_j = x[neighbors]
 

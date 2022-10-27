@@ -18,14 +18,14 @@ class RandomAttack(TargetedAttacker):
     seed : Optional[int], optional
         the random seed for reproducing the attack, by default None
     name : Optional[str], optional
-        name of the attacker, if None, it would be :obj:`__class__.__name__`, 
+        name of the attacker, if None, it would be :obj:`__class__.__name__`,
         by default None
     kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
 
     Raises
     ------
     TypeError
-        unexpected keyword argument in :obj:`kwargs`   
+        unexpected keyword argument in :obj:`kwargs`
 
     Example
     -------
@@ -34,17 +34,20 @@ class RandomAttack(TargetedAttacker):
         from greatx.dataset import GraphDataset
         import torch_geometric.transforms as T
 
-        dataset = GraphDataset(root='~/data/pyg', name='cora', 
-                          transform=T.LargestConnectedComponents())
+        import os.path as osp
+
+        dataset = GraphDataset(root='.', name='Cora',
+                                transform=T.LargestConnectedComponents())
         data = dataset[0]
 
         from greatx.attack.targeted import RandomAttack
         attacker = RandomAttack(data)
         attacker.reset()
-        attacker.attack(target=1) # attacking target node `1` with default budget set as node degree
+        # attacking target node `1` with default budget set as node degree
+        attacker.attack(target=1)
 
-        attacker.reset()
-        attacker.attack(target=1, num_budgets=1) # attacking target node `1` with budget set as 1
+        # attacking target node `1` with budget set as 1
+        attacker.attack(target=1, num_budgets=1)
 
         attacker.data() # get attacked graph
 
@@ -52,26 +55,21 @@ class RandomAttack(TargetedAttacker):
 
         attacker.added_edges() # get added edges after attack
 
-        attacker.removed_edges() # get removed edges after attack    
+        attacker.removed_edges() # get removed edges after attack
 
     Note
     ----
-    * Please remember to call :meth:`reset` before each attack.        
+    * Please remember to call :meth:`reset` before each attack.
     """
-
-    def attack(self,
-               target, *,
-               num_budgets=None,
-               threshold=0.5,
-               direct_attack=True,
-               structure_attack=True,
-               feature_attack=False,
+    def attack(self, target, *, num_budgets=None, threshold=0.5,
+               direct_attack=True, structure_attack=True, feature_attack=False,
                disable=False):
 
         super().attack(target, target_label=None, num_budgets=num_budgets,
-                       direct_attack=direct_attack, structure_attack=structure_attack,
+                       direct_attack=direct_attack,
+                       structure_attack=structure_attack,
                        feature_attack=feature_attack)
-        assert 0 < threshold < 1, f"'threshold' should to be greater than 0 and less than 1, but got {threshold}."
+        assert 0 < threshold < 1
 
         if direct_attack:
             influence_nodes = [target]
@@ -80,7 +78,8 @@ class RandomAttack(TargetedAttacker):
 
         num_chosen = 0
 
-        with tqdm(total=self.num_budgets, desc='Peturbing graph...', disable=disable) as pbar:
+        with tqdm(total=self.num_budgets, desc='Peturbing graph...',
+                  disable=disable) as pbar:
             while num_chosen < self.num_budgets:
                 # randomly choose to add or remove edges
                 if random.random() <= threshold:
@@ -105,8 +104,8 @@ class RandomAttack(TargetedAttacker):
     def get_added_edge(self, influence_nodes: list) -> Optional[tuple]:
         u = random.choice(influence_nodes)
         neighbors = self.adjacency_matrix[u].indices.tolist()
-        attacker_nodes = list(
-            self.nodes_set - set(neighbors) - set([self.target, u]))
+        attacker_nodes = list(self.nodes_set - set(neighbors) -
+                              set([self.target, u]))
 
         if len(attacker_nodes) == 0:
             return None

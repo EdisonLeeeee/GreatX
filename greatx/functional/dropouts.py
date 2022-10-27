@@ -1,22 +1,23 @@
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple
 
 import torch
 from torch import Tensor
 
 try:
-    import torch_cluster
+    import torch_cluster  # noqa
+    random_walk = torch.ops.torch_cluster.random_walk
 except ImportError:
-    torch_cluster = None
+    random_walk = None
 
-from torch_geometric.utils import degree, subgraph
+from torch_geometric.utils import degree, sort_edge_index, subgraph
 from torch_geometric.utils.num_nodes import maybe_num_nodes
 
 
 def drop_edge(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
-              p: float = 0.5, training: bool = True) -> Tuple[Tensor, Tensor]:
-    r"""
-    DropEdge: Sampling edge using a uniform distribution 
-    from the `"DropEdge: Towards Deep Graph Convolutional 
+              p: float = 0.5,
+              training: bool = True) -> Tuple[Tensor, Optional[Tensor]]:
+    r"""DropEdge: Sampling edge using a uniform distribution
+    from the `"DropEdge: Towards Deep Graph Convolutional
     Networks on Node Classification" <https://arxiv.org/abs/1907.10903>`_
     paper (ICLR'20)
 
@@ -30,11 +31,11 @@ def drop_edge(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
         the probability of dropping out on each edge, by default 0.5
     training : bool, optional
         whether the model is during training,
-        do nothing if :obj:`training=True`,, by default True
+        do nothing if :obj:`training=True`, by default True
 
     Returns
     -------
-    Tuple[Tensor, Tensor]
+    Tuple[Tensor, Optional[Tensor]]
         the output edge index and edge weight
 
     Raises
@@ -48,11 +49,11 @@ def drop_edge(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
 
         from greatx.functional import drop_edge
         edge_index = torch.LongTensor([[1, 2], [3,4]])
-        drop_edge(edge_index, p=0.5)      
+        drop_edge(edge_index, p=0.5)
 
     See also
     --------
-    :class:`~greatx.nn.layers.DropEdge`         
+    :class:`~greatx.nn.layers.DropEdge`
     """
 
     if p < 0. or p > 1.:
@@ -72,12 +73,12 @@ def drop_edge(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
     return edge_index, edge_weight
 
 
-def drop_node(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
-              p: float = 0.5, training: bool = True,
-              num_nodes: Optional[int] = None) -> Tuple[Tensor, Tensor]:
-    """
-    DropNode: Sampling node using a uniform distribution.
-    from the `"Graph Contrastive Learning 
+def drop_node(
+        edge_index: Tensor, edge_weight: Optional[Tensor] = None,
+        p: float = 0.5, training: bool = True,
+        num_nodes: Optional[int] = None) -> Tuple[Tensor, Optional[Tensor]]:
+    """DropNode: Sampling node using a uniform distribution.
+    from the `"Graph Contrastive Learning
     with Augmentations" <https://arxiv.org/abs/2010.139023>`_
     paper (NeurIPS'20)
 
@@ -91,11 +92,11 @@ def drop_node(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
         the probability of dropping out on each node, by default 0.5
     training : bool, optional
         whether the model is during training,
-        do nothing if :obj:`training=True`,, by default True
+        do nothing if :obj:`training=True`, by default True
 
     Returns
     -------
-    Tuple[Tensor, Tensor]
+    Tuple[Tensor, Optional[Tensor]]
         the output edge index and edge weight
 
     Raises
@@ -113,7 +114,7 @@ def drop_node(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
 
     See also
     --------
-    :class:`~greatx.nn.layers.DropNode`   
+    :class:`~greatx.nn.layers.DropNode`
     """
 
     if p < 0. or p > 1.:
@@ -131,18 +132,13 @@ def drop_node(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
     return subgraph(subset, edge_index, edge_weight)
 
 
-def drop_path(edge_index: Tensor,
-              edge_weight: Optional[Tensor] = None,
-              r: Optional[Union[float, Tensor]] = 0.5,
-              walks_per_node: int = 2,
-              walk_length: int = 4,
-              p: float = 1, q: float = 1,
-              training: bool = True,
-              num_nodes: int = None,
-              by: str = 'uniform',
-              return_dropped: bool = False) -> Tuple[Tensor, Tensor]:
+def drop_path(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
+              p: float = 0.5, walks_per_node: int = 1, walk_length: int = 3,
+              num_nodes: Optional[int] = None, start: str = 'node',
+              is_sorted: bool = False,
+              training: bool = True) -> Tuple[Tensor, Optional[Tensor]]:
     """DropPath: a structured form of :class:`~greatx.functional.drop_edge`.
-    From the `"MaskGAE: Masked Graph Modeling Meets 
+    From the `"MaskGAE: Masked Graph Modeling Meets
     Graph Autoencoders" <https://arxiv.org/abs/2205.10053>`_
     paper (arXiv'22)
 
@@ -153,35 +149,29 @@ def drop_path(edge_index: Tensor,
         the input edge index
     edge_weight : Optional[Tensor], optional
         the input edge weight, by default None
-    r : Optional[Union[float, Tensor]], optional
-        if :obj:`r` is integer value: the percentage of nodes in the graph that
-        chosen as root nodes to perform random walks, by default 0.5
-        if :obj:`r` is :class:`torch.Tensor`: a set of custom root nodes
+    p : Optional[Union[float, Tensor]], optional
+        * if :obj:`r` is a float value - the percentage of
+        nodes in the graph that chosen as root nodes to
+        perform random walks, by default 0.5
+        * if :obj:`r` is :class:`torch.Tensor`: a set of custom root nodes
     walks_per_node : int, optional
-        number of walks per node, by default 2
+        number of walks per node, by default 1
     walk_length : int, optional
-        number of walk length per node, by default 4
-    p : float, optional
-        :obj:`p` in random walks, by default 1
-    q : float, optional
-        :obj:`q` in random walks, by default 1
+        number of walk length per node, by default 3
+    num_nodes : int, optional
+        number of total nodes in the graph, by default None
+    start : string, optional
+        the type of starting node chosen from node of edge,
+        by default 'node'
+    is_sorted : bool, optional
+        whether the input :obj:`edge_index` is sorted
     training : bool, optional
         whether the model is during training,
         do nothing if :obj:`training=True`, by default True
-    num_nodes : int, optional
-        number of total nodes in the graph, by default None
-    by : str, optional
-        sampling root nodes uniformly :obj:`uniform` or 
-        by degree distribution :obj:`degree`, by default 'uniform'
-    return_dropped : bool, optional
-        whether to return dropped paths: 
-        * if :obj:`True`: return (`edge_index`, `edge_weight`, `dropped_paths`)
-        * if :obj:`False`: return (`edge_index`, `edge_weight`)
-        by default 'False'        
 
     Returns
     -------
-    Tuple[Tensor, Tensor]
+    Tuple[Tensor, Optional[Tensor]]
         the output edge index and edge weight
 
     Raises
@@ -189,9 +179,9 @@ def drop_path(edge_index: Tensor,
     ImportError
         if :class:`torch_cluster` is not installed.
     ValueError
-        :obj:`r` is out of scope [0,1]
+        :obj:`p` is out of scope [0,1]
     ValueError
-        :obj:`r` is not integer value or a Tensor
+        :obj:`p` is not integer value or a Tensor
 
     Example
     -------
@@ -199,14 +189,14 @@ def drop_path(edge_index: Tensor,
 
         from greatx.functional import drop_path
         edge_index = torch.LongTensor([[1, 2], [3,4]])
-        drop_path(edge_index, r=0.5)   
+        drop_path(edge_index, p=0.5)
 
-        drop_path(edge_index, r=torch.tensor([1,2])) # specify root nodes   
+        drop_path(edge_index, p=torch.tensor([1,2])) # specify root nodes
 
 
     See also
     --------
-    :class:`~greatx.nn.layers.DropPath`      
+    :class:`~greatx.nn.layers.DropPath`
     """
 
     if torch_cluster is None:
@@ -214,49 +204,46 @@ def drop_path(edge_index: Tensor,
 
     if not training:
         return edge_index, edge_weight
+    if p < 0. or p > 1.:
+        raise ValueError(f'Sample probability has to be between 0 and 1 '
+                         f'(got {p}')
 
-    assert by in {'degree', 'uniform'}
+    assert start in ['node', 'edge']
+    num_edges = edge_index.size(1)
+    edge_mask = edge_index.new_ones(num_edges, dtype=torch.bool)
+
+    if not training or p == 0.0:
+        return edge_index, edge_mask
+
+    if random_walk is None:
+        raise ImportError('`dropout_path` requires `torch-cluster`.')
+
     num_nodes = maybe_num_nodes(edge_index, num_nodes)
 
+    if not is_sorted:
+        edge_index = sort_edge_index(edge_index, edge_weight,
+                                     num_nodes=num_nodes)
+        if edge_weight is not None:
+            edge_index, edge_weight = edge_index
+
     row, col = edge_index
-    deg = degree(row, num_nodes=num_nodes, dtype=torch.float)
-
-    if isinstance(r, (int, float)):
-        if r <= 0. or r > 1.:
-            raise ValueError(f'Root node sampling ratio `r` has to be between 0 and 1 '
-                             f'(got {r}')
-        num_starts = int(r * num_nodes)
-        if by == 'degree':
-            prob = deg / deg.sum()
-            start = prob.multinomial(num_samples=num_starts, replacement=True)
-        else:
-            start = torch.randperm(num_nodes, device=edge_index.device)[
-                :num_starts]
-    elif torch.is_tensor(r):
-        start = r.to(edge_index)
+    if start == 'edge':
+        sample_mask = torch.rand(row.size(0), device=edge_index.device) <= p
+        start = row[sample_mask].repeat(walks_per_node)
     else:
-        raise ValueError('Root node sampling ratio `r` must be '
-                         f'`float`, `torch.Tensor`, but got {r}.')
+        start = torch.randperm(
+            num_nodes,
+            device=edge_index.device)[:round(num_nodes *
+                                             p)].repeat(walks_per_node)
 
-    if walks_per_node:
-        start = start.repeat(walks_per_node)
-
+    deg = degree(row, num_nodes=num_nodes)
     rowptr = row.new_zeros(num_nodes + 1)
     torch.cumsum(deg, 0, out=rowptr[1:])
-
-    n_id, e_id = torch.ops.torch_cluster.random_walk(
-        rowptr, col, start, walk_length, p, q)
-    e_id = e_id[e_id > 0]
-
-    mask = row.new_ones(row.size(0), dtype=torch.bool)
-
-    if e_id.numel() > 0:
-        mask[e_id.view(-1)] = False
+    n_id, e_id = random_walk(rowptr, col, start, walk_length, 1.0, 1.0)
+    e_id = e_id[e_id != -1].view(-1)  # filter illegal edges
+    edge_mask[e_id] = False
 
     if edge_weight is not None:
-        edge_weight = edge_weight[mask]
+        edge_weight = edge_weight[edge_mask]
 
-    if return_dropped:
-        return edge_index[:, mask], edge_weight, edge_index[:, ~mask]
-    else:
-        return edge_index[:, mask], edge_weight
+    return edge_index[:, edge_mask], edge_weight

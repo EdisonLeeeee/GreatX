@@ -1,13 +1,11 @@
 import sys
-from typing import Any, Callable, List, Optional, Union
+from typing import Callable, Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
-from torch.utils.data import DataLoader
 from torch_geometric.data import Data
-from torch_geometric.loader import DataLoader as PyGLoader
 
 from greatx.training.callbacks import (Callback, CallbackList, Optimizer,
                                        Scheduler)
@@ -23,7 +21,7 @@ class Trainer:
         the model used for training
     device : Union[str, torch.device], optional
         the device used for training, by default 'cpu'
-    cfg : other keyword arguments, such as `lr` and `weight_decay`.    
+    cfg : other keyword arguments, such as `lr` and `weight_decay`.
 
     Example
     -------
@@ -35,23 +33,23 @@ class Trainer:
     Data(x=[2485, 1433], edge_index=[2, 10138], y=[2485])
 
     >>> # simple training
-    >>> trainer.fit({'data': data, 'mask': your_train_mask})
+    >>> trainer.fit(data, data.train_mask)
 
     >>> # train with model picking
     >>> from greatx.training import ModelCheckpoint
     >>> cb = ModelCheckpoint('my_ckpt', monitor='val_acc')
-    >>> trainer.fit({'data': data, 'mask': your_train_mask},
-    ... {'data': data, 'mask': your_val_mask}, callbacks=[cb])    
+    >>> trainer.fit(data, mask=(data.train_mask,
+    ...                         data.val_mask), callbacks=[cb])
 
     >>> # get training logs
     >>> history = trainer.model.history
 
-    >>> trainer.evaluate({'data': data, 'mask': your_test_mask}) # evaluation
+    >>> trainer.evaluate(data, your_test_mask) # evaluation
 
-    >>> predict = trainer.predict({'data': data, 'mask': your_mask}) # prediction
+    >>> predict = trainer.predict(data, your_mask) # prediction
     """
-
-    def __init__(self, model: nn.Module, device: Union[str, torch.device] = 'cpu', **cfg):
+    def __init__(self, model: nn.Module,
+                 device: Union[str, torch.device] = 'cpu', **cfg):
         self.device = torch.device(device)
         self.model = model.to(self.device)
 
@@ -67,19 +65,22 @@ class Trainer:
         self.optimizer = self.config_optimizer()
         self.scheduler = self.config_scheduler(self.optimizer)
 
-    def fit(self, train_inputs, val_inputs: Optional[dict] = None,
-            callbacks: Optional[Callback] = None,
-            verbose: Optional[int] = 1, epochs: int = 100) -> "Trainer":
+    def fit(self, data: Union[Data, Tuple[Data, Data]],
+            mask: Optional[Union[Tensor, Tuple[Tensor, Tensor]]] = None,
+            callbacks: Optional[Callback] = None, verbose: Optional[int] = 1,
+            epochs: int = 100) -> "Trainer":
         """Simple training method designed for `:attr:model`
 
         Parameters
         ----------
-        train_inputs : dict like or custom inputs
-            training data. It is used for `train_step`.
-        val_inputs : Optional[dict]
-            used for validation.
+        data : Union[Data, Tuple[Data, Data]]
+            An instance or a tuple of
+            :class:`torch_geometric.data.Data` denoting the graph.
+            They are used for `train_step` and `val_step`, respectively.
+        mask : Optional[Union[Tensor, Tuple[Tensor, Tensor]]]
+            node masks used for training and validation.
         callbacks : Optional[Callback], optional
-            callbacks used for training, 
+            callbacks used for training,
             see `greatx.training.callbacks`, by default None
         verbose : Optional[int], optional
             verbosity during training, can be:
@@ -90,19 +91,29 @@ class Trainer:
         Example
         -------
         >>> # simple training
-        >>> trainer.fit({'data': data, 'mask': train_mask})
+        >>> trainer.fit(data, data.train_mask)
 
         >>> # train with model picking
         >>> from greatx.training import ModelCheckpoint
         >>> cb = ModelCheckpoint('my_ckpt', monitor='val_acc')
-        >>> trainer.fit({'data': data, 'mask': train_mask},
-        {'data': data, 'mask': val_mask}, callbacks=[cb])           
+        >>> trainer.fit(data, mask=(data.train_mask,
+        ...                         data.val_mask), callbacks=[cb])
         """
 
         empty_cache = self.cfg['empty_cache']
         model = self.model.to(self.device)
         model.stop_training = False
-        validation = val_inputs is not None
+
+        validation = isinstance(data, tuple) or isinstance(mask, tuple)
+        if isinstance(data, tuple):
+            train_data, val_data = data
+        else:
+            train_data = val_data = data
+
+        if isinstance(mask, tuple):
+            train_mask, val_mask = mask
+        else:
+            train_mask = val_mask = mask
 
         # Setup callbacks
         self.callbacks = callbacks = self.config_callbacks(
@@ -119,11 +130,11 @@ class Trainer:
                 if empty_cache and self.device.type.startswith('cuda'):
                     torch.cuda.empty_cache()
                 callbacks.on_epoch_begin(epoch)
-                train_logs = self.train_step(train_inputs)
+                train_logs = self.train_step(train_data, train_mask)
                 logs.update(train_logs)
 
                 if validation:
-                    val_logs = self.test_step(val_inputs)
+                    val_logs = self.test_step(val_data, val_mask)
                     val_logs = {f'val_{k}': v for k, v in val_logs.items()}
                     logs.update(val_logs)
 
@@ -138,13 +149,15 @@ class Trainer:
 
         return self
 
-    def train_step(self, inputs: dict) -> dict:
+    def train_step(self, data: Data, mask: Optional[Tensor] = None) -> dict:
         """One-step training on the inputs.
 
         Parameters
         ----------
-        inputs : dict like or custom inputs
+        data : Data
             the training data.
+        mask : Optional[Tensor]
+            the mask of training nodes.
 
         Returns
         -------
@@ -155,8 +168,7 @@ class Trainer:
         self.callbacks.on_train_batch_begin(0)
 
         model.train()
-        data = inputs['data'].to(self.device)
-        mask = inputs.get('mask', None)
+        data = data.to(self.device)
         adj_t = getattr(data, 'adj_t', None)
         y = data.y.squeeze()
 
@@ -173,15 +185,19 @@ class Trainer:
         loss.backward()
         self.callbacks.on_train_batch_end(0)
 
-        return dict(loss=loss.item(), acc=out.argmax(-1).eq(y).float().mean().item())
+        return dict(loss=loss.item(),
+                    acc=out.argmax(-1).eq(y).float().mean().item())
 
-    def evaluate(self, inputs: dict, verbose: Optional[int] = 1) -> BunchDict:
+    def evaluate(self, data: Data, mask: Optional[Tensor] = None,
+                 verbose: Optional[int] = 1) -> BunchDict:
         """Simple evaluation step for `:attr:model`
 
         Parameters
         ----------
-        inputs : dict like or custom inputs
-            test data, it is used for `test_step`.
+        data : Data
+            the testing data used for :meth:`test_step`.
+        mask : Optional[Tensor]
+            the mask of testing nodes used for :meth:`test_step`.
         verbose : Optional[int], optional
             verbosity during evaluation, by default 1
 
@@ -192,27 +208,28 @@ class Trainer:
 
         Example
         -------
-        >>> trainer.evaluate({'data': data, 'mask': data.test_mask}) # evaluation
+        >>> trainer.evaluate(data, data.test_mask) # evaluation
         """
         if verbose:
             print("Evaluating...")
 
         self.model = self.model.to(self.device)
 
-        progbar = Progbar(target=1,
-                          verbose=verbose)
-        logs = BunchDict(**self.test_step(inputs))
+        progbar = Progbar(target=1, verbose=verbose)
+        logs = BunchDict(**self.test_step(data, mask))
         progbar.update(1, logs)
         return logs
 
     @torch.no_grad()
-    def test_step(self, inputs: dict) -> dict:
+    def test_step(self, data: Data, mask: Optional[Tensor] = None) -> dict:
         """One-step evaluation on the inputs.
 
         Parameters
         ----------
-        inputs : dict like or custom inputs
+        data : Data
             the testing data.
+        mask : Optional[Tensor]
+            the mask of testing nodes.
 
         Returns
         -------
@@ -221,8 +238,7 @@ class Trainer:
         """
         model = self.model
         model.eval()
-        data = inputs['data'].to(self.device)
-        mask = inputs.get('mask', None)
+        data = data.to(self.device)
         adj_t = getattr(data, 'adj_t', None)
         y = data.y.squeeze()
 
@@ -237,16 +253,19 @@ class Trainer:
 
         loss = F.cross_entropy(out, y)
 
-        return dict(loss=loss.item(), acc=out.argmax(-1).eq(y).float().mean().item())
+        return dict(loss=loss.item(),
+                    acc=out.argmax(-1).eq(y).float().mean().item())
 
-    @torch.no_grad()
-    def predict_step(self, inputs: dict) -> Tensor:
+    def predict_step(self, data: Data,
+                     mask: Optional[Tensor] = None) -> Tensor:
         """One-step prediction on the inputs.
 
         Parameters
         ----------
-        inputs : dict like or custom inputs
+        data : Data
             the prediction data.
+        mask : Optional[Tensor]
+            the mask of prediction nodes.
 
         Returns
         -------
@@ -255,9 +274,7 @@ class Trainer:
         """
         model = self.model
         model.eval()
-        callbacks = self.callbacks
-        data = inputs['data'].to(self.device)
-        mask = inputs.get('mask', None)
+        data = data.to(self.device)
         adj_t = getattr(data, 'adj_t', None)
 
         if adj_t is None:
@@ -269,23 +286,28 @@ class Trainer:
             out = out[mask]
         return out
 
-    def predict(self, inputs: dict,
-                transform: Callable = torch.nn.Softmax(dim=-1)) -> Tensor:
+    @torch.no_grad()
+    def predict(
+        self, data: Data, mask: Optional[Tensor] = None,
+        transform: Callable = torch.nn.Softmax(dim=-1)
+    ) -> Tensor:
         """
         Parameters
         ----------
-        inputs : dict like or custom inputs
-            predict data, it is used for `predict_step`
+        data : Data
+            the prediction data used for :meth:`predict_step`.
+        mask : Optional[Tensor]
+            the mask of prediction nodes used for :meth:`predict_step`.
         transform : Callable
             Callable function applied on output predictions.
 
         Example
         -------
-        >>> predict = trainer.predict({'data': data, 'mask': mask_or_not_given}) # prediction
+        >>> predict = trainer.predict(data, mask) # prediction
         """
 
         self.model.to(self.device)
-        out = self.predict_step(inputs).squeeze()
+        out = self.predict_step(data, mask).squeeze()
         if transform is not None:
             out = transform(out)
         return out
@@ -293,12 +315,14 @@ class Trainer:
     def config_optimizer(self) -> torch.optim.Optimizer:
         lr = self.cfg.get('lr', 0.01)
         weight_decay = self.cfg.get('weight_decay', 5e-4)
-        return torch.optim.Adam(self.model.parameters(), lr=lr, weight_decay=weight_decay)
+        return torch.optim.Adam(self.model.parameters(), lr=lr,
+                                weight_decay=weight_decay)
 
     def config_scheduler(self, optimizer: torch.optim.Optimizer):
         return None
 
-    def config_callbacks(self, verbose, epochs, callbacks=None) -> CallbackList:
+    def config_callbacks(self, verbose, epochs,
+                         callbacks=None) -> CallbackList:
         callbacks = CallbackList(callbacks=callbacks, add_history=True,
                                  add_progbar=True if verbose else False)
         if self.optimizer is not None:
@@ -310,11 +334,11 @@ class Trainer:
         return callbacks
 
     @property
-    def model(self):
+    def model(self) -> Optional[torch.nn.Module]:
         return self._model
 
     @model.setter
-    def model(self, m):
+    def model(self, m: Optional[torch.nn.Module]):
         assert m is None or isinstance(m, torch.nn.Module)
         self._model = m
 
@@ -326,8 +350,8 @@ class Trainer:
         return self
 
     def __repr__(self) -> str:
-        model = self.model
-        return f"{self.__class__.__name__}(model={model.__class__.__name__}{self.extra_repr()})"
+        name = self.model.__class__.__name__
+        return f"{self.__class__.__name__}(model={name}{self.extra_repr()})"
 
     __str__ = __repr__
 

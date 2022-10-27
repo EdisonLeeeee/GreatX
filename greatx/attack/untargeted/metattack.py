@@ -14,9 +14,9 @@ from greatx.utils import singleton_mask
 
 
 class Metattack(UntargetedAttacker, Surrogate):
-    r"""Implementation of `Metattack` attack from the: 
-    `"Adversarial Attacks on Graph Neural Networks 
-    via Meta Learning" 
+    r"""Implementation of `Metattack` attack from the:
+    `"Adversarial Attacks on Graph Neural Networks
+    via Meta Learning"
     <https://arxiv.org/abs/1902.08412>`_ paper (ICLR'19)
 
     Parameters
@@ -28,14 +28,14 @@ class Metattack(UntargetedAttacker, Surrogate):
     seed : Optional[int], optional
         the random seed for reproducing the attack, by default None
     name : Optional[str], optional
-        name of the attacker, if None, it would be :obj:`__class__.__name__`, 
-        by default None
+        name of the attacker, if None, it would be
+        :obj:`__class__.__name__`, by default None
     kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
 
     Raises
     ------
     TypeError
-        unexpected keyword argument in :obj:`kwargs`       
+        unexpected keyword argument in :obj:`kwargs`
 
     Example
     -------
@@ -43,9 +43,8 @@ class Metattack(UntargetedAttacker, Surrogate):
 
         from greatx.dataset import GraphDataset
         import torch_geometric.transforms as T
-
-        dataset = GraphDataset(root='~/data/pyg', name='cora', 
-                            transform=T.LargestConnectedComponents())
+        dataset = GraphDataset(root='.', name='Cora',
+                                transform=T.LargestConnectedComponents())
         data = dataset[0]
 
         surrogate_model = ... # train your surrogate model
@@ -65,41 +64,40 @@ class Metattack(UntargetedAttacker, Surrogate):
 
     Note
     ----
-    * Please remember to call :meth:`reset` before each attack.     
+    * Please remember to call :meth:`reset` before each attack.
     """
 
     # Metattack can also conduct feature attack
     _allow_feature_attack: bool = True
 
     def setup_surrogate(self, surrogate: torch.nn.Module,
-                        labeled_nodes: Tensor,
-                        unlabeled_nodes: Tensor,
-                        lr: float = 0.1,
-                        epochs: int = 100,
-                        momentum: float = 0.9,
-                        lambda_: float = 0.,
-                        *,
+                        labeled_nodes: Tensor, unlabeled_nodes: Tensor,
+                        lr: float = 0.1, epochs: int = 100,
+                        momentum: float = 0.9, lambda_: float = 0., *,
                         eps: float = 1.0):
 
         if lambda_ not in (0., 0.5, 1.):
             raise ValueError(
-                "Invalid argument `lambda_`, allowed values [0: (meta-self), 1: (meta-train), 0.5: (meta-both)]."
-            )
+                "Invalid argument `lambda_`, allowed values "
+                "[0: (meta-self), 1: (meta-train), 0.5: (meta-both)].")
 
         Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps,
-                                  freeze=False,
-                                  required=GCN)
+                                  freeze=False, required=GCN)
 
-        labeled_nodes = torch.LongTensor(labeled_nodes).to(self.device)
-        unlabeled_nodes = torch.LongTensor(unlabeled_nodes).to(self.device)
+        if labeled_nodes.dtype == torch.bool:
+            labeled_nodes = labeled_nodes.nonzero().view(-1)
+        labeled_nodes = labeled_nodes.to(self.device)
+
+        if unlabeled_nodes.dtype == torch.bool:
+            unlabeled_nodes = unlabeled_nodes.nonzero().view(-1)
+        unlabeled_nodes = unlabeled_nodes.to(self.device)
 
         self.labeled_nodes = labeled_nodes
         self.unlabeled_nodes = unlabeled_nodes
 
         self.y_train = self.label[labeled_nodes]
         self.y_self_train = self.estimate_self_training_labels(unlabeled_nodes)
-        self.adj = to_dense_adj(self.edge_index,
-                                self.edge_weight,
+        self.adj = to_dense_adj(self.edge_index, self.edge_weight,
                                 num_nodes=self.num_nodes).to(self.device)
 
         weights = []
@@ -128,14 +126,16 @@ class Metattack(UntargetedAttacker, Surrogate):
         return self
 
     def get_perturbed_adj(self, adj_changes=None):
-        adj_changes = self.adj_changes if adj_changes is None else adj_changes
+        if adj_changes is None:
+            adj_changes = self.adj_changes
         adj_changes_triu = torch.triu(adj_changes, diagonal=1)
         adj_changes_symm = self.clip(adj_changes_triu + adj_changes_triu.t())
         modified_adj = adj_changes_symm + self.adj
         return modified_adj
 
     def get_perturbed_feat(self, feat_changes=None):
-        feat_changes = self.feat_changes if feat_changes is None else feat_changes
+        if feat_changes is None:
+            feat_changes = self.feat_changes
         return self.feat + self.clip(feat_changes)
 
     def clip(self, matrix):
@@ -166,24 +166,19 @@ class Metattack(UntargetedAttacker, Surrogate):
         for _ in range(self.epochs):
             out = self(adj, feat)
             loss = F.cross_entropy(out[self.labeled_nodes], self.y_train)
-            grads = torch.autograd.grad(loss,
-                                        self.weights,
-                                        create_graph=True)
+            grads = torch.autograd.grad(loss, self.weights, create_graph=True)
 
             self.w_velocities = [
-                self.momentum * v + g
-                for v, g in zip(self.w_velocities, grads)
+                self.momentum * v + g for v, g in zip(self.w_velocities, grads)
             ]
 
             self.weights = [
-                w - self.lr * v for w, v in zip(self.weights, self.w_velocities)
+                w - self.lr * v
+                for w, v in zip(self.weights, self.w_velocities)
             ]
 
-    def attack(self,
-               num_budgets=0.05, *,
-               structure_attack=True,
-               feature_attack=False,
-               disable=False):
+    def attack(self, num_budgets=0.05, *, structure_attack=True,
+               feature_attack=False, disable=False):
 
         super().attack(num_budgets=num_budgets,
                        structure_attack=structure_attack,
@@ -202,8 +197,7 @@ class Metattack(UntargetedAttacker, Surrogate):
 
         num_nodes, num_feats = self.num_nodes, self.num_feats
 
-        for it in tqdm(range(self.num_budgets),
-                       desc='Peturbing graph...',
+        for it in tqdm(range(self.num_budgets), desc='Peturbing graph...',
                        disable=disable):
 
             if structure_attack:
@@ -215,8 +209,8 @@ class Metattack(UntargetedAttacker, Surrogate):
             adj_norm = dense_gcn_norm(modified_adj)
             self.inner_train(adj_norm, modified_feat)
 
-            adj_grad, feat_grad = self.compute_gradients(adj_norm,
-                                                         modified_feat)
+            adj_grad, feat_grad = self.compute_gradients(
+                adj_norm, modified_feat)
 
             adj_grad_score = modified_adj.new_zeros(1)
             feat_grad_score = modified_feat.new_zeros(1)
@@ -275,13 +269,13 @@ class Metattack(UntargetedAttacker, Surrogate):
         if self.lambda_ == 1:
             loss = F.cross_entropy(logit[self.labeled_nodes], self.y_train)
         elif self.lambda_ == 0.:
-            loss = F.cross_entropy(
-                logit[self.unlabeled_nodes], self.y_self_train)
+            loss = F.cross_entropy(logit[self.unlabeled_nodes],
+                                   self.y_self_train)
         else:
-            loss_labeled = F.cross_entropy(
-                logit[self.labeled_nodes], self.y_train)
-            loss_unlabeled = F.cross_entropy(
-                logit[self.unlabeled_nodes], self.y_self_train)
+            loss_labeled = F.cross_entropy(logit[self.labeled_nodes],
+                                           self.y_train)
+            loss_unlabeled = F.cross_entropy(logit[self.unlabeled_nodes],
+                                             self.y_self_train)
             loss = self.lambda_ * loss_labeled + \
                 (1 - self.lambda_) * loss_unlabeled
 

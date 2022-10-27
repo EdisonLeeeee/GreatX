@@ -31,7 +31,7 @@ def drop_edge(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
         the probability of dropping out on each edge, by default 0.5
     training : bool, optional
         whether the model is during training,
-        do nothing if :obj:`training=True`,, by default True
+        do nothing if :obj:`training=True`, by default True
 
     Returns
     -------
@@ -92,7 +92,7 @@ def drop_node(
         the probability of dropping out on each node, by default 0.5
     training : bool, optional
         whether the model is during training,
-        do nothing if :obj:`training=True`,, by default True
+        do nothing if :obj:`training=True`, by default True
 
     Returns
     -------

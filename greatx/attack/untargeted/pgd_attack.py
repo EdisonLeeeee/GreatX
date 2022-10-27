@@ -1,6 +1,6 @@
 import math
 from copy import deepcopy
-from typing import Callable, Optional
+from typing import Optional
 
 import torch
 import torch.nn.functional as F
@@ -15,9 +15,9 @@ from greatx.nn.models.surrogate import Surrogate
 
 
 class PGDAttack(UntargetedAttacker, Surrogate):
-    r"""Implementation of `PGD` attack from the: 
+    r"""Implementation of `PGD` attack from the:
     `"Topology Attack and Defense for Graph Neural Networks:
-    An Optimization Perspective" 
+    An Optimization Perspective"
     <https://arxiv.org/abs/1906.04214>`_ paper (IJCAI'19)
 
     Parameters
@@ -29,14 +29,14 @@ class PGDAttack(UntargetedAttacker, Surrogate):
     seed : Optional[int], optional
         the random seed for reproducing the attack, by default None
     name : Optional[str], optional
-        name of the attacker, if None, it would be :obj:`__class__.__name__`, 
-        by default None
+        name of the attacker, if None, it would be
+        :obj:`__class__.__name__`, by default None
     kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
 
     Raises
     ------
     TypeError
-        unexpected keyword argument in :obj:`kwargs`       
+        unexpected keyword argument in :obj:`kwargs`
 
     Example
     -------
@@ -45,8 +45,8 @@ class PGDAttack(UntargetedAttacker, Surrogate):
         from greatx.dataset import GraphDataset
         import torch_geometric.transforms as T
 
-        dataset = GraphDataset(root='~/data/pyg', name='cora', 
-                          transform=T.LargestConnectedComponents())
+        dataset = GraphDataset(root='.', name='Cora',
+                                transform=T.LargestConnectedComponents())
         data = dataset[0]
 
         surrogate_model = ... # train your surrogate model
@@ -62,12 +62,11 @@ class PGDAttack(UntargetedAttacker, Surrogate):
 
         attacker.added_edges() # get added edges after attack
 
-        attacker.removed_edges() # get removed edges after attack       
+        attacker.removed_edges() # get removed edges after attack
 
     Note
     ----
-    * MinMax attack is a variant of :class:`~greatx.attack.untargeted.PGDAttack` attack.   
-    * Please remember to call :meth:`reset` before each attack.      
+    * Please remember to call :meth:`reset` before each attack.
 
     """
 
@@ -76,32 +75,33 @@ class PGDAttack(UntargetedAttacker, Surrogate):
 
     def setup_surrogate(self, surrogate: torch.nn.Module,
                         labeled_nodes: Tensor,
-                        unlabeled_nodes: Optional[Tensor] = None,
-                        *,
-                        eps: float = 1.0,
-                        freeze: bool = True):
+                        unlabeled_nodes: Optional[Tensor] = None, *,
+                        eps: float = 1.0, freeze: bool = True):
 
-        Surrogate.setup_surrogate(self, surrogate=surrogate,
-                                  eps=eps, freeze=freeze)
+        Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps,
+                                  freeze=freeze)
 
         labeled_nodes = torch.LongTensor(labeled_nodes).to(self.device)
         # poisoning attack in DeepRobust
         if unlabeled_nodes is None:
+            if labeled_nodes.dtype == torch.bool:
+                labeled_nodes = labeled_nodes.nonzero().view(-1)
             victim_nodes = labeled_nodes
             victim_labels = self.label[labeled_nodes]
         else:  # Evasion attack in original paper
-            unlabeled_nodes = torch.LongTensor(unlabeled_nodes).to(self.device)
+            if unlabeled_nodes.dtype == torch.bool:
+                unlabeled_nodes = unlabeled_nodes.nonzero().view(-1)
+            unlabeled_nodes = unlabeled_nodes.to(self.device)
             self_training_labels = self.estimate_self_training_labels(
                 unlabeled_nodes)
             victim_nodes = torch.cat([labeled_nodes, unlabeled_nodes], dim=0)
-            victim_labels = torch.cat([self.label[labeled_nodes],
-                                       self_training_labels], dim=0)
+            victim_labels = torch.cat(
+                [self.label[labeled_nodes], self_training_labels], dim=0)
 
-        adj = to_dense_adj(self.edge_index,
-                           self.edge_weight,
+        adj = to_dense_adj(self.edge_index, self.edge_weight,
                            num_nodes=self.num_nodes).to(self.device)
-        I = torch.eye(self.num_nodes, device=self.device)
-        self.complementary = torch.ones_like(adj) - I - 2. * adj
+        identity = torch.eye(self.num_nodes, device=self.device)
+        self.complementary = torch.ones_like(adj) - identity - 2. * adj
         self.adj = adj
         self.victim_nodes = victim_nodes
         self.victim_labels = victim_labels
@@ -113,14 +113,8 @@ class PGDAttack(UntargetedAttacker, Surrogate):
         self.perturbations = torch.zeros_like(self.adj).requires_grad_()
         return self
 
-    def attack(self,
-               num_budgets=0.05, *,
-               C=None,
-               CW_loss=False,
-               epochs=200,
-               sample_epochs=20,
-               structure_attack=True,
-               feature_attack=False,
+    def attack(self, num_budgets=0.05, *, C=None, CW_loss=False, epochs=200,
+               sample_epochs=20, structure_attack=True, feature_attack=False,
                disable=False):
 
         super().attack(num_budgets=num_budgets,
@@ -130,8 +124,7 @@ class PGDAttack(UntargetedAttacker, Surrogate):
         self.CW_loss = CW_loss
         C = self.config_C(C)
         perturbations = self.perturbations
-        for epoch in tqdm(range(epochs),
-                          desc='PGD training...',
+        for epoch in tqdm(range(epochs), desc='PGD training...',
                           disable=disable):
             gradients = self.compute_gradients(perturbations,
                                                self.victim_nodes,
@@ -140,8 +133,8 @@ class PGDAttack(UntargetedAttacker, Surrogate):
             perturbations.data.add_(lr * gradients)
             perturbations = self.projection(perturbations)
 
-        best_s = self.bernoulli_sample(
-            perturbations, sample_epochs, disable=disable)
+        best_s = self.bernoulli_sample(perturbations, sample_epochs,
+                                       disable=disable)
         row, col = torch.where(best_s > 0.)
         for it, (u, v) in enumerate(zip(row.tolist(), col.tolist())):
             if self.adj[u, v] > 0:
@@ -179,7 +172,8 @@ class PGDAttack(UntargetedAttacker, Surrogate):
         return miu
 
     def get_perturbed_adj(self, perturbations=None):
-        perturbations = self.perturbations if perturbations is None else perturbations
+        if perturbations is None:
+            perturbations = self.perturbations
         adj_triu = torch.triu(perturbations, diagonal=1)
         perturbations = adj_triu + adj_triu.t()
         adj = self.complementary * perturbations + self.adj
@@ -210,16 +204,15 @@ class PGDAttack(UntargetedAttacker, Surrogate):
         best_s = None
         probs = torch.triu(perturbations, diagonal=1)
         sampler = Bernoulli(probs)
-        for it in tqdm(range(sample_epochs),
-                       desc='Bernoulli sampling...',
+        for it in tqdm(range(sample_epochs), desc='Bernoulli sampling...',
                        disable=disable):
             sampled = sampler.sample()
             if sampled.sum() > self.num_budgets:
                 continue
 
             perturbations.data.copy_(sampled)
-            loss = self.compute_loss(
-                perturbations, self.victim_nodes, self.victim_labels)
+            loss = self.compute_loss(perturbations, self.victim_nodes,
+                                     self.victim_labels)
 
             if best_loss < loss:
                 best_loss = loss
@@ -234,8 +227,8 @@ class PGDAttack(UntargetedAttacker, Surrogate):
 
         if self.CW_loss:
             # logit = F.softmax(logit, dim=1)
-            one_hot = torch.eye(
-                logit.size(-1), device=self.device)[victim_labels]
+            one_hot = torch.eye(logit.size(-1),
+                                device=self.device)[victim_labels]
             range_idx = torch.arange(victim_nodes.size(0), device=self.device)
             best_wrong_class = (logit - 1000 * one_hot).argmax(1)
             margin = logit[range_idx, victim_labels] - \
@@ -252,9 +245,9 @@ class PGDAttack(UntargetedAttacker, Surrogate):
 
 
 class MinmaxAttack(PGDAttack):
-    r"""Implementation of `MinMax` attack from the: 
+    r"""Implementation of `MinMax` attack from the:
     `"Topology Attack and Defense for Graph Neural Networks:
-    An Optimization Perspective" 
+    An Optimization Perspective"
     <https://arxiv.org/abs/1906.04214>`_ paper (IJCAI'19)
 
     Parameters
@@ -266,14 +259,14 @@ class MinmaxAttack(PGDAttack):
     seed : Optional[int], optional
         the random seed for reproducing the attack, by default None
     name : Optional[str], optional
-        name of the attacker, if None, it would be :obj:`__class__.__name__`, 
+        name of the attacker, if None, it would be :obj:`__class__.__name__`,
         by default None
     kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
 
     Raises
     ------
     TypeError
-        unexpected keyword argument in :obj:`kwargs`       
+        unexpected keyword argument in :obj:`kwargs`
 
     Example
     -------
@@ -282,8 +275,8 @@ class MinmaxAttack(PGDAttack):
         from greatx.dataset import GraphDataset
         import torch_geometric.transforms as T
 
-        dataset = GraphDataset(root='~/data/pyg', name='cora', 
-                          transform=T.LargestConnectedComponents())
+        dataset = GraphDataset(root='.', name='Cora',
+                                transform=T.LargestConnectedComponents())
         data = dataset[0]
 
         surrogate_model = ... # train your surrogate model
@@ -299,23 +292,24 @@ class MinmaxAttack(PGDAttack):
 
         attacker.added_edges() # get added edges after attack
 
-        attacker.removed_edges() # get removed edges after attack       
+        attacker.removed_edges() # get removed edges after attack
 
     Note
     ----
-    * MinMax attack is a variant of :class:`~greatx.attack.untargeted.PGDAttack` attack.
-    * Please remember to call :meth:`reset` before each attack.     
+    * MinMax attack is a variant of
+    :class:`~greatx.attack.untargeted.PGDAttack` attack.
+    * Please remember to call :meth:`reset` before each attack.
 
     """
-
     def setup_surrogate(self, surrogate: torch.nn.Module,
                         labeled_nodes: Tensor,
-                        unlabeled_nodes: Optional[Tensor] = None,
-                        *,
+                        unlabeled_nodes: Optional[Tensor] = None, *,
                         eps: float = 1.0):
 
-        super().setup_surrogate(surrogate=surrogate, labeled_nodes=labeled_nodes,
-                                unlabeled_nodes=unlabeled_nodes, eps=eps, freeze=False)
+        super().setup_surrogate(surrogate=surrogate,
+                                labeled_nodes=labeled_nodes,
+                                unlabeled_nodes=unlabeled_nodes, eps=eps,
+                                freeze=False)
 
         self.cached = deepcopy(self.surrogate.state_dict())
         return self
@@ -325,15 +319,9 @@ class MinmaxAttack(PGDAttack):
         self.surrogate.load_state_dict(self.cached)
         return self
 
-    def attack(self,
-               num_budgets=0.05, *,
-               C=None, lr=0.001,
-               CW_loss=False,
-               epochs=100,
-               sample_epochs=20,
-               structure_attack=True,
-               feature_attack=False,
-               disable=False):
+    def attack(self, num_budgets=0.05, *, C=None, lr=0.001, CW_loss=False,
+               epochs=100, sample_epochs=20, structure_attack=True,
+               feature_attack=False, disable=False):
 
         super(PGDAttack, self).attack(num_budgets=num_budgets,
                                       structure_attack=structure_attack,
@@ -344,13 +332,11 @@ class MinmaxAttack(PGDAttack):
         perturbations = self.perturbations
         optimizer = torch.optim.Adam(self.surrogate.parameters(), lr=lr)
 
-        for epoch in tqdm(range(epochs),
-                          desc='Min-MAX training...',
+        for epoch in tqdm(range(epochs), desc='Min-MAX training...',
                           disable=disable):
 
             # =========== Min-step ===================
-            loss = self.compute_loss(perturbations,
-                                     self.victim_nodes,
+            loss = self.compute_loss(perturbations, self.victim_nodes,
                                      self.victim_labels)
 
             optimizer.zero_grad()
@@ -367,8 +353,8 @@ class MinmaxAttack(PGDAttack):
             perturbations = self.projection(perturbations)
             # ========================================
 
-        best_s = self.bernoulli_sample(
-            perturbations, sample_epochs, disable=disable)
+        best_s = self.bernoulli_sample(perturbations, sample_epochs,
+                                       disable=disable)
         row, col = torch.where(best_s > 0.)
         for it, (u, v) in enumerate(zip(row.tolist(), col.tolist())):
             if self.adj[u, v] > 0:

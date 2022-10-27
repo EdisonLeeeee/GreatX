@@ -29,13 +29,13 @@ install_requires = [
     'termcolor',
     'scikit_learn',
     'matplotlib',
+    'numba',
 ]
 
 full_requires = [
     'pandas',
     'matplotlib',
     'networkx>=2.3',
-    'numba>=0.46.0',
     # 'gensim>=3.8.0',
 ]
 

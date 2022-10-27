@@ -1,25 +1,28 @@
+import os.path as osp
+
 import numpy as np
 import torch
 import torch_geometric.transforms as T
 from ogb.nodeproppred import PygNodePropPredDataset
 
 from greatx.attack.targeted import SGAttack
-from greatx.nn.models import GCN, SGC
+from greatx.nn.models import SGC
 from greatx.training.callbacks import ModelCheckpoint
 from greatx.training.trainer import Trainer
-from greatx.utils import BunchDict, split_nodes
+from greatx.utils import BunchDict
 
-dataset = PygNodePropPredDataset(root='~/data/pyg', name=f'ogbn-arxiv',
+root = osp.join(osp.dirname(osp.realpath(__file__)), '../../..', 'data')
+dataset = PygNodePropPredDataset(root=root, name='ogbn-arxiv',
                                  transform=T.ToUndirected())
 data = dataset[0]
 splits = dataset.get_idx_split()
-splits = BunchDict(train_nodes=splits['train'],
-                   val_nodes=splits['valid'],
+splits = BunchDict(train_nodes=splits['train'], val_nodes=splits['valid'],
                    test_nodes=splits['test'])
 
+num_features = data.x.size(-1)
+num_classes = data.y.max().item() + 1
 
-device = torch.device(
-    'cuda') if torch.cuda.is_available() else torch.device('cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # ================================================================== #
 #                     Attack Setting                                 #
@@ -31,17 +34,17 @@ width = 5
 # ================================================================== #
 #                      Before Attack                                 #
 # ================================================================== #
-trainer_before = Trainer(SGC(data.x.size(-1), data.y.max().item() + 1),
-                         device=device, lr=0.1, weight_decay=1e-5)
+trainer_before = Trainer(SGC(num_features, num_classes), device=device, lr=0.1,
+                         weight_decay=1e-5)
 ckp = ModelCheckpoint('model_before.pth', monitor='val_acc')
-trainer_before.fit({'data': data, 'mask': splits.train_nodes},
-                   {'data': data, 'mask': splits.val_nodes}, callbacks=[ckp])
+trainer_before.fit(data, mask=(splits.train_nodes, splits.val_nodes),
+                   callbacks=[ckp])
 trainer_before.cache_clear()
-output = trainer_before.predict({'data': data, 'mask': target})
-print(
-    f"Before attack (target_label={target_label})\n {np.round(output.tolist(), 2)}")
-print('-' * target_label * width + '----👆' + '-' *
-      max(dataset.num_classes - target_label - 1, 0) * width)
+output = trainer_before.predict(data, mask=target)
+print(f"Before attack (target_label={target_label})\n "
+      f"{np.round(output.tolist(), 2)}")
+print('-' * target_label * width + '----👆' +
+      '-' * max(dataset.num_classes - target_label - 1, 0) * width)
 
 # ================================================================== #
 #                      Attacking                                     #
@@ -54,24 +57,23 @@ attacker.attack(target)
 # ================================================================== #
 #                      After evasion Attack                          #
 # ================================================================== #
-output = trainer_before.predict({'data': attacker.data(), 'mask': target})
-print(
-    f"After evasion attack (target_label={target_label})\n {np.round(output.tolist(), 2)}")
-print('-' * target_label * width + '----👆' + '-' *
-      max(dataset.num_classes - target_label - 1, 0) * width)
+output = trainer_before.predict(attacker.data(), mask=target)
+print(f"After evasion attack (target_label={target_label})\n "
+      f"{np.round(output.tolist(), 2)}")
+print('-' * target_label * width + '----👆' +
+      '-' * max(dataset.num_classes - target_label - 1, 0) * width)
 
 # ================================================================== #
 #                      After poisoning Attack                        #
 # ================================================================== #
-trainer_after = Trainer(
-    SGC(data.x.size(-1), data.y.max().item() + 1), device=device)
+trainer_after = Trainer(SGC(num_features, num_classes), device=device)
 ckp = ModelCheckpoint('model_after.pth', monitor='val_acc')
-trainer_after.fit({'data': attacker.data(), 'mask': splits.train_nodes},
-                  {'data': attacker.data(), 'mask': splits.val_nodes}, callbacks=[ckp])
+trainer_after.fit(attacker.data(), mask=(splits.train_nodes, splits.val_nodes),
+                  callbacks=[ckp])
 trainer_after.cache_clear()
-output = trainer_after.predict({'data': attacker.data(), 'mask': target})
+output = trainer_after.predict(attacker.data(), mask=target)
 
-print(
-    f"After poisoning attack (target_label={target_label})\n {np.round(output.tolist(), 2)}")
-print('-' * target_label * width + '----👆' + '-' *
-      max(dataset.num_classes - target_label - 1, 0) * width)
+print(f"After poisoning attack (target_label={target_label})\n "
+      f"{np.round(output.tolist(), 2)}")
+print('-' * target_label * width + '----👆' +
+      '-' * max(dataset.num_classes - target_label - 1, 0) * width)

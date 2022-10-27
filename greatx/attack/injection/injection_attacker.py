@@ -12,7 +12,7 @@ from greatx.utils import BunchDict, add_edges
 
 
 class InjectionAttacker(Attacker):
-    """Base class for Injection Attacker, an inherent attack should implement 
+    """Base class for Injection Attacker, an inherent attack should implement
     the `attack` method.
 
     Example
@@ -23,19 +23,20 @@ class InjectionAttacker(Attacker):
         attacker.reset()
 
         # inject 10 nodes, where each nodes has 2 edges
-        attacker.attack(num_budgets=10, num_edges_local=2) 
+        attacker.attack(num_budgets=10, num_edges_local=2)
 
         # inject 10 nodes, with 100 edges in total
-        attacker.attack(num_budgets=10, num_edges_global=100) 
+        attacker.attack(num_budgets=10, num_edges_global=100)
 
-        # inject 10 nodes, where each nodes has 2 edges, 
+        # inject 10 nodes, where each nodes has 2 edges,
         # and the features of injected nodes lies in [0,1]
-        attacker.attack(num_budgets=10, num_edges_local=2, feat_limits=(0,1)) 
-        attacker.attack(num_budgets=10, num_edges_local=2, feat_limits={'min': 0, 'max':1}) 
+        attacker.attack(num_budgets=10, num_edges_local=2, feat_limits=(0,1))
+        attacker.attack(num_budgets=10, num_edges_local=2,
+                        feat_limits={'min': 0, 'max':1})
 
-        # inject 10 nodes, where each nodes has 2 edges, 
+        # inject 10 nodes, where each nodes has 2 edges,
         # and the features of injected each node has 10 nonzero elements
-        attacker.attack(num_budgets=10, num_edges_local=2, feat_budgets=10) 
+        attacker.attack(num_budgets=10, num_edges_local=2, feat_budgets=10)
 
         # get injected nodes
         attacker.injected_nodes()
@@ -49,7 +50,6 @@ class InjectionAttacker(Attacker):
         # get perturbed graph
         attacker.data()
     """
-
     def reset(self) -> "InjectionAttacker":
         """Reset the state of the Attacker
 
@@ -87,18 +87,21 @@ class InjectionAttacker(Attacker):
             the targeted nodes where injected nodes perturb,
             if None, it will be all nodes in the graph, by default None
         num_edges_global : Optional[int], optional
-            the number of total edges in the graph to be injected for 
+            the number of total edges in the graph to be injected for
             all injected nodes, by default None
         num_edges_local : Optional[int], optional
-            the number of edges allowed to inject for each injected nodes, by default None
+            the number of edges allowed to inject for each injected nodes,
+            by default None
         feat_limits : Optional[Union[tuple, dict]], optional
             the limitation or allowed budgets of injected node features,
-            it can be a tuple, e.g., `(0, 1)` or 
+            it can be a tuple, e.g., `(0, 1)` or
             a dict, e.g., `{'min':0, 'max': 1}`.
-            if None, it is set as (self.feat.min(), self.feat.max()), by default None
+            if None, it is set as (self.feat.min(), self.feat.max()),
+            by default None
         feat_budgets :  Optional[int], optional
             the number of nonzero features can be injected for each node,
-            e.g., `10`, denoting 10 nonzero features can be injected, by default None
+            e.g., `10`, denoting 10 nonzero features can be injected,
+            by default None
 
         Returns
         -------
@@ -106,7 +109,8 @@ class InjectionAttacker(Attacker):
 
         Note
         ----
-        * Both `num_edges_local` and `num_edges_global` cannot be used simultaneously.
+        * Both `num_edges_local` and `num_edges_global` cannot be used
+        simultaneously.
         * Both `feat_limits` and `feat_budgets` cannot be used simultaneously.
         """
 
@@ -119,11 +123,11 @@ class InjectionAttacker(Attacker):
 
         if not self._is_reset:
             raise RuntimeError(
-                'Before calling attack, you must reset your attacker. Use `attacker.reset()`.'
-            )
+                "Before calling attack, you must reset your attacker. "
+                "Call `attacker.reset()`.")
 
-        num_budgets = self._check_budget(
-            num_budgets, max_perturbations=self.num_nodes)
+        num_budgets = self._check_budget(num_budgets,
+                                         max_perturbations=self.num_nodes)
 
         if targets is None:
             self.targets = torch.arange(self.num_nodes, device=self.device)
@@ -131,24 +135,26 @@ class InjectionAttacker(Attacker):
         else:
             if isinstance(targets, torch.BoolTensor):
                 # Boolean mask
-                self.targets = targets.nonzero().view(-1).to(self.device)
+                targets = targets.nonzero().view(-1)
             else:
                 # node indices
-                self.targets = torch.LongTensor(
-                    targets).view(-1).to(self.device)
+                targets = torch.LongTensor(targets).view(-1)
+            self.targets = targets.to(self.device)
 
         self.target_labels = self.label[self.targets]
 
         if num_edges_local is not None and num_edges_global is not None:
-            raise RuntimeError(
-                "Both `num_edges_local` and `num_edges_global` cannot be used simultaneously.")
+            raise RuntimeError("Both `num_edges_local` and `num_edges_global` "
+                               "cannot be used simultaneously.")
 
         if num_edges_global is not None:
             num_edges_local = num_edges_global // len(self.targets)
             if num_edges_local == 0:
                 raise ValueError(
-                    f"Too few edges allowed (num_edges_global={num_edges_global}) for injected nodes ({len(self.targets)}). "
-                    "Maybe you could use the argument `num_edges_local` instead.")
+                    "Too few edges allowed "
+                    f"(num_edges_global={num_edges_global}) "
+                    f"for injected nodes ({len(self.targets)}). "
+                    "Maybe use the argument `num_edges_local` instead.")
 
         if num_edges_local is None:
             num_edges_local = int(self._degree.mean().clamp(min=1))
@@ -161,8 +167,8 @@ class InjectionAttacker(Attacker):
         min_limits = max_limits = None
 
         if feat_limits is not None and feat_budgets is not None:
-            raise RuntimeError(
-                "Both `feat_limits` and `feat_budgets` cannot be used simultaneously.")
+            raise RuntimeError("Both `feat_limits` and `feat_budgets`"
+                               " cannot be used simultaneously.")
 
         if feat_limits is not None:
             if isinstance(feat_limits, tuple):
@@ -174,8 +180,8 @@ class InjectionAttacker(Attacker):
                     raise ValueError(
                         f"Unrecognized key {next(iter(feat_limits.keys()))}.")
             else:
-                raise TypeError(
-                    f"`feat_limits` should be an instance of tuple and dict, but got {feat_limits}.")
+                raise TypeError("`feat_limits` should be an instance of "
+                                f"tuple and dict, but got {feat_limits}.")
 
         feat = self.feat
         assert feat is not None
@@ -199,7 +205,6 @@ class InjectionAttacker(Attacker):
         # TODO
         self._mu = (max_limits - min_limits) / 2
         self._sigma = (max_limits - self._mu) / 3  # 3-sigma rule
-        # ======================================================================
 
         self.feat_limits = min_limits, max_limits
 
@@ -219,7 +224,8 @@ class InjectionAttacker(Attacker):
         if isinstance(nodes, dict):
             nodes = sorted(list(nodes.keys()))
 
-        return torch.tensor(np.asarray(nodes, dtype="int64"), device=self.device)
+        return torch.tensor(np.asarray(nodes, dtype="int64"),
+                            device=self.device)
 
     def added_nodes(self) -> Optional[Tensor]:
         """alias of method `added_nodes`"""
@@ -240,14 +246,16 @@ class InjectionAttacker(Attacker):
         if isinstance(edges, dict):
             edges = list(edges.keys())
 
-        return torch.tensor(np.asarray(edges, dtype="int64").T, device=self.device)
+        return torch.tensor(
+            np.asarray(edges, dtype="int64").T, device=self.device)
 
     def added_edges(self) -> Optional[Tensor]:
         """alias of method `injected_edges`"""
         return self.injected_edges()
 
     def edge_flips(self) -> BunchDict:
-        """Get all the edges to be flipped, including edges to be added and removed."""
+        """Get all the edges to be flipped, including edges
+        to be added and removed."""
         added = self.injected_edges()
         removed = None
         return BunchDict(added=added, removed=removed, all=added)
@@ -266,7 +274,7 @@ class InjectionAttacker(Attacker):
         """alias of method `added_edges`"""
         return self.injected_feats()
 
-    ################## Injection Operation ##############
+    # Injection Operation
     def inject_node(self, node):
 
         self._injected_nodes.append(node)
@@ -295,7 +303,7 @@ class InjectionAttacker(Attacker):
         self._injected_edges.append(edges)
 
     def inject_feat(self, feat: Optional[Tensor] = None):
-        """Generate  a feature vector to the graph for a newly 
+        """Generate  a feature vector to the graph for a newly
         injected node.
 
         Parameters
@@ -343,7 +351,7 @@ class InjectionAttacker(Attacker):
         injected_edges = self.injected_edges()
         injected_feats = self.injected_feats()
         data.x = torch.cat([data.x, injected_feats], dim=0)
-        data.edge_index = add_edges(
-            data.edge_index, injected_edges, symmetric=symmetric)
+        data.edge_index = add_edges(data.edge_index, injected_edges,
+                                    symmetric=symmetric)
 
         return data

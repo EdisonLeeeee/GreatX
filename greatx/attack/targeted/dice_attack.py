@@ -5,12 +5,12 @@ from greatx.attack.targeted.random_attack import RandomAttack
 
 
 class DICEAttack(RandomAttack):
-    r"""Implementation of `DICE` attack from the: 
-    `"Hiding Individuals and Communities in a Social 
+    r"""Implementation of `DICE` attack from the:
+    `"Hiding Individuals and Communities in a Social
     Network" <https://arxiv.org/abs/1608.00375>`_ paper
 
     DICE randomly chooses edges to flip based on the principle of
-    “Disconnect Internally, Connect Externally” (DICE), 
+    “Disconnect Internally, Connect Externally” (DICE),
     which conducts attacks by removing edges between nodes
     with high correlations and connecting edges with low correlations.
 
@@ -23,14 +23,14 @@ class DICEAttack(RandomAttack):
     seed : Optional[int], optional
         the random seed for reproducing the attack, by default None
     name : Optional[str], optional
-        name of the attacker, if None, it would be :obj:`__class__.__name__`, 
+        name of the attacker, if None, it would be :obj:`__class__.__name__`,
         by default None
     kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
 
     Raises
     ------
     TypeError
-        unexpected keyword argument in :obj:`kwargs`    
+        unexpected keyword argument in :obj:`kwargs`
 
     Example
     -------
@@ -39,17 +39,20 @@ class DICEAttack(RandomAttack):
         from greatx.dataset import GraphDataset
         import torch_geometric.transforms as T
 
-        dataset = GraphDataset(root='~/data/pyg', name='cora', 
-                          transform=T.LargestConnectedComponents())
+        import os.path as osp
+
+        dataset = GraphDataset(root='.', name='Cora',
+                                transform=T.LargestConnectedComponents())
         data = dataset[0]
 
         from greatx.attack.targeted import IGAttack
         attacker = IGAttack(data)
         attacker.reset()
-        attacker.attack(target=1) # attacking target node `1` with default budget set as node degree
+        # attacking target node `1` with default budget set as node degree
+        attacker.attack(target=1)
 
-        attacker.reset()
-        attacker.attack(target=1, num_budgets=1) # attacking target node `1` with budget set as 1
+        # attacking target node `1` with budget set as 1
+        attacker.attack(target=1, num_budgets=1)
 
         attacker.data() # get attacked graph
 
@@ -57,18 +60,17 @@ class DICEAttack(RandomAttack):
 
         attacker.added_edges() # get added edges after attack
 
-        attacker.removed_edges() # get removed edges after attack    
+        attacker.removed_edges() # get removed edges after attack
 
     Note
     ----
-    * Please remember to call :meth:`reset` before each attack.        
+    * Please remember to call :meth:`reset` before each attack.
     """
-
     def get_added_edge(self, influence_nodes: list) -> Optional[tuple]:
         u = random.choice(influence_nodes)
         neighbors = self.adjacency_matrix[u].indices.tolist()
-        attacker_nodes = list(
-            self.nodes_set - set(neighbors) - set([self.target, u]))
+        attacker_nodes = list(self.nodes_set - set(neighbors) -
+                              set([self.target, u]))
 
         if len(attacker_nodes) == 0:
             return None

@@ -19,14 +19,14 @@ class RandomAttack(UntargetedAttacker):
     seed : Optional[int], optional
         the random seed for reproducing the attack, by default None
     name : Optional[str], optional
-        name of the attacker, if None, it would be :obj:`__class__.__name__`, 
+        name of the attacker, if None, it would be :obj:`__class__.__name__`,
         by default None
     kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
 
     Raises
     ------
     TypeError
-        unexpected keyword argument in :obj:`kwargs`       
+        unexpected keyword argument in :obj:`kwargs`
 
     Example
     -------
@@ -35,8 +35,8 @@ class RandomAttack(UntargetedAttacker):
         from greatx.dataset import GraphDataset
         import torch_geometric.transforms as T
 
-        dataset = GraphDataset(root='~/data/pyg', name='cora', 
-                          transform=T.LargestConnectedComponents())
+        dataset = GraphDataset(root='.', name='Cora',
+                                transform=T.LargestConnectedComponents())
         data = dataset[0]
 
         from greatx.attack.untargeted import RandomAttack
@@ -53,20 +53,15 @@ class RandomAttack(UntargetedAttacker):
 
     Note
     ----
-    * Please remember to call :meth:`reset` before each attack.        
+    * Please remember to call :meth:`reset` before each attack.
     """
-
-    def attack(self,
-               num_budgets=0.05, *,
-               threshold=0.5,
-               structure_attack=True,
-               feature_attack=False,
-               disable=False):
+    def attack(self, num_budgets=0.05, *, threshold=0.5, structure_attack=True,
+               feature_attack=False, disable=False):
 
         super().attack(num_budgets=num_budgets,
                        structure_attack=structure_attack,
                        feature_attack=feature_attack)
-        assert 0 < threshold < 1, f"'threshold' should to be greater than 0 and less than 1, but got {threshold}."
+        assert 0 < threshold < 1
         random_arr = np.random.choice(2, self.num_budgets,
                                       p=[1 - threshold, threshold]) * 2 - 1
 

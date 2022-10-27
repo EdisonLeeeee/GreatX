@@ -17,8 +17,8 @@
 </p>
 
 <p align=center>
-  <a href="https://www.python.org/downloads/release/python-360/">
-    <img src="https://img.shields.io/badge/Python->=3.6-3776AB?logo=python" alt="Python">
+  <a href="https://www.python.org/downloads/release/python-370/">
+    <img src="https://img.shields.io/badge/Python->=3.7-3776AB?logo=python" alt="Python">
   </a>
   <a href="https://github.com/pytorch/pytorch">
     <img src="https://img.shields.io/badge/PyTorch->=1.8-FF6F00?logo=pytorch" alt="pytorch">
@@ -82,12 +82,13 @@ Take `GCN` as an example:
 from greatx.nn.models import GCN
 from greatx.training.trainer import Trainer
 from torch_geometric.datasets import Planetoid
-dataset = Planetoid(root='.', name='Cora') # Any PyG dataset is available!
+# Any PyG dataset is available!
+dataset = Planetoid(root='.', name='Cora')
 data = dataset[0]
-model = GCN(data.x.size(-1), data.y.max().item() + 1)
-trainer = Trainer(model, device='cuda:0')
-trainer.fit({'data': data, 'mask': data.train_mask})
-trainer.evaluate({'data': data, 'mask': data.test_mask})
+model = GCN(dataset.num_features, dataset.num_classes)
+trainer = Trainer(model, device='cuda:0') # or 'cpu'
+trainer.fit(data, mask=data.train_mask)
+trainer.evaluate(data, mask=data.test_mask)
 ```
 ## A simple targeted manipulation attack
 

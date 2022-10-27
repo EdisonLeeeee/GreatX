@@ -15,7 +15,7 @@ from greatx.training.trainer import Trainer
 from greatx.utils import split_nodes
 
 dataset = 'Cora'
-root = osp.join(osp.dirname(osp.realpath(__file__)), '../..', 'data')
+root = osp.join(osp.dirname(osp.realpath(__file__)), '../../..', 'data')
 dataset = GraphDataset(root=root, name=dataset,
                        transform=T.LargestConnectedComponents())
 

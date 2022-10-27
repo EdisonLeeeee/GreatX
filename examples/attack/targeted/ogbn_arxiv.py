@@ -11,7 +11,7 @@ from greatx.training.callbacks import ModelCheckpoint
 from greatx.training.trainer import Trainer
 from greatx.utils import BunchDict
 
-root = osp.join(osp.dirname(osp.realpath(__file__)), '../../..', 'data')
+root = osp.join(osp.dirname(osp.realpath(__file__)), '../../../..', 'data')
 dataset = PygNodePropPredDataset(root=root, name='ogbn-arxiv',
                                  transform=T.ToUndirected())
 data = dataset[0]

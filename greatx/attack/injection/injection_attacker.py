@@ -265,9 +265,8 @@ class InjectionAttacker(Attacker):
         feats = self._injected_feats
         if feats is None or len(feats) == 0:
             return None
-        # feats = list(self._injected_nodes.values())
         if isinstance(feats, list):
-            return torch.cat(feats, dim=0).float().to(self.device)
+            return torch.stack(feats, dim=0).float().to(self.device)
         return feats.float().to(self.device)
 
     def added_feats(self) -> Optional[Tensor]:

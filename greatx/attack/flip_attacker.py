@@ -1,7 +1,7 @@
 import warnings
 from copy import copy
 from functools import lru_cache
-from typing import Optional, Union
+from typing import Optional
 
 import numpy as np
 import torch
@@ -24,20 +24,20 @@ class FlipAttacker(Attacker):
     seed : Optional[int], optional
         the random seed for reproducing the attack, by default None
     name : Optional[str], optional
-        name of the attacker, if None, it would be :obj:`__class__.__name__`, 
-        by default None
+        name of the attacker, if None, it would be
+        :obj:`__class__.__name__`, by default None
     kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
 
     Raises
     ------
     TypeError
-        unexpected keyword argument in :obj:`kwargs`       
+        unexpected keyword argument in :obj:`kwargs`
 
     Note
     ----
-    :class:`~greatx.attack.FlipAttacker` is a base class for graph modification attacks (GMA).
+    :class:`~greatx.attack.FlipAttacker` is a base class
+    for graph modification attacks (GMA).
     """
-
     def reset(self) -> "FlipAttacker":
         """Reset attacker. This method must be called before attack."""
         super().reset()
@@ -59,7 +59,7 @@ class FlipAttacker(Attacker):
         v : int
             The destination node of the edge
         it : Optional[int], optional
-             The iteration that indicates the order of 
+             The iteration that indicates the order of
              the edge being removed, by default None
         """
 
@@ -68,8 +68,13 @@ class FlipAttacker(Attacker):
             is_singleton_v = self.degree[v] <= 1
 
             if is_singleton_u or is_singleton_v:
-                warnings.warn(f"You are trying to remove an edge ({u}-{v}) that would result in singleton nodes. "
-                              "If the behavior is not intended, please make sure you have set `attacker.set_allow_singleton(False)` or check your algorithm.", UserWarning)
+                warnings.warn(
+                    f"You are trying to remove an edge ({u}-{v}) "
+                    "that would result in singleton nodes. "
+                    "If the behavior is not intended, "
+                    "please make sure you have set "
+                    "`attacker.set_allow_singleton(False)` "
+                    "or check your algorithm.", UserWarning)
 
         self._removed_edges[(u, v)] = it
         self.degree[u] -= 1
@@ -85,7 +90,7 @@ class FlipAttacker(Attacker):
         v : int
             The destination node of the edge
         it : Optional[int], optional
-             The iteration that indicates the order of 
+             The iteration that indicates the order of
              the edge being added, by default None
         """
         self._added_edges[(u, v)] = it
@@ -105,8 +110,8 @@ class FlipAttacker(Attacker):
         if isinstance(edges, dict):
             edges = list(edges.keys())
 
-        removed = torch.tensor(np.asarray(
-            edges, dtype="int64").T, device=self.device)
+        removed = torch.tensor(
+            np.asarray(edges, dtype="int64").T, device=self.device)
         return removed
 
     def added_edges(self) -> Optional[Tensor]:
@@ -121,10 +126,12 @@ class FlipAttacker(Attacker):
         if isinstance(edges, dict):
             edges = list(edges.keys())
 
-        return torch.tensor(np.asarray(edges, dtype="int64").T, device=self.device)
+        return torch.tensor(
+            np.asarray(edges, dtype="int64").T, device=self.device)
 
     def edge_flips(self) -> BunchDict:
-        """Get all the edges to be flipped, including edges to be added and removed."""
+        """Get all the edges to be flipped, including edges
+        to be added and removed."""
         added = self.added_edges()
         removed = self.removed_edges()
         _all = cat(added, removed, dim=1)
@@ -141,7 +148,7 @@ class FlipAttacker(Attacker):
         v : int
             the dimension of the feature to be removed
         it : Optional[int], optional
-            The iteration that indicates the order 
+            The iteration that indicates the order
             of the features being removed, by default None
         """
 
@@ -158,7 +165,7 @@ class FlipAttacker(Attacker):
         v : int
             the dimension of the feature to be added
         it : Optional[int], optional
-            The iteration that indicates the order 
+            The iteration that indicates the order
             of the features being added, by default None
         """
         self._added_feats[(u, v)] = it
@@ -175,7 +182,8 @@ class FlipAttacker(Attacker):
         if torch.is_tensor(feats):
             return feats.to(self.device)
 
-        return torch.tensor(np.asarray(feats, dtype="int64").T, device=self.device)
+        return torch.tensor(
+            np.asarray(feats, dtype="int64").T, device=self.device)
 
     def added_feats(self) -> Optional[Tensor]:
         """Get all the features to be added."""
@@ -189,10 +197,12 @@ class FlipAttacker(Attacker):
         if torch.is_tensor(feats):
             return feats.to(self.device)
 
-        return torch.tensor(np.asarray(feats, dtype="int64").T, device=self.device)
+        return torch.tensor(
+            np.asarray(feats, dtype="int64").T, device=self.device)
 
     def feat_flips(self) -> BunchDict:
-        """Get all the features to be flipped, including features to be added and removed."""
+        """Get all the features to be flipped, including features
+        to be added and removed."""
         added = self.added_feats()
         removed = self.removed_feats()
         _all = cat(added, removed, dim=1)
@@ -249,7 +259,7 @@ class FlipAttacker(Attacker):
         return data
 
     def set_allow_singleton(self, state: bool):
-        """Set whether the attacked graph allow singleton node, i.e., 
+        """Set whether the attacked graph allow singleton node, i.e.,
         zero degree nodes.
 
         Parameters
@@ -259,13 +269,14 @@ class FlipAttacker(Attacker):
 
         Example
         -------
-        >>> attacker.set_allow_singleton(True)            
+        >>> attacker.set_allow_singleton(True)
         """
 
         self._allow_singleton = state
 
     def set_allow_structure_attack(self, state: bool):
-        """Set whether the attacker allow attacks on the topology of the graph.
+        """Set whether the attacker allow attacks on
+        the topology of the graph.
 
         Parameters
         ----------
@@ -274,12 +285,13 @@ class FlipAttacker(Attacker):
 
         Example
         -------
-        >>> attacker.set_allow_structure_attack(True)                  
+        >>> attacker.set_allow_structure_attack(True)
         """
         self._allow_structure_attack = state
 
     def set_allow_feature_attack(self, state: bool):
-        """Set whether the attacker allow attacks on the features of nodes in the graph. 
+        """Set whether the attacker allow attacks on
+        the features of nodes in the graph.
 
         Parameters
         ----------
@@ -288,7 +300,7 @@ class FlipAttacker(Attacker):
 
         Example
         -------
-        >>> attacker.set_allow_feature_attack(True)                
+        >>> attacker.set_allow_feature_attack(True)
         """
         self._allow_feature_attack = state
 
@@ -309,18 +321,21 @@ class FlipAttacker(Attacker):
 
         Note
         ----
-        Please make sure the edge is the one being removed.        
+        Please make sure the edge is the one being removed.
         """
         threshold = 1
-        # threshold = 2 if the graph has selfloop before otherwise threshold = 1
-        if not self._allow_singleton and (self.degree[u] <= threshold or self.degree[v] <= threshold):
+        # threshold = 2 if the graph has selfloop before
+        # otherwise threshold = 1
+        if not self._allow_singleton and (self.degree[u] <= threshold
+                                          or self.degree[v] <= threshold):
             return True
         return False
 
     def is_legal_edge(self, u: int, v: int) -> bool:
         """Check whether the edge (u,v) is legal.
 
-        An edge (u,v) is legal if u!=v and edge (u,v) is not selected before.
+        An edge (u,v) is legal if u!=v and edge (u,v) is
+        not selected before.
 
         Parameters
         -----------
@@ -331,16 +346,15 @@ class FlipAttacker(Attacker):
 
         Returns
         -------
-        bool: `True` if the u!=v and edge (u,v), (v,u) is not selected, otherwise `False`.
+        bool: `True` if the u!=v and edge (u,v), (v,u) is not selected,
+        otherwise `False`.
         """
         _removed_edges = self._removed_edges
         _added_edges = self._added_edges
 
-        return all((u != v,
-                    (u, v) not in _removed_edges,
-                    (v, u) not in _removed_edges,
-                    (u, v) not in _added_edges,
-                    (v, u) not in _added_edges))
+        return all((u != v, (u, v) not in _removed_edges, (v, u)
+                    not in _removed_edges, (u, v) not in _added_edges, (v, u)
+                    not in _added_edges))
 
 
 def cat(a, b, dim=1):

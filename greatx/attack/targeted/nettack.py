@@ -4,7 +4,6 @@ from typing import Optional
 
 import numpy as np
 import scipy.sparse as sp
-from numba import njit
 from torch_geometric.data import Data
 from tqdm import tqdm
 
@@ -251,14 +250,13 @@ class Nettack(TargetedAttacker, Surrogate):
         node_ixs = np.unique(edges[:, 0], return_index=True)[1].astype("int32")
         twohop_ixs = np.transpose(A_hat_sq.nonzero())
         degrees = self.modified_adj.sum(0).A1 + 1
-
+        fn = get_numbafn()
         with warnings.catch_warnings(record=True):
             warnings.filterwarnings(
                 'ignore', '.*Encountered the use of a type that is scheduled*')
-            ixs, vals = compute_new_a_hat_uv(edges, node_ixs, edges_set,
-                                             twohop_ixs, values_before,
-                                             degrees, candidate_edges,
-                                             self.target)
+            ixs, vals = fn(edges, node_ixs, edges_set, twohop_ixs,
+                           values_before, degrees, candidate_edges,
+                           self.target)
         ixs_arr = np.array(ixs)
         a_hat_uv = sp.coo_matrix(
             (vals, (ixs_arr[:, 0], ixs_arr[:, 1])),
@@ -398,117 +396,125 @@ class Nettack(TargetedAttacker, Surrogate):
         return self
 
 
-@njit
-def connected_after(u, v, connected_before, delta):
-    if u == v:
-        if delta == -1:
-            return False
-        else:
-            return True
-    else:
-        return connected_before
+def get_numbafn():
+    from numba import njit
 
-
-@njit
-def compute_new_a_hat_uv(edge_ixs, node_nb_ixs, edges_set, twohop_ixs,
-                         values_before, degs, candidate_edges, u):
-    """
-    Compute the new values [A_hat_square]_u for every potential edge,
-    where u is the target node. C.f. Theorem 5.1
-    equation 17.
-
-    Parameters
-    ----------
-    edge_ixs: np.array, shape [E,2],
-        where E is the number of edges in the graph
-        The indices of the nodes connected by the edges in the input graph.
-    node_nb_ixs: np.array, shape [num_nodes,], dtype int
-        For each node, this gives the first index of edges associated to
-        this node in the edge array (edge_ixs).
-        This will be used to quickly look up the neighbors of a node,
-        since numba does not allow nested lists.
-    edges_set: set((e0, e1))
-        The set of edges in the input graph, i.e. e0 and e1 are
-        two nodes connected by an edge
-    twohop_ixs: np.array, shape [T, 2],
-        where T is the number of edges in A_tilde^2
-        The indices of nodes that are in the twohop neighborhood of each other,
-        including self-loops.
-    values_before: np.array, shape [num_nodes,],
-        the values in [A_hat]^2_uv to be updated.
-    degs: np.array, shape [num_nodes,], dtype int
-        The degree of the nodes in the input graph.
-    candidate_edges: np.array, shape [P, 2],
-        where P is the number of potential edges.
-        The potential edges to be evaluated. For each of these potential edges,
-        this function will compute the values
-        in [A_hat]^2_uv that would result after inserting/removing this edge.
-    u: int
-        The target node
-    """
-    num_nodes = degs.shape[0]
-
-    twohop_u = twohop_ixs[twohop_ixs[:, 0] == u, 1]
-    nbs_u = edge_ixs[edge_ixs[:, 0] == u, 1]
-    nbs_u_set = set(nbs_u)
-
-    return_ixs = []
-    return_values = []
-
-    for ix in range(len(candidate_edges)):
-        edge = candidate_edges[ix]
-        edge_set = set(edge)
-        degs_new = degs.copy()
-        delta = -2 * ((edge[0], edge[1]) in edges_set) + 1
-        degs_new[edge] += delta
-
-        nbs_edge0 = edge_ixs[edge_ixs[:, 0] == edge[0], 1]
-        nbs_edge1 = edge_ixs[edge_ixs[:, 0] == edge[1], 1]
-
-        affected_nodes = set(np.concatenate((twohop_u, nbs_edge0, nbs_edge1)))
-        affected_nodes = affected_nodes.union(edge_set)
-        a_um = edge[0] in nbs_u_set
-        a_un = edge[1] in nbs_u_set
-
-        a_un_after = connected_after(u, edge[0], a_un, delta)
-        a_um_after = connected_after(u, edge[1], a_um, delta)
-
-        for v in affected_nodes:
-            a_uv_before = v in nbs_u_set
-            a_uv_before_sl = a_uv_before or v == u
-
-            if v in edge_set and u in edge_set and u != v:
-                if delta == -1:
-                    a_uv_after = False
-                else:
-                    a_uv_after = True
+    @njit
+    def connected_after(u, v, connected_before, delta):
+        if u == v:
+            if delta == -1:
+                return False
             else:
-                a_uv_after = a_uv_before
-            a_uv_after_sl = a_uv_after or v == u
+                return True
+        else:
+            return connected_before
 
-            from_ix = node_nb_ixs[v]
-            to_ix = node_nb_ixs[v + 1] if v < num_nodes - 1 else len(edge_ixs)
-            node_nbs = edge_ixs[from_ix:to_ix, 1]
-            node_nbs_set = set(node_nbs)
-            a_vm_before = edge[0] in node_nbs_set
+    @njit
+    def compute_new_a_hat_uv(edge_ixs, node_nb_ixs, edges_set, twohop_ixs,
+                             values_before, degs, candidate_edges, u):
+        """
+        Compute the new values [A_hat_square]_u for every potential edge,
+        where u is the target node. C.f. Theorem 5.1
+        equation 17.
 
-            a_vn_before = edge[1] in node_nbs_set
-            a_vn_after = connected_after(v, edge[0], a_vn_before, delta)
-            a_vm_after = connected_after(v, edge[1], a_vm_before, delta)
+        Parameters
+        ----------
+        edge_ixs: np.array, shape [E,2],
+            where E is the number of edges in the graph
+            The indices of the nodes connected by the edges in the input graph.
+        node_nb_ixs: np.array, shape [num_nodes,], dtype int
+            For each node, this gives the first index of edges associated to
+            this node in the edge array (edge_ixs).
+            This will be used to quickly look up the neighbors of a node,
+            since numba does not allow nested lists.
+        edges_set: set((e0, e1))
+            The set of edges in the input graph, i.e. e0 and e1 are
+            two nodes connected by an edge
+        twohop_ixs: np.array, shape [T, 2],
+            where T is the number of edges in A_tilde^2
+            The indices of nodes that are in the twohop neighborhood of
+            each other, including self-loops.
+        values_before: np.array, shape [num_nodes,],
+            the values in [A_hat]^2_uv to be updated.
+        degs: np.array, shape [num_nodes,], dtype int
+            The degree of the nodes in the input graph.
+        candidate_edges: np.array, shape [P, 2],
+            where P is the number of potential edges.
+            The potential edges to be evaluated.
+            For each of these potential edges,
+            this function will compute the values in [A_hat]^2_uv
+            that would result after inserting/removing this edge.
+        u: int
+            The target node
+        """
+        num_nodes = degs.shape[0]
 
-            mult_term = 1. / np.sqrt(degs_new[u] * degs_new[v])
+        twohop_u = twohop_ixs[twohop_ixs[:, 0] == u, 1]
+        nbs_u = edge_ixs[edge_ixs[:, 0] == u, 1]
+        nbs_u_set = set(nbs_u)
 
-            sum_term1 = np.sqrt(degs[u] * degs[v]) * values_before[v] - \
-                a_uv_before_sl / degs[u] - a_uv_before / degs[v]
-            sum_term2 = a_uv_after / degs_new[v] + a_uv_after_sl / degs_new[u]
-            sum_term3 = -((a_um and a_vm_before) / degs[edge[0]]) + (
-                a_um_after and a_vm_after) / degs_new[edge[0]]
-            sum_term4 = -((a_un and a_vn_before) / degs[edge[1]]) + (
-                a_un_after and a_vn_after) / degs_new[edge[1]]
-            new_val = mult_term * (sum_term1 + sum_term2 + sum_term3 +
-                                   sum_term4)
+        return_ixs = []
+        return_values = []
 
-            return_ixs.append((ix, v))
-            return_values.append(new_val)
+        for ix in range(len(candidate_edges)):
+            edge = candidate_edges[ix]
+            edge_set = set(edge)
+            degs_new = degs.copy()
+            delta = -2 * ((edge[0], edge[1]) in edges_set) + 1
+            degs_new[edge] += delta
 
-    return return_ixs, return_values
+            nbs_edge0 = edge_ixs[edge_ixs[:, 0] == edge[0], 1]
+            nbs_edge1 = edge_ixs[edge_ixs[:, 0] == edge[1], 1]
+
+            affected_nodes = set(
+                np.concatenate((twohop_u, nbs_edge0, nbs_edge1)))
+            affected_nodes = affected_nodes.union(edge_set)
+            a_um = edge[0] in nbs_u_set
+            a_un = edge[1] in nbs_u_set
+
+            a_un_after = connected_after(u, edge[0], a_un, delta)
+            a_um_after = connected_after(u, edge[1], a_um, delta)
+
+            for v in affected_nodes:
+                a_uv_before = v in nbs_u_set
+                a_uv_before_sl = a_uv_before or v == u
+
+                if v in edge_set and u in edge_set and u != v:
+                    if delta == -1:
+                        a_uv_after = False
+                    else:
+                        a_uv_after = True
+                else:
+                    a_uv_after = a_uv_before
+                a_uv_after_sl = a_uv_after or v == u
+
+                from_ix = node_nb_ixs[v]
+                to_ix = node_nb_ixs[v + 1] if v < num_nodes - \
+                    1 else len(edge_ixs)
+                node_nbs = edge_ixs[from_ix:to_ix, 1]
+                node_nbs_set = set(node_nbs)
+                a_vm_before = edge[0] in node_nbs_set
+
+                a_vn_before = edge[1] in node_nbs_set
+                a_vn_after = connected_after(v, edge[0], a_vn_before, delta)
+                a_vm_after = connected_after(v, edge[1], a_vm_before, delta)
+
+                mult_term = 1. / np.sqrt(degs_new[u] * degs_new[v])
+
+                sum_term1 = np.sqrt(degs[u] * degs[v]) * values_before[v] - \
+                    a_uv_before_sl / degs[u] - a_uv_before / degs[v]
+                sum_term2 = a_uv_after / \
+                    degs_new[v] + a_uv_after_sl / degs_new[u]
+                sum_term3 = -((a_um and a_vm_before) / degs[edge[0]]) + (
+                    a_um_after and a_vm_after) / degs_new[edge[0]]
+                sum_term4 = -((a_un and a_vn_before) / degs[edge[1]]) + (
+                    a_un_after and a_vn_after) / degs_new[edge[1]]
+                new_val = mult_term * (sum_term1 + sum_term2 + sum_term3 +
+                                       sum_term4)
+
+                return_ixs.append((ix, v))
+                return_values.append(new_val)
+
+        return return_ixs, return_values
+
+    return compute_new_a_hat_uv

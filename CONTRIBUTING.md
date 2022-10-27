@@ -71,7 +71,7 @@ To build the documentation:
 1. [Build and install](#developing-GreatX) GreatX from source.
 2. Install [Sphinx](https://www.sphinx-doc.org/en/master/) theme via
    ```bash
-   pip install git+https://github.com/GreatX-team/pyg_sphinx_theme.git
+   pip install git+https://github.com/pyg-team/pyg_sphinx_theme.git
    ```
 3. Generate the documentation via:
    ```bash

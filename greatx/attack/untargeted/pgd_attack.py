@@ -92,11 +92,10 @@ class PGDAttack(UntargetedAttacker, Surrogate):
             if unlabeled_nodes.dtype == torch.bool:
                 unlabeled_nodes = unlabeled_nodes.nonzero().view(-1)
             unlabeled_nodes = unlabeled_nodes.to(self.device)
-            self_training_labels = self.estimate_self_training_labels(
-                unlabeled_nodes)
+            self_labels = self.estimate_self_training_labels(unlabeled_nodes)
             victim_nodes = torch.cat([labeled_nodes, unlabeled_nodes], dim=0)
-            victim_labels = torch.cat(
-                [self.label[labeled_nodes], self_training_labels], dim=0)
+            victim_labels = torch.cat([self.label[labeled_nodes], self_labels],
+                                      dim=0)
 
         adj = to_dense_adj(self.edge_index, self.edge_weight,
                            num_nodes=self.num_nodes).to(self.device)

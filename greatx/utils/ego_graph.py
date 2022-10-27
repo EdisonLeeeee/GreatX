@@ -3,17 +3,14 @@ from typing import Union
 
 import numpy as np
 import scipy.sparse as sp
-from numba import njit, types
-from numba.typed import Dict
 
 ego_graph_nodes_edges = namedtuple('ego_graph', ['nodes', 'edges'])
-
 
 __all__ = ['ego_graph']
 
 
-def ego_graph(adj_matrix: sp.csr_matrix,
-              targets: Union[int, list], hops: int = 1) -> ego_graph_nodes_edges:
+def ego_graph(adj_matrix: sp.csr_matrix, targets: Union[int, list],
+              hops: int = 1) -> ego_graph_nodes_edges:
     """Returns induced subgraph of neighbors centered at node n within
     a given radius.
 
@@ -34,7 +31,7 @@ def ego_graph(adj_matrix: sp.csr_matrix,
 
     Note
     ----
-    This is a faster implementation of 
+    This is a faster implementation of
     :class:`networkx.ego_graph` based on scipy sparse matrix and numba
 
 
@@ -44,6 +41,7 @@ def ego_graph(adj_matrix: sp.csr_matrix,
     :class:`torch_geometric.utils.k_hop_subgraph`
 
     """
+    fn = get_numbafn()
     assert sp.issparse(adj_matrix)
     adj_matrix = adj_matrix.tocsr(copy=False)
 
@@ -77,8 +75,7 @@ def ego_graph(adj_matrix: sp.csr_matrix,
             start += 1
 
     if len(targets[start:]):
-        e = _get_remaining_edges(
-            indices, indptr, np.array(targets[start:]), seen, hops)
+        e = fn(indices, indptr, np.array(targets[start:]), seen, hops)
     else:
         e = []
 
@@ -86,20 +83,26 @@ def ego_graph(adj_matrix: sp.csr_matrix,
                                  edges=np.asarray(list(edges.keys()) + e).T)
 
 
-@njit
-def _get_remaining_edges(indices: np.ndarray, indptr: np.ndarray,
-                         last_level: np.ndarray, seen: np.ndarray,
-                         hops: int) -> list:
-    edges = []
-    mapping = Dict.empty(
-        key_type=types.int64,
-        value_type=types.int64,
-    )
-    for u in last_level:
-        nbrs = indices[indptr[u]:indptr[u + 1]]
-        nbrs = nbrs[seen[nbrs] == hops]
-        mapping[u] = 1
-        for v in nbrs:
-            if not v in mapping:
-                edges.append((u, v))
-    return edges
+def get_numbafn():
+    from numba import njit, types
+    from numba.typed import Dict
+
+    @njit
+    def _get_remaining_edges(indices: np.ndarray, indptr: np.ndarray,
+                             last_level: np.ndarray, seen: np.ndarray,
+                             hops: int) -> list:
+        edges = []
+        mapping = Dict.empty(
+            key_type=types.int64,
+            value_type=types.int64,
+        )
+        for u in last_level:
+            nbrs = indices[indptr[u]:indptr[u + 1]]
+            nbrs = nbrs[seen[nbrs] == hops]
+            mapping[u] = 1
+            for v in nbrs:
+                if v not in mapping:
+                    edges.append((u, v))
+        return edges
+
+    return _get_remaining_edges

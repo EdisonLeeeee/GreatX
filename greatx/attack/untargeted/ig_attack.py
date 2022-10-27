@@ -28,8 +28,8 @@ class IGAttack(UntargetedAttacker, Surrogate):
     seed : Optional[int], optional
         the random seed for reproducing the attack, by default None
     name : Optional[str], optional
-        name of the attacker, if None, it would be :obj:`__class__.__name__`,
-        by default None
+        name of the attacker, if None, it would be
+        :obj:`__class__.__name__`, by default None
     kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
 
     Raises
@@ -258,6 +258,6 @@ class IGAttack(UntargetedAttacker, Surrogate):
     def compute_feature_gradients(self, adj, feat_step, victim_nodes,
                                   victim_labels):
 
-        logit = self.surrogate(feat_step, feat_step)[victim_nodes] / self.eps
+        logit = self.surrogate(feat_step, adj)[victim_nodes] / self.eps
         loss = F.cross_entropy(logit, victim_labels)
         return grad(loss, feat_step, create_graph=False)[0]

@@ -157,7 +157,7 @@ class DropPath(nn.Module):
         super().__init__()
         self.p = p
         self.walks_per_node = walks_per_node
-        self, walk_length = walk_length
+        self.walk_length = walk_length
         self.num_nodes = num_nodes
         self.start = start
         self.is_sorted = is_sorted

@@ -1,7 +1,7 @@
 # **GreatX**: Graph Reliability Toolbox
 
 <p align="center">
-  <img width = "600" height = "150" src="https://github.com/EdisonLeeeee/GreatX/blob/master/imgs/greatx.png" alt="banner"/>
+  <img width = "600" height = "150" src="./imgs/greatx.png" alt="banner"/>
   <br/>
 </p>
 <p align="center"><strong>GreatX is great!</strong></p>
@@ -32,12 +32,15 @@
   <a href="https://github.com/EdisonLeeeee/GreatX/blob/master/CONTRIBUTING.md">
     <img src="https://img.shields.io/badge/Contributions-Welcome-278ea5" alt="Contrib"/>
   </a>
+  <a href="https://greatx.readthedocs.io/en/latest">
+    <img src="https://readthedocs.org/projects/greatx/badge/?version=latest" alt="docs">
+  </a>
 </p>
 
-# ❓ What is Reliability on Graphs?
+# ❓ What is "Reliability" on Graphs?
 ![threats](./imgs/threats.png)
 
-It refers to robustness against the following threats:
+"Reliability" on graphs refers to *robustness* against the following threats:
 + Inherent noise
 + Distribution Shift
 + Adversarial Attacks

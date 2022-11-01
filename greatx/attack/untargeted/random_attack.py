@@ -2,7 +2,7 @@ import random
 from typing import Optional
 
 import numpy as np
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from greatx.attack.untargeted.untargeted_attacker import UntargetedAttacker
 

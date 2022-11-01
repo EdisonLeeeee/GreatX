@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
 from torch_geometric.utils import add_self_loops, degree, remove_self_loops
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from greatx.attack.backdoor.backdoor_attacker import BackdoorAttacker
 from greatx.functional import spmm

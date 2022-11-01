@@ -6,7 +6,7 @@ import torch
 from scipy import linalg
 from torch import Tensor
 from torch_geometric.data import Data
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
 from greatx.utils import singleton_filter

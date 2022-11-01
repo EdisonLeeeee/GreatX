@@ -2,7 +2,7 @@ from typing import Optional, Union
 
 import numpy as np
 from torch import Tensor
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from greatx.attack.injection.injection_attacker import InjectionAttacker
 

@@ -3,7 +3,7 @@ import torch.nn.functional as F
 from torch import Tensor
 from torch.autograd import grad
 from torch.nn import init
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from greatx.attack.untargeted.untargeted_attacker import UntargetedAttacker
 from greatx.functional import to_dense_adj

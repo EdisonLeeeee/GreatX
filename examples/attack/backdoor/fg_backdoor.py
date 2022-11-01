@@ -5,7 +5,7 @@ import os.path as osp
 
 import torch
 import torch_geometric.transforms as T
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from greatx.attack.backdoor import FGBackdoor
 from greatx.datasets import GraphDataset

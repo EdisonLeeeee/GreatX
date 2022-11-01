@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 from torch.autograd import grad
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
 from greatx.functional import to_dense_adj

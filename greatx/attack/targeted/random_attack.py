@@ -1,7 +1,7 @@
 import random
 from typing import Optional
 
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
 

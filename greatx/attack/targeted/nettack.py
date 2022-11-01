@@ -5,7 +5,7 @@ from typing import Optional
 import numpy as np
 import scipy.sparse as sp
 from torch_geometric.data import Data
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
 from greatx.nn.models.surrogate import Surrogate

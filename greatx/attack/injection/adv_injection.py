@@ -5,7 +5,7 @@ import torch
 import torch.nn.functional as F
 from torch import Tensor
 from torch.autograd import grad
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from greatx.attack.injection.injection_attacker import InjectionAttacker
 from greatx.nn.models.surrogate import Surrogate
@@ -54,7 +54,7 @@ class AdvInjection(InjectionAttacker, Surrogate):
     """
     def attack(self, num_budgets: Union[int, float], *,
                targets: Optional[Tensor] = None, interconnection: bool = False,
-               lr: float = 0.01, num_edges_global: Optional[int] = None,
+               lr: float = 0.1, num_edges_global: Optional[int] = None,
                num_edges_local: Optional[int] = None,
                feat_limits: Optional[Union[tuple, dict]] = None,
                feat_budgets: Optional[int] = None,
@@ -120,7 +120,7 @@ class AdvInjection(InjectionAttacker, Surrogate):
                     injected_feats.data.fill_(0.)
                     injected_feats.data.scatter_(1, topk.indices, 1.0)
                 else:
-                    injected_feats.data = feat_limits * feat_grad.sign()
+                    injected_feats.data = feat_limits * lr * feat_grad.sign()
                     injected_feats.data.clamp_(min=feat_min, max=feat_max)
 
             if interconnection:

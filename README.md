@@ -45,10 +45,11 @@
 + Distribution Shift
 + Adversarial Attacks
 
-For more details, please refer to our paper [**Recent Advances in Reliable Deep Graph Learning: Adversarial Attack, Inherent Noise, and Distribution Shift**](https://arxiv.org/abs/2202.07114)
+For more details, please kindly refer to our paper [**Recent Advances in Reliable Deep Graph Learning: Adversarial Attack, Inherent Noise, and Distribution Shift**](https://arxiv.org/abs/2202.07114)
 
 
 # 💨 News
+- November 2, 2022: We are planning to release GreatX 0.1.0 this month, stay tuned!
 - June 30, 2022: GraphWar has been renamed to GreatX.
 - ~~June 9, 2022: GraphWar **v0.1.0** has been released. We also provide the [documentation](https://greatx.readthedocs.io/en/latest) along with numerous [examples](https://github.com/EdisonLeeeee/GreatX/blob/master/examples)~~ .
 - ~~May 27, 2022: GraphWar has been refactored with [PyTorch Geometric (PyG)](https://github.com/pyg-team/pytorch_geometric), old code based on [DGL](https://www.dgl.ai) can be found [here](https://github.com/EdisonLeeeee/GreatX/tree/dgl). We will soon release the first version of GreatX, stay tuned!~~

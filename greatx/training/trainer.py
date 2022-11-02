@@ -333,6 +333,12 @@ class Trainer:
         return torch.optim.Adam(self.model.parameters(), lr=lr,
                                 weight_decay=weight_decay)
 
+    def reset_optimizer(self) -> "Trainer":
+        if self.optimizer is not None:
+            self.optimizer = self.config_optimizer()
+            self.scheduler = self.config_scheduler(self.optimizer)
+        return self
+
     def config_scheduler(self, optimizer: torch.optim.Optimizer):
         return None
 

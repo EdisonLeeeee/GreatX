@@ -9,7 +9,7 @@ from torch_geometric.data import Data
 
 from greatx.training.callbacks import (Callback, CallbackList, Optimizer,
                                        Scheduler)
-from greatx.utils import BunchDict, Progbar
+from greatx.utils import BunchDict, Progbar, repeat
 
 
 class Trainer:
@@ -60,7 +60,6 @@ class Trainer:
 
         self.cfg.setdefault("lr", 1e-2)
         self.cfg.setdefault("weight_decay", 5e-4)
-        self.cfg.setdefault("empty_cache", False)
 
         self.optimizer = self.config_optimizer()
         self.scheduler = self.config_scheduler(self.optimizer)
@@ -100,20 +99,33 @@ class Trainer:
         ...                         data.val_mask), callbacks=[cb])
         """
 
-        empty_cache = self.cfg['empty_cache']
         model = self.model.to(self.device)
         model.stop_training = False
 
         validation = isinstance(data, tuple) or isinstance(mask, tuple)
         if isinstance(data, tuple):
-            train_data, val_data = data
+            assert len(data) >= 2
+            train_data, *val_data = data
         else:
-            train_data = val_data = data
+            train_data = data
+            val_data = (data, )
 
         if isinstance(mask, tuple):
-            train_mask, val_mask = mask
+            assert len(mask) >= 2
+            train_mask, *val_mask = mask
         else:
-            train_mask = val_mask = mask
+            train_mask = mask
+            val_mask = (mask, )
+
+        # case1: one data for multiple mask
+        # case2: one mask for multiple data
+        # case3: multiple data for multiple mask
+        assert (len(val_data) == 1 or len(val_mask) == 1
+                or (len(val_data) == len(val_mask)))
+
+        num_validas = max(len(val_data), len(val_mask))
+        val_data = repeat(val_data, num_validas)
+        val_mask = repeat(val_mask, num_validas)
 
         # Setup callbacks
         self.callbacks = callbacks = self.config_callbacks(
@@ -127,16 +139,19 @@ class Trainer:
         callbacks.on_train_begin()
         try:
             for epoch in range(epochs):
-                if empty_cache and self.device.type.startswith('cuda'):
-                    torch.cuda.empty_cache()
                 callbacks.on_epoch_begin(epoch)
                 train_logs = self.train_step(train_data, train_mask)
                 logs.update(train_logs)
 
                 if validation:
-                    val_logs = self.test_step(val_data, val_mask)
-                    val_logs = {f'val_{k}': v for k, v in val_logs.items()}
-                    logs.update(val_logs)
+                    for ix, (data, mask) in enumerate(zip(val_data, val_mask)):
+                        val_logs = self.test_step(data, mask)
+                        postfix = "" if num_validas == 1 else f"_{ix}"
+                        val_logs = {
+                            f'val_{k}{postfix}': v
+                            for k, v in val_logs.items()
+                        }
+                        logs.update(val_logs)
 
                 callbacks.on_epoch_end(epoch, logs)
 

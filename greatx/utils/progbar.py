@@ -17,11 +17,14 @@ class Progbar:
     width : int, optional
         progress bar width on screen, by default 30
     verbose : int, optional
-        verbosity mode, 0 (silent), 1 (verbose), 2 (semi-verbose), by default 1
+        verbosity mode, 0 (silent), 1 (verbose), 2 (semi-verbose),
+        by default 1
     interval : float, optional
-        minimum visual progress update interval (in seconds), by default 0.05
+        minimum visual progress update interval (in seconds),
+        by default 0.05
     unit_name : str, optional
-        display name for step counts (usually "step" or "sample"), by default 'step'
+        display name for step counts (usually "step" or "sample"),
+        by default 'step'
 
     Example
     -------
@@ -29,21 +32,16 @@ class Progbar:
     >>> pbar = Progbar(5)
     >>> for i in range(5):
     ...     pbar.add(1, msg=f'current number {i}')
-    5/5 [==============================] - Total: 3.22ms - 643us/step- current number 4
+    5/5 [===============] - Total: 3.22ms - 643us/step- current number 4
 
     >>> pbar = Progbar(5)
     >>> for i in range(5):
     ...     pbar.update(i+1, msg=f'current number {i}')
-    5/5 [==============================] - Total: 3.22ms - 643us/step- current number 4
+    5/5 [===============] - Total: 3.22ms - 643us/step- current number 4
 
     """
-
-    def __init__(self,
-                 target: int,
-                 width: int = 30,
-                 verbose: int = 1,
-                 interval: float = 0.05,
-                 unit_name: str = 'step'):
+    def __init__(self, target: int, width: int = 20, verbose: int = 1,
+                 interval: float = 0.05, unit_name: str = 'step'):
 
         self.target = target
         self.width = width
@@ -51,17 +49,18 @@ class Progbar:
         self.interval = interval
         self.unit_name = unit_name
 
-        self._dynamic_display = ((hasattr(sys.stdout, 'isatty') and
-                                  sys.stdout.isatty()) or
-                                 'ipykernel' in sys.modules or
-                                 'posix' in sys.modules or
-                                 'PYCHARM_HOSTED' in os.environ)
+        self._dynamic_display = ((hasattr(sys.stdout, 'isatty')
+                                  and sys.stdout.isatty())
+                                 or 'ipykernel' in sys.modules
+                                 or 'posix' in sys.modules
+                                 or 'PYCHARM_HOSTED' in os.environ)
         self._total_width = 0
         self._seen_so_far = 0
         self._start = time.perf_counter()
         self._last_update = 0
 
-    def update(self, current: int, msg: Optional[Union[str, List, Tuple]] = None,
+    def update(self, current: int, msg: Optional[Union[str, List,
+                                                       Tuple]] = None,
                finalize: Optional[bool] = None):
         """Updates the progress bar using current value.
 
@@ -71,10 +70,12 @@ class Progbar:
         current : int
             index of current step
         msg : Optional[Union[str, List, Tuple]], optional
-            :obj:`(name, value_for_last_step)` or string messages, by default None
+            :obj:`(name, value_for_last_step)` or string messages,
+            by default None
         finalize : Optional[bool], optional
             whether this is the last update for the progress bar. If
-            :obj:`None`, defaults to :obj:`current >= self.target`, by default None
+            :obj:`None`, defaults to :obj:`current >= self.target`,
+            by default None
 
         Raises
         ------
@@ -138,8 +139,8 @@ class Progbar:
 
             if self.target is not None:
                 numdigits = int(np.log10(self.target)) + 1
-                bar = ('%' + str(numdigits) +
-                       'd/%d [') % (current, self.target)
+                bar = ('%' + str(numdigits) + 'd/%d [') % (current,
+                                                           self.target)
                 prog = float(current) / self.target
                 prog_width = int(self.width * prog)
                 if prog_width > 0:
@@ -171,7 +172,8 @@ class Progbar:
                 eta = time_per_unit * (self.target - current)
                 if eta > 3600:
                     eta_format = '%d:%02d:%02d' % (eta // 3600,
-                                                   (eta % 3600) // 60, eta % 60)
+                                                   (eta % 3600) // 60,
+                                                   eta % 60)
                 elif eta > 60:
                     eta_format = '%d:%02d' % (eta // 60, eta % 60)
                 else:
@@ -193,8 +195,8 @@ class Progbar:
         elif self.verbose == 2:
             if finalize:
                 numdigits = int(np.log10(self.target)) + 1
-                count = ('%' + str(numdigits) +
-                         'd/%d') % (current, self.target)
+                count = ('%' + str(numdigits) + 'd/%d') % (current,
+                                                           self.target)
                 info = count + info
                 info += message
                 info += '\n'
@@ -211,7 +213,8 @@ class Progbar:
         n : int
             number of steps to add to the progress bar
         msg : Optional[Union[str, List, Tuple]], optional
-            :obj:`(name, value_for_last_step)` or string messages, by default None
+            :obj:`(name, value_for_last_step)` or string messages,
+            by default None
         """
         self.update(self._seen_so_far + n, msg)
 

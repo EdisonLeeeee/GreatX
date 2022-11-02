@@ -369,6 +369,9 @@ class CallbackList:
     def __iter__(self):
         return iter(self.callbacks)
 
+    def __getitem__(self, index):
+        return self.callbacks[index]
+
     def __str__(self) -> str:
 
         format_string = ""
@@ -800,10 +803,17 @@ class ModelCheckpoint(Callback):
         return file_path
 
     def __str__(self) -> str:
-        return f"{self.__class__.__name__}(monitor={self.monitor}, " + \
-            "verbose={self.verbose}, filepath={self.filepath}, " +\
-            "save_best_only={self.save_best_only}, " +\
-            "save_weights_only={self.save_weights_only})"
+        format_string = ""
+        attrs = {
+            'monitor', 'verbose', 'filepath', 'save_best_only',
+            'save_weights_only'
+        }
+        for attr in attrs:
+            format_string += f'\n  {attr}={getattr(self,attr)},'
+        if format_string:
+            # replace last ``,`` as ``\n``
+            format_string = format_string[:-1] + '\n'
+        return f"{self.__class__.__name__}({format_string})"
 
     __repr__ = __str__
 
@@ -918,9 +928,14 @@ class EarlyStopping(Callback):
         return self.monitor_op(monitor_value - self.min_delta, reference_value)
 
     def __str__(self) -> str:
-        return f"{self.__class__.__name__}(monitor={self.monitor}, " +\
-            "patience={self.patience}, verbose={self.verbose}, " +\
-            "min_delta={self.min_delta}, mode={self.mode})"
+        format_string = ""
+        attrs = {'monitor', 'verbose', 'patience', 'min_delta', 'mode'}
+        for attr in attrs:
+            format_string += f'\n  {attr}={getattr(self,attr)},'
+        if format_string:
+            # replace last ``,`` as ``\n``
+            format_string = format_string[:-1] + '\n'
+        return f"{self.__class__.__name__}({format_string})"
 
     __repr__ = __str__
 
@@ -935,13 +950,13 @@ class ProgbarLogger(Callback):
         self.seen = 0
         self.progbar = None
         self.target = None
-        self.verbose = 1
-        self.epochs = 1
+        self.verbose = None
+        self.epochs = None
 
     def set_params(self, params):
         self.verbose = params['verbose']
         self.epochs = params['epochs']
-        self.target = params['epochs']
+        self.target = self.epochs
 
     def on_train_begin(self, logs=None):
         self._reset_progbar()
@@ -1011,8 +1026,14 @@ class ProgbarLogger(Callback):
         self._reset_progbar()
 
     def __str__(self) -> str:
-        return f"{self.__class__.__name__}(epochs={self.epochs}, " +\
-            "verbose={self.verbose})"
+        format_string = ""
+        attrs = {'epochs', 'verbose'}
+        for attr in attrs:
+            format_string += f'\n  {attr}={getattr(self,attr)},'
+        if format_string:
+            # replace last ``,`` as ``\n``
+            format_string = format_string[:-1] + '\n'
+        return f"{self.__class__.__name__}({format_string})"
 
     __repr__ = __str__
 
@@ -1206,7 +1227,13 @@ class TqdmCallback(Callback):
         self._maybe_init_progbar()
 
     def __str__(self) -> str:
-        return f"{self.__class__.__name__}(epochs={self.epochs}, " +\
-            "verbose={self.verbose})"
+        format_string = ""
+        attrs = {'epochs', 'verbose'}
+        for attr in attrs:
+            format_string += f'\n  {attr}={getattr(self,attr)},'
+        if format_string:
+            # replace last ``,`` as ``\n``
+            format_string = format_string[:-1] + '\n'
+        return f"{self.__class__.__name__}({format_string})"
 
     __repr__ = __str__

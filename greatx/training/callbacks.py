@@ -24,7 +24,6 @@ import time
 
 import numpy as np
 import torch
-from tqdm import tqdm
 
 from greatx.utils import BunchDict, Progbar
 
@@ -375,8 +374,8 @@ class CallbackList:
     def __str__(self) -> str:
 
         format_string = ""
-        for cb in self.callbacks:
-            format_string += f'\n  {cb},'
+        for ix, cb in enumerate(self.callbacks):
+            format_string += f'\n  ({ix}){cb},'
         if format_string:
             # replace last ``,`` as ``\n``
             format_string = format_string[:-1] + '\n'
@@ -1064,176 +1063,7 @@ class Optimizer(Callback):
         self.optimizer.step()
 
     def __str__(self) -> str:
-        return f"{self.__class__.__name__}(optimizer={self.optimizer})"
-
-    __repr__ = __str__
-
-
-class LambdaCallback(Callback):
-    r"""Callback for creating simple, custom callbacks on-the-fly.
-
-    This callback is constructed with anonymous functions that will be called
-    at the appropriate time (during `Model.{fit | evaluate | predict}`).
-    Note that the callbacks expects positional arguments, as:
-
-    - `on_epoch_begin` and `on_epoch_end` expect two positional arguments:
-      `epoch`, `logs`
-    - `on_batch_begin` and `on_batch_end` expect two positional arguments:
-      `batch`, `logs`
-    - `on_train_begin` and `on_train_end` expect one positional argument:
-      `logs`
-
-    Args:
-        on_epoch_begin: called at the beginning of every epoch.
-        on_epoch_end: called at the end of every epoch.
-        on_batch_begin: called at the beginning of every batch.
-        on_batch_end: called at the end of every batch.
-        on_train_begin: called at the beginning of model training.
-        on_train_end: called at the end of model training.
-
-    Example(From TensorFlow):
-
-    ```python
-    # Print the batch number at the beginning of every batch.
-    batch_print_callback = LambdaCallback(
-        on_batch_begin=lambda batch,logs: print(batch))
-
-    # Stream the epoch loss to a file in JSON format. The file content
-    # is not well-formed JSON but rather has a JSON object per line.
-    import json
-    json_log = open('loss_log.json', mode='wt', buffering=1)
-    json_logging_callback = LambdaCallback(
-        on_epoch_end=lambda epoch, logs: json_log.write(
-            json.dumps({'epoch': epoch, 'loss': logs['loss']}) + '\n'),
-        on_train_end=lambda logs: json_log.close()
-    )
-
-    # Terminate some processes after having finished model training.
-    processes = ...
-    cleanup_callback = LambdaCallback(
-        on_train_end=lambda logs: [
-            p.terminate() for p in processes if p.is_alive()])
-
-    model.fit(...,
-              callbacks=[batch_print_callback,
-                         json_logging_callback,
-                         cleanup_callback])
-    ```
-    """
-    def __init__(self, on_epoch_begin=None, on_epoch_end=None,
-                 on_batch_begin=None, on_batch_end=None, on_train_begin=None,
-                 on_train_end=None, **kwargs):
-        super().__init__()
-        self.__dict__.update(kwargs)
-        if on_epoch_begin is not None:
-            self.on_epoch_begin = on_epoch_begin
-        else:
-            self.on_epoch_begin = lambda epoch, logs: None
-        if on_epoch_end is not None:
-            self.on_epoch_end = on_epoch_end
-        else:
-            self.on_epoch_end = lambda epoch, logs: None
-        if on_batch_begin is not None:
-            self.on_batch_begin = on_batch_begin
-        else:
-            self.on_batch_begin = lambda batch, logs: None
-        if on_batch_end is not None:
-            self.on_batch_end = on_batch_end
-        else:
-            self.on_batch_end = lambda batch, logs: None
-        if on_train_begin is not None:
-            self.on_train_begin = on_train_begin
-        else:
-            self.on_train_begin = lambda logs: None
-        if on_train_end is not None:
-            self.on_train_end = on_train_end
-        else:
-            self.on_train_end = lambda logs: None
-
-
-class TqdmCallback(Callback):
-    """Callback that prints metrics to stdout.
-    TODO: on_[test/predict]_[begin/end] haven't been tested.
-    """
-    def __init__(self, verbose=None, tqdm_class=tqdm):
-        super().__init__()
-        # Defaults to all Model's metrics except for loss.
-        self.seen = 0
-        self.progbar = None
-        self.target = None
-        self.verbose = 1
-        self.epochs = 1
-        self.verbose = verbose
-        self.tqdm_class = tqdm_class
-
-    def set_params(self, params):
-        self.epochs = params['epochs']
-        if self.verbose:
-            self.target = params['epochs']
-        else:
-            # Will be inferred at the end of the first epoch.
-            self.target = None
-
-    def on_train_begin(self, logs=None):
-        self._reset_progbar()
-
-    def on_train_end(self, logs=None):
-        self._reset_progbar()
-
-    def on_test_begin(self, logs=None):
-        self._reset_progbar()
-        self._maybe_init_progbar()
-
-    def on_predict_begin(self, logs=None):
-        self._reset_progbar()
-        self._maybe_init_progbar()
-
-    def on_epoch_begin(self, epoch, logs=None):
-        self._maybe_init_progbar()
-
-    def on_train_batch_end(self, batch, logs=None):
-        self._batch_update_progbar(batch, logs)
-
-    def on_test_batch_end(self, batch, logs=None):
-        self._batch_update_progbar(batch, logs)
-
-    def on_predict_batch_end(self, batch, logs=None):
-        # Don't pass prediction results.
-        self._batch_update_progbar(batch, None)
-
-    def on_epoch_end(self, epoch, logs=None):
-        logs = logs or {}
-        if self.verbose:
-            self.progbar.set_postfix(logs)
-            self.progbar.update(1)
-
-    def on_test_end(self, logs=None):
-        self._reset_progbar()
-
-    def on_predict_end(self, logs=None):
-        self._reset_progbar()
-
-    def _reset_progbar(self):
-        if self.progbar is not None:
-            self.progbar.close()
-
-    def _maybe_init_progbar(self):
-        if self.progbar is None:
-            self.progbar = self.tqdm_class(total=self.target, desc='',
-                                           disable=not self.verbose)
-
-    def _batch_update_progbar(self, batch, logs=None):
-        """Updates the progbar."""
-        self._maybe_init_progbar()
-
-    def __str__(self) -> str:
-        format_string = ""
-        attrs = {'epochs', 'verbose'}
-        for attr in attrs:
-            format_string += f'\n  {attr}={getattr(self,attr)},'
-        if format_string:
-            # replace last ``,`` as ``\n``
-            format_string = format_string[:-1] + '\n'
-        return f"{self.__class__.__name__}({format_string})"
+        return f"{self.__class__.__name__}(optimizer=" +\
+            f"{self.optimizer.__class__.__name__})"
 
     __repr__ = __str__

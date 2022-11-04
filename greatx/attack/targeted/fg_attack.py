@@ -162,7 +162,7 @@ class FGAttack(TargetedAttacker, Surrogate):
                         self.add_edge(u, v, it)
                 else:
                     u, v = divmod(feat_argmax.item(), num_feats)
-                    feat_weight = modified_feat[u, v].data
+                    feat_weight = modified_feat[u, v].data.item()
                     modified_feat[u, v].data.fill_(1 - feat_weight)
                     if feat_weight > 0:
                         self.remove_feat(u, v, it)

@@ -39,7 +39,6 @@ trainer_before = Trainer(SGC(num_features, num_classes), device=device, lr=0.1,
 ckp = ModelCheckpoint('model_before.pth', monitor='val_acc')
 trainer_before.fit(data, mask=(splits.train_nodes, splits.val_nodes),
                    callbacks=[ckp])
-trainer_before.cache_clear()
 output = trainer_before.predict(data, mask=target)
 print(f"Before attack (target_label={target_label})\n "
       f"{np.round(output.tolist(), 2)}")
@@ -57,6 +56,7 @@ attacker.attack(target)
 # ================================================================== #
 #                      After evasion Attack                          #
 # ================================================================== #
+trainer_before.cache_clear()
 output = trainer_before.predict(attacker.data(), mask=target)
 print(f"After evasion attack (target_label={target_label})\n "
       f"{np.round(output.tolist(), 2)}")
@@ -70,7 +70,6 @@ trainer_after = Trainer(SGC(num_features, num_classes), device=device)
 ckp = ModelCheckpoint('model_after.pth', monitor='val_acc')
 trainer_after.fit(attacker.data(), mask=(splits.train_nodes, splits.val_nodes),
                   callbacks=[ckp])
-trainer_after.cache_clear()
 output = trainer_after.predict(attacker.data(), mask=target)
 
 print(f"After poisoning attack (target_label={target_label})\n "

@@ -1,6 +1,5 @@
 import os.path as osp
 
-import numpy as np
 import torch
 import torch_geometric.transforms as T
 
@@ -9,7 +8,7 @@ from greatx.datasets import GraphDataset
 from greatx.nn.models import GCN
 from greatx.training.callbacks import ModelCheckpoint
 from greatx.training.trainer import Trainer
-from greatx.utils import split_nodes
+from greatx.utils import mark, split_nodes
 
 dataset = 'Cora'
 root = osp.join(osp.dirname(osp.realpath(__file__)), '../../..', 'data')
@@ -29,7 +28,6 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # ================================================================== #
 target = 1  # target node to attack
 target_label = data.y[target].item()
-width = 5
 
 # ================================================================== #
 #                      Before Attack                                 #
@@ -41,10 +39,8 @@ ckp = ModelCheckpoint('model_before.pth', monitor='val_acc')
 trainer_before.fit(data, mask=(splits.train_nodes, splits.val_nodes),
                    callbacks=[ckp])
 output = trainer_before.predict(data, mask=target)
-print(f"Before attack (target_label={target_label})\n "
-      f"{np.round(output.tolist(), 2)}")
-print('-' * target_label * width + '----👆' +
-      '-' * max(dataset.num_classes - target_label - 1, 0) * width)
+print("Before attack:")
+print(mark(output, target_label))
 
 # ================================================================== #
 #                      Attacking                                     #
@@ -58,10 +54,8 @@ attacker.attack(target)
 #                      After evasion Attack                          #
 # ================================================================== #
 output = trainer_before.predict(attacker.data(), mask=target)
-print(f"After evasion attack (target_label={target_label})\n "
-      f"{np.round(output.tolist(), 2)}")
-print('-' * target_label * width + '----👆' +
-      '-' * max(dataset.num_classes - target_label - 1, 0) * width)
+print("After evasion attack:")
+print(mark(output, target_label))
 
 # ================================================================== #
 #                      After poisoning Attack                        #
@@ -71,8 +65,5 @@ ckp = ModelCheckpoint('model_after.pth', monitor='val_acc')
 trainer_after.fit(attacker.data(), mask=(splits.train_nodes, splits.val_nodes),
                   callbacks=[ckp])
 output = trainer_after.predict(attacker.data(), mask=target)
-
-print(f"After poisoning attack (target_label={target_label})\n "
-      f"{np.round(output.tolist(), 2)}")
-print('-' * target_label * width + '----👆' +
-      '-' * max(dataset.num_classes - target_label - 1, 0) * width)
+print("After poisoning attack:")
+print(mark(output, target_label))

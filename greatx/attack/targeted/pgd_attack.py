@@ -1,20 +1,21 @@
 import math
 from functools import partial
-from typing import Union
+from typing import Optional, Union
 
 import numpy as np
 import torch
-import torch.nn.functional as F
 from torch import Tensor
 from torch.autograd import grad
 from tqdm.auto import tqdm
 
-from greatx.attack.untargeted.untargeted_attacker import UntargetedAttacker
+from greatx.attack.targeted.targeted_attacker import TargetedAttacker
+from greatx.attack.untargeted.pgd_attack import (cross_entropy_loss,
+                                                 margin_loss, symmetric)
 from greatx.functional import to_dense_adj
 from greatx.nn.models.surrogate import Surrogate
 
 
-class PGDAttack(UntargetedAttacker, Surrogate):
+class PGDAttack(TargetedAttacker, Surrogate):
     r"""Implementation of `PGD` attack from the:
     `"Topology Attack and Defense for Graph Neural Networks:
     An Optimization Perspective"
@@ -29,8 +30,8 @@ class PGDAttack(UntargetedAttacker, Surrogate):
     seed : Optional[int], optional
         the random seed for reproducing the attack, by default None
     name : Optional[str], optional
-        name of the attacker, if None, it would be
-        :obj:`__class__.__name__`, by default None
+        name of the attacker, if None, it would be :obj:`__class__.__name__`,
+        by default None
     kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
 
     Raises
@@ -45,18 +46,25 @@ class PGDAttack(UntargetedAttacker, Surrogate):
         from greatx.dataset import GraphDataset
         import torch_geometric.transforms as T
 
+        import os.path as osp
+
         dataset = GraphDataset(root='.', name='Cora',
                                 transform=T.LargestConnectedComponents())
         data = dataset[0]
 
         surrogate_model = ... # train your surrogate model
 
-        from greatx.attack.untargeted import PGDAttack
+        from greatx.attack.targeted import PGDAttack
         attacker = PGDAttack(data)
-        attacker.setup_surrogate(surrogate_model,
-                                 victim_nodes=test_nodes)
+        attacker.setup_surrogate(surrogate_model)
         attacker.reset()
-        attacker.attack(0.05) # attack with 0.05% of edge perturbations
+        # attacking target node `1` with default budget set as node degree
+        attacker.attack(target=1)
+
+        attacker.reset()
+        # attacking target node `1` with budget set as 1
+        attacker.attack(target=1, num_budgets=1)
+
         attacker.data() # get attacked graph
 
         attacker.edge_flips() # get edge flips after attack
@@ -64,66 +72,22 @@ class PGDAttack(UntargetedAttacker, Surrogate):
         attacker.added_edges() # get added edges after attack
 
         attacker.removed_edges() # get removed edges after attack
-
-    Note
-    ----
-    * Please remember to call :meth:`reset` before each attack.
-
     """
 
-    # PGDAttack cannot ensure that there is not singleton node after attacks.
+    # PGDAttack cannot ensure there are no singleton nodes
     _allow_singleton: bool = True
 
     def setup_surrogate(
         self,
         surrogate: torch.nn.Module,
-        victim_nodes: Tensor,
-        ground_truth: bool = True,
         *,
         eps: float = 1.0,
         freeze: bool = True,
     ) -> "PGDAttack":
-        """Setup the surrogate model for adversarial attack.
-
-        Parameters
-        ----------
-        surrogate : torch.nn.Module
-            the surrogate model
-        victim_nodes : Tensor
-            the victim nodes_set
-        ground_truth : bool, optional
-            whether to use ground-truth label for victim nodes,
-            if False, the node labels are estimated by the surrogate model,
-            by default True
-        eps : float, optional
-            the temperature of softmax activation, by default 1.0
-        freeze : bool, optional
-            whether to free the surrogate model to avoid the
-            gradient accumulation, by default True
-
-        Returns
-        -------
-        PGDAttack
-            the attacker itself
-        """
-
         Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps,
                                   freeze=freeze)
-
-        if victim_nodes.dtype == torch.bool:
-            victim_nodes = victim_nodes.nonzero().view(-1)
-        victim_nodes = torch.LongTensor(victim_nodes).to(self.device)
-
         self.adj = to_dense_adj(self.edge_index, self.edge_weight,
                                 num_nodes=self.num_nodes).to(self.device)
-        self.victim_nodes = victim_nodes
-
-        if ground_truth:
-            self.victim_labels = self.label[victim_nodes]
-        else:
-            self.victim_labels = self.estimate_self_training_labels(
-                victim_nodes)
-
         return self
 
     def reset(self) -> "PGDAttack":
@@ -133,8 +97,11 @@ class PGDAttack(UntargetedAttacker, Surrogate):
 
     def attack(
         self,
-        num_budgets: Union[int, float] = 0.05,
+        target: int,
         *,
+        target_label: Optional[int] = None,
+        num_budgets: Optional[Union[float, int]] = None,
+        direct_attack: bool = True,
         base_lr: float = 0.1,
         epochs: int = 200,
         ce_loss: bool = False,
@@ -148,9 +115,20 @@ class PGDAttack(UntargetedAttacker, Surrogate):
 
         Parameters
         ----------
+        target : int
+            the target node to attack
+        target_label : Optional[int], optional
+            the label of the target node, if None,
+            it defaults to its ground truth label,
+            by default None
+        direct_attack : bool, optional
+            whether to conduct direct attack on the target,
+            N/A for this method when :obj:`direct_attack=False`.
         num_budgets : Union[int, float], optional
             the number of attack budgets, coubd be float (ratio)
-            or int (number), by default 0.05
+            or int (number), if None, it defaults to the number of
+            node degree of :obj:`target`
+            by default None
         base_lr : float, optional
             the base learning rate for PGD training, by default 0.1
         epochs : int, optional
@@ -178,10 +156,25 @@ class PGDAttack(UntargetedAttacker, Surrogate):
         PGDAttack
             the attacker itself
         """
-
-        super().attack(num_budgets=num_budgets,
+        if not direct_attack:
+            raise RuntimeError(
+                "PGDAttack is not applicable to indirect attack.")
+        super().attack(target, target_label, num_budgets=num_budgets,
+                       direct_attack=direct_attack,
                        structure_attack=structure_attack,
                        feature_attack=feature_attack)
+
+        if target_label is None:
+            if self.target_label is None:
+                raise RuntimeError("please specify argument `target_label` "
+                                   "as the node label does not exist.")
+            self.victim_label = self.target_label.view(-1)
+        else:
+            self.victim_label = torch.as_tensor(target_label,
+                                                device=self.device,
+                                                dtype=torch.long).view(-1)
+        self.victim_node = torch.as_tensor(self.target, device=self.device,
+                                           dtype=torch.long).view(-1)
 
         if ce_loss:
             self.loss_fn = partial(cross_entropy_loss, eps=self.eps)
@@ -236,8 +229,8 @@ class PGDAttack(UntargetedAttacker, Surrogate):
 
     def compute_loss(self, perturbations: Tensor) -> Tensor:
         adj = self.adj + perturbations * (1 - 2 * self.adj)
-        logit = self.surrogate(self.feat, adj)[self.victim_nodes]
-        loss = self.loss_fn(logit, self.victim_labels)
+        logit = self.surrogate(self.feat, adj)[self.victim_node]
+        loss = self.loss_fn(logit, self.victim_label)
         return loss
 
     def compute_gradients(self, perturbations: Tensor) -> Tensor:
@@ -247,24 +240,3 @@ class PGDAttack(UntargetedAttacker, Surrogate):
 
     def grad_fn(self, pert_sym: Tensor) -> Tensor:
         return grad(self.compute_loss(pert_sym), pert_sym)[0]
-
-
-def symmetric(x: Tensor) -> Tensor:
-    x = x.triu(diagonal=1)
-    return x + x.T
-
-
-def margin_loss(logit: Tensor, y_true: Tensor) -> Tensor:
-    all_nodes = torch.arange(y_true.size(0))
-    # Get the scores of the true classes.
-    scores_true = logit[all_nodes, y_true]
-    # Get the highest scores when not considering the true classes.
-    scores_mod = logit.clone()
-    scores_mod[all_nodes, y_true] = -np.inf
-    scores_pred_excl_true = scores_mod.amax(dim=-1)
-    return -(scores_true - scores_pred_excl_true).tanh().mean()
-
-
-def cross_entropy_loss(logit: Tensor, y_true: Tensor,
-                       eps: float = 1.0) -> Tensor:
-    return F.cross_entropy(logit / eps, y_true)

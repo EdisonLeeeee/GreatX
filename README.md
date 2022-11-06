@@ -135,6 +135,8 @@ In detail, the following methods are currently implemented:
 | **GFAttack**     | *Chang et al*.  [A Restricted Black - box Adversarial Framework Towards Attacking Graph Embedding Models](https://arxiv.org/abs/1908.01297), *AAAI'20* | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/attack/targeted/gf_attack.py)     |
 | **IGAttack**     | *Wu et al.* [Adversarial Examples on Graph Data: Deep Insights into Attack and Defense](https://arxiv.org/abs/1903.01610), *IJCAI'19*                  | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/attack/targeted/ig_attack.py)     |
 | **SGAttack**     | *Li et al.* [ Adversarial Attack on Large Scale Graph](https://arxiv.org/abs/2009.03488), *TKDE'21*                                                    | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/attack/targeted/sg_attack.py)     |
+| **PGDAttack**    | *Xu et al.* [Topology Attack and Defense for Graph Neural Networks: An Optimization Perspective](https://arxiv.org/abs/1906.04214), *IJCAI'19*         | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/attack/targeted/pgd_attack.py)    |
+
 #### Untargeted Attack
 
 | Methods          | Descriptions                                                                                                                                   | Examples                                                                                                        |

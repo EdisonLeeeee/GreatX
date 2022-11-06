@@ -85,7 +85,7 @@ class FGAttack(TargetedAttacker, Surrogate):
 
     # FGAttack can conduct feature attack
     _allow_feature_attack: bool = True
-    # FGAttack cannot ensure there are no singleton nodes
+    # FGAttack will not ensure there are no singleton nodes
     _allow_singleton: bool = True
 
     def reset(self):

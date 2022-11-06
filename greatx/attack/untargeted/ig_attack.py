@@ -8,7 +8,6 @@ from torch_geometric.data import Data
 from tqdm.auto import tqdm
 
 from greatx.attack.untargeted.untargeted_attacker import UntargetedAttacker
-from greatx.functional import to_dense_adj
 from greatx.nn.models.surrogate import Surrogate
 from greatx.utils import singleton_mask
 
@@ -81,8 +80,7 @@ class IGAttack(UntargetedAttacker, Surrogate):
         num_nodes, num_feats = self.num_nodes, self.num_feats
         self.nodes_set = set(range(num_nodes))
         self.feats_list = list(range(num_feats))
-        self.adj = to_dense_adj(self.edge_index, self.edge_weight,
-                                num_nodes=self.num_nodes).to(self.device)
+        self.adj = self.get_dense_adj()
 
     def setup_surrogate(self, surrogate: torch.nn.Module, victim_nodes: Tensor,
                         victim_labels: Optional[Tensor] = None, *,

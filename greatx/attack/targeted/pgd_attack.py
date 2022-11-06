@@ -11,7 +11,6 @@ from tqdm.auto import tqdm
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
 from greatx.attack.untargeted.pgd_attack import (cross_entropy_loss,
                                                  margin_loss, symmetric)
-from greatx.functional import to_dense_adj
 from greatx.nn.models.surrogate import Surrogate
 
 
@@ -86,8 +85,7 @@ class PGDAttack(TargetedAttacker, Surrogate):
     ) -> "PGDAttack":
         Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps,
                                   freeze=freeze)
-        self.adj = to_dense_adj(self.edge_index, self.edge_weight,
-                                num_nodes=self.num_nodes).to(self.device)
+        self.adj = self.get_dense_adj()
         return self
 
     def reset(self) -> "PGDAttack":

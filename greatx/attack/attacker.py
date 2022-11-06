@@ -5,9 +5,13 @@ from typing import Optional, Union
 import numpy as np
 import scipy.sparse as sp
 import torch
+from torch import Tensor
 from torch_geometric import seed_everything
 from torch_geometric.data import Data
 from torch_geometric.utils import degree, to_scipy_sparse_matrix
+from torch_sparse import SparseTensor
+
+from greatx.functional import to_dense_adj
 
 
 class Attacker(torch.nn.Module):
@@ -171,24 +175,41 @@ class Attacker(torch.nn.Module):
         return self._max_perturbations
 
     @property
-    def feat(self) -> torch.Tensor:
+    def feat(self) -> Tensor:
         """Node features of the original graph."""
         return self.ori_data.x
 
     @property
-    def label(self) -> torch.Tensor:
+    def label(self) -> Tensor:
         """Node labels of the original graph."""
         return self.ori_data.y
 
     @property
-    def edge_index(self) -> torch.Tensor:
+    def edge_index(self) -> Tensor:
         """Edge index of the original graph."""
         return self.ori_data.edge_index
 
     @property
-    def edge_weight(self) -> torch.Tensor:
+    def edge_weight(self) -> Tensor:
         """Edge weight of the original graph."""
         return self.ori_data.edge_weight
+
+    def get_dense_adj(self) -> Tensor:
+        """Returns a dense adjacency denoting the
+        original graph.
+        If :attr:`self.ori_data` has the attribute :obj:`adj_t`,
+        then it is returned, otherwise it is built from the
+        tuple :obj:`(edge_index, edge_weight)`.
+        """
+        data = self.ori_data
+        adj_t = data.get('adj_t')
+        if isinstance(adj_t, Tensor):
+            return adj_t.t().to(self.device)
+        elif isinstance(adj_t, SparseTensor):
+            return adj_t.to_dense().to(self.device)
+
+        return to_dense_adj(data.edge_index, data.edge_weight,
+                            self.num_nodes).to(self.device)
 
     def _check_feature_matrix_binary(self):
         """Check if the feature matrix is binary.
@@ -200,7 +221,7 @@ class Attacker(torch.nn.Module):
         """
         feat = self.feat
         # FIXME: (Jintang Li) this is quite time-consuming in large matrix
-        # so I only check `10` rows of the matrix randomly.
+        # so it only checks `10` rows of the matrix randomly.
         feat = feat[torch.randint(0, feat.size(0), size=(10, ))]
         if not torch.unique(feat).tolist() == [0, 1]:
             raise RuntimeError(

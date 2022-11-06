@@ -6,7 +6,6 @@ from torch.nn import init
 from tqdm.auto import tqdm
 
 from greatx.attack.untargeted.untargeted_attacker import UntargetedAttacker
-from greatx.functional import to_dense_adj
 from greatx.nn.layers.gcn_conv import dense_gcn_norm
 from greatx.nn.models import GCN
 from greatx.nn.models.surrogate import Surrogate
@@ -97,8 +96,7 @@ class Metattack(UntargetedAttacker, Surrogate):
 
         self.y_train = self.label[labeled_nodes]
         self.y_self_train = self.estimate_self_training_labels(unlabeled_nodes)
-        self.adj = to_dense_adj(self.edge_index, self.edge_weight,
-                                num_nodes=self.num_nodes).to(self.device)
+        self.adj = self.get_dense_adj()
 
         weights = []
         w_velocities = []

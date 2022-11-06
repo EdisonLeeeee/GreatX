@@ -8,7 +8,6 @@ from torch_geometric.data import Data
 from tqdm.auto import tqdm
 
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
-from greatx.functional import to_dense_adj
 from greatx.nn.models.surrogate import Surrogate
 from greatx.utils import singleton_filter
 
@@ -88,8 +87,7 @@ class IGAttack(TargetedAttacker, Surrogate):
         num_nodes, num_feats = self.num_nodes, self.num_feats
         self.nodes_set = set(range(num_nodes))
         self.feats_list = list(range(num_feats))
-        self.adj = to_dense_adj(self.edge_index, self.edge_weight,
-                                num_nodes=self.num_nodes).to(self.device)
+        self.adj = self.get_dense_adj()
 
     def attack(self, target, *, target_label=None, num_budgets=None, steps=20,
                direct_attack=True, structure_attack=True, feature_attack=False,

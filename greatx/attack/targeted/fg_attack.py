@@ -4,7 +4,6 @@ from torch.autograd import grad
 from tqdm.auto import tqdm
 
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
-from greatx.functional import to_dense_adj
 from greatx.nn.models.surrogate import Surrogate
 from greatx.utils import singleton_mask
 
@@ -90,9 +89,7 @@ class FGAttack(TargetedAttacker, Surrogate):
 
     def reset(self):
         super().reset()
-        self.modified_adj = to_dense_adj(self.edge_index, self.edge_weight,
-                                         num_nodes=self.num_nodes).to(
-                                             self.device)
+        self.modified_adj = self.get_dense_adj()
         self.modified_feat = self.feat.clone()
         return self
 

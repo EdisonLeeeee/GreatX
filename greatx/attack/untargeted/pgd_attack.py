@@ -10,7 +10,6 @@ from torch.autograd import grad
 from tqdm.auto import tqdm
 
 from greatx.attack.untargeted.untargeted_attacker import UntargetedAttacker
-from greatx.functional import to_dense_adj
 from greatx.nn.models.surrogate import Surrogate
 
 
@@ -114,8 +113,7 @@ class PGDAttack(UntargetedAttacker, Surrogate):
             victim_nodes = victim_nodes.nonzero().view(-1)
         victim_nodes = torch.LongTensor(victim_nodes).to(self.device)
 
-        self.adj = to_dense_adj(self.edge_index, self.edge_weight,
-                                num_nodes=self.num_nodes).to(self.device)
+        self.adj = self.get_dense_adj()
         self.victim_nodes = victim_nodes
 
         if ground_truth:

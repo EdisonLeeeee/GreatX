@@ -61,12 +61,14 @@ class UntargetedAttacker(FlipAttacker):
 
             See `:attr:max_perturbations`
 
-        structure_attack : bool
+        structure_attack : bool, optional
             whether to conduct structure attack, i.e.,
-            modify the graph structure (edges)
-        feature_attack : bool
+            modify the graph structure (edges),
+            by default True
+        feature_attack : bool, optional
             whether to conduct feature attack, i.e.,
-            modify the node features
+            modify the node features,
+            by default False
 
         """
 

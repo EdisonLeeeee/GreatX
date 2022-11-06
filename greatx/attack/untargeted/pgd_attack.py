@@ -1,12 +1,12 @@
 import math
-from copy import deepcopy
-from typing import Optional
+from functools import partial
+from typing import Union
 
+import numpy as np
 import torch
 import torch.nn.functional as F
 from torch import Tensor
 from torch.autograd import grad
-from torch.distributions.bernoulli import Bernoulli
 from tqdm.auto import tqdm
 
 from greatx.attack.untargeted.untargeted_attacker import UntargetedAttacker
@@ -53,7 +53,8 @@ class PGDAttack(UntargetedAttacker, Surrogate):
 
         from greatx.attack.untargeted import PGDAttack
         attacker = PGDAttack(data)
-        attacker.setup_surrogate(surrogate_model)
+        attacker.setup_surrogate(surrogate_model,
+                                 victim_nodes=test_nodes)
         attacker.reset()
         attacker.attack(0.05) # attack with 0.05% of edge perturbations
         attacker.data() # get attacked graph
@@ -73,288 +74,159 @@ class PGDAttack(UntargetedAttacker, Surrogate):
     # PGDAttack cannot ensure that there is not singleton node after attacks.
     _allow_singleton: bool = True
 
-    def setup_surrogate(self, surrogate: torch.nn.Module,
-                        labeled_nodes: Tensor,
-                        unlabeled_nodes: Optional[Tensor] = None, *,
-                        eps: float = 1.0, freeze: bool = True):
+    def setup_surrogate(
+        self,
+        surrogate: torch.nn.Module,
+        victim_nodes: Tensor,
+        ground_truth: bool = True,
+        *,
+        eps: float = 1.0,
+        freeze: bool = True,
+    ) -> "PGDAttack":
+        """Setup the surrogate model for adversarial attack.
+
+        Parameters
+        ----------
+        surrogate : torch.nn.Module
+            the surrogate model
+        victim_nodes : Tensor
+            the victim nodes_set
+        ground_truth : bool, optional
+            whether to use ground-truth label for victim nodes,
+            if False, the node labels are estimated by the surrogate model,
+            by default True
+        eps : float, optional
+            the temperature of softmax activation, by default 1.0
+        freeze : bool, optional
+            whether to free the surrogate model to avoid the
+            gradient accumulation, by default True
+
+        Returns
+        -------
+        PGDAttack
+            the attacker itself
+        """
 
         Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps,
                                   freeze=freeze)
 
-        labeled_nodes = torch.LongTensor(labeled_nodes).to(self.device)
-        # poisoning attack in DeepRobust
-        if unlabeled_nodes is None:
-            if labeled_nodes.dtype == torch.bool:
-                labeled_nodes = labeled_nodes.nonzero().view(-1)
-            victim_nodes = labeled_nodes
-            victim_labels = self.label[labeled_nodes]
-        else:  # Evasion attack in original paper
-            if unlabeled_nodes.dtype == torch.bool:
-                unlabeled_nodes = unlabeled_nodes.nonzero().view(-1)
-            unlabeled_nodes = unlabeled_nodes.to(self.device)
-            self_labels = self.estimate_self_training_labels(unlabeled_nodes)
-            victim_nodes = torch.cat([labeled_nodes, unlabeled_nodes], dim=0)
-            victim_labels = torch.cat([self.label[labeled_nodes], self_labels],
-                                      dim=0)
+        if victim_nodes.dtype == torch.bool:
+            victim_nodes = victim_nodes.nonzero().view(-1)
+        victim_nodes = torch.LongTensor(victim_nodes).to(self.device)
 
         adj = to_dense_adj(self.edge_index, self.edge_weight,
                            num_nodes=self.num_nodes).to(self.device)
-        identity = torch.eye(self.num_nodes, device=self.device)
-        self.complementary = torch.ones_like(adj) - identity - 2. * adj
         self.adj = adj
         self.victim_nodes = victim_nodes
-        self.victim_labels = victim_labels
+
+        if ground_truth:
+            self.victim_labels = self.label[victim_nodes]
+        else:
+            self.victim_labels = self.estimate_self_training_labels(
+                victim_nodes)
 
         return self
 
-    def reset(self):
+    def reset(self) -> "PGDAttack":
         super().reset()
         self.perturbations = torch.zeros_like(self.adj).requires_grad_()
         return self
 
-    def attack(self, num_budgets=0.05, *, C=None, CW_loss=False, epochs=200,
-               sample_epochs=20, structure_attack=True, feature_attack=False,
-               disable=False):
+    def attack(
+        self,
+        num_budgets: Union[int, float] = 0.05,
+        *,
+        base_lr: float = 0.1,
+        epochs: int = 200,
+        ce_loss: bool = False,
+        sample_epochs: int = 20,
+        structure_attack: bool = True,
+        feature_attack: bool = False,
+        disable: bool = False,
+    ) -> "PGDAttack":
+        """Adversarial attack method for
+        "Project gradient descent attack (PGD)"
+
+        Parameters
+        ----------
+        num_budgets : Union[int, float], optional
+            the number of attack budgets, coubd be float (ratio)
+            or int (number), by default 0.05
+        base_lr : float, optional
+            the base learning rate for PGD training, by default 0.1
+        epochs : int, optional
+            the number of epochs for PGD training, by default 200
+        ce_loss : bool, optional
+            whether to use cross-entropy loss (True) or
+            margin loss (False), by default False
+        sample_epochs : int, optional
+            the number of sampling epochs for learned perturbations,
+            by default 20
+        structure_attack : bool, optional
+            whether to conduct structure attack, i.e.,
+            modify the graph structure (edges),
+            by default True
+        feature_attack : bool, optional
+            whether to conduct feature attack, i.e.,
+            modify the node features, N/A for this method.
+            by default False
+        disable : bool, optional
+            whether to disable the tqdm progress bar,
+            by default False
+
+        Returns
+        -------
+        PGDAttack
+            the attacker itself
+        """
 
         super().attack(num_budgets=num_budgets,
                        structure_attack=structure_attack,
                        feature_attack=feature_attack)
 
-        self.CW_loss = CW_loss
-        C = self.config_C(C)
+        if ce_loss:
+            self.loss_fn = partial(cross_entropy_loss, eps=self.eps)
+        else:
+            self.loss_fn = margin_loss
         perturbations = self.perturbations
         for epoch in tqdm(range(epochs), desc='PGD training...',
                           disable=disable):
-            gradients = self.compute_gradients(perturbations,
-                                               self.victim_nodes,
-                                               self.victim_labels)
-            lr = C / math.sqrt(epoch + 1)
-            perturbations.data.add_(lr * gradients)
-            perturbations = self.projection(perturbations)
+            lr = base_lr * self.num_budgets / math.sqrt(epoch + 1)
+            gradients = self.compute_gradients(perturbations)
 
-        best_s = self.bernoulli_sample(perturbations, sample_epochs,
-                                       disable=disable)
-        row, col = torch.where(best_s > 0.)
-        for it, (u, v) in enumerate(zip(row.tolist(), col.tolist())):
-            if self.adj[u, v] > 0:
-                self.remove_edge(u, v, it)
-            else:
-                self.add_edge(u, v, it)
+            with torch.no_grad():
+                perturbations += lr * gradients
+                if perturbations.clamp(0, 1).sum() <= self.num_budgets:
+                    perturbations.clamp_(0, 1)
+                else:
+                    top = perturbations.max().item()
+                    bot = (perturbations.min() - 1).clamp_min(0).item()
+                    mu = (top + bot) / 2
+                    while (top - bot) / 2 > 1e-5:
+                        used_budget = (perturbations - mu).clamp(0, 1).sum()
+                        if used_budget == self.num_budgets:
+                            break
+                        elif used_budget > self.num_budgets:
+                            bot = mu
+                        else:
+                            top = mu
+                        mu = (top + bot) / 2
+                    perturbations.sub_(mu).clamp_(0, 1)
 
-        return self
+        best_loss = -np.inf
+        best_pert = None
 
-    def config_C(self, C=None):
-        if C is not None:
-            return C
-        if self.CW_loss:
-            C = 0.1
-        else:
-            C = 200
-        return C
-
-    def bisection(self, perturbations, a, b, epsilon):
-        def func(x):
-            clipped_matrix = self.clip(perturbations - x)
-            return clipped_matrix.sum() - self.num_budgets
-
-        miu = a
-        while (b - a) > epsilon:
-            miu = (a + b) / 2
-            # Check if middle point is root
-            if func(miu) == 0:
-                break
-            # Decide the side to repeat the steps
-            if func(miu) * func(a) < 0:
-                b = miu
-            else:
-                a = miu
-        return miu
-
-    def get_perturbed_adj(self, perturbations=None):
-        if perturbations is None:
-            perturbations = self.perturbations
-        adj_triu = torch.triu(perturbations, diagonal=1)
-        perturbations = adj_triu + adj_triu.t()
-        adj = self.complementary * perturbations + self.adj
-        return adj
-
-    def projection(self, perturbations):
-        clipped_matrix = self.clip(perturbations)
-        num_modified = clipped_matrix.sum()
-
-        if num_modified > self.num_budgets:
-            left = (perturbations - 1.).min()
-            right = perturbations.max()
-            miu = self.bisection(perturbations, left, right, epsilon=1e-5)
-            clipped_matrix = self.clip(perturbations - miu)
-        else:
-            pass
-
-        perturbations.data.copy_(clipped_matrix)
-        return perturbations
-
-    def clip(self, matrix):
-        clipped_matrix = torch.clamp(matrix, 0., 1.)
-        return clipped_matrix
-
-    @torch.no_grad()
-    def bernoulli_sample(self, perturbations, sample_epochs=20, disable=False):
-        best_loss = -1e4
-        best_s = None
-        probs = torch.triu(perturbations, diagonal=1)
-        sampler = Bernoulli(probs)
+        perturbations.detach_()
         for it in tqdm(range(sample_epochs), desc='Bernoulli sampling...',
                        disable=disable):
-            sampled = sampler.sample()
-            if sampled.sum() > self.num_budgets:
-                continue
+            sampled = perturbations.bernoulli()
+            if sampled.count_nonzero() <= self.num_budgets:
+                loss = self.compute_loss(symmetric(sampled))
+                if best_loss < loss:
+                    best_loss = loss
+                    best_pert = sampled
 
-            perturbations.data.copy_(sampled)
-            loss = self.compute_loss(perturbations, self.victim_nodes,
-                                     self.victim_labels)
-
-            if best_loss < loss:
-                best_loss = loss
-                best_s = sampled
-
-        assert best_s is not None, "Something went wrong"
-        return best_s.cpu()
-
-    def compute_loss(self, perturbations, victim_nodes, victim_labels):
-        adj = self.get_perturbed_adj(perturbations)
-        logit = self.surrogate(self.feat, adj)[victim_nodes] / self.eps
-
-        if self.CW_loss:
-            # logit = F.softmax(logit, dim=1)
-            one_hot = torch.eye(logit.size(-1),
-                                device=self.device)[victim_labels]
-            range_idx = torch.arange(victim_nodes.size(0), device=self.device)
-            best_wrong_class = (logit - 1000 * one_hot).argmax(1)
-            margin = logit[range_idx, victim_labels] - \
-                logit[range_idx, best_wrong_class] + 50
-            loss = -torch.clamp(margin, min=0.)
-            return loss.mean()
-        else:
-            loss = F.cross_entropy(logit, self.victim_labels)
-        return loss
-
-    def compute_gradients(self, perturbations, victim_nodes, victim_labels):
-        loss = self.compute_loss(perturbations, victim_nodes, victim_labels)
-        return grad(loss, perturbations, create_graph=False)[0]
-
-
-class MinmaxAttack(PGDAttack):
-    r"""Implementation of `MinMax` attack from the:
-    `"Topology Attack and Defense for Graph Neural Networks:
-    An Optimization Perspective"
-    <https://arxiv.org/abs/1906.04214>`_ paper (IJCAI'19)
-
-    Parameters
-    ----------
-    data : Data
-        PyG-like data denoting the input graph
-    device : str, optional
-        the device of the attack running on, by default "cpu"
-    seed : Optional[int], optional
-        the random seed for reproducing the attack, by default None
-    name : Optional[str], optional
-        name of the attacker, if None, it would be :obj:`__class__.__name__`,
-        by default None
-    kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
-
-    Raises
-    ------
-    TypeError
-        unexpected keyword argument in :obj:`kwargs`
-
-    Example
-    -------
-    .. code-block:: python
-
-        from greatx.dataset import GraphDataset
-        import torch_geometric.transforms as T
-
-        dataset = GraphDataset(root='.', name='Cora',
-                                transform=T.LargestConnectedComponents())
-        data = dataset[0]
-
-        surrogate_model = ... # train your surrogate model
-
-        from greatx.attack.untargeted import MinmaxAttack
-        attacker = MinmaxAttack(data)
-        attacker.setup_surrogate(surrogate_model)
-        attacker.reset()
-        attacker.attack(0.05) # attack with 0.05% of edge perturbations
-        attacker.data() # get attacked graph
-
-        attacker.edge_flips() # get edge flips after attack
-
-        attacker.added_edges() # get added edges after attack
-
-        attacker.removed_edges() # get removed edges after attack
-
-    Note
-    ----
-    * MinMax attack is a variant of
-    :class:`~greatx.attack.untargeted.PGDAttack` attack.
-    * Please remember to call :meth:`reset` before each attack.
-
-    """
-    def setup_surrogate(self, surrogate: torch.nn.Module,
-                        labeled_nodes: Tensor,
-                        unlabeled_nodes: Optional[Tensor] = None, *,
-                        eps: float = 1.0):
-
-        super().setup_surrogate(surrogate=surrogate,
-                                labeled_nodes=labeled_nodes,
-                                unlabeled_nodes=unlabeled_nodes, eps=eps,
-                                freeze=False)
-
-        self.cached = deepcopy(self.surrogate.state_dict())
-        return self
-
-    def reset(self):
-        super().reset()
-        self.surrogate.load_state_dict(self.cached)
-        return self
-
-    def attack(self, num_budgets=0.05, *, C=None, lr=0.001, CW_loss=False,
-               epochs=100, sample_epochs=20, structure_attack=True,
-               feature_attack=False, disable=False):
-
-        super(PGDAttack, self).attack(num_budgets=num_budgets,
-                                      structure_attack=structure_attack,
-                                      feature_attack=feature_attack)
-
-        self.CW_loss = CW_loss
-        C = self.config_C(C)
-        perturbations = self.perturbations
-        optimizer = torch.optim.Adam(self.surrogate.parameters(), lr=lr)
-
-        for epoch in tqdm(range(epochs), desc='Min-MAX training...',
-                          disable=disable):
-
-            # =========== Min-step ===================
-            loss = self.compute_loss(perturbations, self.victim_nodes,
-                                     self.victim_labels)
-
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-            # ========================================
-
-            # =========== Max-step ===================
-            gradients = self.compute_gradients(perturbations,
-                                               self.victim_nodes,
-                                               self.victim_labels)
-            lr = C / math.sqrt(epoch + 1)
-            perturbations.data.add_(lr * gradients)
-            perturbations = self.projection(perturbations)
-            # ========================================
-
-        best_s = self.bernoulli_sample(perturbations, sample_epochs,
-                                       disable=disable)
-        row, col = torch.where(best_s > 0.)
+        row, col = torch.where(best_pert > 0.)
         for it, (u, v) in enumerate(zip(row.tolist(), col.tolist())):
             if self.adj[u, v] > 0:
                 self.remove_edge(u, v, it)
@@ -362,3 +234,38 @@ class MinmaxAttack(PGDAttack):
                 self.add_edge(u, v, it)
 
         return self
+
+    def compute_loss(self, perturbations: Tensor) -> Tensor:
+        adj = self.adj + perturbations * (1 - 2 * self.adj)
+        logit = self.surrogate(self.feat, adj)[self.victim_nodes]
+        loss = self.loss_fn(logit, self.victim_labels)
+        return loss
+
+    def compute_gradients(self, perturbations: Tensor) -> Tensor:
+        pert_sym = symmetric(perturbations)
+        return grad(pert_sym, perturbations,
+                    grad_outputs=self.grad_fn(pert_sym))[0]
+
+    def grad_fn(self, pert_sym: Tensor) -> Tensor:
+        return grad(self.compute_loss(pert_sym), pert_sym)[0]
+
+
+def symmetric(x: Tensor) -> Tensor:
+    x = x.triu(diagonal=1)
+    return x + x.T
+
+
+def margin_loss(logit: Tensor, y_true: Tensor) -> Tensor:
+    all_nodes = torch.arange(y_true.shape[0])
+    # Get the scores of the true classes.
+    scores_true = logit[all_nodes, y_true]
+    # Get the highest scores when not considering the true classes.
+    scores_mod = logit.clone()
+    scores_mod[all_nodes, y_true] = -np.inf
+    scores_pred_excl_true = scores_mod.amax(dim=-1)
+    return -(scores_true - scores_pred_excl_true).tanh().mean()
+
+
+def cross_entropy_loss(logit: Tensor, y_true: Tensor,
+                       eps: float = 1.0) -> Tensor:
+    return F.cross_entropy(logit / eps, y_true)

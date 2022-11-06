@@ -37,13 +37,8 @@ print(f"Before attack\n {logs}")
 #                      Attacking                                     #
 # ================================================================== #
 attacker = PGDAttack(data, device=device)
-# Evasion setting
-# attacker.setup_surrogate(trainer_before.model,
-#                          labeled_nodes=splits.train_nodes,
-#                          unlabeled_nodes=splits.test_nodes)
-# Poisoning setting
-attacker.setup_surrogate(trainer_before.model,
-                         labeled_nodes=splits.train_nodes)
+attacker.setup_surrogate(trainer_before.model, victim_nodes=splits.test_nodes,
+                         ground_truth=True)
 attacker.reset()
 attacker.attack(0.05)
 

@@ -15,7 +15,7 @@ class Surrogate(Module):
     Parameters
     ----------
     device : str, optional
-        the device of a model to use for, by default "cpu"    
+        the device of a model to use for, by default "cpu"
 
     """
     _is_setup = False  # flags to denote the surrogate model is properly set
@@ -24,10 +24,9 @@ class Surrogate(Module):
         super().__init__()
         self.device = torch.device(device)
 
-    def setup_surrogate(self, surrogate: Module, *,
-                        eps: float = 1.0,
-                        freeze: bool = True,
-                        required: Union[Module, Tuple[Module]] = None) -> "Surrogate":
+    def setup_surrogate(
+            self, surrogate: Module, *, eps: float = 1.0, freeze: bool = True,
+            required: Union[Module, Tuple[Module]] = None) -> "Surrogate":
         """Method used to initialize the (trained) surrogate model.
 
         Parameters
@@ -37,9 +36,11 @@ class Surrogate(Module):
         eps : float, optional
             temperature used for softmax activation, by default 1.0
         freeze : bool, optional
-            whether to freeze the model's parameters to save time, by default True
+            whether to freeze the model's parameters to save time,
+            by default True
         required : Union[Module, Tuple[Module]], optional
-            which class(es) of the surrogate model are required, by default None
+            which class(es) of the surrogate model are required,
+            by default None
 
         Returns
         -------
@@ -49,18 +50,21 @@ class Surrogate(Module):
         Raises
         ------
         RuntimeError
-            if the surrogate model is not an instance of :class:`torch.nn.Module`
+            if the surrogate model is not an instance of
+            :class:`torch.nn.Module`
         RuntimeError
             if the surrogate model is not an instance of :obj:`required`
         """
 
         if not isinstance(surrogate, Module):
             raise RuntimeError(
-                "The surrogate model must be an instance of `torch.nn.Module`.")
+                "The surrogate model must be an instance of `torch.nn.Module`."
+            )
 
         if required is not None and not isinstance(surrogate, required):
             raise RuntimeError(
-                f"The surrogate model is required to be `{required}`, but got `{surrogate.__class__.__name__}`.")
+                f"The surrogate model is required to be `{required}`, "
+                f"but got `{surrogate.__class__.__name__}`.")
 
         surrogate.eval()
         if hasattr(surrogate, 'cache_clear'):
@@ -80,8 +84,33 @@ class Surrogate(Module):
 
         return self
 
-    def estimate_self_training_labels(self,
-                                      nodes: Optional[Tensor] = None) -> Tensor:
+    def clip_grad(
+        self,
+        grad: Tensor,
+        grad_clip: Optional[float],
+    ) -> Tensor:
+        """Gradient clipping function
+
+        Parameters
+        ----------
+        grad : Tensor
+            the input gradients to clip
+        grad_clip : Optional[float]
+            the clipping number of the gradients
+
+        Returns
+        -------
+        Tensor
+            the clipped gradients
+        """
+        if grad_clip is not None:
+            grad_len_sq = grad.square().sum()
+            if grad_len_sq > grad_clip * grad_clip:
+                grad *= grad_clip / grad_len_sq.sqrt()
+        return grad
+
+    def estimate_self_training_labels(
+            self, nodes: Optional[Tensor] = None) -> Tensor:
         """Estimate the labels of nodes using the trained surrogate model.
 
         Parameters
@@ -95,8 +124,8 @@ class Surrogate(Module):
         Tensor
             the labels of the input nodes.
         """
-        self_training_labels = self.surrogate(
-            self.feat, self.edge_index, self.edge_weight)
+        self_training_labels = self.surrogate(self.feat, self.edge_index,
+                                              self.edge_weight)
         if nodes is not None:
             self_training_labels = self_training_labels[nodes]
         return self_training_labels.argmax(-1)

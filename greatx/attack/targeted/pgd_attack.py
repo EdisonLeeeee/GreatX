@@ -188,10 +188,7 @@ class PGDAttack(TargetedAttacker, Surrogate):
             lr = base_lr * self.num_budgets / math.sqrt(epoch + 1)
             gradients = self.compute_gradients(perturbations)
 
-            if grad_clip is not None:
-                grad_len_sq = gradients.square().sum()
-                if grad_len_sq > grad_clip * grad_clip:
-                    gradients *= grad_clip / grad_len_sq.sqrt()
+            gradients = self.clip(gradients, grad_clip)
 
             with torch.no_grad():
                 perturbations += lr * gradients

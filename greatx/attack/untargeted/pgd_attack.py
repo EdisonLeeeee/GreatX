@@ -195,7 +195,7 @@ class PGDAttack(UntargetedAttacker, Surrogate):
             lr = base_lr * self.num_budgets / math.sqrt(epoch + 1)
             gradients = self.compute_gradients(perturbations)
 
-            gradients = self.clip(gradients, grad_clip)
+            gradients = self.clip_grad(gradients, grad_clip)
 
             with torch.no_grad():
                 perturbations += lr * gradients

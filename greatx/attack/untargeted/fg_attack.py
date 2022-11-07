@@ -90,6 +90,7 @@ class FGAttack(UntargetedAttacker, Surrogate):
         if victim_nodes.dtype == torch.bool:
             victim_nodes = victim_nodes.nonzero().view(-1)
         self.victim_nodes = victim_nodes.to(self.device)
+
         if victim_labels is None:
             victim_labels = self.label[victim_nodes]
         self.victim_labels = victim_labels.to(self.device)

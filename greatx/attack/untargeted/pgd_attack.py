@@ -111,10 +111,7 @@ class PGDAttack(UntargetedAttacker, Surrogate):
 
         if victim_nodes.dtype == torch.bool:
             victim_nodes = victim_nodes.nonzero().view(-1)
-        victim_nodes = torch.LongTensor(victim_nodes).to(self.device)
-
-        self.adj = self.get_dense_adj()
-        self.victim_nodes = victim_nodes
+        self.victim_nodes = victim_nodes.to(self.device)
 
         if ground_truth:
             self.victim_labels = self.label[victim_nodes]
@@ -122,6 +119,7 @@ class PGDAttack(UntargetedAttacker, Surrogate):
             self.victim_labels = self.estimate_self_training_labels(
                 victim_nodes)
 
+        self.adj = self.get_dense_adj()
         return self
 
     def reset(self) -> "PGDAttack":

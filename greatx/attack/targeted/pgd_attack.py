@@ -101,6 +101,7 @@ class PGDAttack(TargetedAttacker, Surrogate):
         num_budgets: Optional[Union[float, int]] = None,
         direct_attack: bool = True,
         base_lr: float = 0.1,
+        grad_clip: Optional[float] = None,
         epochs: int = 200,
         ce_loss: bool = False,
         sample_epochs: int = 20,
@@ -129,6 +130,9 @@ class PGDAttack(TargetedAttacker, Surrogate):
             by default None
         base_lr : float, optional
             the base learning rate for PGD training, by default 0.1
+        grad_clip : float, optional
+            gradient clipping for the computed gradients,
+            by default None
         epochs : int, optional
             the number of epochs for PGD training, by default 200
         ce_loss : bool, optional
@@ -183,6 +187,8 @@ class PGDAttack(TargetedAttacker, Surrogate):
                           disable=disable):
             lr = base_lr * self.num_budgets / math.sqrt(epoch + 1)
             gradients = self.compute_gradients(perturbations)
+
+            gradients = self.clip_grad(gradients, grad_clip)
 
             with torch.no_grad():
                 perturbations += lr * gradients

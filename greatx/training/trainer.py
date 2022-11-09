@@ -333,8 +333,45 @@ class Trainer:
         return torch.optim.Adam(self.model.parameters(), lr=lr,
                                 weight_decay=weight_decay)
 
-    def reset_optimizer(self) -> "Trainer":
+    def reset_optimizer(
+        self,
+        lr: Optional[float] = None,
+        weight_decay: Optional[float] = None,
+    ) -> "Trainer":
+        """Reset the optimizer with given learning rate and
+        weight decay parameters.
+
+        Parameters
+        ----------
+        lr : Optional[float], optional
+            the learning rate. If None, will use the default
+            learning rate :obj:`0.01`, by default None
+        weight_decay : Optional[float], optional
+            the weight decay factor. If None, will use the default
+            factor :obj:`5e-5`, by default None
+
+        Returns
+        -------
+        Trainer
+            the trainer itself
+
+        Example
+        -------
+        >>> Reset optimizer and use default learning rate
+        >>> and weight decay
+        >>> trainer.reset_optimizer()
+
+        >>> Reset optimizer and use learning rate of 0.1
+        >>> trainer.reset_optimizer(lr=0.1)
+
+        >>> Reset optimizer and use weight decay of 0.001
+        >>> trainer.reset_optimizer(weight_decay=0.001)
+        """
         if self.optimizer is not None:
+            if lr is not None:
+                self.cfg['lr'] = lr
+            if weight_decay is not None:
+                self.cfg['weight_decay'] = weight_decay
             self.optimizer = self.config_optimizer()
             self.scheduler = self.config_scheduler(self.optimizer)
         return self

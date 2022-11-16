@@ -3,7 +3,7 @@ from torch_geometric.nn import JumpingKnowledge
 
 from greatx.functional import spmm
 from greatx.nn.layers import GCNConv, Sequential, activations
-from greatx.nn.layers.gcn_conv import make_gcn_norm, make_self_loops
+from greatx.nn.layers.gcn_conv import make_gcn_norm
 from greatx.utils import wrapper
 
 
@@ -107,9 +107,10 @@ class JKNet(nn.Module):
 
         x = self.jump(xs)
 
-        edge_index, edge_weight = make_self_loops(edge_index, edge_weight,
-                                                  num_nodes=x.size(0))
-        edge_index, edge_weight = make_gcn_norm(edge_index, edge_weight)
+        edge_index, edge_weight = make_gcn_norm(edge_index, edge_weight,
+                                                num_nodes=x.size(0),
+                                                dtype=x.dtype,
+                                                add_self_loops=True)
 
         out = spmm(x, edge_index, edge_weight)
 

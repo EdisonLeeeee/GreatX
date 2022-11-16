@@ -95,7 +95,10 @@ class RobustConv(nn.Module):
                                                       num_nodes=x.size(0))
 
         if self.normalize:
-            edge_index, edge_weight = make_gcn_norm(edge_index, edge_weight)
+            edge_index, edge_weight = make_gcn_norm(edge_index, edge_weight,
+                                                    num_nodes=x.size(0),
+                                                    dtype=x.dtype,
+                                                    add_self_loops=False)
 
         attention = torch.exp(-self.gamma * var)
         mean = mean * attention

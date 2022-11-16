@@ -86,13 +86,10 @@ def make_gcn_norm(
     edge_index: Adj,
     edge_weight: OptTensor = None,
     num_nodes: Optional[int] = None,
+    add_self_loops: bool = True,
     dtype: Optional[torch.dtype] = None,
 ) -> Tuple[Adj, OptTensor]:
     r"""Perform GCN-normalization for input graph.
-
-    Note that this method will not add self-loops edges into
-    the input graph denoted as
-    :obj:`edge_index` and :obj:`edge_weight`.
 
     Parameters
     ----------
@@ -113,15 +110,16 @@ def make_gcn_norm(
     if isinstance(edge_index, torch.LongTensor):
         # Sparse edge_index with shape [2, M]
         edge_index, edge_weight = gcn_norm(edge_index, edge_weight,
-                                           num_nodes=None, improved=False,
-                                           add_self_loops=False, dtype=dtype)
+                                           num_nodes=num_nodes, improved=False,
+                                           add_self_loops=add_self_loops,
+                                           dtype=dtype)
     elif isinstance(edge_index, torch.FloatTensor):
         # N by N dense adjacency matrix
         edge_index = dense_gcn_norm(edge_index, improved=False,
-                                    add_self_loops=False)
+                                    add_self_loops=add_self_loops)
     elif isinstance(edge_index, SparseTensor):
-        edge_index = gcn_norm(edge_index, num_nodes=None, improved=False,
-                              add_self_loops=False, dtype=dtype)
+        edge_index = gcn_norm(edge_index, num_nodes=num_nodes, improved=False,
+                              add_self_loops=add_self_loops, dtype=dtype)
     else:
         raise ValueError(f"Type {type(edge_index)} is not supported.")
     return edge_index, edge_weight
@@ -208,7 +206,10 @@ class GCNConv(nn.Module):
                                                       improved=self.improved)
 
         if self.normalize:
-            edge_index, edge_weight = make_gcn_norm(edge_index, edge_weight)
+            edge_index, edge_weight = make_gcn_norm(edge_index, edge_weight,
+                                                    num_nodes=x.size(0),
+                                                    dtype=x.dtype,
+                                                    add_self_loops=False)
 
         out = spmm(x, edge_index, edge_weight)
 

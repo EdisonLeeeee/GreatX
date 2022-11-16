@@ -106,5 +106,5 @@ class AdaptiveConv(nn.Module):
 
         return x - out
 
-    def extra_repr(self) -> str:
-        return f"K={self.K}"
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(K={self.K})"

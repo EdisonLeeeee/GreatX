@@ -53,7 +53,6 @@ class SoftMedianConv(nn.Module):
     The input edges must be sorted for :meth:`dimmedian_idx`
     from :class:`glcore`
 
-
     See also
     --------
     :class:`~greatx.nn.models.supervised.SoftMedianGCN`

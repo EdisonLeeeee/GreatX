@@ -89,7 +89,8 @@ def make_gcn_norm(
     add_self_loops: bool = True,
     dtype: Optional[torch.dtype] = None,
 ) -> Tuple[Adj, OptTensor]:
-    r"""Perform GCN-normalization for input graph.
+    r"""Perform GCN-normalization :math:`\mathbf{\hat{D}}^{-1/2}
+    \mathbf{\hat{A}} \mathbf{\hat{D}}^{-1/2}`for input graph.
 
     Parameters
     ----------
@@ -100,6 +101,13 @@ def make_gcn_norm(
         or :obj:`torch.LongTensor`.
     edge_weight : OptTensor, optional
         edge weights for the input edge_index, by default None
+    num_nodes : Optional[int], optional
+        number of nodes, by default None
+    add_self_loops : bool, optional
+        whether to add self-loop edges, by default True
+    dtype : Optional[torch.dtype], optional
+        types of edge weights of added self-loop edges
+        if :obj:`add_self_loops=True`.
 
     Returns
     -------

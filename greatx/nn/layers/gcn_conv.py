@@ -13,7 +13,7 @@ from greatx.functional import spmm
 
 
 def dense_gcn_norm(adj: Tensor, improved: bool = False,
-                   add_self_loops: bool = True, rate: float = -0.5):
+                   add_self_loops: bool = True, rate: float = -0.5) -> Tensor:
     fill_value = 2. if improved else 1.
     if add_self_loops:
         adj = dense_add_self_loops(adj, fill_value)

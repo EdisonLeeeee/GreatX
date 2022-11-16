@@ -2,8 +2,9 @@ import warnings
 
 import torch
 import torch.nn.functional as F
-from sklearn.preprocessing import normalize
-from torch_geometric.utils import to_scipy_sparse_matrix
+from torch_scatter import scatter_add
+
+EPS = 1e-10
 
 
 class GNNGUARD(torch.nn.Module):
@@ -15,10 +16,11 @@ class GNNGUARD(torch.nn.Module):
     Parameters
     ----------
     threshold : float, optional
-        threshold for removing edges based on attention scores,
-        by default 0.1
+        threshold for removing edges based on
+        attention scores, by default 0.1
     add_self_loops : bool, optional
-        whether to add self-loops to the input graph, by default False
+        whether to add self-loops to the input graph,
+        by default False
     """
     def __init__(self, threshold: float = 0.1, add_self_loops: bool = False):
         super().__init__()
@@ -37,22 +39,22 @@ class GNNGUARD(torch.nn.Module):
         mask = att_score >= self.threshold
         edge_index = edge_index[:, mask]
         att_score = att_score[mask]
-        adj_matrix = to_scipy_sparse_matrix(edge_index, att_score.detach())
-        adj_matrix = normalize(adj_matrix, axis=1, norm='l1')
-        row, col = edge_index.tolist()
-        att_score_norm = torch.tensor(adj_matrix[row, col]).to(x).view(-1)
+
+        row, col = edge_index
+        row_sum = scatter_add(att_score, col, dim_size=x.size(0))
+        att_score_norm = att_score / (row_sum[row] + EPS)
 
         if self.add_self_loops:
-            degree = adj_matrix.getnnz(axis=1)
-            self_weight = torch.tensor(1.0 / (degree + 1)).to(x)
+            degree = scatter_add(torch.ones_like(att_score_norm), col,
+                                 dim_size=x.size(0))
+            self_weight = 1.0 / (degree + 1)
             att_score_norm = torch.cat([att_score_norm, self_weight])
-            loop_index = torch.arange(0, adj_matrix.shape[0], dtype=torch.long,
+            loop_index = torch.arange(0, x.size(0), dtype=torch.long,
                                       device=edge_index.device)
             loop_index = loop_index.unsqueeze(0).repeat(2, 1)
             edge_index = torch.cat([edge_index, loop_index], dim=1)
 
         att_score_norm = att_score_norm.exp()
-
         return edge_index, att_score_norm
 
     def extra_repr(self) -> str:

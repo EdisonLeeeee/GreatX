@@ -5,18 +5,16 @@ from torch import Tensor
 from torch_geometric.data import Data
 from torch_geometric.nn.conv.gcn_conv import gcn_norm
 from torch_geometric.transforms import BaseTransform
-from torch_geometric.utils import add_self_loops
 
 from greatx.functional import spmm
 
 
 class FeaturePropagation(BaseTransform):
     r"""Implementation of FeaturePropagation
-    from the `"On the Unreasonable Effectiveness 
-    of Feature propagation in Learning 
+    from the `"On the Unreasonable Effectiveness
+    of Feature propagation in Learning
     on Graphs with Missing Node Features"
     <https://arxiv.org/abs/2111.12128>`_ paper (ICLR'21)
-
 
     Parameters
     ----------
@@ -28,7 +26,8 @@ class FeaturePropagation(BaseTransform):
         whether to compute symmetric normalization
         coefficients on the fly, by default True
     add_self_loops : bool, optional
-        whether to add self-loops to the input graph, by default True
+        whether to add self-loops to the input graph,
+        by default True
 
     Example
     -------
@@ -37,18 +36,17 @@ class FeaturePropagation(BaseTransform):
         data = ... # PyG-like data
         data = FeaturePropagation(num_iterations=40)(data)
 
-        # missing_mask is a mask `[num_nodes, num_features]` indicating where the feature is missing
+        # missing_mask is a mask `[num_nodes, num_features]`
+        # indicating where the feature is missing
         data = FeaturePropagation(missing_mask=missing_mask)(data)
 
     Reference:
 
-    * https://github.com/twitter-research/feature-propagation
+    https://github.com/twitter-research/feature-propagation
 
     """
-
     def __init__(self, missing_mask: Optional[Tensor] = None,
-                 num_iterations: int = 40,
-                 normalize: bool = True):
+                 num_iterations: int = 40, normalize: bool = True):
         super().__init__()
         self.missing_mask = missing_mask
         self.num_iterations = num_iterations
@@ -56,9 +54,9 @@ class FeaturePropagation(BaseTransform):
 
     def __call__(self, data: Data) -> Data:
 
-        # out is inizialized to 0 for missing values. However,
-        # its initialization does not matter for the final
-        # value at convergence
+        # out is inizialized to 0 for missing values.
+        # However, its initialization does not
+        # matter for the final value at convergence
         x = data.x
         known_feature_mask = None
         missing_mask = self.missing_mask
@@ -72,8 +70,8 @@ class FeaturePropagation(BaseTransform):
         edge_index, edge_weight = data.edge_index, data.edge_weight
 
         if self.normalize:
-            edge_index, edge_weight = gcn_norm(edge_index, edge_weight, x.size(0),
-                                               improved=False,
+            edge_index, edge_weight = gcn_norm(edge_index, edge_weight,
+                                               x.size(0), improved=False,
                                                add_self_loops=False,
                                                dtype=x.dtype)
         for _ in range(self.num_iterations):

@@ -24,9 +24,11 @@ class JaccardPurification(BaseTransform):
     Parameters
     ----------
     threshold : float, optional
-        threshold to filter edges based on Jaccard similarity, by default 0.
+        threshold to filter edges based on Jaccard similarity,
+        by default 0.
     allow_singleton : bool, optional
-        whether such defense strategy allow singleton nodes, by default False
+        whether such defense strategy allow singleton nodes,
+        by default False
     """
     def __init__(self, threshold: float = 0., allow_singleton: bool = False):
         # TODO: add percentage purification

@@ -18,9 +18,11 @@ class GNNGUARD(nn.Module):
     out_channels : int,
         the output dimensions of model
     hids : list, optional
-        the number of hidden units for each hidden layer, by default [16]
+        the number of hidden units for each hidden layer,
+        by default [16]
     acts : list, optional
-        the activation function for each hidden layer, by default ['relu']
+        the activation function for each hidden layer,
+        by default ['relu']
     dropout : float, optional
         the dropout ratio of model, by default 0.5
     bias : bool, optional
@@ -56,17 +58,18 @@ class GNNGUARD(nn.Module):
         super().__init__()
 
         conv = []
+        # Add self-loops in the first input layer
+        conv.append(GNNGUARDLayer(add_self_loops=True))
         for hid, act in zip(hids, acts):
-            conv.append(GNNGUARDLayer(add_self_loops=True))
             conv.append(
                 GCNConv(in_channels, hid, bias=bias, add_self_loops=False,
                         normalize=normalize))
             if bn:
                 conv.append(nn.BatchNorm1d(hid))
             conv.append(activations.get(act))
+            conv.append(GNNGUARDLayer())
             conv.append(nn.Dropout(dropout))
             in_channels = hid
-        conv.append(GNNGUARDLayer())
         conv.append(
             GCNConv(in_channels, out_channels, add_self_loops=False, bias=bias,
                     normalize=normalize))

@@ -114,7 +114,7 @@ class SoftMedianConv(nn.Module):
 
             if self.add_self_loops:
                 edge_index, edge_weight = add_self_loops(
-                    edge_index, num_nodes=x.size(0))
+                    edge_index, edge_weight, num_nodes=x.size(0))
 
             if self.normalize:
                 edge_index, edge_weight = gcn_norm(edge_index, edge_weight,

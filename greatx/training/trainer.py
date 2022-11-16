@@ -67,7 +67,7 @@ class Trainer:
     def fit(self, data: Union[Data, Tuple[Data, Data]],
             mask: Optional[Union[Tensor, Tuple[Tensor, Tensor]]] = None,
             callbacks: Optional[Callback] = None, verbose: Optional[int] = 1,
-            epochs: int = 100) -> "Trainer":
+            epochs: int = 100, prefix: str = 'val') -> "Trainer":
         """Simple training method designed for `:attr:model`
 
         Parameters
@@ -86,6 +86,8 @@ class Trainer:
             :obj:`None, 1, 2, 3, 4`, by default 1
         epochs : int, optional
             training epochs, by default 100
+        prefix : str, optional
+            prefix for validation metrics
 
         Example
         -------
@@ -148,7 +150,7 @@ class Trainer:
                         val_logs = self.test_step(data, mask)
                         postfix = "" if num_validas == 1 else f"_{ix}"
                         val_logs = {
-                            f'val_{k}{postfix}': v
+                            f'{prefix}_{k}{postfix}': v
                             for k, v in val_logs.items()
                         }
                         logs.update(val_logs)

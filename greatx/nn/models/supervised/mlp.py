@@ -28,13 +28,6 @@ class MLP(nn.Module):
         whether to use :class:`BatchNorm1d` after the Linear layer,
         by default False
 
-    Note
-    ----
-    It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`~greatx.utils.wrapper`.
-
-    See Examples below.
-
     Examples
     --------
     >>> # MLP with one hidden layer
@@ -43,10 +36,10 @@ class MLP(nn.Module):
     >>> # MLP with two hidden layers
     >>> model = MLP(100, 10, hids=[32, 16], acts=['relu', 'elu'])
 
-    >>> # MLP with two hidden layers, without activation at the first layer
+    >>> # MLP with two hidden layers, without first activation
     >>> model = MLP(100, 10, hids=[32, 16], acts=[None, 'relu'])
 
-    >>> # MLP with very deep architectures, each layer has elu as activation
+    >>> # MLP with deep architectures, each layer has elu activation
     >>> model = MLP(100, 10, hids=[16]*8, acts=['elu'])
 
     See also

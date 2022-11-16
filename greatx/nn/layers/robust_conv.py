@@ -16,7 +16,7 @@ from greatx.utils.check import is_edge_index
 
 class RobustConv(nn.Module):
     r"""The robust graph convolutional operator
-    from the `"Robust Graph Convolutional Networks 
+    from the `"Robust Graph Convolutional Networks
     Against Adversarial Attacks"
     <http://pengcui.thumedialab.com/papers/RGCN.pdf>`_ paper (KDD'19)
 
@@ -31,27 +31,21 @@ class RobustConv(nn.Module):
     add_self_loops : bool, optional
         whether to add self-loops to the input graph, by default True
     bias : bool, optional
-        whether to use bias in the layers, by default True     
+        whether to use bias in the layers, by default True
 
     Note
     ----
-    Different from that in :class:`torch_geometric`, 
-    For the inputs :obj:`x`, :obj:`edge_index`, and :obj:`edge_weight`,
-    our implementation supports:
-
-    * :obj:`edge_index` is :class:`torch.FloatTensor`: dense adjacency matrix with shape :obj:`[N, N]`
-    * :obj:`edge_index` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`
-    * :obj:`edge_index` is :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`           
+    Different from that in :class:`torch_geometric`,
+    for the input :obj:`edge_index`, our implementation supports
+    :obj:`torch.FloatTensor`, :obj:`torch.LongTensor`
+    and obj:`torch_sparse.SparseTensor`.
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.RobustGCN`       
+    :class:`~greatx.nn.models.supervised.RobustGCN`
     """
-
-    def __init__(self, in_channels: int, out_channels: int,
-                 gamma: float = 1.0,
-                 add_self_loops: bool = True,
-                 bias: bool = True):
+    def __init__(self, in_channels: int, out_channels: int, gamma: float = 1.0,
+                 add_self_loops: bool = True, bias: bool = True):
 
         super().__init__()
 
@@ -102,14 +96,13 @@ class RobustConv(nn.Module):
         is_edge_like = is_edge_index(edge_index)
 
         if is_edge_like:
-            edge_index, edge_weight = gcn_norm(edge_index, edge_weight, mean.size(0),
-                                               improved=False,
-                                               add_self_loops=self.add_self_loops,
-                                               dtype=mean.dtype)
+            edge_index, edge_weight = gcn_norm(
+                edge_index, edge_weight, mean.size(0), improved=False,
+                add_self_loops=self.add_self_loops, dtype=mean.dtype)
         elif isinstance(edge_index, SparseTensor):
-            adj = gcn_norm(edge_index, mean.size(0),
-                           improved=False,
-                           add_self_loops=self.add_self_loops, dtype=mean.dtype)
+            adj = gcn_norm(edge_index, mean.size(0), improved=False,
+                           add_self_loops=self.add_self_loops,
+                           dtype=mean.dtype)
 
         else:
             # N by N dense adjacency matrix

@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 
 from greatx.nn.layers import SATConv, Sequential, activations
@@ -6,16 +5,16 @@ from greatx.utils import wrapper
 
 
 class SAT(nn.Module):
-    r"""Graph Convolution Network with 
-    Spectral Adversarial Training (SAT) from the `"Spectral Adversarial 
+    r"""Graph Convolution Network with
+    Spectral Adversarial Training (SAT) from the `"Spectral Adversarial
     Training for Robust Graph Neural Network"
     <https://arxiv.org>`_ paper (arXiv'22)
 
     Parameters
     ----------
-    in_channels : int, 
+    in_channels : int,
         the input dimensions of model
-    out_channels : int, 
+    out_channels : int,
         the output dimensions of model
     hids : list, optional
         the number of hidden units for each hidden layer, by default [16]
@@ -27,16 +26,10 @@ class SAT(nn.Module):
         whether to use bias in the layers, by default False
     normalize : bool, optional
         whether to compute symmetric normalization
-        coefficients on the fly, by default True              
+        coefficients on the fly, by default True
     bn: bool, optional
-        whether to use :class:`BatchNorm1d` after the convolution layer, by default False         
-
-    Note
-    ----
-    It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
-
-    See Examples below.
+        whether to use :class:`BatchNorm1d` after the convolution layer,
+        by default False
 
     Examples
     --------
@@ -46,43 +39,35 @@ class SAT(nn.Module):
     >>> # SAT with two hidden layers
     >>> model = SAT(100, 10, hids=[32, 16], acts=['relu', 'elu'])
 
-    >>> # SAT with two hidden layers, without activation at the first layer
+    >>> # SAT with two hidden layers, without first activation
     >>> model = SAT(100, 10, hids=[32, 16], acts=[None, 'relu'])
 
-    >>> # SAT with very deep architectures, each layer has elu as activation function
+    >>> # SAT with deep architectures, each layer has elu activation
     >>> model = SAT(100, 10, hids=[16]*8, acts=['elu'])
 
     See also
     --------
-    :class:`~greatx.nn.layers.SATConv`    
+    :class:`~greatx.nn.layers.SATConv`
 
     """
     @wrapper
-    def __init__(self,
-                 in_channels: int,
-                 out_channels: int,
-                 hids: list = [16],
-                 acts: list = ['relu'],
-                 dropout: float = 0.5,
-                 bias: bool = False,
-                 normalize: bool = True,
-                 bn: bool = False):
+    def __init__(self, in_channels: int, out_channels: int, hids: list = [16],
+                 acts: list = ['relu'], dropout: float = 0.5,
+                 bias: bool = False, normalize: bool = True, bn: bool = False):
         super().__init__()
 
         conv = []
         assert len(hids) == len(acts)
         for hid, act in zip(hids, acts):
-            conv.append(SATConv(in_channels,
-                                hid,
-                                bias=bias,
-                                normalize=normalize))
+            conv.append(
+                SATConv(in_channels, hid, bias=bias, normalize=normalize))
             if bn:
                 conv.append(nn.BatchNorm1d(hid))
             conv.append(activations.get(act))
             conv.append(nn.Dropout(dropout))
             in_channels = hid
-        conv.append(SATConv(in_channels, out_channels,
-                    bias=bias, normalize=normalize))
+        conv.append(
+            SATConv(in_channels, out_channels, bias=bias, normalize=normalize))
         self.conv = Sequential(*conv)
 
     def reset_parameters(self):

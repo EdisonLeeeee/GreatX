@@ -49,9 +49,13 @@ print(f"After evasion attack\n {logs}")
 # ================================================================== #
 #                      After poisoning Attack                        #
 # ================================================================== #
-trainer_after = Trainer(GNNGUARD(num_features, num_classes), device=device)
-ckp = ModelCheckpoint('model_after.pth', monitor='val_acc')
-trainer_after.fit(attacker.data(), mask=(splits.train_nodes, splits.val_nodes),
-                  callbacks=[ckp])
-logs = trainer_after.evaluate(attacker.data(), splits.test_nodes)
-print(f"After poisoning attack\n {logs}")
+trainer_after_gcn = Trainer(GCN(num_features, num_classes), device=device)
+trainer_after_gcn.fit(attacker.data(), mask=splits.train_nodes)
+logs = trainer_after_gcn.evaluate(attacker.data(), splits.test_nodes)
+print(f"After poisoning attack (GCN)\n {logs}")
+
+trainer_after_defense = Trainer(GNNGUARD(num_features, num_classes),
+                                device=device)
+trainer_after_defense.fit(attacker.data(), mask=splits.train_nodes)
+logs = trainer_after_defense.evaluate(attacker.data(), splits.test_nodes)
+print(f"After poisoning attack (GNNGUARD)\n {logs}")

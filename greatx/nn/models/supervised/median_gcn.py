@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 
 from greatx.nn.layers import MedianConv, Sequential, activations
@@ -6,17 +5,17 @@ from greatx.utils import wrapper
 
 
 class MedianGCN(nn.Module):
-    r"""Graph Convolution Network (GCN) with 
+    r"""Graph Convolution Network (GCN) with
     median aggregation (MedianGCN)
-    from the `"Understanding Structural Vulnerability 
+    from the `"Understanding Structural Vulnerability
     in Graph Convolutional Networks"
     <https://www.ijcai.org/proceedings/2021/310>`_ paper (IJCAI'21)
 
     Parameters
     ----------
-    in_channels : int, 
+    in_channels : int,
         the input dimensions of model
-    out_channels : int, 
+    out_channels : int,
         the output dimensions of model
     hids : list, optional
         the number of hidden units for each hidden layer, by default [16]
@@ -26,7 +25,7 @@ class MedianGCN(nn.Module):
         aggregation function, including {'median', 'sample_median'},
         where :obj:`median` uses the exact median as the aggregation function,
         while :obj:`sample_median` appropriates the median with a fixed set
-        of sampled nodes. :obj:`sample_median` is much faster and 
+        of sampled nodes. :obj:`sample_median` is much faster and
         more scalable than :obj:`median`. By default, :obj:`median` is used.
     dropout : float, optional
         the dropout ratio of model, by default 0.5
@@ -34,16 +33,10 @@ class MedianGCN(nn.Module):
         whether to use bias in the layers, by default True
     normalize : bool, optional
         whether to compute symmetric normalization
-        coefficients on the fly, by default False              
+        coefficients on the fly, by default False
     bn: bool, optional
-        whether to use :class:`BatchNorm1d` after the convolution layer, by default False   
-
-    Note
-    ----
-    It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
-
-    See Examples below.
+        whether to use :class:`BatchNorm1d` after the convolution layer,
+        by default False
 
     Examples
     --------
@@ -53,10 +46,10 @@ class MedianGCN(nn.Module):
     >>> # MedianGCN with two hidden layers
     >>> model = MedianGCN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
 
-    >>> # MedianGCN with two hidden layers, without activation at the first layer
+    >>> # MedianGCN with two hidden layers, without first activation
     >>> model = MedianGCN(100, 10, hids=[32, 16], acts=[None, 'relu'])
 
-    >>> # MedianGCN with very deep architectures, each layer has elu as activation function
+    >>> # MedianGCN with deep architectures, each layer has elu activation
     >>> model = MedianGCN(100, 10, hids=[16]*8, acts=['elu'])
 
     >>> # MedianGCN with sample median aggregation
@@ -64,39 +57,31 @@ class MedianGCN(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.layers.MedianConv`    
+    :class:`~greatx.nn.layers.MedianConv`
 
     """
-
     @wrapper
-    def __init__(self,
-                 in_channels: int,
-                 out_channels: int,
-                 hids: list = [16],
-                 acts: list = ['relu'],
-                 reduce: str = 'median',
-                 dropout: float = 0.5,
-                 bn: bool = False,
-                 normalize: bool = False,
-                 bias: bool = True):
+    def __init__(self, in_channels: int, out_channels: int, hids: list = [16],
+                 acts: list = ['relu'], reduce: str = 'median',
+                 dropout: float = 0.5, bn: bool = False,
+                 normalize: bool = False, bias: bool = True):
 
         super().__init__()
 
         conv = []
         assert len(hids) == len(acts)
         for hid, act in zip(hids, acts):
-            conv.append(MedianConv(in_channels,
-                                   hid,
-                                   bias=bias,
-                                   normalize=normalize,
-                                   reduce=reduce))
+            conv.append(
+                MedianConv(in_channels, hid, bias=bias, normalize=normalize,
+                           reduce=reduce))
             if bn:
                 conv.append(nn.BatchNorm1d(hid))
             conv.append(activations.get(act))
             conv.append(nn.Dropout(dropout))
             in_channels = hid
-        conv.append(MedianConv(in_channels, out_channels,
-                    bias=bias, normalize=normalize, reduce=reduce))
+        conv.append(
+            MedianConv(in_channels, out_channels, bias=bias,
+                       normalize=normalize, reduce=reduce))
         self.conv = Sequential(*conv)
 
     def reset_parameters(self):

@@ -95,7 +95,7 @@ def scatter_sample_median(x: Tensor, edge_index: Tensor,
     neighborhood sampling."""
 
     try:
-        from glcore import neighbor_sampler_cpu
+        from glcore import neighbor_sampler_cpu  # noqa
     except (ImportError, ModuleNotFoundError):
         raise ModuleNotFoundError(
             "`scatter_sample_median` requires glcore which "

@@ -5,19 +5,19 @@ from torch import Tensor, nn
 from torch_geometric.nn.conv.gcn_conv import gcn_norm
 from torch_geometric.nn.dense.linear import Linear
 from torch_geometric.nn.inits import zeros
-from torch_geometric.typing import Adj, OptTensor
-from torch_geometric.utils import add_self_loops, coalesce, remove_self_loops
+from torch_geometric.typing import OptTensor
+from torch_geometric.utils import add_self_loops, coalesce
 from torch_sparse import SparseTensor
 
 try:
-    from glcore import dimmedian_idx
+    from glcore import dimmedian_idx  # noqa
 except (ModuleNotFoundError, ImportError):
     dimmedian_idx = None
 
 
 class SoftMedianConv(nn.Module):
-    r"""The graph convolutional operator with soft 
-    median aggregation from the `"Robustness of Graph Neural Networks 
+    r"""The graph convolutional operator with soft
+    median aggregation from the `"Robustness of Graph Neural Networks
     at Scale" <https://arxiv.org/abs/2110.14038>`_ paper (NeurIPS'21)
 
     Parameters
@@ -29,37 +29,34 @@ class SoftMedianConv(nn.Module):
     cached : bool, optional
         whether the layer will cache
         the computation of :math:`(\mathbf{\hat{D}}^{-1/2} \mathbf{\hat{A}}
-        \mathbf{\hat{D}}^{-1/2})` and sorted edges on first execution, 
-        and will use the cached version for further executions, by default False
+        \mathbf{\hat{D}}^{-1/2})` and sorted edges on first execution,
+        and will use the cached version for further executions,
+        by default False
     add_self_loops : bool, optional
         whether to add self-loops to the input graph, by default True
     normalize : bool, optional
         whether to compute symmetric normalization
         coefficients on the fly, by default False
     row_normalize : bool, optional
-        whether to perform row-normalization on the fly, by default True        
+        whether to perform row-normalization on the fly, by default True
     bias : bool, optional
-        whether to use bias in the layers, by default True    
+        whether to use bias in the layers, by default True
 
     Raises
     ------
     RuntimeWarning
-        if module `"glcore" <https://github.com/EdisonLeeeee/glcore>`_ is not properly installed.
+        if module `"glcore" <https://github.com/EdisonLeeeee/glcore>`_
+        is not properly installed.
 
     Note
     ----
-    * The input edges must be sorted for :meth:`dimmedian_idx` from :class:`glcore`
+    The input edges must be sorted for :meth:`dimmedian_idx`
+    from :class:`glcore`
 
-    The same as :class:`torch_geometric`, 
-    for the inputs :obj:`x`, :obj:`edge_index`, and :obj:`edge_weight`,
-    our implementation supports:
-
-    * :obj:`edge_index` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`
-    * :obj:`edge_index` is :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`      
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.SoftMedianGCN`   
+    :class:`~greatx.nn.models.supervised.SoftMedianGCN`
     """
     _cached_edges: Optional[Tuple[Tensor, Tensor]] = None
 
@@ -71,8 +68,10 @@ class SoftMedianConv(nn.Module):
         super().__init__()
 
         if dimmedian_idx is None:
-            raise RuntimeWarning("Module 'glcore' is not properly installed, please refer to "
-                                 "'https://github.com/EdisonLeeeee/glcore' for more information.")
+            raise RuntimeWarning(
+                "Module 'glcore' is not properly installed, "
+                "please refer 'https://github.com/EdisonLeeeee/glcore' "
+                "for more information.")
 
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -100,7 +99,7 @@ class SoftMedianConv(nn.Module):
         self._cached_edges = None
         return self
 
-    def forward(self, x: Tensor, edge_index: Adj,
+    def forward(self, x: Tensor, edge_index: Tensor,
                 edge_weight: OptTensor = None) -> Tensor:
         """"""
 
@@ -119,9 +118,10 @@ class SoftMedianConv(nn.Module):
                     edge_index, num_nodes=x.size(0))
 
             if self.normalize:
-                edge_index, edge_weight = gcn_norm(edge_index, edge_weight, x.size(0),
-                                                   improved=False,
-                                                   add_self_loops=False, dtype=x.dtype)
+                edge_index, edge_weight = gcn_norm(edge_index, edge_weight,
+                                                   x.size(0), improved=False,
+                                                   add_self_loops=False,
+                                                   dtype=x.dtype)
 
             if edge_weight is None:
                 edge_weight = x.new_ones(edge_index.size(1))

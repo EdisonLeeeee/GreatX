@@ -29,11 +29,15 @@ def get_inc(edge_index: Adj, num_nodes: Optional[int] = None) -> SparseTensor:
     col_index = col_index[mask]
     num_edges = row_index.numel()
 
-    row = torch.cat([torch.arange(num_edges, device=device),
-                    torch.arange(num_edges, device=device)])
+    row = torch.cat([
+        torch.arange(num_edges, device=device),
+        torch.arange(num_edges, device=device)
+    ])
     col = torch.cat([row_index, col_index])
-    value = torch.cat([torch.ones(num_edges, device=device), -
-                      torch.ones(num_edges, device=device)])
+    value = torch.cat([
+        torch.ones(num_edges, device=device),
+        -torch.ones(num_edges, device=device)
+    ])
     inc_mat = SparseTensor(row=row, rowptr=None, col=col, value=value,
                            sparse_sizes=(num_edges, num_nodes))
     return inc_mat
@@ -57,7 +61,7 @@ def inc_norm(inc: SparseTensor, edge_index: Adj,
 
 class ElasticConv(nn.Module):
     r"""
-    The ElasticGNN operator from the `"Elastic Graph Neural 
+    The ElasticGNN operator from the `"Elastic Graph Neural
     Networks" <https://arxiv.org/abs/2107.06996>`_
     paper (ICML'21)
 
@@ -77,35 +81,22 @@ class ElasticConv(nn.Module):
     lambda2 : float, optional
         trade-off hyperparameter, by default 3
     L21 : bool, optional
-        whether to use row-wise projection 
+        whether to use row-wise projection
         on the l2 ball of radius λ1., by default True
     cached : bool, optional
-        whether to cache the incident matrix, by default True  
+        whether to cache the incident matrix, by default True
 
-    Note
-    ----
-    The same as :class:`torch_geometric`, 
-    for the inputs :obj:`x`, :obj:`edge_index`, and :obj:`edge_weight`,
-    our implementation supports:
-
-    * :obj:`edge_index` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`
-    * :obj:`edge_index` is :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`           
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.ElasticGNN`       
+    :class:`~greatx.nn.models.supervised.ElasticGNN`
     """
 
     _cached_inc: Optional[SparseTensor] = None  # incident matrix
 
-    def __init__(self,
-                 K: int = 3,
-                 lambda_amp: float = 0.1,
-                 normalize: bool = True,
-                 add_self_loops: bool = True,
-                 lambda1: float = 3.,
-                 lambda2: float = 3.,
-                 L21: bool = True,
+    def __init__(self, K: int = 3, lambda_amp: float = 0.1,
+                 normalize: bool = True, add_self_loops: bool = True,
+                 lambda1: float = 3., lambda2: float = 3., L21: bool = True,
                  cached: bool = True):
 
         super().__init__()
@@ -134,14 +125,14 @@ class ElasticConv(nn.Module):
         if self.normalize:
             if torch.is_tensor(edge_index):
                 # NOTE: we do not support Dense adjacency matrix here
-                edge_index, edge_weight = gcn_norm(edge_index, edge_weight, x.size(0),
-                                                   improved=False,
-                                                   add_self_loops=self.add_self_loops, dtype=x.dtype)
+                edge_index, edge_weight = gcn_norm(
+                    edge_index, edge_weight, x.size(0), improved=False,
+                    add_self_loops=self.add_self_loops, dtype=x.dtype)
 
             else:
-                edge_index = gcn_norm(edge_index, x.size(0),
-                                      improved=False,
-                                      add_self_loops=self.add_self_loops, dtype=x.dtype)
+                edge_index = gcn_norm(edge_index, x.size(0), improved=False,
+                                      add_self_loops=self.add_self_loops,
+                                      dtype=x.dtype)
 
         cache = self._cached_inc
         if cache is None:
@@ -158,8 +149,8 @@ class ElasticConv(nn.Module):
 
         return self.emp_forward(x, inc_mat, edge_index, edge_weight)
 
-    def emp_forward(self, x: Tensor, inc_mat: SparseTensor,
-                    edge_index: Adj, edge_weight: OptTensor = None) -> Tensor:
+    def emp_forward(self, x: Tensor, inc_mat: SparseTensor, edge_index: Adj,
+                    edge_weight: OptTensor = None) -> Tensor:
         lambda1 = self.lambda1
         lambda2 = self.lambda2
 
@@ -209,6 +200,5 @@ class ElasticConv(nn.Module):
             row_norm[index]  # avoid to be devided by 0
         return scale.unsqueeze(1) * x
 
-    def __repr__(self) -> str:
-        return (f'{self.__class__.__name__}(lambda_amp={self.lambda_amp}, K={self.K}) '
-                f'lambda1={self.lambda1}, lambda2={self.lambda2}')
+    def extra_repr(self) -> str:
+        return f"K={self.K}"

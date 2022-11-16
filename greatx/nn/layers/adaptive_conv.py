@@ -10,7 +10,7 @@ from greatx.utils.check import is_edge_index
 
 
 class AdaptiveConv(nn.Module):
-    r"""The AirGNN operator from the `"Graph Neural Networks 
+    r"""The AirGNN operator from the `"Graph Neural Networks
     with Adaptive Residual" <https://openreview.net/forum?id=hfkER_KJiNw>`_
     paper (NeurIPS'21)
 
@@ -28,24 +28,17 @@ class AdaptiveConv(nn.Module):
 
     Note
     ----
-    Different from that in :class:`torch_geometric`, 
-    for the inputs :obj:`x`, :obj:`edge_index`, and :obj:`edge_weight`,
-    our implementation supports:
-
-    * :obj:`edge_index` is :class:`torch.FloatTensor`: dense adjacency matrix with shape :obj:`[N, N]`
-    * :obj:`edge_index` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`
-    * :obj:`edge_index` is :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`     
+    Different from that in :class:`torch_geometric`,
+    for the input :obj:`edge_index`, our implementation supports
+    :obj:`torch.FloatTensor`, :obj:`torch.LongTensor`
+    and obj:`torch_sparse.SparseTensor`.
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.AirGNN`     
+    :class:`~greatx.nn.models.supervised.AirGNN`
     """
-
-    def __init__(self,
-                 K: int = 3,
-                 lambda_amp: float = 0.1,
-                 normalize: bool = True,
-                 add_self_loops: bool = True):
+    def __init__(self, K: int = 3, lambda_amp: float = 0.1,
+                 normalize: bool = True, add_self_loops: bool = True):
         super().__init__()
 
         self.K = K
@@ -64,13 +57,13 @@ class AdaptiveConv(nn.Module):
 
         if self.normalize:
             if is_edge_like:
-                edge_index, edge_weight = gcn_norm(edge_index, edge_weight, x.size(0),
-                                                   improved=False,
-                                                   add_self_loops=self.add_self_loops, dtype=x.dtype)
+                edge_index, edge_weight = gcn_norm(
+                    edge_index, edge_weight, x.size(0), improved=False,
+                    add_self_loops=self.add_self_loops, dtype=x.dtype)
             elif isinstance(edge_index, SparseTensor):
-                edge_index = gcn_norm(edge_index, x.size(0),
-                                      improved=False,
-                                      add_self_loops=self.add_self_loops, dtype=x.dtype)
+                edge_index = gcn_norm(edge_index, x.size(0), improved=False,
+                                      add_self_loops=self.add_self_loops,
+                                      dtype=x.dtype)
 
             else:
                 # N by N dense adjacency matrix
@@ -79,15 +72,16 @@ class AdaptiveConv(nn.Module):
 
         return self.amp_forward(x, edge_index, edge_weight)
 
-    def amp_forward(self, x: Tensor, edge_index: Adj, edge_weight: OptTensor = None) -> Tensor:
+    def amp_forward(self, x: Tensor, edge_index: Adj,
+                    edge_weight: OptTensor = None) -> Tensor:
         lambda_amp = self.lambda_amp
         gamma = 1 / (2 * (1 - lambda_amp))  # or simply gamma = 1
         hh: Tensor = x
 
         for k in range(self.K):
+            # Equation (9)
             y = x - gamma * 2 * \
-                (1 - lambda_amp) * self.compute_LX(x,
-                                                   edge_index, edge_weight)  # Equation (9)
+                (1 - lambda_amp) * self.compute_LX(x, edge_index, edge_weight)
             # Equation (11) and (12)
             x = hh + self.proximal_L21(x=y - hh, lambda_=gamma * lambda_amp)
         return x
@@ -101,7 +95,8 @@ class AdaptiveConv(nn.Module):
         score[index] = score[index] / row_norm[index]
         return score.unsqueeze(1) * x
 
-    def compute_LX(self, x: Tensor, edge_index: Adj, edge_weight: OptTensor = None) -> Tensor:
+    def compute_LX(self, x: Tensor, edge_index: Adj,
+                   edge_weight: OptTensor = None) -> Tensor:
         is_edge_like = is_edge_index(edge_index)
 
         if is_edge_like:
@@ -111,5 +106,5 @@ class AdaptiveConv(nn.Module):
 
         return x - out
 
-    def __repr__(self) -> str:
-        return (f'{self.__class__.__name__}(lambda_amp={self.lambda_amp}, K={self.K})')
+    def extra_repr(self) -> str:
+        return f"K={self.K}"

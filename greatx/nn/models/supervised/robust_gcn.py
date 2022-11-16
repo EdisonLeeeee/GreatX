@@ -1,41 +1,37 @@
 import torch
 import torch.nn as nn
 
-from greatx.nn.layers import RobustConv, Sequential, activations
+from greatx.nn.layers import RobustConv, activations
 from greatx.utils import wrapper
 
 
 class RobustGCN(nn.Module):
     r"""Robust graph convolutional network (RobustGCN)
-    from the `"Robust Graph Convolutional Networks 
+    from the `"Robust Graph Convolutional Networks
     Against Adversarial Attacks"
     <http://pengcui.thumedialab.com/papers/RGCN.pdf>`_ paper (KDD'19)
 
     Parameters
     ----------
-    in_channels : int, 
+    in_channels : int,
         the input dimensions of model
-    out_channels : int, 
+    out_channels : int,
         the output dimensions of model
     hids : list, optional
-        the number of hidden units for each hidden layer, by default [32]
+        the number of hidden units for each hidden layer,
+        by default [32]
     acts : list, optional
-        the activation function for each hidden layer, by default ['relu']
+        the activation function for each hidden layer,
+        by default ['relu']
     dropout : float, optional
         the dropout ratio of model, by default 0.5
     bias : bool, optional
         whether to use bias in the layers, by default True
     gamma : float, optional
-        the scale of attention on the variances, by default 1.0       
+        the scale of attention on the variances, by default 1.0
     bn: bool, optional
-        whether to use :class:`BatchNorm1d` after the convolution layer, by default False   
-
-    Note
-    ----
-    It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
-
-    See Examples below.
+        whether to use :class:`BatchNorm1d` after the convolution layer,
+        by default False
 
     Examples
     --------
@@ -45,52 +41,48 @@ class RobustGCN(nn.Module):
     >>> # RobustGCN with two hidden layers
     >>> model = RobustGCN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
 
-    >>> # RobustGCN with two hidden layers, without activation at the first layer
+    >>> # RobustGCN with two hidden layers, without first activation
     >>> model = RobustGCN(100, 10, hids=[32, 16], acts=[None, 'relu'])
 
-    >>> # RobustGCN with very deep architectures, each layer has elu as activation function
+    >>> # RobustGCN with deep architectures, each layer has elu activation
     >>> model = RobustGCN(100, 10, hids=[16]*8, acts=['elu'])
 
     See also
     --------
-    :class:`~greatx.nn.layers.RobustConv`    
+    :class:`~greatx.nn.layers.RobustConv`
 
     """
-
     @wrapper
-    def __init__(self,
-                 in_channels: int,
-                 out_channels: int,
-                 hids: list = [32],
-                 acts: list = ['relu'],
-                 dropout: float = 0.5,
-                 bias: bool = True,
-                 gamma: float = 1.0,
-                 bn: bool = False,):
+    def __init__(
+        self,
+        in_channels: int,
+        out_channels: int,
+        hids: list = [32],
+        acts: list = ['relu'],
+        dropout: float = 0.5,
+        bias: bool = True,
+        gamma: float = 1.0,
+        bn: bool = False,
+    ):
 
         super().__init__()
 
         assert len(hids) > 0
-        self.conv1 = RobustConv(in_channels,
-                                hids[0],
-                                bias=bias)
+        self.conv1 = RobustConv(in_channels, hids[0], bias=bias)
         self.act1 = activations.get(acts[0])
 
         conv2 = nn.ModuleList()
 
         in_channels = hids[0]
         for hid, act in zip(hids[1:], acts[1:]):
-            conv2.append(RobustConv(in_channels,
-                                    hid,
-                                    bias=bias,
-                                    gamma=gamma))
+            conv2.append(RobustConv(in_channels, hid, bias=bias, gamma=gamma))
             if bn:
-                conv.append(nn.BatchNorm1d(hid))
+                conv2.append(nn.BatchNorm1d(hid))
             conv2.append(activations.get(act))
             in_channels = hid
 
-        conv2.append(RobustConv(
-            in_channels, out_channels, gamma=gamma, bias=bias))
+        conv2.append(
+            RobustConv(in_channels, out_channels, gamma=gamma, bias=bias))
         self.conv2 = conv2
         self.dropout = nn.Dropout(dropout)
 

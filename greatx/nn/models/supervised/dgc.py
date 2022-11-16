@@ -42,11 +42,6 @@ class DGC(nn.Module):
     To accept a different graph as inputs, please call
     :meth:`cache_clear` first to clear cached results.
 
-    It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`~greatx.utils.wrapper`.
-
-    See Examples below.
-
     Examples
     --------
     >>> # DGC without hidden layer
@@ -55,10 +50,10 @@ class DGC(nn.Module):
     >>> # DGC with two hidden layers
     >>> model = DGC(100, 10, hids=[32, 16], acts=['relu', 'elu'])
 
-    >>> # DGC with two hidden layers, without activation at the first layer
+    >>> # DGC with two hidden layers, without first activation
     >>> model = DGC(100, 10, hids=[32, 16], acts=[None, 'relu'])
 
-    >>> # DGC with very deep architectures, each layer has elu as activation
+    >>> # DGC with deep architectures, each layer has elu activation
     >>> model = DGC(100, 10, hids=[16]*8, acts=['elu'])
 
     See also

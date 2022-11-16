@@ -5,16 +5,16 @@ from greatx.utils import wrapper
 
 
 class AirGNN(nn.Module):
-    r"""Graph Neural Networks with Adaptive residual (AirGNN) 
-    from the `"Graph Neural Networks with Adaptive Residual" 
+    r"""Graph Neural Networks with Adaptive residual (AirGNN)
+    from the `"Graph Neural Networks with Adaptive Residual"
     <https://openreview.net/forum?id=hfkER_KJiNw>`_
     paper (NeurIPS'21)
 
     Parameters
     ----------
-    in_channels : int, 
+    in_channels : int,
         the input dimensions of model
-    out_channels : int, 
+    out_channels : int,
         the output dimensions of model
     hids : list, optional
         the number of hidden units for each hidden layer, by default [64]
@@ -23,20 +23,14 @@ class AirGNN(nn.Module):
     K : int, optional
         the number of propagation steps during message passing, by default 3
     lambda_amp : float, optional
-        trade-off for adaptive message passing, by default 0.1        
+        trade-off for adaptive message passing, by default 0.1
     dropout : float, optional
         the dropout ratio of model, by default 0.8
     bias : bool, optional
         whether to use bias in the layers, by default True
     bn: bool, optional
-        whether to use :class:`BatchNorm1d` after the convolution layer, by default False         
-
-    Note
-    ----
-    It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
-
-    See Examples below.
+        whether to use :class:`BatchNorm1d` after the convolution layer,
+        by default False
 
     Examples
     --------
@@ -46,29 +40,21 @@ class AirGNN(nn.Module):
     >>> # AirGNN with two hidden layers
     >>> model = AirGNN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
 
-    >>> # AirGNN with two hidden layers, without activation at the first layer
+    >>> # AirGNN with two hidden layers, without first activation
     >>> model = AirGNN(100, 10, hids=[32, 16], acts=[None, 'relu'])
 
-    >>> # AirGNN with very deep architectures, each layer has elu as activation function
+    >>> # AirGNN with deep architectures, each layer has elu activation
     >>> model = AirGNN(100, 10, hids=[16]*8, acts=['elu'])
 
     See also
     --------
-    :class:`~greatx.nn.layers.AdaptiveConv`    
+    :class:`~greatx.nn.layers.AdaptiveConv`
 
     """
-
     @wrapper
-    def __init__(self,
-                 in_channels: int,
-                 out_channels: int,
-                 hids: list = [64],
-                 acts: list = ['relu'],
-                 K: int = 3,
-                 lambda_amp: float = 0.5,
-                 dropout: float = 0.8,
-                 bias: bool = True,
-                 bn: bool = False):
+    def __init__(self, in_channels: int, out_channels: int, hids: list = [64],
+                 acts: list = ['relu'], K: int = 3, lambda_amp: float = 0.5,
+                 dropout: float = 0.8, bias: bool = True, bn: bool = False):
 
         super().__init__()
         assert len(hids) > 0

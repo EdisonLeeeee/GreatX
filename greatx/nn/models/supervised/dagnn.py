@@ -6,20 +6,20 @@ from greatx.utils import wrapper
 
 
 class DAGNN(nn.Module):
-    r"""The DAGNN operator from the `"Towards Deeper Graph Neural 
+    r"""The DAGNN operator from the `"Towards Deeper Graph Neural
     Networks" <https://arxiv.org/abs/2007.09296>`_
     paper (KDD'20)
 
     Parameters
     ----------
-    in_channels : int, 
+    in_channels : int,
         the input dimensions of model
-    out_channels : int, 
+    out_channels : int,
         the output dimensions of model
     hids : list, optional
         the number of hidden units for each hidden layer, by default [64]
     K : int, optional
-        the number of propagation steps, by default 10    
+        the number of propagation steps, by default 10
     acts : list, optional
         the activation function for each hidden layer, by default ['relu']
     dropout : float, optional
@@ -27,14 +27,8 @@ class DAGNN(nn.Module):
     bias : bool, optional
         whether to use bias in the layers, by default True
     bn: bool, optional
-        whether to use :class:`BatchNorm1d` after the convolution layer, by default False         
-
-    Note
-    ----
-    It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
-
-    See Examples below.
+        whether to use :class:`BatchNorm1d` after the convolution layer,
+        by default False
 
     Examples
     --------
@@ -44,28 +38,21 @@ class DAGNN(nn.Module):
     >>> # DAGNN with two hidden layers
     >>> model = DAGNN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
 
-    >>> # DAGNN with two hidden layers, without activation at the first layer
+    >>> # DAGNN with two hidden layers, without first activation
     >>> model = DAGNN(100, 10, hids=[32, 16], acts=[None, 'relu'])
 
-    >>> # DAGNN with very deep architectures, each layer has elu as activation function
+    >>> # DAGNN with deep architectures, each layer has elu activation
     >>> model = DAGNN(100, 10, hids=[16]*8, acts=['elu'])
 
     See also
     --------
-    :class:`~greatx.nn.layers.DAGNNConv`    
+    :class:`~greatx.nn.layers.DAGNNConv`
 
     """
-
     @wrapper
-    def __init__(self,
-                 in_channels: int,
-                 out_channels: int,
-                 hids: list = [64],
-                 acts: list = ['relu'],
-                 dropout: float = 0.5,
-                 K: int = 10,
-                 bn: bool = False,
-                 bias: bool = True):
+    def __init__(self, in_channels: int, out_channels: int, hids: list = [64],
+                 acts: list = ['relu'], dropout: float = 0.5, K: int = 10,
+                 bn: bool = False, bias: bool = True):
 
         super().__init__()
         assert len(hids) > 0

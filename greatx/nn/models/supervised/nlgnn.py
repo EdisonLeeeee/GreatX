@@ -8,35 +8,31 @@ from greatx.utils import wrapper
 
 class NLGCN(nn.Module):
     r"""Non-Local Graph Neural Networks (NLGNN) with
-    :class:`GCN` as backbone from the 
+    :class:`GCN` as backbone from the
     `"Non-Local Graph Neural Networks"
     <https://ieeexplore.ieee.org/document/9645300>`_ paper (TPAMI'22)
 
     Parameters
     ----------
-    in_channels : int, 
+    in_channels : int,
         the input dimensions of model
-    out_channels : int, 
+    out_channels : int,
         the output dimensions of model
     hids : list, optional
         the number of hidden units for each hidden layer, by default [16]
     acts : list, optional
         the activation function for each hidden layer, by default ['relu']
-    kernel : int, 
-        the number of kernel used in :class:`nn.Conv1d`, by default 5       
+    kernel : int,
+        the number of kernel used in :class:`nn.Conv1d`, by default 5
     dropout : float, optional
         the dropout ratio of model, by default 0.5
     bias : bool, optional
         whether to use bias in the layers, by default True
     bn: bool, optional
-        whether to use :class:`BatchNorm1d` after the convolution layer, by default False         
+        whether to use :class:`BatchNorm1d` after the convolution layer,
+        by default False
 
-    Note
-    ----
-    It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
 
-    See Examples below.
 
     Examples
     --------
@@ -46,58 +42,48 @@ class NLGCN(nn.Module):
     >>> # NLGCN with two hidden layers
     >>> model = NLGCN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
 
-    >>> # NLGCN with two hidden layers, without activation at the first layer
+    >>> # NLGCN with two hidden layers, without first activation
     >>> model = NLGCN(100, 10, hids=[32, 16], acts=[None, 'relu'])
 
-    >>> # NLGCN with very deep architectures, each layer has elu as activation function
+    >>> # NLGCN with deep architectures, each layer has elu activation
     >>> model = NLGCN(100, 10, hids=[16]*8, acts=['elu'])
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.NLMLP`    
-    :class:`~greatx.nn.models.supervised.NLGAT`  
+    :class:`~greatx.nn.models.supervised.NLMLP`
+    :class:`~greatx.nn.models.supervised.NLGAT`
 
     Reference:
 
-    * https://github.com/divelab/Non-Local-GNN    
+    * https://github.com/divelab/Non-Local-GNN
 
     """
-
     @wrapper
-    def __init__(self,
-                 in_channels: int,
-                 out_channels: int,
-                 hids: list = [16],
-                 acts: list = ['relu'],
-                 kernel: int = 5,
-                 dropout: float = 0.5,
-                 bn: bool = False,
-                 normalize: bool = True,
-                 bias: bool = True):
+    def __init__(self, in_channels: int, out_channels: int, hids: list = [16],
+                 acts: list = ['relu'], kernel: int = 5, dropout: float = 0.5,
+                 bn: bool = False, normalize: bool = True, bias: bool = True):
 
         super().__init__()
         conv = []
         assert len(hids) == len(acts)
         for hid, act in zip(hids, acts):
-            conv.append(GCNConv(in_channels,
-                                hid,
-                                bias=bias,
-                                normalize=normalize))
+            conv.append(
+                GCNConv(in_channels, hid, bias=bias, normalize=normalize))
             if bn:
                 conv.append(nn.BatchNorm1d(hid))
             conv.append(activations.get(act))
             conv.append(nn.Dropout(dropout))
             in_channels = hid
 
-        conv.append(GCNConv(in_channels, out_channels,
-                    bias=bias, normalize=normalize))
+        conv.append(
+            GCNConv(in_channels, out_channels, bias=bias, normalize=normalize))
         self.conv = Sequential(*conv)
 
         self.proj = nn.Linear(out_channels, 1)
-        self.conv1d_1 = nn.Conv1d(
-            out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
-        self.conv1d_2 = nn.Conv1d(
-            out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
+        self.conv1d_1 = nn.Conv1d(out_channels, out_channels, kernel,
+                                  padding=int((kernel - 1) / 2))
+        self.conv1d_2 = nn.Conv1d(out_channels, out_channels, kernel,
+                                  padding=int((kernel - 1) / 2))
         self.lin = nn.Linear(2 * out_channels, out_channels)
         self.conv1d_dropout = nn.Dropout(dropout)
 
@@ -133,38 +119,32 @@ class NLGCN(nn.Module):
 
 class NLMLP(nn.Module):
     r"""Non-Local Graph Neural Networks (NLGNN) with
-    :class:`MLP` as backbone from the 
+    :class:`MLP` as backbone from the
     `"Non-Local Graph Neural Networks"
     <https://ieeexplore.ieee.org/document/9645300>`_ paper (TPAMI'22)
 
     Parameters
     ----------
-    in_channels : int, 
+    in_channels : int,
         the input dimensions of model
-    out_channels : int, 
+    out_channels : int,
         the output dimensions of model
     hids : list, optional
         the number of hidden units for each hidden layer, by default [32]
     acts : list, optional
         the activation function for each hidden layer, by default ['relu']
-    kernel : int, 
-        the number of kernel used in :class:`nn.Conv1d`, by default 5       
+    kernel : int,
+        the number of kernel used in :class:`nn.Conv1d`, by default 5
     dropout : float, optional
         the dropout ratio of model, by default 0.5
     bias : bool, optional
         whether to use bias in the layers, by default True
     bn: bool, optional
-        whether to use :class:`BatchNorm1d` after the convolution layer, by default False  
+        whether to use :class:`BatchNorm1d` after the convolution layer,
+        by default False
     normalize : bool, optional
         whether to compute symmetric normalization
-        coefficients on the fly, by default True                  
-
-    Note
-    ----
-    It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
-
-    See Examples below.
+        coefficients on the fly, by default True
 
     Examples
     --------
@@ -174,56 +154,46 @@ class NLMLP(nn.Module):
     >>> # NLGCN with two hidden layers
     >>> model = NLGCN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
 
-    >>> # NLGCN with two hidden layers, without activation at the first layer
+    >>> # NLGCN with two hidden layers, without first activation
     >>> model = NLGCN(100, 10, hids=[32, 16], acts=[None, 'relu'])
 
-    >>> # NLGCN with very deep architectures, each layer has elu as activation function
+    >>> # NLGCN with deep architectures, each layer has elu activation
     >>> model = NLGCN(100, 10, hids=[16]*8, acts=['elu'])
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.NLGCN`    
-    :class:`~greatx.nn.models.supervised.NLGAT`    
+    :class:`~greatx.nn.models.supervised.NLGCN`
+    :class:`~greatx.nn.models.supervised.NLGAT`
 
     Reference:
 
-    * https://github.com/divelab/Non-Local-GNN    
+    * https://github.com/divelab/Non-Local-GNN
 
     """
-
     @wrapper
-    def __init__(self,
-                 in_channels: int,
-                 out_channels: int,
-                 hids: list = [32],
-                 acts: list = ['relu'],
-                 kernel: int = 5,
-                 dropout: float = 0.5,
-                 bias: bool = True,
-                 bn: bool = False):
+    def __init__(self, in_channels: int, out_channels: int, hids: list = [32],
+                 acts: list = ['relu'], kernel: int = 5, dropout: float = 0.5,
+                 bias: bool = True, bn: bool = False):
 
         super().__init__()
         conv = []
         assert len(hids) == len(acts)
         for hid, act in zip(hids, acts):
-            conv.append(nn.Linear(in_channels,
-                                  hid,
-                                  bias=bias))
+            conv.append(nn.Linear(in_channels, hid, bias=bias))
             if bn:
                 conv.append(nn.BatchNorm1d(hid))
             conv.append(activations.get(act))
             conv.append(nn.Dropout(dropout))
             in_channels = hid
 
-        conv.append(nn.Linear(in_channels, out_channels,
-                    bias=bias))
+        conv.append(nn.Linear(in_channels, out_channels, bias=bias))
         self.conv = Sequential(*conv)
 
         self.proj = nn.Linear(out_channels, 1)
-        self.conv1d_1 = nn.Conv1d(
-            out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
-        self.conv1d_2 = nn.Conv1d(
-            out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
+        self.conv1d_1 = nn.Conv1d(out_channels, out_channels, kernel,
+                                  padding=int((kernel - 1) / 2))
+        self.conv1d_2 = nn.Conv1d(out_channels, out_channels, kernel,
+                                  padding=int((kernel - 1) / 2))
         self.lin = nn.Linear(2 * out_channels, out_channels)
         self.conv1d_dropout = nn.Dropout(dropout)
 
@@ -259,37 +229,33 @@ class NLMLP(nn.Module):
 
 class NLGAT(nn.Module):
     r"""Non-Local Graph Neural Networks (NLGNN) with
-    :class:`GAT` as backbone from the 
+    :class:`GAT` as backbone from the
     `"Non-Local Graph Neural Networks"
     <https://ieeexplore.ieee.org/document/9645300>`_ paper (TPAMI'22)
 
     Parameters
     ----------
-    in_channels : int, 
+    in_channels : int,
         the input dimensions of model
-    out_channels : int, 
+    out_channels : int,
         the output dimensions of model
     hids : list, optional
         the number of hidden units for each hidden layer, by default [8]
     num_heads : list, optional
-        the number of attention heads for each hidden layer, by default [8]        
+        the number of attention heads for each hidden layer, by default [8]
     acts : list, optional
         the activation function for each hidden layer, by default ['relu']
-    kernel : int, 
-        the number of kernel used in :class:`nn.Conv1d`, by default 5            
+    kernel : int,
+        the number of kernel used in :class:`nn.Conv1d`, by default 5
     dropout : float, optional
         the dropout ratio of model, by default 0.6
     bias : bool, optional
         whether to use bias in the layers, by default True
     bn: bool, optional
-        whether to use :class:`BatchNorm1d` after the convolution layer, by default False                    
+        whether to use :class:`BatchNorm1d` after the convolution layer,
+        by default False
 
-    Note
-    ----
-    It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
 
-    See Examples below.
 
     Examples
     --------
@@ -299,45 +265,35 @@ class NLGAT(nn.Module):
     >>> # NLGAT with two hidden layers
     >>> model = NLGAT(100, 10, hids=[32, 16], acts=['relu', 'elu'])
 
-    >>> # NLGAT with two hidden layers, without activation at the first layer
+    >>> # NLGAT with two hidden layers, without first activation
     >>> model = NLGAT(100, 10, hids=[32, 16], acts=[None, 'relu'])
 
-    >>> # NLGAT with very deep architectures, each layer has elu as activation function
+    >>> # NLGAT with deep architectures, each layer has elu activation
     >>> model = NLGAT(100, 10, hids=[16]*8, acts=['elu'])
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.NLGCN`    
-    :class:`~greatx.nn.models.supervised.NLMLP`    
+    :class:`~greatx.nn.models.supervised.NLGCN`
+    :class:`~greatx.nn.models.supervised.NLMLP`
 
     Reference:
 
-    * https://github.com/divelab/Non-Local-GNN    
+    * https://github.com/divelab/Non-Local-GNN
 
     """
-
     @wrapper
-    def __init__(self,
-                 in_channels: int,
-                 out_channels: int,
-                 hids: list = [8],
-                 num_heads: list = [8],
-                 acts: list = ['elu'],
-                 kernel: int = 5,
-                 dropout: float = 0.6,
-                 bias: bool = True,
-                 bn: bool = False,
+    def __init__(self, in_channels: int, out_channels: int, hids: list = [8],
+                 num_heads: list = [8], acts: list = ['elu'], kernel: int = 5,
+                 dropout: float = 0.6, bias: bool = True, bn: bool = False,
                  includes=['num_heads']):
 
         super().__init__()
         head = 1
         conv = []
         for hid, num_head, act in zip(hids, num_heads, acts):
-            conv.append(GATConv(in_channels * head,
-                                hid,
-                                heads=num_head,
-                                bias=bias,
-                                dropout=dropout))
+            conv.append(
+                GATConv(in_channels * head, hid, heads=num_head, bias=bias,
+                        dropout=dropout))
             if bn:
                 conv.append(nn.BatchNorm1d(hid))
             conv.append(activations.get(act))
@@ -345,19 +301,16 @@ class NLGAT(nn.Module):
             in_channels = hid
             head = num_head
 
-        conv.append(GATConv(in_channels * head,
-                            out_channels,
-                            heads=1,
-                            bias=bias,
-                            concat=False,
-                            dropout=dropout))
+        conv.append(
+            GATConv(in_channels * head, out_channels, heads=1, bias=bias,
+                    concat=False, dropout=dropout))
         self.conv = Sequential(*conv)
 
         self.proj = nn.Linear(out_channels, 1)
-        self.conv1d_1 = nn.Conv1d(
-            out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
-        self.conv1d_2 = nn.Conv1d(
-            out_channels, out_channels, kernel, padding=int((kernel - 1) / 2))
+        self.conv1d_1 = nn.Conv1d(out_channels, out_channels, kernel,
+                                  padding=int((kernel - 1) / 2))
+        self.conv1d_2 = nn.Conv1d(out_channels, out_channels, kernel,
+                                  padding=int((kernel - 1) / 2))
         self.lin = nn.Linear(2 * out_channels, out_channels)
         self.conv1d_dropout = nn.Dropout(dropout)
 

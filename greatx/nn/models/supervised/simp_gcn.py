@@ -3,10 +3,7 @@ from typing import Optional
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch import Tensor
-from torch_geometric.nn.dense.linear import Linear
-from torch_geometric.nn.inits import glorot, zeros
-from torch_geometric.typing import Adj, OptTensor
+from torch_geometric.nn.inits import zeros
 from torch_geometric.utils import coalesce
 from torch_sparse import SparseTensor
 
@@ -21,9 +18,9 @@ class SimPGCN(nn.Module):
 
     Parameters
     ----------
-    in_channels : int, 
+    in_channels : int,
         the input dimensions of model
-    out_channels : int, 
+    out_channels : int,
         the output dimensions of model
     hids : list, optional
         the number of hidden units for each hidden layer, by default [64]
@@ -36,14 +33,8 @@ class SimPGCN(nn.Module):
     gamma : float, optional
         trade-off hyperparameter, by default 0.01
     bn: bool, optional (*NOT IMPLEMENTED NOW*)
-        whether to use :class:`BatchNorm1d` after the convolution layer, by default False         
-
-    Note
-    ----
-    It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
-
-    See Examples below.
+        whether to use :class:`BatchNorm1d` after the convolution layer,
+        by default False
 
     Examples
     --------
@@ -53,46 +44,43 @@ class SimPGCN(nn.Module):
     >>> # SimPGCN with two hidden layers
     >>> model = SimPGCN(100, 10, hids=[32, 16], acts=['relu', 'elu'])
 
-    >>> # SimPGCN with two hidden layers, without activation at the first layer
+    >>> # SimPGCN with two hidden layers, without first activation
     >>> model = SimPGCN(100, 10, hids=[32, 16], acts=[None, 'relu'])
 
-    >>> # SimPGCN with very deep architectures, each layer has elu as activation function
+    >>> # SimPGCN with deep architectures, each layer has elu activation
     >>> model = SimPGCN(100, 10, hids=[16]*8, acts=['elu'])
 
     """
     @wrapper
-    def __init__(self,
-                 in_channels: int,
-                 out_channels: int,
-                 hids: list = [64],
-                 acts: list = [None],
-                 dropout: float = 0.5,
-                 bias: bool = True,
-                 gamma: float = 0.01,
-                 bn: bool = False  # TODO
-                 ):
+    def __init__(
+            self,
+            in_channels: int,
+            out_channels: int,
+            hids: list = [64],
+            acts: list = [None],
+            dropout: float = 0.5,
+            bias: bool = True,
+            gamma: float = 0.01,
+            bn: bool = False  # TODO
+    ):
 
         super().__init__()
 
         if bn:
             raise NotImplementedError
 
-        assert bias == True
+        assert bias is True
 
         layers = nn.ModuleList()
         act_layers = nn.ModuleList()
 
         inc = in_channels
         for hid, act in zip(hids, acts):
-            layers.append(GCNConv(in_channels,
-                                  hid,
-                                  bias=bias))
+            layers.append(GCNConv(in_channels, hid, bias=bias))
             act_layers.append(activations.get(act))
             inc = hid
 
-        layers.append(GCNConv(inc,
-                              out_channels,
-                              bias=bias))
+        layers.append(GCNConv(inc, out_channels, bias=bias))
         act_layers.append(activations.get(None))
 
         self.layers = layers
@@ -163,10 +151,12 @@ class SimPGCN(nn.Module):
                 tmp = tmp + layer.bias
 
             # adj_knn does not need to add self-loop edges
+
+
 #             add_self_loops = layer.add_self_loops
 #             layer.add_self_loops = False
             tmp_knn = layer(x, adj_knn)
-#             layer.add_self_loops = add_self_loops
+            #             layer.add_self_loops = add_self_loops
 
             # taken together
             x = s * act(layer(x, edge_index, edge_weight)) + (1 - s) * \
@@ -188,21 +178,20 @@ class SimPGCN(nn.Module):
         node_pairs = self._node_pairs
         pseudo_labels = self._pseudo_labels
         if len(node_pairs[0]) > K:
-            #             sampled = np.random.choice(len(node_pairs[0]), K, replace=False)
-            prob = torch.full((len(node_pairs[0]),), 1. / len(node_pairs[0]))
+            prob = torch.full((len(node_pairs[0]), ), 1. / len(node_pairs[0]))
             sampled = prob.multinomial(num_samples=K, replacement=False)
 
             embeddings0 = embeddings[node_pairs[0][sampled]]
             embeddings1 = embeddings[node_pairs[1][sampled]]
             embeddings = self.linear(torch.abs(embeddings0 - embeddings1))
-            loss = F.mse_loss(
-                embeddings, pseudo_labels[sampled].unsqueeze(-1), reduction='mean')
+            loss = F.mse_loss(embeddings, pseudo_labels[sampled].unsqueeze(-1),
+                              reduction='mean')
         else:
             embeddings0 = embeddings[node_pairs[0]]
             embeddings1 = embeddings[node_pairs[1]]
             embeddings = self.linear(torch.abs(embeddings0 - embeddings1))
-            loss = F.mse_loss(
-                embeddings, pseudo_labels.unsqueeze(-1), reduction='mean')
+            loss = F.mse_loss(embeddings, pseudo_labels.unsqueeze(-1),
+                              reduction='mean')
         return loss
 
 
@@ -221,14 +210,14 @@ def knn_graph(x: torch.Tensor, k: int = 20) -> SparseTensor:
     edge_weight = topk.values.flatten()
 
     N = x.size(0)
-    adj = SparseTensor.from_edge_index(
-        edge_index, edge_weight, sparse_sizes=(N, N))
+    adj = SparseTensor.from_edge_index(edge_index, edge_weight,
+                                       sparse_sizes=(N, N))
 
     return adj
 
 
-def pairwise_cosine_similarity(X: torch.Tensor,
-                               Y: Optional[torch.Tensor] = None) -> torch.Tensor:
+def pairwise_cosine_similarity(
+        X: torch.Tensor, Y: Optional[torch.Tensor] = None) -> torch.Tensor:
     """Compute cosine similarity between samples in X and Y.
 
     Cosine similarity, or the cosine kernel, computes similarity as the
@@ -267,10 +256,10 @@ def attr_sim(x, k=5):
 
     sims = pairwise_cosine_similarity(x)
     indices_sorted = sims.argsort(1)
-    selected = torch.cat((indices_sorted[:, :k],
-                          indices_sorted[:, - k - 1:]), dim=1)
-    row = torch.arange(x.size(0), device=x.device).repeat_interleave(
-        selected.size(1))
+    selected = torch.cat((indices_sorted[:, :k], indices_sorted[:, -k - 1:]),
+                         dim=1)
+    row = torch.arange(x.size(0),
+                       device=x.device).repeat_interleave(selected.size(1))
     col = selected.view(-1)
 
     mask = row != col

@@ -29,13 +29,13 @@ class Discriminator(nn.Module):
 
 
 class DGI(nn.Module):
-    r"""Deep Graph Infomax (DGI) from the 
+    r"""Deep Graph Infomax (DGI) from the
     `"Deep Graph Infomax"
     <https://arxiv.org/abs/1809.10341>`_ paper (ICLR'19)
 
     Parameters
     ----------
-    in_channels : int, 
+    in_channels : int,
         the input dimensions of model
     hids : list, optional
         the number of hidden units for each hidden layer, by default [512]
@@ -46,17 +46,13 @@ class DGI(nn.Module):
     bias : bool, optional
         whether to use bias in the layers, by default True
     bn: bool, optional
-        whether to use :class:`BatchNorm1d` after the convolution layer, by default False         
+        whether to use :class:`BatchNorm1d` after the convolution layer,
+        by default False
     normalize : bool, optional
         whether to compute symmetric normalization
-        coefficients on the fly, by default True        
+        coefficients on the fly, by default True
 
-    Note
-    ----
-    It is convenient to extend the number of layers with different or the same
-    hidden units (activation functions) using :func:`~greatx.utils.wrapper`. 
 
-    See Examples below.
 
     Examples
     --------
@@ -66,10 +62,10 @@ class DGI(nn.Module):
     >>> # DGI with two hidden layers
     >>> model = DGI(100, hids=[32, 16], acts=['relu', 'elu'])
 
-    >>> # DGI with two hidden layers, without activation at the first layer
+    >>> # DGI with two hidden layers, without first activation
     >>> model = DGI(100, hids=[32, 16], acts=[None, 'relu'])
 
-    >>> # DGI with very deep architectures, each layer has elu as activation function
+    >>> # DGI with deep architectures, each layer has elu activation
     >>> model = DGI(100, hids=[16]*8, acts=['elu'])
 
     Reference:
@@ -78,23 +74,16 @@ class DGI(nn.Module):
 
     """
     @wrapper
-    def __init__(self,
-                 in_channels: int,
-                 hids: list = [512],
-                 acts: list = ['prelu'],
-                 dropout: float = 0.,
-                 bias: bool = True,
-                 bn: bool = False,
-                 normalize: bool = True):
+    def __init__(self, in_channels: int, hids: list = [512],
+                 acts: list = ['prelu'], dropout: float = 0.,
+                 bias: bool = True, bn: bool = False, normalize: bool = True):
 
         super().__init__()
 
         encoder = []
         for hid, act in zip(hids, acts):
-            encoder.append(GCNConv(in_channels,
-                                   hid,
-                                   bias=bias,
-                                   normalize=normalize))
+            encoder.append(
+                GCNConv(in_channels, hid, bias=bias, normalize=normalize))
             if bn:
                 encoder.append(nn.BatchNorm1d(hid))
             encoder.append(activations.get(act))

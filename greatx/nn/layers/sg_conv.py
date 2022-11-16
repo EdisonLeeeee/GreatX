@@ -4,7 +4,7 @@ from torch import Tensor, nn
 from torch_geometric.nn.conv.gcn_conv import gcn_norm
 from torch_geometric.nn.dense.linear import Linear
 from torch_geometric.typing import Adj, OptTensor
-from torch_sparse import SparseTensor, matmul
+from torch_sparse import SparseTensor
 
 from greatx.functional import spmm
 from greatx.nn.layers.gcn_conv import dense_gcn_norm
@@ -12,7 +12,7 @@ from greatx.utils.check import is_edge_index
 
 
 class SGConv(nn.Module):
-    r"""The simplified graph convolutional operator from 
+    r"""The simplified graph convolutional operator from
     the `"Simplifying Graph Convolutional Networks"
     <https://arxiv.org/abs/1902.07153>`_ paper (ICML'19)
 
@@ -23,7 +23,7 @@ class SGConv(nn.Module):
     out_channels : int
         dimensions of output samples
     K : int
-        the number of propagation steps, by default 1     
+        the number of propagation steps, by default 1
     cached : bool, optional
         whether the layer will cache
         the computation of :math:`(\mathbf{\hat{D}}^{-1/2} \mathbf{\hat{A}}
@@ -35,29 +35,25 @@ class SGConv(nn.Module):
         whether to compute symmetric normalization
         coefficients on the fly, by default True
     bias : bool, optional
-        whether to use bias in the layers, by default True    
+        whether to use bias in the layers, by default True
 
     Note
     ----
-    Different from that in :class:`torch_geometric`, 
-    for the inputs :obj:`x`, :obj:`edge_index`, and :obj:`edge_weight`,
-    our implementation supports:
-
-    * :obj:`edge_index` is :class:`torch.FloatTensor`: dense adjacency matrix with shape :obj:`[N, N]`
-    * :obj:`edge_index` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`
-    * :obj:`edge_index` is :class:`torch_sparse.SparseTensor`: sparse matrix with sparse shape :obj:`[N, N]`   
+    Different from that in :class:`torch_geometric`,
+    for the input :obj:`edge_index`, our implementation supports
+    :obj:`torch.FloatTensor`, :obj:`torch.LongTensor`
+    and obj:`torch_sparse.SparseTensor`.
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.SGC`    
+    :class:`~greatx.nn.models.supervised.SGC`
     """
 
     _cached_x: Optional[Tensor]
 
     def __init__(self, in_channels: int, out_channels: int, K: int = 1,
                  cached: bool = False, add_self_loops: bool = True,
-                 normalize: bool = True,
-                 bias: bool = True):
+                 normalize: bool = True, bias: bool = True):
         super().__init__()
 
         self.in_channels = in_channels

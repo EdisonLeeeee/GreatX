@@ -1,3 +1,5 @@
+from typing import Optional, Tuple
+
 import torch
 from torch import Tensor, nn
 from torch_geometric.nn.conv.gcn_conv import gcn_norm
@@ -8,14 +10,13 @@ from torch_geometric.utils import add_self_loops
 from torch_sparse import SparseTensor, fill_diag
 
 from greatx.functional import spmm
-from greatx.utils.check import is_edge_index
 
 
 def dense_gcn_norm(adj: Tensor, improved: bool = False,
                    add_self_loops: bool = True, rate: float = -0.5):
     fill_value = 2. if improved else 1.
     if add_self_loops:
-        adj = adj + torch.diag(adj.new_full((adj.size(0), ), fill_value))
+        adj = dense_add_self_loops(adj, fill_value)
     deg = adj.sum(dim=1)
     deg_inv_sqrt = deg.pow_(rate)
     deg_inv_sqrt.masked_fill_(deg_inv_sqrt == float('inf'), 0.)
@@ -28,6 +29,102 @@ def dense_gcn_norm(adj: Tensor, improved: bool = False,
 def dense_add_self_loops(adj: Tensor, fill_value: float = 1.0) -> Tensor:
     diag = torch.diag(adj.new_full((adj.size(0), ), fill_value))
     return adj + diag
+
+
+def make_self_loops(
+    edge_index: Adj,
+    edge_weight: OptTensor = None,
+    num_nodes: Optional[int] = None,
+    fill_value: float = 1.0,
+    improved: bool = False,
+) -> Tuple[Adj, OptTensor]:
+    r"""Add self-loop edges for input graph.
+
+    Parameters
+    ----------
+    edge_index : Adj
+        input graph denoted by `edge_index`, could be
+        :obj:`torch.FloatTensor`,
+        :obj:`torch_sparse.SparseTensor`,
+        or :obj:`torch.LongTensor`.
+    edge_weight : OptTensor, optional
+        edge weights for the input edge_index, by default None
+    num_nodes : Optional[int], optional
+        number of nodes, by default None
+    fill_value : float, optional
+        fill value for the added self-loop edges,
+        by default 1.0
+    improved : bool, optional
+        whether the layer computes
+        :math:`\mathbf{\hat{A}}` as :math:`\mathbf{A} + 2\mathbf{I}`,
+        by default False
+
+    Returns
+    -------
+    Tuple[Adj, OptTensor]
+        output edge indices and edge weights with
+        added self-loop edges.
+    """
+
+    fill_value = 2. if improved else 1.
+    if isinstance(edge_index, torch.LongTensor):
+        # Sparse edge_index with shape [2, M]
+        edge_index, edge_weight = add_self_loops(edge_index, edge_weight,
+                                                 fill_value=fill_value,
+                                                 num_nodes=num_nodes)
+    elif isinstance(edge_index, torch.FloatTensor):
+        # N by N dense adjacency matrix
+        edge_index = dense_add_self_loops(edge_index, fill_value)
+    elif isinstance(edge_index, SparseTensor):
+        edge_index = fill_diag(edge_index, fill_value)
+    else:
+        raise ValueError(f"Type {type(edge_index)} is not supported.")
+    return edge_index, edge_weight
+
+
+def make_gcn_norm(
+    edge_index: Adj,
+    edge_weight: OptTensor = None,
+    num_nodes: Optional[int] = None,
+    dtype: Optional[torch.dtype] = None,
+) -> Tuple[Adj, OptTensor]:
+    r"""Perform GCN-normalization for input graph.
+
+    Note that this method will not add self-loops edges into
+    the input graph denoted as
+    :obj:`edge_index` and :obj:`edge_weight`.
+
+    Parameters
+    ----------
+    edge_index : Adj
+        input graph denoted by `edge_index`, could be
+        :obj:`torch.FloatTensor`,
+        :obj:`torch_sparse.SparseTensor`,
+        or :obj:`torch.LongTensor`.
+    edge_weight : OptTensor, optional
+        edge weights for the input edge_index, by default None
+
+    Returns
+    -------
+    Tuple[Adj, OptTensor]
+        output normalized graph denoted as
+        :obj:`edge_index` and :obj:`edge_weight`.
+    """
+    if isinstance(edge_index, torch.LongTensor):
+        # Sparse edge_index with shape [2, M]
+        edge_index, edge_weight = gcn_norm(edge_index, edge_weight,
+                                           num_nodes=None, improved=False,
+                                           add_self_loops=False, dtype=dtype)
+    elif isinstance(edge_index, torch.FloatTensor):
+        # N by N dense adjacency matrix
+        edge_index = dense_gcn_norm(edge_index, improved=False,
+                                    add_self_loops=False)
+    elif isinstance(edge_index, SparseTensor):
+        edge_index = gcn_norm(edge_index, num_nodes=None, improved=False,
+                              add_self_loops=False, dtype=dtype)
+    else:
+        raise ValueError(f"Type {type(edge_index)} is not supported.")
+    return edge_index, edge_weight
 
 
 class GCNConv(nn.Module):
@@ -104,31 +201,14 @@ class GCNConv(nn.Module):
         """"""
 
         x = self.lin(x)
-        is_edge_like = is_edge_index(edge_index)
 
         if self.add_self_loops:
-            if is_edge_like:
-                edge_index, edge_weight = add_self_loops(
-                    edge_index, num_nodes=x.size(0))
-            elif isinstance(edge_index, SparseTensor):
-                edge_index = fill_diag(edge_index, 1.0)
-            else:
-                # N by N dense adjacency matrix
-                edge_index = dense_add_self_loops(edge_index, 1.0)
+            edge_index, edge_weight = make_self_loops(edge_index, edge_weight,
+                                                      num_nodes=x.size(0),
+                                                      improved=self.improved)
 
         if self.normalize:
-            if is_edge_like:
-                edge_index, edge_weight = gcn_norm(edge_index, edge_weight,
-                                                   x.size(0), self.improved,
-                                                   False, dtype=x.dtype)
-            elif isinstance(edge_index, SparseTensor):
-                edge_index = gcn_norm(edge_index, x.size(0),
-                                      improved=self.improved,
-                                      add_self_loops=False, dtype=x.dtype)
-            else:
-                # N by N dense adjacency matrix
-                edge_index = dense_gcn_norm(edge_index, improved=self.improved,
-                                            add_self_loops=False)
+            edge_index, edge_weight = make_gcn_norm(edge_index, edge_weight)
 
         out = spmm(x, edge_index, edge_weight)
 

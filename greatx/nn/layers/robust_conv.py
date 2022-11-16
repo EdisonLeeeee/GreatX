@@ -3,15 +3,12 @@ from typing import Union
 import torch
 import torch.nn.functional as F
 from torch import Tensor, nn
-from torch_geometric.nn.conv.gcn_conv import gcn_norm
 from torch_geometric.nn.dense.linear import Linear
 from torch_geometric.nn.inits import zeros
 from torch_geometric.typing import Adj, OptPairTensor, OptTensor
-from torch_sparse import SparseTensor
 
 from greatx.functional import spmm
-from greatx.nn.layers.gcn_conv import dense_gcn_norm
-from greatx.utils.check import is_edge_index
+from greatx.nn.layers.gcn_conv import make_gcn_norm, make_self_loops
 
 
 class RobustConv(nn.Module):
@@ -93,21 +90,12 @@ class RobustConv(nn.Module):
         mean = F.relu(mean)
         var = F.relu(var)
 
-        is_edge_like = is_edge_index(edge_index)
+        if self.add_self_loops:
+            edge_index, edge_weight = make_self_loops(edge_index, edge_weight,
+                                                      num_nodes=x.size(0))
 
-        if is_edge_like:
-            edge_index, edge_weight = gcn_norm(
-                edge_index, edge_weight, mean.size(0), improved=False,
-                add_self_loops=self.add_self_loops, dtype=mean.dtype)
-        elif isinstance(edge_index, SparseTensor):
-            adj = gcn_norm(edge_index, mean.size(0), improved=False,
-                           add_self_loops=self.add_self_loops,
-                           dtype=mean.dtype)
-
-        else:
-            # N by N dense adjacency matrix
-            adj = dense_gcn_norm(edge_index, improved=False,
-                                 add_self_loops=self.add_self_loops)
+        if self.normalize:
+            edge_index, edge_weight = make_gcn_norm(edge_index, edge_weight)
 
         attention = torch.exp(-self.gamma * var)
         mean = mean * attention
@@ -115,12 +103,13 @@ class RobustConv(nn.Module):
 
         # TODO: actually, using .square() is not always right,
         # particularly weighted graph
-        if is_edge_like:
+        if edge_weight is not None:
             mean = spmm(mean, edge_index, edge_weight)
             var = spmm(var, edge_index, edge_weight.square())
         else:
-            mean = adj @ mean
-            var = (adj * adj) @ var
+            # N by N adjacency matrix (sparse or dense)
+            mean = edge_index @ mean
+            var = (edge_index * edge_index) @ var
 
         return mean, var
 

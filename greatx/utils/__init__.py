@@ -1,19 +1,19 @@
-from .bunchdict import BunchDict
-from .check import is_edge_index
-from .cka import CKA
-from .ego_graph import ego_graph
-from .filter import (LikelihoodFilter, SingletonFilter, singleton_filter,
-                     singleton_mask)
-from .functions import repeat, topk, wrapper
-from .logger import get_logger, setup_logger
-from .mark import mark
-from .missing_feature import MissingFeature
-from .modification import add_edges, flip_edges, flip_graph, remove_edges
-from .normalize import normalize
-from .overlap import overlap
-from .progbar import Progbar
-from .scipy_sparse import scipy_normalize
-from .split_data import split_nodes, split_nodes_by_classes
+from greatx.utils.bunchdict import BunchDict
+from greatx.utils.cka import CKA
+from greatx.utils.ego_graph import ego_graph
+from greatx.utils.filter import (LikelihoodFilter, SingletonFilter,
+                                 singleton_filter, singleton_mask)
+from greatx.utils.functions import repeat, topk, wrapper
+from greatx.utils.logger import get_logger, setup_logger
+from greatx.utils.mark import mark
+from greatx.utils.missing_feature import MissingFeature
+from greatx.utils.modification import (add_edges, flip_edges, flip_graph,
+                                       remove_edges)
+from greatx.utils.normalize import normalize
+from greatx.utils.overlap import overlap
+from greatx.utils.progbar import Progbar
+from greatx.utils.scipy_sparse import scipy_normalize
+from greatx.utils.split_data import split_nodes, split_nodes_by_classes
 
 classes = __all__ = [
     'Progbar',
@@ -39,6 +39,5 @@ classes = __all__ = [
     'overlap',
     'ego_graph',
     'MissingFeature',
-    'is_edge_index',
     'mark',
 ]

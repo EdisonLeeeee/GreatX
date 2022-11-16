@@ -2,13 +2,13 @@ from typing import Optional
 
 import torch
 from torch import Tensor, nn
-from torch_geometric.nn.conv.gcn_conv import gcn_norm
 from torch_geometric.typing import Adj, OptTensor
 from torch_geometric.utils import degree
 from torch_geometric.utils.num_nodes import maybe_num_nodes
 from torch_sparse import SparseTensor, mul
 
 from greatx.functional import spmm
+from greatx.nn.layers.gcn_conv import make_gcn_norm, make_self_loops
 
 
 def get_inc(edge_index: Adj, num_nodes: Optional[int] = None) -> SparseTensor:
@@ -92,7 +92,7 @@ class ElasticConv(nn.Module):
     :class:`~greatx.nn.models.supervised.ElasticGNN`
     """
 
-    _cached_inc: Optional[SparseTensor] = None  # incident matrix
+    _cached: Optional[SparseTensor] = None  # incident matrix
 
     def __init__(self, K: int = 3, lambda_amp: float = 0.1,
                  normalize: bool = True, add_self_loops: bool = True,
@@ -115,37 +115,36 @@ class ElasticConv(nn.Module):
 
     def cache_clear(self):
         """Clear cached inputs or intermediate results."""
-        self._cached_inc = None
+        self._cached = None
         return self
 
     def forward(self, x: Tensor, edge_index: Adj,
                 edge_weight: OptTensor = None) -> Tensor:
         """"""
 
-        if self.normalize:
-            if torch.is_tensor(edge_index):
-                # NOTE: we do not support Dense adjacency matrix here
-                edge_index, edge_weight = gcn_norm(
-                    edge_index, edge_weight, x.size(0), improved=False,
-                    add_self_loops=self.add_self_loops, dtype=x.dtype)
+        cache = self._cached
 
-            else:
-                edge_index = gcn_norm(edge_index, x.size(0), improved=False,
-                                      add_self_loops=self.add_self_loops,
-                                      dtype=x.dtype)
-
-        cache = self._cached_inc
         if cache is None:
+            if self.add_self_loops:
+                # NOTE: we do not support Dense adjacency matrix here
+                edge_index, edge_weight = make_self_loops(
+                    edge_index, edge_weight, num_nodes=x.size(0))
+
+            if self.normalize:
+                # NOTE: we do not support Dense adjacency matrix here
+                edge_index, edge_weight = make_gcn_norm(
+                    edge_index, edge_weight)
+
             # compute incident matrix before normalizing edge_index
             inc_mat = get_inc(edge_index, num_nodes=x.size(0))
             # normalize incident matrix
             inc_mat = inc_norm(inc_mat, edge_index, num_nodes=x.size(0))
 
             if self.cached:
-                self._cached_inc = inc_mat
+                self._cached = (inc_mat, edge_index, edge_weight)
                 self.init_z = x.new_zeros((inc_mat.sizes()[0], x.size()[-1]))
         else:
-            inc_mat = self._cached_inc
+            inc_mat, edge_index, edge_weight = self._cached
 
         return self.emp_forward(x, inc_mat, edge_index, edge_weight)
 

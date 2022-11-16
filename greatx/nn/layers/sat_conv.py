@@ -7,8 +7,7 @@ from torch_geometric.nn.dense.linear import Linear
 from torch_geometric.utils import add_self_loops
 
 from greatx.functional import spmm
-from greatx.nn.layers.gcn_conv import dense_gcn_norm
-from greatx.utils.check import is_edge_index
+from greatx.nn.layers.gcn_conv import dense_add_self_loops, dense_gcn_norm
 
 
 class SATConv(nn.Module):
@@ -28,25 +27,25 @@ class SATConv(nn.Module):
         whether to compute symmetric normalization
         coefficients on the fly, by default True
     bias : bool, optional
-        whether to use bias in the layers, by default True    
+        whether to use bias in the layers, by default True
 
     Note
     ----
     For the inputs :obj:`x`, :obj:`U`, and :obj:`V`,
     our implementation supports:
-
-    * :obj:`U` is :class:`torch.LongTensor`: edge indices with shape :obj:`[2, M]`
-    * :obj:`U` is :class:`torch.FloatTensor` and :obj:`V` is :obj:`None`: dense matrix with shape :obj:`[N, N]`
-    * :obj:`U` and :obj:`V` are :class:`torch.FloatTensor`: eigenvector and corresponding eigenvalues           
+    (1) :obj:`U` is :class:`torch.LongTensor`,
+    denoting edge indices with shape :obj:`[2, M]`;
+    (2) :obj:`U` is :class:`torch.FloatTensor` and :obj:`V` is :obj:`None`,
+    denoting dense matrix with shape :obj:`[N, N]`;
+    (3) :obj:`U` and :obj:`V` are :class:`torch.FloatTensor`,
+    denoting eigenvector and corresponding eigenvalues.
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.SAT`       
+    :class:`~greatx.nn.models.supervised.SAT`
     """
-
     def __init__(self, in_channels: int, out_channels: int,
-                 add_self_loops: bool = True,
-                 normalize: bool = True,
+                 add_self_loops: bool = True, normalize: bool = True,
                  bias: bool = False):
         super().__init__()
 
@@ -70,14 +69,13 @@ class SATConv(nn.Module):
     def forward(self, x: Tensor, U: Tensor, V: Optional[Tensor] = None):
         """"""
         # NOTE: torch_sparse.SparseTensor is not supported
-        is_edge_like = is_edge_index(U)
         x = self.lin(x)
 
-        if is_edge_like:
+        if isinstance(U, torch.LongTensor):
             edge_index, edge_weight = U, V
             if self.add_self_loops:
-                edge_index, edge_weight = add_self_loops(edge_index, edge_weight,
-                                                         num_nodes=x.size(0))
+                edge_index, edge_weight = add_self_loops(
+                    edge_index, edge_weight, num_nodes=x.size(0))
             if self.normalize:
                 edge_index, edge_weight = gcn_norm(  # yapf: disable
                     edge_index, edge_weight, x.size(0), False,
@@ -87,8 +85,11 @@ class SATConv(nn.Module):
 
         elif V is None:
             adj = U
+            if self.add_self_loops:
+                adj = dense_add_self_loops(adj)
+
             if self.normalize:
-                adj = dense_gcn_norm(adj, add_self_loops=self.add_self_loops)
+                adj = dense_gcn_norm(adj, add_self_loops=False)
             x = adj @ x
         else:
             x = (U * V) @ (U.t() @ x)

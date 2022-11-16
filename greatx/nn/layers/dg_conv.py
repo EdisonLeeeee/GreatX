@@ -106,10 +106,7 @@ class DGConv(nn.Module):
 
             delta = self.t / self.K
             for k in range(self.K):
-                if is_edge_like:
-                    out = spmm(x, edge_index, edge_weight)
-                else:
-                    out = edge_index @ x
+                out = spmm(x, edge_index, edge_weight)
                 x = (1 - delta) * x + delta * out
 
             if self.cached:

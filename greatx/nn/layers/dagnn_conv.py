@@ -74,15 +74,12 @@ class DAGNNConv(nn.Module):
                 dtype=x.dtype)
         else:
             # N by N dense adjacency matrix
-            adj = dense_gcn_norm(edge_index,
-                                 add_self_loops=self.add_self_loops)
+            edge_index = dense_gcn_norm(edge_index,
+                                        add_self_loops=self.add_self_loops)
 
         xs = [x]
         for _ in range(self.K):
-            if is_edge_like:
-                x = spmm(x, edge_index, edge_weight)
-            else:
-                x = adj @ x
+            x = spmm(x, edge_index, edge_weight)
             xs.append(x)
 
         H = torch.stack(xs, dim=1)

@@ -102,10 +102,7 @@ class SGConv(nn.Module):
                         edge_index, add_self_loops=self.add_self_loops)
 
             for k in range(self.K):
-                if is_edge_like:
-                    x = spmm(x, edge_index, edge_weight)
-                else:
-                    x = edge_index @ x
+                x = spmm(x, edge_index, edge_weight)
 
             if self.cached:
                 self._cached_x = x

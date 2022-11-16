@@ -165,10 +165,7 @@ class ElasticConv(nn.Module):
         for k in range(self.K):
 
             if lambda2:
-                if torch.is_tensor(edge_index):
-                    out = spmm(x, edge_index, edge_weight)
-                else:
-                    out = edge_index @ x
+                out = spmm(x, edge_index, edge_weight)
 
                 y = gamma * hh + (1 - gamma) * out
             else:

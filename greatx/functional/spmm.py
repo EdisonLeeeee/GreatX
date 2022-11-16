@@ -1,13 +1,26 @@
+from typing import Union
+
 import torch
 from torch import Tensor
 from torch_geometric.typing import OptTensor
 from torch_geometric.utils import degree, sort_edge_index, to_dense_batch
 from torch_scatter import scatter
+from torch_sparse import SparseTensor, matmul
+
+# @torch.jit._overload
+# def spmm(x, edge_index, edge_weight, reduce):
+#     # type: (Tensor, Tensor, OptTensor, str) -> Tensor
+#     pass
+
+# @torch.jit._overload
+# def spmm(x, edge_index, edge_weight, reduce):
+#     # type: (Tensor, SparseTensor, OptTensor, str) -> Tensor
+#     pass
 
 
-def spmm(x: Tensor, edge_index: Tensor, edge_weight: OptTensor = None,
-         reduce: str = 'sum') -> Tensor:
-    r"""Sparse matrix multiplication using :class:`torch_scatter`.
+def spmm(x: Tensor, edge_index: Union[Tensor, SparseTensor],
+         edge_weight: OptTensor = None, reduce: str = 'sum') -> Tensor:
+    r"""Sparse-dense matrix multiplication.
 
     Parameters
     ----------
@@ -20,18 +33,15 @@ def spmm(x: Tensor, edge_index: Tensor, edge_weight: OptTensor = None,
         the edge weight of the sparse matrix, by default None
     reduce : str, optional
         reduction of the sparse matrix multiplication, including:
-        * :obj:`mean`
-        * :obj:`sum`
-        * :obj:`max`
-        * :obj:`min`
-        * :obj:`median`
-        * :obj:`sample_median`
-        by default :obj:'sum'
+        (:obj:`'mean'`, :obj:`'sum'`, :obj:`'add'`,
+        :obj:`'max'`, :obj:`'min'`, :obj:`'median'`,
+        :obj:`'sample_median'`)
+        by default :obj:`'sum'`
 
     Returns
     -------
     Tensor
-        the output result of the multiplication.
+        the output result of the matrix multiplication.
 
     Example
     -------
@@ -40,18 +50,44 @@ def spmm(x: Tensor, edge_index: Tensor, edge_weight: OptTensor = None,
         import torch
         from greatx.functional import spmm
 
-        x = torch.randn(5,2)
+        x = torch.randn(5, 2)
         edge_index = torch.LongTensor([[1,2], [3,4]])
         out1 = spmm(x, edge_index, reduce='sum')
 
         # which is equivalent to:
-        A = torch.zeros(5,5)
+        A = torch.zeros(5, 5)
         A[edge_index[0], edge_index[1]] = 1.0
-        out2 = torch.mm(A.t(),x)
+        out2 = torch.mm(A.t(), x)
 
         assert torch.allclose(out1, out2)
+
+        # Also, it also supports :obj:`torch.sparse.Tensor`
+        # and :obj:`torch_sparse.SparseTensor`
+        A = A.to_sparse()
+        out3 = spmm(x, A.t())
+        assert torch.allclose(out1, out3)
+
+        A = SparseTensor.from_torch_sparse_coo_tensor(A)
+        out4 = spmm(x, A.t())
+        assert torch.allclose(out1, out4)
+
+    See also
+    --------
+    :class:`~torch_geometric.utils.spmm` (>=2.2.0)
     """
 
+    # Case 1: `torch_sparse.SparseTensor`
+    if isinstance(edge_index, SparseTensor):
+        assert reduce in ['sum', 'add', 'mean', 'min', 'max']
+        return matmul(edge_index, x, reduce)
+
+    # Case 2: `torch.sparse.Tensor` (Sparse) and `torch.FloatTensor` (Dense)
+    if isinstance(edge_index, Tensor) and (edge_index.is_sparse
+                                           or edge_index.dtype == torch.float):
+        assert reduce in ['sum', 'add']
+        return torch.sparse.mm(edge_index, x)
+
+    # Case 3: `torch.LongTensor` (Sparse)
     if reduce == 'median':
         return scatter_median(x, edge_index, edge_weight)
     elif reduce == 'sample_median':

@@ -130,10 +130,7 @@ class GCNConv(nn.Module):
                 edge_index = dense_gcn_norm(edge_index, improved=self.improved,
                                             add_self_loops=False)
 
-        if is_edge_like:
-            out = spmm(x, edge_index, edge_weight)
-        else:
-            out = edge_index @ x
+        out = spmm(x, edge_index, edge_weight)
 
         if self.bias is not None:
             out += self.bias

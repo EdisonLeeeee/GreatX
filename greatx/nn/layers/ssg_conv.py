@@ -106,10 +106,7 @@ class SSGConv(nn.Module):
 
             x_out = x * self.alpha
             for k in range(self.K):
-                if is_edge_like:
-                    x = spmm(x, edge_index, edge_weight)
-                else:
-                    x = edge_index @ x
+                x = spmm(x, edge_index, edge_weight)
                 x_out = x_out + (1 - self.alpha) / self.K * x
 
             if self.cached:

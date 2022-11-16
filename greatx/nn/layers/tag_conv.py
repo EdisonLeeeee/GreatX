@@ -85,10 +85,7 @@ class TAGConv(nn.Module):
 
         xs = [x]
         for k in range(self.K):
-            if is_edge_like:
-                x = spmm(x, edge_index, edge_weight)
-            else:
-                x = edge_index @ x
+            x = spmm(x, edge_index, edge_weight)
             xs.append(x)
 
         xs = torch.cat(xs, dim=-1)

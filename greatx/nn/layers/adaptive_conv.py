@@ -97,12 +97,7 @@ class AdaptiveConv(nn.Module):
 
     def compute_LX(self, x: Tensor, edge_index: Adj,
                    edge_weight: OptTensor = None) -> Tensor:
-        is_edge_like = is_edge_index(edge_index)
-
-        if is_edge_like:
-            out = spmm(x, edge_index, edge_weight)
-        else:
-            out = edge_index @ x
+        out = spmm(x, edge_index, edge_weight)
 
         return x - out
 

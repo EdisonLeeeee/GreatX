@@ -14,7 +14,7 @@ class FeaturePropagation(BaseTransform):
     from the `"On the Unreasonable Effectiveness
     of Feature propagation in Learning
     on Graphs with Missing Node Features"
-    <https://arxiv.org/abs/2111.12128>`_ paper (ICLR'21)
+    <https://arxiv.org/abs/2111.12128>`_ paper (arXiv'21)
 
     Parameters
     ----------

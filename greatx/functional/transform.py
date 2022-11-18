@@ -5,7 +5,7 @@ from torch import Tensor
 from torch_geometric.utils.num_nodes import maybe_num_nodes
 from torch_sparse import SparseTensor
 
-__all__ = ['to_sparse_tensor', 'to_dense_adj']
+__all__ = ['to_sparse_tensor', 'to_dense_adj', 'to_sparse_adj']
 
 
 def to_sparse_tensor(
@@ -78,7 +78,6 @@ def to_sparse_adj(
     edge_index: Tensor,
     edge_weight: Optional[Tensor] = None,
     num_nodes: Optional[int] = None,
-    fill_value: float = 1.0,
 ) -> torch.sparse.FloatTensor:
     """Convert edge index to sparse adjacency matrix
     :class:`torch.sparse.FloatTensor`
@@ -91,19 +90,29 @@ def to_sparse_adj(
         edge weight with shape [M], by default None
     num_nodes : Optional[int], optional
         the number of nodes in the graph, by default None
-    fill_value : float
-        filling value for elements in the adjacency matrix
-        where edges existed, by default 1.0
 
-    Returns
+    Return
     -------
     :class:`torch.sparse.FloatTensor`
         output sparse adjacency matrix with shape :obj:`[num_nodes, num_nodes]`
+
+    Example:
+    -------
+
+        >>> edge_index = torch.tensor([[0, 1, 1, 2, 2, 3],
+        ...                            [1, 0, 2, 1, 3, 2]])
+        >>> to_torch_coo_tensor(edge_index)
+        tensor(indices=tensor([[0, 1, 1, 2, 2, 3],
+                            [1, 0, 2, 1, 3, 2]]),
+            values=tensor([1., 1., 1., 1., 1., 1.]),
+            size=(4, 4), nnz=6, layout=torch.sparse_coo)
     """
     num_nodes = maybe_num_nodes(edge_index, num_nodes)
+    device = edge_index.device
     if edge_weight is None:
-        edge_weight = torch.full((edge_index.size(1), ), fill_value,
-                                 device=edge_index.device)
+        edge_weight = torch.ones(edge_index.size(1), device=device)
 
     shape = torch.Size((num_nodes, num_nodes))
-    return torch.sparse.FloatTensor(edge_index, edge_weight, shape).coalesce()
+    adj = torch.sparse_coo_tensor(edge_index, edge_weight, shape,
+                                  device=device)
+    return adj.coalesce()

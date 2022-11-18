@@ -1,14 +1,11 @@
 from typing import Optional
 
 from torch import Tensor, nn
-from torch_geometric.nn.conv.gcn_conv import gcn_norm
 from torch_geometric.nn.dense.linear import Linear
 from torch_geometric.typing import Adj, OptTensor
-from torch_sparse import SparseTensor
 
 from greatx.functional import spmm
-from greatx.nn.layers.gcn_conv import dense_gcn_norm
-from greatx.utils.check import is_edge_index
+from greatx.nn.layers.gcn_conv import make_gcn_norm, make_self_loops
 
 
 class SGConv(nn.Module):
@@ -84,22 +81,16 @@ class SGConv(nn.Module):
         """"""
 
         cache = self._cached_x
-        is_edge_like = is_edge_index(edge_index)
 
         if cache is None:
+            if self.add_self_loops:
+                edge_index, edge_weight = make_self_loops(
+                    edge_index, edge_weight, num_nodes=x.size(0))
+
             if self.normalize:
-                if is_edge_like:
-                    edge_index, edge_weight = gcn_norm(  # yapf: disable
-                        edge_index, edge_weight, x.size(0), False,
-                        self.add_self_loops, dtype=x.dtype)
-                elif isinstance(edge_index, SparseTensor):
-                    edge_index = gcn_norm(  # yapf: disable
-                        edge_index, edge_weight, x.size(0), False,
-                        self.add_self_loops, dtype=x.dtype)
-                else:
-                    # N by N dense adjacency matrix
-                    edge_index = dense_gcn_norm(
-                        edge_index, add_self_loops=self.add_self_loops)
+                edge_index, edge_weight = make_gcn_norm(
+                    edge_index, edge_weight, num_nodes=x.size(0),
+                    dtype=x.dtype, add_self_loops=False)
 
             for k in range(self.K):
                 x = spmm(x, edge_index, edge_weight)

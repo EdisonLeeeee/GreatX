@@ -1,13 +1,10 @@
 import torch.nn as nn
 from torch_geometric.nn import JumpingKnowledge
-from torch_geometric.nn.conv.gcn_conv import gcn_norm
-from torch_sparse import SparseTensor
 
 from greatx.functional import spmm
 from greatx.nn.layers import GCNConv, Sequential, activations
-from greatx.nn.layers.gcn_conv import dense_gcn_norm
+from greatx.nn.layers.gcn_conv import make_gcn_norm
 from greatx.utils import wrapper
-from greatx.utils.check import is_edge_index
 
 
 class JKNet(nn.Module):
@@ -110,24 +107,11 @@ class JKNet(nn.Module):
 
         x = self.jump(xs)
 
-        is_edge_like = is_edge_index(edge_index)
+        edge_index, edge_weight = make_gcn_norm(edge_index, edge_weight,
+                                                num_nodes=x.size(0),
+                                                dtype=x.dtype,
+                                                add_self_loops=True)
 
-        if is_edge_like:
-            edge_index, edge_weight = gcn_norm(edge_index, edge_weight,
-                                               x.size(0), False,
-                                               add_self_loops=True,
-                                               dtype=x.dtype)
-        elif isinstance(edge_index, SparseTensor):
-            edge_index = gcn_norm(  # yapf: disable
-                edge_index, edge_weight, x.size(0), False, add_self_loops=True,
-                dtype=x.dtype)
-        else:
-            # N by N dense adjacency matrix
-            adj = dense_gcn_norm(edge_index, add_self_loops=True)
-
-        if is_edge_like:
-            out = spmm(x, edge_index, edge_weight)
-        else:
-            out = adj @ x
+        out = spmm(x, edge_index, edge_weight)
 
         return self.mlp(out)

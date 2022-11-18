@@ -1,12 +1,9 @@
 import torch
 from torch import Tensor, nn
-from torch_geometric.nn.conv.gcn_conv import gcn_norm
 from torch_geometric.typing import Adj, OptTensor
-from torch_sparse import SparseTensor
 
 from greatx.functional import spmm
-from greatx.nn.layers.gcn_conv import dense_gcn_norm
-from greatx.utils.check import is_edge_index
+from greatx.nn.layers.gcn_conv import make_gcn_norm, make_self_loops
 
 
 class AdaptiveConv(nn.Module):
@@ -53,22 +50,15 @@ class AdaptiveConv(nn.Module):
                 edge_weight: OptTensor = None) -> Tensor:
         """"""
 
-        is_edge_like = is_edge_index(edge_index)
+        if self.add_self_loops:
+            edge_index, edge_weight = make_self_loops(edge_index, edge_weight,
+                                                      num_nodes=x.size(0))
 
         if self.normalize:
-            if is_edge_like:
-                edge_index, edge_weight = gcn_norm(
-                    edge_index, edge_weight, x.size(0), improved=False,
-                    add_self_loops=self.add_self_loops, dtype=x.dtype)
-            elif isinstance(edge_index, SparseTensor):
-                edge_index = gcn_norm(edge_index, x.size(0), improved=False,
-                                      add_self_loops=self.add_self_loops,
-                                      dtype=x.dtype)
-
-            else:
-                # N by N dense adjacency matrix
-                edge_index = dense_gcn_norm(edge_index, improved=False,
-                                            add_self_loops=self.add_self_loops)
+            edge_index, edge_weight = make_gcn_norm(edge_index, edge_weight,
+                                                    num_nodes=x.size(0),
+                                                    dtype=x.dtype,
+                                                    add_self_loops=False)
 
         return self.amp_forward(x, edge_index, edge_weight)
 
@@ -76,7 +66,7 @@ class AdaptiveConv(nn.Module):
                     edge_weight: OptTensor = None) -> Tensor:
         lambda_amp = self.lambda_amp
         gamma = 1 / (2 * (1 - lambda_amp))  # or simply gamma = 1
-        hh: Tensor = x
+        hh = x
 
         for k in range(self.K):
             # Equation (9)

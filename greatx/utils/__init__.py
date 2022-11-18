@@ -1,5 +1,4 @@
 from .bunchdict import BunchDict
-from .check import is_edge_index
 from .cka import CKA
 from .ego_graph import ego_graph
 from .filter import (LikelihoodFilter, SingletonFilter, singleton_filter,
@@ -39,6 +38,5 @@ classes = __all__ = [
     'overlap',
     'ego_graph',
     'MissingFeature',
-    'is_edge_index',
     'mark',
 ]

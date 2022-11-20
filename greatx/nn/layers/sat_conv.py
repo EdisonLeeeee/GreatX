@@ -71,7 +71,7 @@ class SATConv(nn.Module):
         # NOTE: torch_sparse.SparseTensor is not supported
         x = self.lin(x)
 
-        if isinstance(U, torch.LongTensor):
+        if isinstance(U, Tensor) and U.dtype == torch.long:
             edge_index, edge_weight = U, V
             if self.add_self_loops:
                 edge_index, edge_weight = add_self_loops(

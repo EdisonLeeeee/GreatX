@@ -67,18 +67,19 @@ def make_self_loops(
     """
 
     fill_value = 2. if improved else 1.
-    if isinstance(edge_index, torch.LongTensor):
+    if isinstance(edge_index, Tensor) and edge_index.dtype == torch.long:
         # Sparse edge_index with shape [2, M]
         edge_index, edge_weight = add_self_loops(edge_index, edge_weight,
                                                  fill_value=fill_value,
                                                  num_nodes=num_nodes)
-    elif isinstance(edge_index, torch.FloatTensor):
+    elif isinstance(edge_index, Tensor) and edge_index.dtype == torch.float:
         # N by N dense adjacency matrix
         edge_index = dense_add_self_loops(edge_index, fill_value)
     elif isinstance(edge_index, SparseTensor):
         edge_index = fill_diag(edge_index, fill_value)
     else:
         raise ValueError(f"Type {type(edge_index)} is not supported.")
+        
     return edge_index, edge_weight
 
 
@@ -115,13 +116,13 @@ def make_gcn_norm(
         output normalized graph denoted as
         :obj:`edge_index` and :obj:`edge_weight`.
     """
-    if isinstance(edge_index, torch.LongTensor):
+    if isinstance(edge_index, Tensor) and edge_index.dtype == torch.long:
         # Sparse edge_index with shape [2, M]
         edge_index, edge_weight = gcn_norm(edge_index, edge_weight,
                                            num_nodes=num_nodes, improved=False,
                                            add_self_loops=add_self_loops,
                                            dtype=dtype)
-    elif isinstance(edge_index, torch.FloatTensor):
+    elif isinstance(edge_index, Tensor) and edge_index.dtype == torch.float:
         # N by N dense adjacency matrix
         edge_index = dense_gcn_norm(edge_index, improved=False,
                                     add_self_loops=add_self_loops)
@@ -130,6 +131,7 @@ def make_gcn_norm(
                               add_self_loops=add_self_loops, dtype=dtype)
     else:
         raise ValueError(f"Type {type(edge_index)} is not supported.")
+        
     return edge_index, edge_weight
 
 

@@ -76,25 +76,28 @@ def to_dense_adj(
 
 def to_sparse_adj(
     edge_index: Tensor,
-    edge_weight: Optional[Tensor] = None,
-    num_nodes: Optional[int] = None,
-) -> torch.sparse.FloatTensor:
+    edge_attr: Optional[Tensor] = None,
+    size: Optional[int] = None,
+) -> torch.sparse.Tensor:
     """Convert edge index to sparse adjacency matrix
-    :class:`torch.sparse.FloatTensor`
+    :class:`torch.sparse.Tensor`
 
     Parameters
     ----------
     edge_index : torch.Tensor
         edge index with shape [2, M]
-    edge_weight : Optional[Tensor], optional
-        edge weight with shape [M], by default None
-    num_nodes : Optional[int], optional
-        the number of nodes in the graph, by default None
+    edge_attr : Optional[Tensor], optional
+        edge attributes, by default None
+    size : Optional[int], optional
+        The size of the sparse matrix.
+            If given as an integer, will create a quadratic sparse matrix.
+            If set to :obj:`None`, will infer a quadratic sparse matrix based
+            on :obj:`edge_index.max() + 1`. By default None
 
     Return
     -------
-    :class:`torch.sparse.FloatTensor`
-        output sparse adjacency matrix with shape :obj:`[num_nodes, num_nodes]`
+    :class:`torch.sparse.Tensor`
+        output sparse adjacency matrix
 
     Example:
     -------
@@ -107,12 +110,17 @@ def to_sparse_adj(
             values=tensor([1., 1., 1., 1., 1., 1.]),
             size=(4, 4), nnz=6, layout=torch.sparse_coo)
     """
-    num_nodes = maybe_num_nodes(edge_index, num_nodes)
-    device = edge_index.device
-    if edge_weight is None:
-        edge_weight = torch.ones(edge_index.size(1), device=device)
 
-    shape = torch.Size((num_nodes, num_nodes))
-    adj = torch.sparse_coo_tensor(edge_index, edge_weight, shape,
-                                  device=device)
-    return adj.coalesce()
+    if size is None:
+        size = int(edge_index.max()) + 1
+    if not isinstance(size, (tuple, list)):
+        size = (size, size)
+
+    if edge_attr is None:
+        edge_attr = torch.ones(edge_index.size(1), device=edge_index.device)
+
+    size = tuple(size) + edge_attr.size()[1:]
+    out = torch.sparse_coo_tensor(edge_index, edge_attr, size,
+                                  device=edge_index.device)
+    out = out.coalesce()
+    return out

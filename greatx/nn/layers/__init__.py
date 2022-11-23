@@ -11,6 +11,7 @@ from .sat_conv import SATConv
 from .sg_conv import SGConv
 from .snn import IF, LIF, PLIF, PoissonEncoder
 from .soft_median_conv import SoftMedianConv
+from .spiking_gcn_conv import SpikingGCNonv
 from .ssg_conv import SSGConv
 from .tag_conv import TAGConv
 from .tensor_conv import TensorGCNConv, TensorLinear
@@ -38,4 +39,5 @@ classes = __all__ = [
     "IF",
     "LIF",
     "PLIF",
+    "SpikingGCNonv",
 ]

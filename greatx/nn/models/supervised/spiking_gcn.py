@@ -26,7 +26,7 @@ class SpikingGCN(nn.Module):
     T : int
         the number of time steps, by default 20
     tau : float
-        the :math:`\tau` in LIF neuron, by default 1.0
+        the :math:`\tau` in LIF neuron, by default 2.0
     v_threshold : float
         the threshold :math:`V_{th}` in LIF neuron, by default 1.0
     v_reset : float

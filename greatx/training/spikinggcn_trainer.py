@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from torch import Tensor
 from torch_geometric.data import Data
 
-from greatx.training.trainer import Trainer
+from greatx.training import Trainer
 
 
 class SpikingGCNTrainer(Trainer):

@@ -84,7 +84,7 @@ Assume that you have a `torch_geometric.data.Data` instance `data` that describe
 Take `GCN` as an example:
 ```python
 from greatx.nn.models import GCN
-from greatx.training.trainer import Trainer
+from greatx.training import Trainer
 from torch_geometric.datasets import Planetoid
 # Any PyG dataset is available!
 dataset = Planetoid(root='.', name='Cora')

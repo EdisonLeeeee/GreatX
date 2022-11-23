@@ -10,8 +10,8 @@ from tqdm.auto import tqdm
 from greatx.attack.backdoor import LGCBackdoor
 from greatx.datasets import GraphDataset
 from greatx.nn.models import GCN
+from greatx.training import Trainer
 from greatx.training.callbacks import ModelCheckpoint
-from greatx.training.trainer import Trainer
 from greatx.utils import split_nodes
 
 dataset = 'Cora'

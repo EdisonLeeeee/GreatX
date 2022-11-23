@@ -6,8 +6,8 @@ from ogb.nodeproppred import PygNodePropPredDataset
 
 from greatx.attack.targeted import SGAttack
 from greatx.nn.models import SGC
+from greatx.training import Trainer
 from greatx.training.callbacks import ModelCheckpoint
-from greatx.training.trainer import Trainer
 from greatx.utils import BunchDict, mark
 
 root = osp.join(osp.dirname(osp.realpath(__file__)), '../../../..', 'data')

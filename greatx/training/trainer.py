@@ -7,8 +7,12 @@ import torch.nn.functional as F
 from torch import Tensor
 from torch_geometric.data import Data
 
-from greatx.training.callbacks import (Callback, CallbackList, Optimizer,
-                                       Scheduler)
+from greatx.training.callbacks import (
+    Callback,
+    CallbackList,
+    Optimizer,
+    Scheduler,
+)
 from greatx.utils import BunchDict, Progbar, repeat
 
 
@@ -25,7 +29,7 @@ class Trainer:
 
     Example
     -------
-    >>> from greatx.training.trainer import Trainer
+    >>> from greatx.training import Trainer
     >>> model = ... # your model
     >>> trainer = Trainer(model, device='cuda')
 

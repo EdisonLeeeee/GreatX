@@ -7,7 +7,7 @@ from greatx.attack.untargeted import FGAttack
 from greatx.datasets import GraphDataset
 from greatx.nn.models import GCN, GNNGUARD
 from greatx.training.callbacks import ModelCheckpoint
-from greatx.training.trainer import Trainer
+from greatx.training import Trainer
 from greatx.utils import split_nodes
 
 dataset = 'Cora'

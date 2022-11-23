@@ -6,8 +6,8 @@ import torch_geometric.transforms as T
 from greatx.datasets import GraphDataset
 from greatx.defense import FeaturePropagation
 from greatx.nn.models import GCN
+from greatx.training import Trainer
 from greatx.training.callbacks import ModelCheckpoint
-from greatx.training.trainer import Trainer
 from greatx.utils import MissingFeature, split_nodes
 
 dataset = 'Cora'

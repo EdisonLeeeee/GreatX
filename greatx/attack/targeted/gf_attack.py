@@ -70,11 +70,12 @@ class GFAttack(TargetedAttacker):
 
     Note
     ----
-    * In the paper, the authors mainly consider the single edge perturbations,
-    i.e., :obj:`num_budgets=1`.
+    * In the paper, the authors mainly consider the single edge perturbations, i.e., :obj:`num_budgets=1`. # noqa
+
     * Please remember to call :meth:`reset` before each attack.
-    * T=128 for citeseer and pubmed, T=num_nodes//2 for cora to
-    reproduce results in paper.
+
+    * T=128 for citeseer and pubmed, T=num_nodes//2 for cora to reproduce results in paper. # noqa
+
     """
     def __init__(self, data: Data, K: int = 2, T: int = 128,
                  device: str = "cpu", seed: Optional[int] = None,

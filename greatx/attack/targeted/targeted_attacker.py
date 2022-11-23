@@ -50,36 +50,24 @@ class TargetedAttacker(FlipAttacker):
 
     def attack(self, target, target_label, num_budgets, direct_attack,
                structure_attack, feature_attack) -> "TargetedAttacker":
-        """Base method that describes the adversarial targeted attack
+        """Base method that describes the adversarial targeted attack.
 
         Parameters
         ----------
         target : int
             the target node to be attacked
-        target_label: int
-            the label of the target node.
-        num_budgets :
-            int (0<`num_budgets`<=:attr:max_perturbations)
-            or float (0<`num_budgets`<=1)
-            * Case 1:
-            `int` : the number of attack budgets,
-            i.e., how many edges can be perturbed.
-
-            * Case 2:
-            `float`: the number of attack budgets is
-            the ratio of :attr:max_perturbations
-
-            See `:attr:max_perturbations`
-
+        target_label : int
+            the label of the target node
+        num_budgets : int or float
+            the number/percentage of perturbations allowed to attack
         direct_attack : bool
-            whether to conduct direct attack or indirect attack.
+            whether to conduct direct attack or indirect attack
         structure_attack : bool
             whether to conduct structure attack, i.e.,
             modify the graph structure (edges)
         feature_attack : bool
             whether to conduct feature attack, i.e.,
             modify the node features
-
         """
         _is_setup = getattr(self, "_is_setup", True)
 

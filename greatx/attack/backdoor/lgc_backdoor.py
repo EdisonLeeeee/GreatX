@@ -97,6 +97,8 @@ class FGBackdoor(BackdoorAttacker, Surrogate):
 
     Example
     -------
+    .. code-block:: python
+
         from greatx.dataset import GraphDataset
         import torch_geometric.transforms as T
 
@@ -143,6 +145,7 @@ class FGBackdoor(BackdoorAttacker, Surrogate):
 
     def attack(self, num_budgets: Union[int, float], target_class: int,
                disable: bool = False) -> "FGBackdoor":
+
         super().attack(num_budgets, target_class)
         assert target_class < self.num_classes
 

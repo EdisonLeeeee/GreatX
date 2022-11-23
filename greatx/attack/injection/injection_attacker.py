@@ -109,9 +109,10 @@ class InjectionAttacker(Attacker):
 
         Note
         ----
-        * Both `num_edges_local` and `num_edges_global` cannot be used
-        simultaneously.
+        * Both `num_edges_local` and `num_edges_global` cannot be used simultaneously. # noqa
+
         * Both `feat_limits` and `feat_budgets` cannot be used simultaneously.
+
         """
 
         _is_setup = getattr(self, "_is_setup", True)

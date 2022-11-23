@@ -64,9 +64,10 @@ class IGAttack(UntargetedAttacker, Surrogate):
 
     Note
     ----
-    * In the paper, `IG-FGSM` attack was implemented for targeted attack,
-    we adapt the codes for the non-targeted attack here.
+    * In the paper, `IG-FGSM` attack was implemented for targeted attack, we adapt the codes for the non-targeted attack here. # noqa
+
     * Please remember to call :meth:`reset` before each attack.
+
     """
     # IGAttack can conduct feature attack
     _allow_feature_attack: bool = True

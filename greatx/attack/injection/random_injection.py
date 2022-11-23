@@ -44,6 +44,7 @@ class RandomInjection(InjectionAttacker):
     Note
     ----
     * Please remember to call :meth:`reset` before each attack.
+
     """
     def attack(self, num_budgets: Union[int, float], *,
                targets: Optional[Tensor] = None, interconnection: bool = False,
@@ -89,8 +90,7 @@ class RandomInjection(InjectionAttacker):
 
         Note
         ----
-        * Both `num_edges_local` and `num_edges_global` cannot be used
-        simultaneously.
+        * Both `num_edges_local` and `num_edges_global` cannot be used simultaneously. # noqa
         * Both `feat_limits` and `feat_budgets` cannot be used simultaneously.
         """
         super().attack(num_budgets, targets=targets,

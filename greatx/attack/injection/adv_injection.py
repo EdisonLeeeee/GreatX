@@ -51,6 +51,7 @@ class AdvInjection(InjectionAttacker, Surrogate):
     Note
     ----
     * Please remember to call :meth:`reset` before each attack.
+
     """
     def attack(self, num_budgets: Union[int, float], *,
                targets: Optional[Tensor] = None, interconnection: bool = False,

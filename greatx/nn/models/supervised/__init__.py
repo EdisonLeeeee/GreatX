@@ -17,12 +17,33 @@ from .sat import SAT
 from .sgc import SGC
 from .simp_gcn import SimPGCN
 from .soft_median_gcn import SoftMedianGCN
+from .spiking_gcn import SpikingGCN
 from .ssgc import SSGC
 from .tagcn import TAGCN
 
 classes = __all__ = [
-    "GCN", "SGC", "SSGC", "DGC", "GAT", "APPNP", "DAGNN", "JKNet", "TAGCN",
-    "NLGCN", "NLGAT", "NLMLP", "LogisticRegression", "MLP", "MedianGCN",
-    "RobustGCN", "AirGNN", "ElasticGNN", "SoftMedianGCN", "SimPGCN",
-    "GNNGUARD", "SAT", "RTGCN"
+    "GCN",
+    "SGC",
+    "SSGC",
+    "DGC",
+    "GAT",
+    "APPNP",
+    "DAGNN",
+    "JKNet",
+    "TAGCN",
+    "NLGCN",
+    "NLGAT",
+    "NLMLP",
+    "LogisticRegression",
+    "MLP",
+    "MedianGCN",
+    "RobustGCN",
+    "AirGNN",
+    "ElasticGNN",
+    "SoftMedianGCN",
+    "SimPGCN",
+    "GNNGUARD",
+    "SAT",
+    "RTGCN",
+    "SpikingGCN",
 ]

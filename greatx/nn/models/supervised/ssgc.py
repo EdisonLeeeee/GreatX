@@ -71,6 +71,8 @@ class SSGC(nn.Module):
                  bn: bool = False):
         super().__init__()
 
+        assert len(hids) == len(acts)
+
         conv = []
         for i, (hid, act) in enumerate(zip(hids, acts)):
             if i == 0:

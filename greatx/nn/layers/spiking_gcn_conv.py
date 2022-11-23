@@ -10,7 +10,7 @@ from greatx.nn.layers.gcn_conv import make_gcn_norm, make_self_loops
 
 
 class SpikingGCNonv(nn.Module):
-    r"""The simplified graph convolutional operator from
+    r"""The spiking graph convolutional operator from
     the `"Spiking Graph Convolutional Networks"
     <https://arxiv.org/abs/2205.02767>`_ paper (IJCAI'22)
 
@@ -22,6 +22,8 @@ class SpikingGCNonv(nn.Module):
         dimensions of output samples
     K : int
         the number of propagation steps, by default 1
+    T : int
+        the number of time steps, by default 20
     tau : float
         the :math:`\tau` in LIF neuron, by default 1.0
     v_threshold : float

@@ -1,13 +1,13 @@
 import torch.nn as nn
 
-from greatx.nn.layers import Sequential, SGConv, activations
+from greatx.nn.layers import Sequential, SpikingGCNonv
 from greatx.utils import wrapper
 
 
-class SGC(nn.Module):
-    r"""The Simple Graph Convolution Network (SGC) from
-    the `"Simplifying Graph Convolutional Networks"
-    <https://arxiv.org/abs/1902.07153>`_ paper (ICML'19)
+class SpikingGCN(nn.Module):
+    r"""The spiking graph convolutional neural network from
+    the `"Spiking Graph Convolutional Networks"
+    <https://arxiv.org/abs/2205.02767>`_ paper (IJCAI'22)
 
     Parameters
     ----------
@@ -23,6 +23,14 @@ class SGC(nn.Module):
         by default []
     K : int, optional
         the number of propagation steps, by default 2
+    T : int
+        the number of time steps, by default 20
+    tau : float
+        the :math:`\tau` in LIF neuron, by default 1.0
+    v_threshold : float
+        the threshold :math:`V_{th}` in LIF neuron, by default 1.0
+    v_reset : float
+        the reset level :math:`V_{reset}` in LIF neuron, by default 0
     dropout : float, optional
         the dropout ratio of model, by default 0.
     bias : bool, optional
@@ -36,6 +44,9 @@ class SGC(nn.Module):
     bn: bool, optional
         whether to use :class:`BatchNorm1d` after the convolution layer,
         by default False
+    bn_input: bool, optional
+        whether to use :class:`BatchNorm1d` before input to
+        the convolution layer, by default False
 
     Note
     ----
@@ -45,50 +56,44 @@ class SGC(nn.Module):
     Examples
     --------
     >>> # SGC without hidden layer
-    >>> model = SGC(100, 10)
-
-    >>> # SGC with two hidden layers
-    >>> model = SGC(100, 10, hids=[32, 16], acts=['relu', 'elu'])
-
-    >>> # SGC with two hidden layers, without first activation
-    >>> model = SGC(100, 10, hids=[32, 16], acts=[None, 'relu'])
-
-    >>> # SGC with deep architectures, each layer has elu activation
-    >>> model = SGC(100, 10, hids=[16]*8, acts=['elu'])
+    >>> model = SpikingGCN(100, 10)
 
     See also
     --------
-    :class:`~greatx.nn.layers.SGConv`
+    :class:`~greatx.nn.layers.SpikingGCNonv`
 
     """
     @wrapper
-    def __init__(self, in_channels, out_channels, hids: list = [],
-                 acts: list = [], K: int = 2, dropout: float = 0.,
-                 bias: bool = True, cached: bool = True, bn: bool = False):
+    def __init__(
+        self,
+        in_channels,
+        out_channels,
+        hids: list = [],
+        acts: list = [],
+        K: int = 2,
+        T: int = 20,
+        tau: float = 2.0,
+        v_threshold: float = 1.0,
+        v_reset: float = 0.,
+        dropout: float = 0.,
+        bias: bool = True,
+        cached: bool = True,
+        bn: bool = False,
+    ):
         super().__init__()
 
-        assert len(hids) == len(acts)
+        assert len(hids) == len(acts) == 0
 
         conv = []
-        for i, (hid, act) in enumerate(zip(hids, acts)):
-            if i == 0:
-                conv.append(
-                    SGConv(in_channels, hid, bias=bias, K=K, cached=cached))
-            else:
-                conv.append(nn.Linear(in_channels, hid, bias=bias))
-            if bn:
-                conv.append(nn.BatchNorm1d(hid))
-            conv.append(activations.get(act))
-            conv.append(nn.Dropout(dropout))
-            in_channels = hid
-
-        if not hids:
-            conv.append(
-                SGConv(in_channels, out_channels, bias=bias, K=K,
-                       cached=cached))
+        if bn:
+            conv.append(nn.BatchNorm1d(in_channels))
         else:
-            conv.append(nn.Linear(in_channels, out_channels, bias=bias))
+            conv.append(nn.Identity())
 
+        conv.append(
+            SpikingGCNonv(in_channels, out_channels, bias=bias, K=K, T=T,
+                          cached=cached, tau=tau, v_threshold=v_threshold,
+                          v_reset=v_reset))
         self.conv = Sequential(*conv)
 
     def reset_parameters(self):

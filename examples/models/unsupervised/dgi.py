@@ -5,7 +5,7 @@ from torch_geometric.data import Data
 from torch_geometric.datasets import Planetoid
 
 from greatx.nn.models import DGI, LogisticRegression
-from greatx.training import DGITrainer, Trainer
+from greatx.training import Trainer, UnspuervisedTrainer
 from greatx.training.callbacks import EarlyStopping, ModelCheckpoint
 
 dataset = 'Cora'
@@ -23,7 +23,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 #                 Self-supervised Learning                           #
 # ================================================================== #
 model = DGI(num_features, 512)
-trainer = DGITrainer(model, device=device, lr=0.001, weight_decay=0.)
+trainer = UnspuervisedTrainer(model, device=device, lr=0.001, weight_decay=0.)
 es = EarlyStopping(monitor='loss', patience=20)
 trainer.fit(data, epochs=500, callbacks=[es])
 

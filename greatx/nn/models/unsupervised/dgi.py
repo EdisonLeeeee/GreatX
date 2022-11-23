@@ -2,9 +2,12 @@ import math
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 from greatx.nn.layers import GCNConv, Sequential, activations
 from greatx.utils import wrapper
+
+bce = F.binary_cross_entropy_with_logits
 
 
 class Discriminator(nn.Module):
@@ -118,3 +121,8 @@ class DGI(nn.Module):
         neg = self.discriminator(z2, summary).squeeze()
 
         return pos, neg
+
+    def loss(self, postive, negative):
+        loss = bce(postive, postive.new_ones(postive.size(0))) + \
+            bce(negative, negative.new_zeros(negative.size(0)))
+        return loss

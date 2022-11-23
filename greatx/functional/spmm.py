@@ -7,15 +7,17 @@ from torch_geometric.utils import degree, sort_edge_index, to_dense_batch
 from torch_scatter import scatter
 from torch_sparse import SparseTensor, matmul
 
-# @torch.jit._overload
-# def spmm(x, edge_index, edge_weight, reduce):
-#     # type: (Tensor, Tensor, OptTensor, str) -> Tensor
-#     pass
 
-# @torch.jit._overload
-# def spmm(x, edge_index, edge_weight, reduce):
-#     # type: (Tensor, SparseTensor, OptTensor, str) -> Tensor
-#     pass
+@torch.jit._overload
+def spmm(x, edge_index, edge_weight, reduce):
+    # type: (Tensor, Tensor, OptTensor, str) -> Tensor
+    pass
+
+
+@torch.jit._overload
+def spmm(x, edge_index, edge_weight, reduce):
+    # type: (Tensor, SparseTensor, OptTensor, str) -> Tensor
+    pass
 
 
 def spmm(x: Tensor, edge_index: Union[Tensor, SparseTensor],

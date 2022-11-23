@@ -35,7 +35,7 @@ class SuperSpike(BaseSpike):
     @staticmethod
     def backward(ctx, grad_output):
         x, alpha = ctx.saved_tensors
-        grad_input = grad_output.clone()
+        grad_input = grad_output  # .clone()
         sg = 1 / (1 + alpha * x.abs())**2
         return grad_input * sg, None
 
@@ -50,7 +50,7 @@ class MultiGaussSpike(BaseSpike):
     @staticmethod
     def backward(ctx, grad_output):
         x, alpha = ctx.saved_tensors
-        grad_input = grad_output.clone()
+        grad_input = grad_output  # .clone()
         zero = torch.tensor(0.0)  # no need to specify device for 0-d tensors
         sg = (1.15 * gaussian(x, zero, alpha) -
               0.15 * gaussian(x, alpha, 6 * alpha) -
@@ -72,7 +72,7 @@ class TriangleSpike(BaseSpike):
     @staticmethod
     def backward(ctx, grad_output):
         x, alpha = ctx.saved_tensors
-        grad_input = grad_output.clone()
+        grad_input = grad_output  # .clone()
         sg = torch.nn.functional.relu(1 - alpha * x.abs())
         return grad_input * sg, None
 
@@ -84,7 +84,7 @@ class ArctanSpike(BaseSpike):
     @staticmethod
     def backward(ctx, grad_output):
         x, alpha = ctx.saved_tensors
-        grad_input = grad_output.clone()
+        grad_input = grad_output  # .clone()
         sg = 1 / (1 + alpha * x * x)
         return grad_input * sg, None
 
@@ -93,7 +93,7 @@ class SigmoidSpike(BaseSpike):
     @staticmethod
     def backward(ctx, grad_output):
         x, alpha = ctx.saved_tensors
-        grad_input = grad_output.clone()
+        grad_input = grad_output  # .clone()
         sgax = (x * alpha).sigmoid_()
         sg = (1. - sgax) * sgax * alpha
         return grad_input * sg, None
@@ -130,6 +130,7 @@ SURROGATE = {
 
 class PoissonEncoder(nn.Module):
     def forward(self, x: Tensor) -> Tensor:
+        """"""
         out_spike = torch.rand_like(x).le(x).to(x)
         return out_spike
 

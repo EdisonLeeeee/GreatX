@@ -144,6 +144,27 @@ def get_surrogate(name: str) -> Callable:
 
 
 class IF(nn.Module):
+    r"""The Integrate-and-Fire (IF) neuron for
+    spiking neural networks.
+
+    Parameters
+    ----------
+    v_threshold : float, optional
+        the threshold for emitting a spike, by default 1.0
+    v_reset : float, optional
+        the reset level for neuron, by default 0.
+    alpha : float, optional
+        the smooth factor for surrogate function, by default 1.0
+    gamma : float, optional
+        the threshold decay factor :math:`\gamma`, by default 0.
+    thresh_decay : float, optional
+        the threshold decay factor, by default 1.0
+    surrogate : str, optional
+        the surrogate function for training spiking neurons,
+        could one of (:obj:'sigmoid', :obj:'triangle', :obj:'arctan'
+        :obj:'mg', and :obj:'super'), by default 'sigmoid'
+
+    """
     def __init__(
         self,
         v_threshold: float = 1.0,
@@ -164,6 +185,7 @@ class IF(nn.Module):
         self.reset()
 
     def reset(self):
+        """Reset neuron states."""
         self.v = 0.
         self.v_th = self.v_threshold
 
@@ -181,6 +203,29 @@ class IF(nn.Module):
 
 
 class LIF(nn.Module):
+    r"""The Leaky Integrate-and-Fire (LIF) neuron for
+    spiking neural networks.
+
+    Parameters
+    ----------
+    v_threshold : float, optional
+        the threshold for emitting a spike, by default 1.0
+    v_reset : float, optional
+        the reset level for neuron, by default 0.
+    tau : float, optional
+        the leaky factor :math:`\tau` for LIF-based neuron, by default 1.0
+    alpha : float, optional
+        the smooth factor for surrogate function, by default 1.0
+    gamma : float, optional
+        the threshold decay factor :math:`\gamma`, by default 0.
+    thresh_decay : float, optional
+        the threshold decay factor, by default 1.0
+    surrogate : str, optional
+        the surrogate function for training spiking neurons,
+        could one of (:obj:'sigmoid', :obj:'triangle', :obj:'arctan'
+        :obj:'mg', and :obj:'super'), by default 'sigmoid'
+
+    """
     def __init__(
         self,
         v_threshold: float = 1.0,
@@ -203,6 +248,7 @@ class LIF(nn.Module):
         self.reset()
 
     def reset(self):
+        """Reset neuron states."""
         self.v = 0.
         self.v_th = self.v_threshold
 
@@ -220,6 +266,30 @@ class LIF(nn.Module):
 
 
 class PLIF(nn.Module):
+    r"""The Parametric Leaky Integrate-and-Fire (PLIF) neuron for
+    spiking neural networks. It differs from :class:`LIF` with a
+    trainable :math:`\tau`.
+
+    Parameters
+    ----------
+    v_threshold : float, optional
+        the threshold for emitting a spike, by default 1.0
+    v_reset : float, optional
+        the reset level for neuron, by default 0.
+    tau : float, optional
+        the leaky factor :math:`\tau` for LIF-based neuron, by default 1.0
+    alpha : float, optional
+        the smooth factor for surrogate function, by default 1.0
+    gamma : float, optional
+        the threshold decay factor :math:`\gamma`, by default 0.
+    thresh_decay : float, optional
+        the threshold decay factor, by default 1.0
+    surrogate : str, optional
+        the surrogate function for training spiking neurons,
+        could one of (:obj:'sigmoid', :obj:'triangle', :obj:'arctan'
+        :obj:'mg', and :obj:'super'), by default 'sigmoid'
+
+    """
     def __init__(
         self,
         v_threshold: float = 1.0,
@@ -243,6 +313,7 @@ class PLIF(nn.Module):
         self.reset()
 
     def reset(self):
+        """Reset neuron states."""
         self.v = 0.
         self.v_th = self.v_threshold
 

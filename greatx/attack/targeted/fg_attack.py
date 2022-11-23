@@ -69,17 +69,15 @@ class FGAttack(TargetedAttacker, Surrogate):
     ----
     This is a simple but effective attack that utilizes gradient information
     of the adjacency matrix. There are several work sharing the same heuristic:
-    * `FGSM`: `"Explaining and Harnessing Adversarial Examples"
-    <https://arxiv.org/abs/1412.6572>`_ paper (ICLR'15)
-    * `"Link Prediction Adversarial Attack Via Iterative Gradient Attack"
-    <https://ieeexplore.ieee.org/abstract/document/9141291>`_
-    paper (IEEE Trans'20)
-    * `"Adversarial Attack on Graph Structured Data"
-    <https://arxiv.org/abs/1806.02371>`_ paper (ICML'18)
 
-    Note
-    ----
-    * Please remember to call :meth:`reset` before each attack.
+    * `FGSM`: `"Explaining and Harnessing Adversarial Examples" <https://arxiv.org/abs/1412.6572>`_ paper (ICLR'15) # noqa
+
+    * `"Link Prediction Adversarial Attack Via Iterative Gradient Attack" <https://ieeexplore.ieee.org/abstract/document/9141291>`_ paper (IEEE Trans'20) # noqa
+
+    * `"Adversarial Attack on Graph Structured Data" <https://arxiv.org/abs/1806.02371>`_ paper (ICML'18) # noqa
+
+    Also, Please remember to call :meth:`reset` before each attack.
+
     """
 
     # FGAttack can conduct feature attack

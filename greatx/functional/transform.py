@@ -102,13 +102,13 @@ def to_sparse_adj(
     Example:
     -------
 
-        >>> edge_index = torch.tensor([[0, 1, 1, 2, 2, 3],
-        ...                            [1, 0, 2, 1, 3, 2]])
-        >>> to_torch_coo_tensor(edge_index)
-        tensor(indices=tensor([[0, 1, 1, 2, 2, 3],
-                            [1, 0, 2, 1, 3, 2]]),
-            values=tensor([1., 1., 1., 1., 1., 1.]),
-            size=(4, 4), nnz=6, layout=torch.sparse_coo)
+    >>> edge_index = torch.tensor([[0, 1, 1, 2, 2, 3],
+    ...                            [1, 0, 2, 1, 3, 2]])
+    >>> to_torch_coo_tensor(edge_index)
+    tensor(indices=tensor([[0, 1, 1, 2, 2, 3],
+                        [1, 0, 2, 1, 3, 2]]),
+        values=tensor([1., 1., 1., 1., 1., 1.]),
+        size=(4, 4), nnz=6, layout=torch.sparse_coo)
     """
 
     if size is None:

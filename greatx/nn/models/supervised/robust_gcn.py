@@ -49,7 +49,7 @@ class RobustGCN(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.layers.RobustConv`
+    :class:`greatx.nn.layers.RobustConv`
 
     """
     @wrapper

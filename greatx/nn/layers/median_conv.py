@@ -38,7 +38,7 @@ class MedianConv(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.MedianGCN`
+    :class:`greatx.nn.models.supervised.MedianGCN`
     """
     def __init__(self, in_channels: int, out_channels: int,
                  reduce: str = 'median', add_self_loops: bool = True,

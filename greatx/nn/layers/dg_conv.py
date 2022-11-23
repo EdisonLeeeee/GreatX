@@ -45,7 +45,7 @@ class DGConv(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.DGC`
+    :class:`greatx.nn.models.supervised.DGC`
     """
 
     _cached_x: Optional[Tensor]

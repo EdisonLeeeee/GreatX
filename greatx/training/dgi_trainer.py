@@ -10,7 +10,7 @@ bce = F.binary_cross_entropy_with_logits
 
 
 class DGITrainer(Trainer):
-    """Custom trainer for :class:`~greatx.nn.models.unsupervised.DGI`
+    """Custom trainer for :class:`greatx.nn.models.unsupervised.DGI`
 
     Parameters
     ----------

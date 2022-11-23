@@ -35,7 +35,7 @@ class DAGNNConv(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.DAGNN`
+    :class:`greatx.nn.models.supervised.DAGNN`
     """
     def __init__(self, in_channels: int, out_channels: int = 1, K: int = 1,
                  add_self_loops: bool = True, bias: bool = True):

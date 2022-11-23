@@ -79,7 +79,7 @@ def make_self_loops(
         edge_index = fill_diag(edge_index, fill_value)
     else:
         raise ValueError(f"Type {type(edge_index)} is not supported.")
-        
+
     return edge_index, edge_weight
 
 
@@ -131,7 +131,7 @@ def make_gcn_norm(
                               add_self_loops=add_self_loops, dtype=dtype)
     else:
         raise ValueError(f"Type {type(edge_index)} is not supported.")
-        
+
     return edge_index, edge_weight
 
 
@@ -175,7 +175,7 @@ class GCNConv(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.GCN`
+    :class:`greatx.nn.models.supervised.GCN`
     """
     def __init__(self, in_channels: int, out_channels: int,
                  improved: bool = False, cached: bool = False,

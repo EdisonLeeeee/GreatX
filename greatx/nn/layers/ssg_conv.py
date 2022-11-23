@@ -44,7 +44,7 @@ class SSGConv(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.SSGC`
+    :class:`greatx.nn.models.supervised.SSGC`
     """
 
     _cached_x: Optional[Tensor]

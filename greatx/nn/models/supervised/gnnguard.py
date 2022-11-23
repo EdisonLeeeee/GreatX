@@ -7,7 +7,7 @@ from greatx.utils import wrapper
 
 class GNNGUARD(nn.Module):
     r"""Graph Convolution Network (GCN) with
-    :class:`~greatx.defense.GNNGUARD` from the `"GNNGUARD:
+    :class:`greatx.defense.GNNGUARD` from the `"GNNGUARD:
     Defending Graph Neural Networks against Adversarial Attacks"
     <https://arxiv.org/abs/2006.08149>`_ paper (NeurIPS'20)
 
@@ -47,8 +47,8 @@ class GNNGUARD(nn.Module):
 
     See also
     --------
-    :class:`~greatx.defense.GNNGUARD`
-    :class:`~greatx.nn.models.supervised.GCN`
+    :class:`greatx.defense.GNNGUARD`
+    :class:`greatx.nn.models.supervised.GCN`
     """
     @wrapper
     def __init__(self, in_channels: int, out_channels: int, hids: list = [16],

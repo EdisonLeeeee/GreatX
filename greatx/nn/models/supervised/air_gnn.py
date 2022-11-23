@@ -48,7 +48,7 @@ class AirGNN(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.layers.AdaptiveConv`
+    :class:`greatx.nn.layers.AdaptiveConv`
 
     """
     @wrapper

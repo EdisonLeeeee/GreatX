@@ -60,7 +60,7 @@ class SpikingGCN(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.layers.SpikingGCNonv`
+    :class:`greatx.nn.layers.SpikingGCNonv`
 
     """
     @wrapper

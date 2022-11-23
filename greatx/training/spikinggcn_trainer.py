@@ -8,7 +8,7 @@ from greatx.training.trainer import Trainer
 
 
 class SpikingGCNTrainer(Trainer):
-    """Custom trainer for :class:`~greatx.nn.models.supervised.SpikingGCN`
+    """Custom trainer for :class:`greatx.nn.models.supervised.SpikingGCN`
 
     Parameters
     ----------

@@ -9,7 +9,7 @@ from greatx.training.trainer import Trainer
 
 
 class RobustGCNTrainer(Trainer):
-    """Custom trainer for :class:`~greatx.nn.models.supervised.RobustGCN`
+    """Custom trainer for :class:`greatx.nn.models.supervised.RobustGCN`
 
     Parameters
     ----------
@@ -21,7 +21,7 @@ class RobustGCNTrainer(Trainer):
 
     Note
     ----
-    :class:`~greatx.training.RobustGCNTrainer` accepts the following argument:
+    :class:`greatx.training.RobustGCNTrainer` accepts the following argument:
 
     * :obj:`kl`: trade-off parameter for kl loss
 

@@ -89,7 +89,7 @@ class ElasticConv(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.ElasticGNN`
+    :class:`greatx.nn.models.supervised.ElasticGNN`
     """
 
     _cached: Optional[SparseTensor] = None  # incident matrix

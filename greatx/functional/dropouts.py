@@ -53,7 +53,7 @@ def drop_edge(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
 
     See also
     --------
-    :class:`~greatx.nn.layers.DropEdge`
+    :class:`greatx.nn.layers.DropEdge`
     """
 
     if p < 0. or p > 1.:
@@ -114,7 +114,7 @@ def drop_node(
 
     See also
     --------
-    :class:`~greatx.nn.layers.DropNode`
+    :class:`greatx.nn.layers.DropNode`
     """
 
     if p < 0. or p > 1.:
@@ -137,7 +137,7 @@ def drop_path(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
               num_nodes: Optional[int] = None, start: str = 'node',
               is_sorted: bool = False,
               training: bool = True) -> Tuple[Tensor, Optional[Tensor]]:
-    """DropPath: a structured form of :class:`~greatx.functional.drop_edge`
+    """DropPath: a structured form of :class:`greatx.functional.drop_edge`
     from the `"MaskGAE: Masked Graph Modeling Meets
     Graph Autoencoders" <https://arxiv.org/abs/2205.10053>`_
     paper (arXiv'22)
@@ -198,7 +198,7 @@ def drop_path(edge_index: Tensor, edge_weight: Optional[Tensor] = None,
 
     See also
     --------
-    :class:`~greatx.nn.layers.DropPath`
+    :class:`greatx.nn.layers.DropPath`
     """
 
     if torch_cluster is None:

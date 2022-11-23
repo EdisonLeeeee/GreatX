@@ -47,7 +47,7 @@ class SAT(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.layers.SATConv`
+    :class:`greatx.nn.layers.SATConv`
 
     """
     @wrapper

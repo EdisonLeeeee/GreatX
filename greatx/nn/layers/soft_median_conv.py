@@ -55,7 +55,7 @@ class SoftMedianConv(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.SoftMedianGCN`
+    :class:`greatx.nn.models.supervised.SoftMedianGCN`
     """
     _cached_edges: Optional[Tuple[Tensor, Tensor]] = None
 

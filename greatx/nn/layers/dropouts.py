@@ -37,7 +37,7 @@ class DropEdge(nn.Module):
 
     See also
     --------
-    :class:`~greatx.functional.drop_edge`
+    :class:`greatx.functional.drop_edge`
     """
     def __init__(self, p: float = 0.5):
         super().__init__()
@@ -79,7 +79,7 @@ class DropNode(nn.Module):
 
     See also
     --------
-    :class:`~greatx.functional.drop_node`
+    :class:`greatx.functional.drop_node`
     """
     def __init__(self, p: float = 0.5):
         super().__init__()
@@ -96,7 +96,7 @@ class DropNode(nn.Module):
 
 
 class DropPath(nn.Module):
-    """DropPath: a structured form of :class:`~greatx.functional.drop_edge`
+    """DropPath: a structured form of :class:`greatx.functional.drop_edge`
     from the `"MaskGAE: Masked Graph Modeling Meets
     Graph Autoencoders" <https://arxiv.org/abs/2205.10053>`_
     paper (arXiv'22)
@@ -149,7 +149,7 @@ class DropPath(nn.Module):
 
     See also
     --------
-    :class:`~greatx.functional.drop_path`
+    :class:`greatx.functional.drop_path`
     """
     def __init__(self, p: float = 0.5, walks_per_node: int = 1,
                  walk_length: int = 3, num_nodes: Optional[int] = None,

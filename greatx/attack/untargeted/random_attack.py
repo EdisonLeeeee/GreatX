@@ -21,7 +21,7 @@ class RandomAttack(UntargetedAttacker):
     name : Optional[str], optional
         name of the attacker, if None, it would be :obj:`__class__.__name__`,
         by default None
-    kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
+    kwargs : additional arguments of :class:`greatx.attack.Attacker`,
 
     Raises
     ------

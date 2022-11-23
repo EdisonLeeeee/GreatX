@@ -42,7 +42,7 @@ class RTGCN(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.layers.TensorGCNConv`
+    :class:`greatx.nn.layers.TensorGCNConv`
 
     """
     @wrapper

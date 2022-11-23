@@ -46,7 +46,7 @@ class DAGNN(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.layers.DAGNNConv`
+    :class:`greatx.nn.layers.DAGNNConv`
 
     """
     @wrapper

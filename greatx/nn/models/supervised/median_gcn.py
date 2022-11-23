@@ -57,7 +57,7 @@ class MedianGCN(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.layers.MedianConv`
+    :class:`greatx.nn.layers.MedianConv`
 
     """
     @wrapper

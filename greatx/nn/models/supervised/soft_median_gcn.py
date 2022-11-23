@@ -61,7 +61,7 @@ class SoftMedianGCN(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.layers.SoftMedianConv`
+    :class:`greatx.nn.layers.SoftMedianConv`
 
     """
     @wrapper

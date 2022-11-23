@@ -58,7 +58,7 @@ class DGC(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.layers.DGConv`
+    :class:`greatx.nn.layers.DGConv`
 
     """
     @wrapper

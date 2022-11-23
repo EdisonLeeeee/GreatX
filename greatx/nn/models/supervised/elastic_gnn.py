@@ -55,7 +55,7 @@ class ElasticGNN(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.layers.ElasticGNN`
+    :class:`greatx.nn.layers.ElasticGNN`
 
     """
     @wrapper

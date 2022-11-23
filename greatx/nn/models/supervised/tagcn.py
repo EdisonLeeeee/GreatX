@@ -49,7 +49,7 @@ class TAGCN(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.layers.TAGCNConv`
+    :class:`greatx.nn.layers.TAGCNConv`
 
     """
     @wrapper

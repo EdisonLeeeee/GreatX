@@ -46,7 +46,7 @@ class GCN(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.layers.GCNConv`
+    :class:`greatx.nn.layers.GCNConv`
 
     """
     @wrapper

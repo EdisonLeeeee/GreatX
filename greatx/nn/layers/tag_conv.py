@@ -37,7 +37,7 @@ class TAGConv(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.TAGCN`
+    :class:`greatx.nn.models.supervised.TAGCN`
 
     """
     def __init__(self, in_channels: int, out_channels: int, K: int = 2,

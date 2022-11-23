@@ -5,8 +5,8 @@ from torch import Tensor, nn
 
 
 class TensorGCNConv(nn.Module):
-    r"""The rotbust tensor graph convolutional operator from 
-    the `"Robust Tensor Graph Convolutional Networks 
+    r"""The rotbust tensor graph convolutional operator from
+    the `"Robust Tensor Graph Convolutional Networks
     via T-SVD based Graph Augmentation"
     <https://dl.acm.org/doi/abs/10.1145/3534678.3539436>`_ paper (KDD'22)
 
@@ -17,32 +17,29 @@ class TensorGCNConv(nn.Module):
     out_channels : int
         dimensions of output samples
     num_nodes : int
-        number of input nodes        
+        number of input nodes
     num_channels : int
-        number of input channels (adjacency matrixs)          
+        number of input channels (adjacency matrixs)
     bias : bool, optional
-        whether to use bias in the layers, by default True    
+        whether to use bias in the layers, by default True
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.RTGCN`         
+    :class:`greatx.nn.models.supervised.RTGCN`
     """
-
-    def __init__(self, in_channels: int, out_channels: int,
-                 num_nodes: int, num_channels: int, bias: bool = True):
+    def __init__(self, in_channels: int, out_channels: int, num_nodes: int,
+                 num_channels: int, bias: bool = True):
         super().__init__()
 
         self.in_channels = in_channels
         self.out_channels = out_channels
         self.num_channels = num_channels
 
-        self.weight = nn.Parameter(torch.Tensor(in_channels,
-                                                out_channels,
-                                                num_channels))
+        self.weight = nn.Parameter(
+            torch.Tensor(in_channels, out_channels, num_channels))
         if bias:
-            self.bias = nn.Parameter(torch.Tensor(num_nodes,
-                                                  out_channels,
-                                                  num_channels))
+            self.bias = nn.Parameter(
+                torch.Tensor(num_nodes, out_channels, num_channels))
         else:
             self.register_parameter('bias', None)
 
@@ -74,13 +71,37 @@ class TensorGCNConv(nn.Module):
         return Z.real
 
     def __repr__(self) -> str:
-        return (f'{self.__class__.__name__}(({self.in_channels}, {self.num_channels}), '
+        return (f'{self.__class__.__name__}(({self.in_channels}, '
+                f'{self.num_channels}), '
                 f'({self.out_channels}, {self.num_channels}))')
 
 
 class TensorLinear(nn.Module):
-    def __init__(self, in_channels: int, num_nodes: int, num_channels: int,
-                 bias: bool = True):
+    r"""The tensor linear operator from
+    the `"Robust Tensor Graph Convolutional Networks
+    via T-SVD based Graph Augmentation"
+    <https://dl.acm.org/doi/abs/10.1145/3534678.3539436>`_ paper (KDD'22)
+
+    Parameters
+    ----------
+    in_channels : int
+        dimensions of int samples
+    out_channels : int
+        dimensions of output samples
+    bias : bool, optional
+        whether to use bias in the layers, by default True
+
+    See also
+    --------
+    :class:`greatx.nn.models.supervised.RTGCN`
+    """
+    def __init__(
+        self,
+        in_channels: int,
+        num_nodes: int,
+        num_channels: int,
+        bias: bool = True,
+    ):
         super().__init__()
         self.in_channels = in_channels
         self.num_channels = num_channels

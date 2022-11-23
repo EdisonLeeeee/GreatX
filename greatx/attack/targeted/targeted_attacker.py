@@ -17,7 +17,7 @@ class TargetedAttacker(FlipAttacker):
     name : Optional[str], optional
         name of the attacker, if None, it would be
         :obj:`__class__.__name__`, by default None
-    kwargs : additional arguments of :class:`~greatx.attack.Attacker`,
+    kwargs : additional arguments of :class:`greatx.attack.Attacker`,
 
     Raises
     ------
@@ -26,8 +26,8 @@ class TargetedAttacker(FlipAttacker):
 
     Note
     ----
-    :class:`~greatx.attack.targeted.TargetedAttacker` is a subclass of
-    :class:`~greatx.attack.FlipAttacker`.
+    :class:`greatx.attack.targeted.TargetedAttacker` is a subclass of
+    :class:`greatx.attack.FlipAttacker`.
     It belongs to graph modification attack (GMA).
     """
     def reset(self) -> "TargetedAttacker":

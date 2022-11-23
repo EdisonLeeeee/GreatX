@@ -52,7 +52,7 @@ class SpikingGCNonv(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.SpikingGCN`
+    :class:`greatx.nn.models.supervised.SpikingGCN`
     """
 
     _cached_x: Optional[Tensor]

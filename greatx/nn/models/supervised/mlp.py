@@ -44,7 +44,7 @@ class MLP(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.LogisticRegression`
+    :class:`greatx.nn.models.supervised.LogisticRegression`
 
     """
     @wrapper
@@ -95,7 +95,7 @@ class LogisticRegression(nn.Module):
 
     See also
     --------
-    :class:`~greatx.nn.models.supervised.MLP`
+    :class:`greatx.nn.models.supervised.MLP`
     """
     def __init__(self, in_channels: int, out_channels: int, bias: bool = True):
         super().__init__()

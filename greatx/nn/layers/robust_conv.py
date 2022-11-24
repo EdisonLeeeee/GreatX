@@ -102,7 +102,7 @@ class RobustConv(nn.Module):
 
         if self.add_self_loops:
             edge_index, edge_weight = make_self_loops(edge_index, edge_weight,
-                                                      num_nodes=x.size(0))
+                                                      num_nodes=mean.size(0))
 
         if self.normalize:
             edge_index, edge_weight = make_gcn_norm(edge_index, edge_weight,

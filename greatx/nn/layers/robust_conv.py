@@ -27,6 +27,8 @@ class RobustConv(nn.Module):
         the scale of attention on the variances, by default 1.0
     add_self_loops : bool, optional
         whether to add self-loops to the input graph, by default True
+    normalize : bool, optional
+        whether to normalize the input graph, by default True
     bias : bool, optional
         whether to use bias in the layers, by default True
 
@@ -41,8 +43,15 @@ class RobustConv(nn.Module):
     --------
     :class:`greatx.nn.models.supervised.RobustGCN`
     """
-    def __init__(self, in_channels: int, out_channels: int, gamma: float = 1.0,
-                 add_self_loops: bool = True, bias: bool = True):
+    def __init__(
+        self,
+        in_channels: int,
+        out_channels: int,
+        gamma: float = 1.0,
+        normalize: bool = True,
+        add_self_loops: bool = True,
+        bias: bool = True,
+    ):
 
         super().__init__()
 
@@ -50,6 +59,7 @@ class RobustConv(nn.Module):
         self.out_channels = out_channels
         self.add_self_loops = add_self_loops
         self.gamma = gamma
+        self.normalize = normalize
 
         self.lin_mean = Linear(in_channels, out_channels, bias=False,
                                weight_initializer='glorot')
@@ -96,8 +106,8 @@ class RobustConv(nn.Module):
 
         if self.normalize:
             edge_index, edge_weight = make_gcn_norm(edge_index, edge_weight,
-                                                    num_nodes=x.size(0),
-                                                    dtype=x.dtype,
+                                                    num_nodes=mean.size(0),
+                                                    dtype=mean.dtype,
                                                     add_self_loops=False)
 
         attention = torch.exp(-self.gamma * var)

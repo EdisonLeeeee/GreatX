@@ -20,9 +20,7 @@ def get_trainer(model: Union[str, torch.nn.Module]) -> Trainer:
     Returns
     -------
     Custom trainer or default trainer
-    :class:`greatx.training.Trainer` or
-    :class:`training.unsup_trainer.UnspuervisedTrainer`
-    for the model.
+    :class:`greatx.training.Trainer` for the model.
 
     Examples
     --------
@@ -45,18 +43,17 @@ def get_trainer(model: Union[str, torch.nn.Module]) -> Trainer:
     >>> greatx.training.get_trainer('robustGCN')
     greatx.training.trainer.Trainer
 
-    >>> # get trainer for unsupervised models
-    >>> from greatx.nn.models import DGI
-    >>> greatx.training.get_trainer(DGI)
-    greatx.training.unsup_trainer.UnspuervisedTrainer
+    Note
+    ----
+    Unsupervised models are not supported for thie method to get
+    the :class:`greatx.training.UnsupervisedTrainer`. It will also
+    return the :class:`greatx.training.Trainer` by default.
     """
     default = training.Trainer
     if isinstance(model, str):
         class_name = model
     else:
         class_name = model.__class__.__name__
-        if hasattr(model, "loss"):
-            return UnspuervisedTrainer
 
     trainer = getattr(training, class_name + "Trainer", default)
     return trainer

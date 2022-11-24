@@ -32,6 +32,8 @@ class SimPGCN(nn.Module):
         whether to use bias in the layers, by default True
     gamma : float, optional
         trade-off hyperparameter, by default 0.01
+    gamma : float, optional
+        trade-off hyperparameter for the embedding loss, by default 5.0
     bn: bool, optional (*NOT IMPLEMENTED NOW*)
         whether to use :class:`BatchNorm1d` after the convolution layer,
         by default False
@@ -53,15 +55,16 @@ class SimPGCN(nn.Module):
     """
     @wrapper
     def __init__(
-            self,
-            in_channels: int,
-            out_channels: int,
-            hids: List[int] = [64],
-            acts: List[str] = [None],
-            dropout: float = 0.5,
-            bias: bool = True,
-            gamma: float = 0.01,
-            bn: bool = False  # TODO
+        self,
+        in_channels: int,
+        out_channels: int,
+        hids: List[int] = [64],
+        acts: List[str] = [None],
+        dropout: float = 0.5,
+        bias: bool = True,
+        gamma: float = 0.01,
+        lambda_: float = 5.0,
+        bn: bool = False,
     ):
 
         super().__init__()
@@ -100,6 +103,7 @@ class SimPGCN(nn.Module):
         self.linear = nn.Linear(hids[-1], 1)
         self.dropout = nn.Dropout(dropout)
         self.gamma = gamma
+        self.lambda_ = lambda_
         self.reset_parameters()
 
     def reset_parameters(self):
@@ -171,7 +175,7 @@ class SimPGCN(nn.Module):
         else:
             return x
 
-    def regression_loss(self, embeddings):
+    def loss(self, outpput, embeddings):
         K = 10000
         node_pairs = self._node_pairs
         pseudo_labels = self._pseudo_labels
@@ -190,7 +194,7 @@ class SimPGCN(nn.Module):
             embeddings = self.linear(torch.abs(embeddings0 - embeddings1))
             loss = F.mse_loss(embeddings, pseudo_labels.unsqueeze(-1),
                               reduction='mean')
-        return loss
+        return self.lambda_ * loss
 
 
 def knn_graph(x: torch.Tensor, k: int = 20) -> SparseTensor:

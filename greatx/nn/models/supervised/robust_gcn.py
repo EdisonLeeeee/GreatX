@@ -31,6 +31,8 @@ class RobustGCN(nn.Module):
         whether to use bias in the layers, by default True
     gamma : float, optional
         the scale of attention on the variances, by default 1.0
+    gamma : float, optional
+        the scale of attention on the variances, by default 1.0
     bn: bool, optional
         whether to use :class:`BatchNorm1d` after the convolution layer,
         by default False
@@ -64,6 +66,7 @@ class RobustGCN(nn.Module):
         dropout: float = 0.5,
         bias: bool = True,
         gamma: float = 1.0,
+        kl: float = 5e-4,
         bn: bool = False,
     ):
 
@@ -86,6 +89,7 @@ class RobustGCN(nn.Module):
         conv2.append(
             RobustConv(in_channels, out_channels, gamma=gamma, bias=bias))
         self.conv2 = conv2
+        self.kl = kl
         self.dropout = nn.Dropout(dropout)
 
     def reset_parameters(self):
@@ -118,3 +122,9 @@ class RobustGCN(nn.Module):
         eps = torch.randn_like(std)
         z = eps.mul(std).add_(mean)
         return z
+
+    def loss(self, *args):
+        mean, var = self.mean, self.var
+        kl_loss = -0.5 * torch.sum(
+            torch.mean(1 + torch.log(var + 1e-8) - mean.pow(2) + var, dim=1))
+        return self.kl * kl_loss

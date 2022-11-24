@@ -52,10 +52,23 @@ class Trainer:
 
     >>> predict = trainer.predict(data, your_mask) # prediction
     """
+
+    # `Trainer` is designed for supervised models
+    # so the cross-entropy loos w.r.t. the
+    # outputs and the labels will added by default.
+    # If `supervised=False`, the loss will ignored
+    # see :class:`UnsupervisedTrainer`.
+    supervised = True
+
     def __init__(self, model: nn.Module,
                  device: Union[str, torch.device] = 'cpu', **cfg):
         self.device = torch.device(device)
         self.model = model.to(self.device)
+
+        if not self.supervised and not hasattr(model, 'loss'):
+            raise RuntimeError(
+                "The unsupervised loss must implemented in the `model.loss()`!"
+            )
 
         self.cfg = BunchDict(cfg)
 
@@ -194,15 +207,27 @@ class Trainer:
         y = data.y.squeeze()
 
         if adj_t is None:
-            out = model(data.x, data.edge_index, data.edge_weight)
+            outs = model(data.x, data.edge_index, data.edge_weight)
         else:
-            out = model(data.x, adj_t)
+            outs = model(data.x, adj_t)
+
+        if not isinstance(outs, tuple):
+            outs = outs,
+        # In case multiple outputs are returned
+        out = outs[0]
 
         if mask is not None:
             out = out[mask]
             y = y[mask]
 
-        loss = F.cross_entropy(out, y)
+        if self.supervised:
+            loss = F.cross_entropy(out, y)
+        else:
+            loss = 0.
+
+        if hasattr(model, 'loss'):
+            loss += model.loss(*outs)  # add additional loss
+
         loss.backward()
         self.callbacks.on_train_batch_end(0)
 

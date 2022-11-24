@@ -5,7 +5,7 @@ import torch_geometric.transforms as T
 
 from greatx.datasets import GraphDataset
 from greatx.nn.models import RobustGCN
-from greatx.training import RobustGCNTrainer
+from greatx.training import Trainer
 from greatx.training.callbacks import ModelCheckpoint
 from greatx.utils import split_nodes
 
@@ -22,7 +22,7 @@ num_classes = data.y.max().item() + 1
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = RobustGCN(num_features, num_classes)
-trainer = RobustGCNTrainer(model, device=device)
+trainer = Trainer(model, device=device)
 ckp = ModelCheckpoint('model.pth', monitor='val_acc')
 trainer.fit(data, mask=(splits.train_nodes, splits.val_nodes), callbacks=[ckp])
 trainer.evaluate(data, splits.test_nodes)

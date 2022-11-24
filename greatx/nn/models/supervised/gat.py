@@ -1,3 +1,5 @@
+from typing import List
+
 import torch.nn as nn
 from torch_geometric.nn import GATConv
 
@@ -16,11 +18,11 @@ class GAT(nn.Module):
         the input dimensions of model
     out_channels : int,
         the output dimensions of model
-    hids : list, optional
+    hids : List[int], optional
         the number of hidden units for each hidden layer, by default [8]
-    num_heads : list, optional
+    num_heads : List[int], optional
         the number of attention heads for each hidden layer, by default [8]
-    acts : list, optional
+    acts : List[str], optional
         the activation function for each hidden layer, by default ['relu']
     dropout : float, optional
         the dropout ratio of model, by default 0.6
@@ -53,10 +55,10 @@ class GAT(nn.Module):
 
     """
     @wrapper
-    def __init__(self, in_channels: int, out_channels: int, hids: list = [8],
-                 num_heads: list = [8], acts: list = ['elu'],
-                 dropout: float = 0.6, bias: bool = True, bn: bool = False,
-                 includes=['num_heads']):
+    def __init__(self, in_channels: int, out_channels: int,
+                 hids: List[int] = [8], num_heads: List[int] = [8],
+                 acts: List[str] = ['elu'], dropout: float = 0.6,
+                 bias: bool = True, bn: bool = False, includes=['num_heads']):
         super().__init__()
         head = 1
         conv = []

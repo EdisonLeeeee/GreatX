@@ -1,3 +1,5 @@
+from typing import List
+
 import torch.nn as nn
 
 from greatx.nn.layers import MedianConv, Sequential, activations
@@ -17,9 +19,9 @@ class MedianGCN(nn.Module):
         the input dimensions of model
     out_channels : int,
         the output dimensions of model
-    hids : list, optional
+    hids : List[int], optional
         the number of hidden units for each hidden layer, by default [16]
-    acts : list, optional
+    acts : List[str], optional
         the activation function for each hidden layer, by default ['relu']
     reduce : str
         aggregation function, including {'median', 'sample_median'},
@@ -61,10 +63,10 @@ class MedianGCN(nn.Module):
 
     """
     @wrapper
-    def __init__(self, in_channels: int, out_channels: int, hids: list = [16],
-                 acts: list = ['relu'], reduce: str = 'median',
-                 dropout: float = 0.5, bn: bool = False,
-                 normalize: bool = False, bias: bool = True):
+    def __init__(self, in_channels: int, out_channels: int,
+                 hids: List[int] = [16], acts: List[str] = ['relu'],
+                 reduce: str = 'median', dropout: float = 0.5,
+                 bn: bool = False, normalize: bool = False, bias: bool = True):
 
         super().__init__()
 

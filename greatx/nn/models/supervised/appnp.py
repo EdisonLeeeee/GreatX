@@ -1,3 +1,5 @@
+from typing import List
+
 import torch.nn as nn
 from torch_geometric.nn import APPNP as APPNPConv
 
@@ -18,9 +20,9 @@ class APPNP(nn.Module):
         the input dimensions of model
     out_channels : int,
         the output dimensions of model
-    hids : list, optional
+    hids : List[int], optional
         the number of hidden units for each hidden layer, by default [16]
-    acts : list, optional
+    acts : List[str], optional
         the activation function for each hidden layer, by default ['relu']
     dropout : float, optional
         the dropout ratio of model, by default 0.8
@@ -59,10 +61,10 @@ class APPNP(nn.Module):
 
     """
     @wrapper
-    def __init__(self, in_channels: int, out_channels: int, hids: list = [16],
-                 acts: list = ['relu'], dropout: float = 0.8, K: int = 10,
-                 alpha: float = 0.1, bn: bool = False, bias: bool = True,
-                 cached: bool = False):
+    def __init__(self, in_channels: int, out_channels: int,
+                 hids: List[int] = [16], acts: List[str] = ['relu'],
+                 dropout: float = 0.8, K: int = 10, alpha: float = 0.1,
+                 bn: bool = False, bias: bool = True, cached: bool = False):
 
         super().__init__()
         assert len(hids) > 0

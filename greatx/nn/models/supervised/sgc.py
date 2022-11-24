@@ -1,3 +1,5 @@
+from typing import List
+
 import torch.nn as nn
 
 from greatx.nn.layers import Sequential, SGConv, activations
@@ -15,10 +17,10 @@ class SGC(nn.Module):
         the input dimensions of model
     out_channels : int,
         the output dimensions of model
-    hids : list, optional
+    hids : List[int], optional
         the number of hidden units for each hidden layer,
         by default []
-    acts : list, optional
+    acts : List[str], optional
         the activation function for each hidden layer,
         by default []
     K : int, optional
@@ -62,8 +64,8 @@ class SGC(nn.Module):
 
     """
     @wrapper
-    def __init__(self, in_channels, out_channels, hids: list = [],
-                 acts: list = [], K: int = 2, dropout: float = 0.,
+    def __init__(self, in_channels, out_channels, hids: List[int] = [],
+                 acts: List[str] = [], K: int = 2, dropout: float = 0.,
                  bias: bool = True, cached: bool = True, bn: bool = False):
         super().__init__()
 

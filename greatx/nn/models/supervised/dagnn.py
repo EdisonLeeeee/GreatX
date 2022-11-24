@@ -1,3 +1,5 @@
+from typing import List
+
 import torch.nn as nn
 from torch.nn import Linear
 
@@ -16,11 +18,11 @@ class DAGNN(nn.Module):
         the input dimensions of model
     out_channels : int,
         the output dimensions of model
-    hids : list, optional
+    hids : List[int], optional
         the number of hidden units for each hidden layer, by default [64]
     K : int, optional
         the number of propagation steps, by default 10
-    acts : list, optional
+    acts : List[str], optional
         the activation function for each hidden layer, by default ['relu']
     dropout : float, optional
         the dropout ratio of model, by default 0.5
@@ -50,9 +52,10 @@ class DAGNN(nn.Module):
 
     """
     @wrapper
-    def __init__(self, in_channels: int, out_channels: int, hids: list = [64],
-                 acts: list = ['relu'], dropout: float = 0.5, K: int = 10,
-                 bn: bool = False, bias: bool = True):
+    def __init__(self, in_channels: int, out_channels: int,
+                 hids: List[int] = [64], acts: List[str] = ['relu'],
+                 dropout: float = 0.5, K: int = 10, bn: bool = False,
+                 bias: bool = True):
 
         super().__init__()
         assert len(hids) > 0

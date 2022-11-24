@@ -1,3 +1,5 @@
+from typing import List
+
 import torch
 import torch.nn as nn
 
@@ -17,10 +19,10 @@ class RobustGCN(nn.Module):
         the input dimensions of model
     out_channels : int,
         the output dimensions of model
-    hids : list, optional
+    hids : List[int], optional
         the number of hidden units for each hidden layer,
         by default [32]
-    acts : list, optional
+    acts : List[str], optional
         the activation function for each hidden layer,
         by default ['relu']
     dropout : float, optional
@@ -57,8 +59,8 @@ class RobustGCN(nn.Module):
         self,
         in_channels: int,
         out_channels: int,
-        hids: list = [32],
-        acts: list = ['relu'],
+        hids: List[int] = [32],
+        acts: List[str] = ['relu'],
         dropout: float = 0.5,
         bias: bool = True,
         gamma: float = 1.0,

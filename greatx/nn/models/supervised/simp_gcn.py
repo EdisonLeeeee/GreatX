@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 import torch
 import torch.nn as nn
@@ -22,9 +22,9 @@ class SimPGCN(nn.Module):
         the input dimensions of model
     out_channels : int,
         the output dimensions of model
-    hids : list, optional
+    hids : List[int], optional
         the number of hidden units for each hidden layer, by default [64]
-    acts : list, optional
+    acts : List[str], optional
         the activation function for each hidden layer, by default None
     dropout : float, optional
         the dropout ratio of model, by default 0.5
@@ -56,8 +56,8 @@ class SimPGCN(nn.Module):
             self,
             in_channels: int,
             out_channels: int,
-            hids: list = [64],
-            acts: list = [None],
+            hids: List[int] = [64],
+            acts: List[str] = [None],
             dropout: float = 0.5,
             bias: bool = True,
             gamma: float = 0.01,
@@ -151,12 +151,10 @@ class SimPGCN(nn.Module):
                 tmp = tmp + layer.bias
 
             # adj_knn does not need to add self-loop edges
-
-
-#             add_self_loops = layer.add_self_loops
-#             layer.add_self_loops = False
+            # add_self_loops = layer.add_self_loops
+            # layer.add_self_loops = False
             tmp_knn = layer(x, adj_knn)
-            #             layer.add_self_loops = add_self_loops
+            # layer.add_self_loops = add_self_loops
 
             # taken together
             x = s * act(layer(x, edge_index, edge_weight)) + (1 - s) * \

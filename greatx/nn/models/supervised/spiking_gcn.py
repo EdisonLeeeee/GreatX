@@ -1,3 +1,5 @@
+from typing import List
+
 import torch.nn as nn
 
 from greatx.nn.layers import Sequential, SpikingGCNonv
@@ -15,10 +17,10 @@ class SpikingGCN(nn.Module):
         the input dimensions of model
     out_channels : int,
         the output dimensions of model
-    hids : list, optional
+    hids : List[int], optional
         the number of hidden units for each hidden layer,
         by default []
-    acts : list, optional
+    acts : List[str], optional
         the activation function for each hidden layer,
         by default []
     K : int, optional
@@ -68,8 +70,8 @@ class SpikingGCN(nn.Module):
         self,
         in_channels,
         out_channels,
-        hids: list = [],
-        acts: list = [],
+        hids: List[int] = [],
+        acts: List[str] = [],
         K: int = 2,
         T: int = 20,
         tau: float = 2.0,

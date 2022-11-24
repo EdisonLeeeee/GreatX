@@ -1,3 +1,5 @@
+from typing import List
+
 import torch.nn as nn
 
 from greatx.defense import GNNGUARD as GNNGUARDLayer
@@ -17,10 +19,10 @@ class GNNGUARD(nn.Module):
         the input dimensions of model
     out_channels : int,
         the output dimensions of model
-    hids : list, optional
+    hids : List[int], optional
         the number of hidden units for each hidden layer,
         by default [16]
-    acts : list, optional
+    acts : List[str], optional
         the activation function for each hidden layer,
         by default ['relu']
     dropout : float, optional
@@ -51,8 +53,9 @@ class GNNGUARD(nn.Module):
     :class:`greatx.nn.models.supervised.GCN`
     """
     @wrapper
-    def __init__(self, in_channels: int, out_channels: int, hids: list = [16],
-                 acts: list = ['relu'], dropout: float = 0.5, bn: bool = False,
+    def __init__(self, in_channels: int, out_channels: int,
+                 hids: List[int] = [16], acts: List[str] = ['relu'],
+                 dropout: float = 0.5, bn: bool = False,
                  normalize: bool = True, bias: bool = True):
 
         super().__init__()

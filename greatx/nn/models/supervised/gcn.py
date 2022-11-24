@@ -1,3 +1,5 @@
+from typing import List
+
 import torch.nn as nn
 
 from greatx.nn.layers import GCNConv, Sequential, activations
@@ -15,9 +17,9 @@ class GCN(nn.Module):
         the input dimensions of model
     out_channels : int,
         the output dimensions of model
-    hids : list, optional
+    hids : List[int], optional
         the number of hidden units for each hidden layer, by default [16]
-    acts : list, optional
+    acts : List[str], optional
         the activation function for each hidden layer, by default ['relu']
     dropout : float, optional
         the dropout ratio of model, by default 0.5
@@ -50,9 +52,10 @@ class GCN(nn.Module):
 
     """
     @wrapper
-    def __init__(self, in_channels: int, out_channels: int, hids: list = [16],
-                 acts: list = ['relu'], dropout: float = 0.5,
-                 bias: bool = True, bn: bool = False, normalize: bool = True):
+    def __init__(self, in_channels: int, out_channels: int,
+                 hids: List[int] = [16], acts: List[str] = ['relu'],
+                 dropout: float = 0.5, bias: bool = True, bn: bool = False,
+                 normalize: bool = True):
 
         super().__init__()
 

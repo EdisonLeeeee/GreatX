@@ -1,3 +1,5 @@
+from typing import List
+
 import torch.nn as nn
 
 from greatx.nn.layers import DGConv, Sequential, activations
@@ -16,9 +18,9 @@ class DGC(nn.Module):
         the input dimensions of model
     out_channels : int,
         the output dimensions of model
-    hids : list, optional
+    hids : List[int], optional
         the number of hidden units for each hidden layer, by default []
-    acts : list, optional
+    acts : List[str], optional
         the activation function for each hidden layer, by default []
     K : int, optional
         the number of propagation steps, by default 5
@@ -62,8 +64,8 @@ class DGC(nn.Module):
 
     """
     @wrapper
-    def __init__(self, in_channels, out_channels, hids: list = [],
-                 acts: list = [], dropout: float = 0., K: int = 5,
+    def __init__(self, in_channels, out_channels, hids: List[int] = [],
+                 acts: List[str] = [], dropout: float = 0., K: int = 5,
                  t: float = 5.27, bias: bool = True, cached: bool = True,
                  bn: bool = False):
         super().__init__()

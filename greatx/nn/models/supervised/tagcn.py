@@ -1,3 +1,5 @@
+from typing import List
+
 import torch.nn as nn
 
 from greatx.nn.layers import Sequential, TAGConv, activations
@@ -16,9 +18,9 @@ class TAGCN(nn.Module):
         the input dimensions of model
     out_channels : int,
         the output dimensions of model
-    hids : list, optional
+    hids : List[int], optional
         the number of hidden units for each hidden layer, by default [16]
-    acts : list, optional
+    acts : List[str], optional
         the activation function for each hidden layer, by default ['relu']
     K : int
         the number of propagation steps, by default 2
@@ -53,9 +55,10 @@ class TAGCN(nn.Module):
 
     """
     @wrapper
-    def __init__(self, in_channels: int, out_channels: int, hids: list = [16],
-                 acts: list = ['relu'], K: int = 2, dropout: float = 0.5,
-                 bias: bool = True, normalize: bool = True, bn: bool = False):
+    def __init__(self, in_channels: int, out_channels: int,
+                 hids: List[int] = [16], acts: List[str] = ['relu'],
+                 K: int = 2, dropout: float = 0.5, bias: bool = True,
+                 normalize: bool = True, bn: bool = False):
 
         super().__init__()
 

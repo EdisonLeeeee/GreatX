@@ -1,3 +1,5 @@
+from typing import List
+
 import torch.nn as nn
 
 from greatx.nn.layers import AdaptiveConv, Sequential, activations
@@ -16,9 +18,9 @@ class AirGNN(nn.Module):
         the input dimensions of model
     out_channels : int,
         the output dimensions of model
-    hids : list, optional
+    hids : List[int], optional
         the number of hidden units for each hidden layer, by default [64]
-    acts : list, optional
+    acts : List[str], optional
         the activation function for each hidden layer, by default ['relu']
     K : int, optional
         the number of propagation steps during message passing, by default 3
@@ -52,9 +54,10 @@ class AirGNN(nn.Module):
 
     """
     @wrapper
-    def __init__(self, in_channels: int, out_channels: int, hids: list = [64],
-                 acts: list = ['relu'], K: int = 3, lambda_amp: float = 0.5,
-                 dropout: float = 0.8, bias: bool = True, bn: bool = False):
+    def __init__(self, in_channels: int, out_channels: int,
+                 hids: List[int] = [64], acts: List[str] = ['relu'],
+                 K: int = 3, lambda_amp: float = 0.5, dropout: float = 0.8,
+                 bias: bool = True, bn: bool = False):
 
         super().__init__()
         assert len(hids) > 0

@@ -7,7 +7,6 @@ from torch import Tensor
 from torch_geometric.nn import GCNConv
 
 from greatx.nn.layers import GCNConv, Sequential, activations
-from greatx.nn.models import MLP
 from greatx.utils import wrapper
 
 try:
@@ -16,23 +15,26 @@ except ImportError:
     dropout_edge = mask_feature = None
 
 
-class GRACE(torch.nn.Module):
-    r"""GRAph Contrastive rEpresentation learning (GRACE) from the
-    `"Deep Graph Contrastive Representation Learning"
-    <https://arxiv.org/abs/2006.04131>`_ paper (ICML'20)
+class CCA_SSG(torch.nn.Module):
+    r"""CCA-SSG model from the
+    `"From Canonical Correlation Analysis to
+    Self-supervised Graph Neural Networks"
+    <https://arxiv.org/abs/2106.12484>`_ paper (NeurIPS'21)
 
     Parameters
     ----------
     in_channels : int,
         the input dimensions of model
     hids : List[int], optional
-        the number of hidden units for each hidden layer, by default [128]
+        the number of hidden units for each hidden layer,
+        by default [512, 512]
     acts : List[str], optional
-        the activation function for each hidden layer, by default ['prelu']
+        the activation function for each hidden layer,
+        by default ['prelu', 'prelu']
     project_hids : List[int], optional
-        the projection dimensions of model, by default [128]
-    tau : float, optional
-        the temperature coefficient of softmax, by default 0.5
+        the projection dimensions of model, by default [512, 512]
+    lambd : float, optional
+        the trade-off of the loss, by default 1e-3
     dropout : float, optional
         the dropout ratio of model, by default 0.0
     bias : bool, optional
@@ -40,50 +42,43 @@ class GRACE(torch.nn.Module):
     bn: bool, optional
         whether to use :class:`BatchNorm1d` after the convolution layer,
         by default False
-    drop_edge1 : float, optional
-        the dropout ratio of edges for the first view, by default 0.8
-    drop_edge1 : float, optional
-        the dropout ratio of edges for the second view, by default 0.7
-    drop_feat1 : float, optional
-        the dropout ratio of features for the first view, by default 0.4
-    drop_feat2 : float, optional
-        the dropout ratio of features for the second view, by default 0.3
+    drop_edge : float, optional
+        the dropout ratio of edges for contrasting, by default 0.2
+    drop_feat : float, optional
+        the dropout ratio of features for contrasting, by default 0.2
 
 
     Examples
     --------
-    >>> # GRACE with one hidden layer
-    >>> model = GRACE(100)
+    >>> # CCA_SSG with one hidden layer
+    >>> model = CCA_SSG(100)
 
-    >>> # GRACE with two hidden layers
-    >>> model = GRACE(100, hids=[32, 16], acts=['relu', 'elu'])
+    >>> # CCA_SSG with two hidden layers
+    >>> model = CCA_SSG(100, hids=[32, 16], acts=['relu', 'elu'])
 
-    >>> # GRACE with two hidden layers, without first activation
-    >>> model = GRACE(100, hids=[32, 16], acts=[None, 'relu'])
+    >>> # CCA_SSG with two hidden layers, without first activation
+    >>> model = CCA_SSG(100, hids=[32, 16], acts=[None, 'relu'])
 
-    >>> # GRACE with deep architectures, each layer has elu activation
-    >>> model = GRACE(100, hids=[16]*8, acts=['elu'])
+    >>> # CCA_SSG with deep architectures, each layer has elu activation
+    >>> model = CCA_SSG(100, hids=[16]*8, acts=['elu'])
 
     Reference:
 
-    * Author's code: https://github.com/CRIPAC-DIG/GRACE
+    * Author's code: https://github.com/hengruizhang98/CCA-SSG
 
     """
     @wrapper
     def __init__(
         self,
         in_channels: int,
-        hids: List[int] = [128],
-        acts: List[str] = ['prelu'],
-        project_hids: List[int] = [128],
+        hids: List[int] = [512, 512],
+        acts: List[str] = ['prelu', 'prelu'],
         dropout: float = 0.,
-        tau: float = 0.5,
+        lambd: float = 1e-3,
         bias: bool = True,
         bn: bool = False,
-        drop_edge1: float = 0.8,
-        drop_edge2: float = 0.7,
-        drop_feat1: float = 0.4,
-        drop_feat2: float = 0.3,
+        drop_edge: float = 0.2,
+        drop_feat: float = 0.2,
     ):
 
         super().__init__()
@@ -103,12 +98,9 @@ class GRACE(torch.nn.Module):
             in_channels = hid
 
         self.encoder = Sequential(*encoder)
-        self.decoder = MLP(in_channels, in_channels, project_hids, dropout=0.)
-        self.tau = tau
-        self.drop_edge1 = drop_edge1
-        self.drop_edge2 = drop_edge2
-        self.drop_feat1 = drop_feat1
-        self.drop_feat2 = drop_feat2
+        self.drop_edge = drop_edge
+        self.drop_feat = drop_feat
+        self.lambd = lambd
 
     def encode(
         self,
@@ -127,8 +119,8 @@ class GRACE(torch.nn.Module):
     ) -> Tensor:
         """"""
 
-        edge_index1, mask1 = dropout_edge(edge_index, p=self.drop_edge1)
-        edge_index2, mask2 = dropout_edge(edge_index, p=self.drop_edge2)
+        edge_index1, mask1 = dropout_edge(edge_index, p=self.drop_edge)
+        edge_index2, mask2 = dropout_edge(edge_index, p=self.drop_edge)
 
         if edge_weight is not None:
             edge_weight1 = edge_weight[mask1]
@@ -136,14 +128,14 @@ class GRACE(torch.nn.Module):
         else:
             edge_weight1 = edge_weight2 = None
 
-        x1 = mask_feature(x, self.drop_feat1)[0]
-        x2 = mask_feature(x, self.drop_feat2)[0]
+        x1 = mask_feature(x, self.drop_feat)[0]
+        x2 = mask_feature(x, self.drop_feat)[0]
 
         h1 = self.encoder(x1, edge_index1, edge_weight1)
         h2 = self.encoder(x2, edge_index2, edge_weight2)
 
-        z1 = self.decoder(h1)
-        z2 = self.decoder(h2)
+        z1 = (h1 - h1.mean(0)) / h1.std(0)
+        z2 = (h2 - h2.mean(0)) / h2.std(0)
 
         return z1, z2
 
@@ -153,9 +145,19 @@ class GRACE(torch.nn.Module):
         return torch.mm(z1, z2.t())
 
     def loss(self, z1: Tensor, z2: Tensor) -> Tensor:
-        refl_sim = torch.exp(self.sim(z1, z1) / self.tau)
-        between_sim = torch.exp(self.sim(z1, z2) / self.tau)
-        a = between_sim.diag()
-        b = refl_sim.sum(1) + between_sim.sum(1) - refl_sim.diag()
-        c = -torch.log(a / b)
-        return c.mean()
+        c = z1.t() @ z2
+        c1 = z1.t() @ z1
+        c2 = z2.t() @ z2
+
+        N = z1.size(0)
+        c = c / N
+        c1 = c1 / N
+        c2 = c2 / N
+
+        loss_inv = -torch.diagonal(c).sum()
+        iden = torch.eye(c.size(0), device=c.device)
+        loss_dec1 = (iden - c1).pow(2).sum()
+        loss_dec2 = (iden - c2).pow(2).sum()
+
+        loss = loss_inv + self.lambd * (loss_dec1 + loss_dec2)
+        return loss

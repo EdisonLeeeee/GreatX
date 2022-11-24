@@ -185,10 +185,11 @@ In detail, the following methods are currently implemented:
 | **SpikingGCN**          | *Zhu et al.*  [Spiking Graph Convolutional Networks](https://arxiv.org/abs/2205.02767), *IJCAI'22*                                         | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/supervised/spiking_gcn.py) |
 
 #### Unsupervised/Self-supervise
-| Methods   | Descriptions                                                                                               | Examples                                                                                                  |
-| --------- | ---------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| **DGI**   | *Veličković et al.* [Deep Graph Infomax](https://arxiv.org/abs/1809.10341), *ICLR'19*                      | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/unsupervised/dgi.py)   |
-| **GRACE** | *Zhu et al.* [Deep Graph Contrastive Representation Learning](https://arxiv.org/abs/2006.04131), *ICML'20* | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/unsupervised/grace.py) |
+| Methods     | Descriptions                                                                                                                                  | Examples                                                                                                    |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **DGI**     | *Veličković et al.* [Deep Graph Infomax](https://arxiv.org/abs/1809.10341), *ICLR'19*                                                         | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/unsupervised/dgi.py)     |
+| **GRACE**   | *Zhu et al.* [Deep Graph Contrastive Representation Learning](https://arxiv.org/abs/2006.04131), *ICML'20*                                    | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/unsupervised/grace.py)   |
+| **CCA-SSG** | *Zhang et al.* [From Canonical Correlation Analysis to Self-supervised Graph Neural Networks](https://arxiv.org/abs/2106.12484), *NeurIPS'21* | [[**Example**]](https://github.com/EdisonLeeeee/GreatX/blob/master/examples/models/unsupervised/cca_ssg.py) |
 
 ### Techniques Against Adversarial Attacks
 

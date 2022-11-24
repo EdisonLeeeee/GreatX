@@ -1,8 +1,10 @@
 import math
+from typing import List, Optional
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch import Tensor
 
 from greatx.nn.layers import GCNConv, Sequential, activations
 from greatx.utils import wrapper
@@ -11,9 +13,9 @@ bce = F.binary_cross_entropy_with_logits
 
 
 class Discriminator(nn.Module):
-    def __init__(self, in_channels):
+    def __init__(self, in_channels: int):
         super().__init__()
-        self.weight = nn.Parameter(torch.Tensor(in_channels, in_channels))
+        self.weight = nn.Parameter(Tensor(in_channels, in_channels))
 
     @staticmethod
     def uniform(size, tensor):
@@ -25,7 +27,7 @@ class Discriminator(nn.Module):
         size = self.weight.size(0)
         self.uniform(size, self.weight)
 
-    def forward(self, x, summary):
+    def forward(self, x: Tensor, summary: Tensor) -> Tensor:
         """"""
         x = torch.matmul(x, torch.matmul(self.weight, summary))
         return x
@@ -40,9 +42,9 @@ class DGI(nn.Module):
     ----------
     in_channels : int,
         the input dimensions of model
-    hids : list, optional
+    hids : List[int], optional
         the number of hidden units for each hidden layer, by default [512]
-    acts : list, optional
+    acts : List[str], optional
         the activation function for each hidden layer, by default ['prelu']
     dropout : float, optional
         the dropout ratio of model, by default 0.0
@@ -51,11 +53,6 @@ class DGI(nn.Module):
     bn: bool, optional
         whether to use :class:`BatchNorm1d` after the convolution layer,
         by default False
-    normalize : bool, optional
-        whether to compute symmetric normalization
-        coefficients on the fly, by default True
-
-
 
     Examples
     --------
@@ -77,16 +74,15 @@ class DGI(nn.Module):
 
     """
     @wrapper
-    def __init__(self, in_channels: int, hids: list = [512],
-                 acts: list = ['prelu'], dropout: float = 0.,
-                 bias: bool = True, bn: bool = False, normalize: bool = True):
+    def __init__(self, in_channels: int, hids: List[int] = [512],
+                 acts: List[str] = ['prelu'], dropout: float = 0.,
+                 bias: bool = True, bn: bool = False):
 
         super().__init__()
 
         encoder = []
         for hid, act in zip(hids, acts):
-            encoder.append(
-                GCNConv(in_channels, hid, bias=bias, normalize=normalize))
+            encoder.append(GCNConv(in_channels, hid, bias=bias))
             if bn:
                 encoder.append(nn.BatchNorm1d(hid))
             encoder.append(activations.get(act))
@@ -98,18 +94,28 @@ class DGI(nn.Module):
         self.reset_parameters()
 
     @staticmethod
-    def corruption(x):
+    def corruption(x: Tensor) -> Tensor:
         return x[torch.randperm(x.size(0))]
 
     def reset_parameters(self):
         self.encoder.reset_parameters()
         self.discriminator.reset_parameters()
 
-    def encode(self, x, edge_index, edge_weight=None):
+    def encode(
+        self,
+        x: Tensor,
+        edge_index: Tensor,
+        edge_weight: Optional[Tensor] = None,
+    ) -> Tensor:
         z = self.encoder(x, edge_index, edge_weight)
         return z
 
-    def forward(self, x, edge_index, edge_weight=None):
+    def forward(
+        self,
+        x: Tensor,
+        edge_index: Tensor,
+        edge_weight: Optional[Tensor] = None,
+    ) -> Tensor:
         """"""
         z1 = self.encode(x, edge_index, edge_weight)  # view1
         z2 = self.encode(self.corruption(x), edge_index, edge_weight)  # view2
@@ -122,7 +128,7 @@ class DGI(nn.Module):
 
         return pos, neg
 
-    def loss(self, postive, negative):
+    def loss(self, postive: Tensor, negative: Tensor) -> Tensor:
         loss = bce(postive, postive.new_ones(postive.size(0))) + \
             bce(negative, negative.new_zeros(negative.size(0)))
         return loss

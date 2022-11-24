@@ -40,13 +40,13 @@ class GRACE(torch.nn.Module):
     bn: bool, optional
         whether to use :class:`BatchNorm1d` after the convolution layer,
         by default False
-    drop_edge_1 : float, optional
+    drop_edge1 : float, optional
         the dropout ratio of edges for the first view, by default 0.8
-    drop_edge_1 : float, optional
+    drop_edge1 : float, optional
         the dropout ratio of edges for the second view, by default 0.7
-    drop_feat_1 : float, optional
+    drop_feat1 : float, optional
         the dropout ratio of features for the first view, by default 0.4
-    drop_feat_2 : float, optional
+    drop_feat2 : float, optional
         the dropout ratio of features for the second view, by default 0.3
 
 
@@ -80,10 +80,10 @@ class GRACE(torch.nn.Module):
         tau: float = 0.5,
         bias: bool = True,
         bn: bool = False,
-        drop_edge_1: float = 0.8,
-        drop_edge_2: float = 0.7,
-        drop_feat_1: float = 0.4,
-        drop_feat_2: float = 0.3,
+        drop_edge1: float = 0.8,
+        drop_edge2: float = 0.7,
+        drop_feat1: float = 0.4,
+        drop_feat2: float = 0.3,
     ):
 
         super().__init__()
@@ -95,11 +95,7 @@ class GRACE(torch.nn.Module):
 
         encoder = []
         for hid, act in zip(hids, acts):
-            encoder.append(GCNConv(
-                in_channels,
-                hid,
-                bias=bias,
-            ))
+            encoder.append(GCNConv(in_channels, hid, bias=bias))
             if bn:
                 encoder.append(nn.BatchNorm1d(hid))
             encoder.append(activations.get(act))
@@ -109,10 +105,10 @@ class GRACE(torch.nn.Module):
         self.encoder = Sequential(*encoder)
         self.decoder = MLP(in_channels, in_channels, project_hids, dropout=0.)
         self.tau = tau
-        self.drop_edge_1 = drop_edge_1
-        self.drop_edge_2 = drop_edge_2
-        self.drop_feat_1 = drop_feat_1
-        self.drop_feat_2 = drop_feat_2
+        self.drop_edge1 = drop_edge1
+        self.drop_edge2 = drop_edge2
+        self.drop_feat1 = drop_feat1
+        self.drop_feat2 = drop_feat2
 
     def encode(
         self,
@@ -131,19 +127,20 @@ class GRACE(torch.nn.Module):
     ) -> Tensor:
         """"""
 
-        edge_index_1, mask_1 = dropout_edge(edge_index, p=self.drop_edge_1)
-        edge_index_2, mask_2 = dropout_edge(edge_index, p=self.drop_edge_2)
+        edge_index1, mask1 = dropout_edge(edge_index, p=self.drop_edge1)
+        edge_index2, mask2 = dropout_edge(edge_index, p=self.drop_edge2)
+
         if edge_weight is not None:
-            edge_weight_1 = edge_index[:, mask_1]
-            edge_weight_2 = edge_index[:, mask_2]
+            edge_weight1 = edge_weight[mask1]
+            edge_weight2 = edge_weight[mask2]
         else:
-            edge_weight_1 = edge_weight_2 = None
+            edge_weight1 = edge_weight2 = None
 
-        x_1 = mask_feature(x, self.drop_feat_1)[0]
-        x_2 = mask_feature(x, self.drop_feat_2)[0]
+        x1 = mask_feature(x, self.drop_feat1)[0]
+        x2 = mask_feature(x, self.drop_feat2)[0]
 
-        z1 = self.encoder(x_1, edge_index_1, edge_weight_1)
-        z2 = self.encoder(x_2, edge_index_2, edge_weight_2)
+        z1 = self.encoder(x1, edge_index1, edge_weight1)
+        z2 = self.encoder(x2, edge_index2, edge_weight2)
         h1 = self.decoder(z1)
         h2 = self.decoder(z2)
 

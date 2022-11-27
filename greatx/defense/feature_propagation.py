@@ -14,7 +14,8 @@ class FeaturePropagation(BaseTransform):
     from the `"On the Unreasonable Effectiveness
     of Feature propagation in Learning
     on Graphs with Missing Node Features"
-    <https://arxiv.org/abs/2111.12128>`_ paper (arXiv'21)
+    <https://openreview.net/forum?id=qe_qOarxjg>`_
+    paper (Log'22)
 
     Parameters
     ----------
@@ -39,6 +40,11 @@ class FeaturePropagation(BaseTransform):
         # missing_mask is a mask `[num_nodes, num_features]`
         # indicating where the feature is missing
         data = FeaturePropagation(missing_mask=missing_mask)(data)
+
+    See also
+    --------
+    :class:`torch_geometric.transforms.FeaturePropagation`
+
 
     Reference:
 

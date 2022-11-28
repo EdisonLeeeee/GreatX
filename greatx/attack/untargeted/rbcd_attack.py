@@ -141,6 +141,8 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         self.coeffs.update(**kwargs)
 
         num_budgets = self.num_budgets
+        feat, victim_nodes, victim_labels = (self.feat, self.victim_nodes,
+                                             self.victim_labels)
 
         # Sample initial search space (Algorithm 1, line 3-4)
         self.sample_random_block(num_budgets)
@@ -149,9 +151,8 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         for step in tqdm(range(num_budgets), desc='Peturbing graph...',
                          disable=disable):
 
-            loss, gradient = self.compute_gradients(self.feat,
-                                                    self.victim_labels,
-                                                    self.victim_nodes)
+            loss, gradient = self.compute_gradients(feat, victim_labels,
+                                                    victim_nodes)
 
             scalars = self.update(step, gradient, num_budgets)
 

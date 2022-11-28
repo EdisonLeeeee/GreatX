@@ -25,7 +25,219 @@ from greatx.nn.models.surrogate import Surrogate
 METRIC = Callable[[Tensor, Tensor, Optional[Tensor]], Tensor]
 
 
-class PRBCDAttack(UntargetedAttacker, Surrogate):
+class RBCDAttack:
+    """Base class for :class:`PRBCDAttack` and
+    :class:`GRBCDEAttack`."""
+
+    # RBCDAttack will not ensure there are no singleton nodes
+    _allow_singleton: bool = False
+
+    # TODO: Although RBCDAttack accepts directed graphs,
+    # we currently don't explicitlyt support directed graphs.
+    # This should be made available in the future.
+    is_undirected: bool = True
+
+    coeffs: Dict[str, Any] = {
+        'max_final_samples': 20,
+        'max_trials_sampling': 20,
+        'with_early_stopping': True,
+        'eps': 1e-7
+    }
+
+    def compute_gradients(
+        self,
+        feat: Tensor,
+        victim_labels: Tensor,
+        victim_nodes: Tensor,
+    ) -> Tuple[Tensor, Tensor]:
+        """Forward and update edge weights."""
+        self.block_edge_weight.requires_grad_()
+
+        # Retrieve sparse perturbed adjacency matrix `A \oplus p_{t-1}`
+        # (Algorithm 1, line 6 / Algorithm 2, line 7)
+        edge_index, edge_weight = self.get_modified_graph(
+            self._edge_index, self._edge_weight, self.block_edge_index,
+            self.block_edge_weight)
+
+        # Get prediction (Algorithm 1, line 6 / Algorithm 2, line 7)
+        prediction = self.surrogate(feat, edge_index,
+                                    edge_weight)[victim_nodes]
+        # Calculate loss combining all each node
+        # (Algorithm 1, line 7 / Algorithm 2, line 8)
+        loss = self.loss(prediction, victim_labels)
+        # Retrieve gradient towards the current block
+        # (Algorithm 1, line 7 / Algorithm 2, line 8)
+        gradient = torch.autograd.grad(loss, self.block_edge_weight)[0]
+
+        return loss, gradient
+
+    def get_modified_graph(
+        self,
+        edge_index: Tensor,
+        edge_weight: Tensor,
+        block_edge_index: Tensor,
+        block_edge_weight: Tensor,
+    ) -> Tuple[Tensor, Tensor]:
+        """Merges adjacency matrix with current block (incl. weights)"""
+        if self.is_undirected:
+            block_edge_index, block_edge_weight = to_undirected(
+                block_edge_index, block_edge_weight, num_nodes=self.num_nodes,
+                reduce='mean')
+
+        modified_edge_index = torch.cat((edge_index, block_edge_index), dim=-1)
+        modified_edge_weight = torch.cat((edge_weight, block_edge_weight))
+
+        modified_edge_index, modified_edge_weight = coalesce(
+            modified_edge_index, modified_edge_weight,
+            num_nodes=self.num_nodes, reduce='sum')
+
+        # Allow (soft) removal of edges
+        mask = modified_edge_weight > 1
+        modified_edge_weight[mask] = 2 - modified_edge_weight[mask]
+
+        return modified_edge_index, modified_edge_weight
+
+    @torch.no_grad()
+    def sample_random_block(self, num_budgets: int = 0):
+        for _ in range(self.coeffs['max_trials_sampling']):
+            num_possible = num_possible_edges(self.num_nodes,
+                                              self.is_undirected)
+            self.current_block = torch.randint(num_possible,
+                                               (self.block_size, ),
+                                               device=self.device)
+            self.current_block = torch.unique(self.current_block, sorted=True)
+
+            if self.is_undirected:
+                self.block_edge_index = linear_to_triu_idx(
+                    self.num_nodes, self.current_block)
+            else:
+                self.block_edge_index = linear_to_full_idx(
+                    self.num_nodes, self.current_block)
+
+                self._filter_self_loops_in_block(with_weight=False)
+
+            self.block_edge_weight = torch.full(self.current_block.shape,
+                                                self.coeffs['eps'],
+                                                device=self.device)
+            if self.current_block.size(0) >= num_budgets:
+                return
+
+        raise RuntimeError("Sampling random block was not successful. "
+                           "Please decrease `num_budgets`.")
+
+    def resample_random_block(self, num_budgets: int):
+        # Keep at most half of the block (i.e. resample low weights)
+        sorted_idx = torch.argsort(self.block_edge_weight)
+        keep_above = (self.block_edge_weight <=
+                      self.coeffs['eps']).sum().long()
+        if keep_above < sorted_idx.size(0) // 2:
+            keep_above = sorted_idx.size(0) // 2
+        sorted_idx = sorted_idx[keep_above:]
+
+        self.current_block = self.current_block[sorted_idx]
+
+        # Sample until enough edges were drawn
+        for _ in range(self.coeffs['max_trials_sampling']):
+            n_edges_resample = self.block_size - self.current_block.size(0)
+            num_possible = num_possible_edges(self.num_nodes,
+                                              self.is_undirected)
+            lin_index = torch.randint(num_possible, (n_edges_resample, ),
+                                      device=self.device)
+
+            current_block = torch.cat((self.current_block, lin_index))
+            self.current_block, unique_idx = torch.unique(
+                current_block, sorted=True, return_inverse=True)
+
+            if self.is_undirected:
+                self.block_edge_index = linear_to_triu_idx(
+                    self.num_nodes, self.current_block)
+            else:
+                self.block_edge_index = linear_to_full_idx(
+                    self.num_nodes, self.current_block)
+
+            # Merge existing weights with new edge weights
+            block_edge_weight_prev = self.block_edge_weight[sorted_idx]
+            self.block_edge_weight = torch.full(self.current_block.shape,
+                                                self.coeffs['eps'],
+                                                device=self.device)
+
+            self.block_edge_weight[
+                unique_idx[:sorted_idx.size(0)]] = block_edge_weight_prev
+
+            if not self.is_undirected:
+                self._filter_self_loops_in_block(with_weight=True)
+
+            if self.current_block.size(0) > num_budgets:
+                return
+
+        raise RuntimeError("Sampling random block was not successful."
+                           "Please decrease `num_budgets`.")
+
+    @torch.no_grad()
+    def sample_final_edges(
+        self,
+        feat: Tensor,
+        num_budgets: int,
+        victim_nodes: Tensor,
+        victim_labels: Tensor,
+    ) -> Tuple[Tensor, Tensor]:
+        best_metric = float('-Inf')
+        block_edge_weight = self.block_edge_weight
+        block_edge_weight[block_edge_weight <= self.coeffs['eps']] = 0
+
+        for i in range(self.coeffs['max_final_samples']):
+            if i == 0:
+                # In first iteration employ top k heuristic instead of sampling
+                sampled_edges = torch.zeros_like(block_edge_weight)
+                sampled_edges[torch.topk(block_edge_weight,
+                                         num_budgets).indices] = 1
+            else:
+                sampled_edges = torch.bernoulli(block_edge_weight).float()
+
+            if sampled_edges.sum() > num_budgets:
+                # Allowed num_budgets is exceeded
+                continue
+
+            self.block_edge_weight = sampled_edges
+
+            edge_index, edge_weight = self.get_modified_graph(
+                self._edge_index, self._edge_weight, self.block_edge_index,
+                self.block_edge_weight)
+            prediction = self.surrogate(feat, edge_index,
+                                        edge_weight)[victim_nodes]
+            metric = self.metric(prediction, victim_labels)
+
+            # Save best sample
+            if metric > best_metric:
+                best_metric = metric
+                best_edge_weight = self.block_edge_weight.clone().cpu()
+
+        flipped_edges = self.block_edge_index[:, best_edge_weight != 0]
+        return flipped_edges
+
+    def update_edge_weights(self, num_budgets: int, epoch: int,
+                            gradient: Tensor):
+        # The learning rate is refined heuristically, s.t. (1) it is
+        # independent of the number of perturbations (assuming an undirected
+        # adjacency matrix) and (2) to decay learning rate during fine-tuning
+        # (i.e. fixed search space).
+        lr = (num_budgets / self.num_nodes * self.lr /
+              np.sqrt(max(0, epoch - self.epochs_resampling) + 1))
+        self.block_edge_weight.data.add_(lr * gradient)
+
+    def _filter_self_loops_in_block(self, with_weight: bool):
+        mask = self.block_edge_index[0] != self.block_edge_index[1]
+        self.current_block = self.current_block[mask]
+        self.block_edge_index = self.block_edge_index[:, mask]
+        if with_weight:
+            self.block_edge_weight = self.block_edge_weight[mask]
+
+    def _append_statistics(self, mapping: Dict[str, Any]):
+        for key, value in mapping.items():
+            self.attack_statistics[key].append(value)
+
+
+class PRBCDAttack(UntargetedAttacker, RBCDAttack, Surrogate):
     r"""Projected Randomized Block Coordinate Descent (PRBCD) adversarial
     attack from the `Robustness of Graph Neural Networks at Scale
     <https://www.cs.cit.tum.de/daml/robustness-of-gnns-at-scale>`_ paper.
@@ -53,19 +265,6 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
     out of the box (sampling needs to be adapted).
 
     """
-
-    # TODO: Although PRBCDAttack accepts directed graphs,
-    # we currently don't explicitlyt support directed graphs.
-    # This should be made available in the future.
-    is_undirected: bool = True
-
-    coeffs: Dict[str, Any] = {
-        'max_final_samples': 20,
-        'max_trials_sampling': 20,
-        'with_early_stopping': True,
-        'eps': 1e-7
-    }
-
     def setup_surrogate(
         self,
         surrogate: torch.nn.Module,
@@ -295,198 +494,6 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
             self.victim_labels,
         )
 
-    def compute_gradients(
-        self,
-        feat: Tensor,
-        victim_labels: Tensor,
-        victim_nodes: Tensor,
-    ) -> Tuple[Tensor, Tensor]:
-        """Forward and update edge weights."""
-        self.block_edge_weight.requires_grad_()
-
-        # Retrieve sparse perturbed adjacency matrix `A \oplus p_{t-1}`
-        # (Algorithm 1, line 6 / Algorithm 2, line 7)
-        edge_index, edge_weight = self.get_modified_graph(
-            self._edge_index, self._edge_weight, self.block_edge_index,
-            self.block_edge_weight)
-
-        # Get prediction (Algorithm 1, line 6 / Algorithm 2, line 7)
-        prediction = self.surrogate(feat, edge_index,
-                                    edge_weight)[victim_nodes]
-        # Calculate loss combining all each node
-        # (Algorithm 1, line 7 / Algorithm 2, line 8)
-        loss = self.loss(prediction, victim_labels)
-        # Retrieve gradient towards the current block
-        # (Algorithm 1, line 7 / Algorithm 2, line 8)
-        gradient = torch.autograd.grad(loss, self.block_edge_weight)[0]
-
-        return loss, gradient
-
-    def get_modified_graph(
-        self,
-        edge_index: Tensor,
-        edge_weight: Tensor,
-        block_edge_index: Tensor,
-        block_edge_weight: Tensor,
-    ) -> Tuple[Tensor, Tensor]:
-        """Merges adjacency matrix with current block (incl. weights)"""
-        if self.is_undirected:
-            block_edge_index, block_edge_weight = to_undirected(
-                block_edge_index, block_edge_weight, num_nodes=self.num_nodes,
-                reduce='mean')
-
-        modified_edge_index = torch.cat((edge_index, block_edge_index), dim=-1)
-        modified_edge_weight = torch.cat((edge_weight, block_edge_weight))
-
-        modified_edge_index, modified_edge_weight = coalesce(
-            modified_edge_index, modified_edge_weight,
-            num_nodes=self.num_nodes, reduce='sum')
-
-        # Allow (soft) removal of edges
-        mask = modified_edge_weight > 1
-        modified_edge_weight[mask] = 2 - modified_edge_weight[mask]
-
-        return modified_edge_index, modified_edge_weight
-
-    @torch.no_grad()
-    def sample_random_block(self, num_budgets: int = 0):
-        for _ in range(self.coeffs['max_trials_sampling']):
-            num_possible = num_possible_edges(self.num_nodes,
-                                              self.is_undirected)
-            self.current_block = torch.randint(num_possible,
-                                               (self.block_size, ),
-                                               device=self.device)
-            self.current_block = torch.unique(self.current_block, sorted=True)
-
-            if self.is_undirected:
-                self.block_edge_index = linear_to_triu_idx(
-                    self.num_nodes, self.current_block)
-            else:
-                self.block_edge_index = linear_to_full_idx(
-                    self.num_nodes, self.current_block)
-
-                self._filter_self_loops_in_block(with_weight=False)
-
-            self.block_edge_weight = torch.full(self.current_block.shape,
-                                                self.coeffs['eps'],
-                                                device=self.device)
-            if self.current_block.size(0) >= num_budgets:
-                return
-
-        raise RuntimeError("Sampling random block was not successful. "
-                           "Please decrease `num_budgets`.")
-
-    def resample_random_block(self, num_budgets: int):
-        # Keep at most half of the block (i.e. resample low weights)
-        sorted_idx = torch.argsort(self.block_edge_weight)
-        keep_above = (self.block_edge_weight <=
-                      self.coeffs['eps']).sum().long()
-        if keep_above < sorted_idx.size(0) // 2:
-            keep_above = sorted_idx.size(0) // 2
-        sorted_idx = sorted_idx[keep_above:]
-
-        self.current_block = self.current_block[sorted_idx]
-
-        # Sample until enough edges were drawn
-        for _ in range(self.coeffs['max_trials_sampling']):
-            n_edges_resample = self.block_size - self.current_block.size(0)
-            num_possible = num_possible_edges(self.num_nodes,
-                                              self.is_undirected)
-            lin_index = torch.randint(num_possible, (n_edges_resample, ),
-                                      device=self.device)
-
-            current_block = torch.cat((self.current_block, lin_index))
-            self.current_block, unique_idx = torch.unique(
-                current_block, sorted=True, return_inverse=True)
-
-            if self.is_undirected:
-                self.block_edge_index = linear_to_triu_idx(
-                    self.num_nodes, self.current_block)
-            else:
-                self.block_edge_index = linear_to_full_idx(
-                    self.num_nodes, self.current_block)
-
-            # Merge existing weights with new edge weights
-            block_edge_weight_prev = self.block_edge_weight[sorted_idx]
-            self.block_edge_weight = torch.full(self.current_block.shape,
-                                                self.coeffs['eps'],
-                                                device=self.device)
-
-            self.block_edge_weight[
-                unique_idx[:sorted_idx.size(0)]] = block_edge_weight_prev
-
-            if not self.is_undirected:
-                self._filter_self_loops_in_block(with_weight=True)
-
-            if self.current_block.size(0) > num_budgets:
-                return
-
-        raise RuntimeError("Sampling random block was not successful."
-                           "Please decrease `num_budgets`.")
-
-    @torch.no_grad()
-    def sample_final_edges(
-        self,
-        feat: Tensor,
-        num_budgets: int,
-        victim_nodes: Tensor,
-        victim_labels: Tensor,
-    ) -> Tuple[Tensor, Tensor]:
-        best_metric = float('-Inf')
-        block_edge_weight = self.block_edge_weight
-        block_edge_weight[block_edge_weight <= self.coeffs['eps']] = 0
-
-        for i in range(self.coeffs['max_final_samples']):
-            if i == 0:
-                # In first iteration employ top k heuristic instead of sampling
-                sampled_edges = torch.zeros_like(block_edge_weight)
-                sampled_edges[torch.topk(block_edge_weight,
-                                         num_budgets).indices] = 1
-            else:
-                sampled_edges = torch.bernoulli(block_edge_weight).float()
-
-            if sampled_edges.sum() > num_budgets:
-                # Allowed num_budgets is exceeded
-                continue
-
-            self.block_edge_weight = sampled_edges
-
-            edge_index, edge_weight = self.get_modified_graph(
-                self._edge_index, self._edge_weight, self.block_edge_index,
-                self.block_edge_weight)
-            prediction = self.surrogate(feat, edge_index,
-                                        edge_weight)[victim_nodes]
-            metric = self.metric(prediction, victim_labels)
-
-            # Save best sample
-            if metric > best_metric:
-                best_metric = metric
-                best_edge_weight = self.block_edge_weight.clone().cpu()
-
-        flipped_edges = self.block_edge_index[:, best_edge_weight != 0]
-        return flipped_edges
-
-    def update_edge_weights(self, num_budgets: int, epoch: int,
-                            gradient: Tensor):
-        # The learning rate is refined heuristically, s.t. (1) it is
-        # independent of the number of perturbations (assuming an undirected
-        # adjacency matrix) and (2) to decay learning rate during fine-tuning
-        # (i.e. fixed search space).
-        lr = (num_budgets / self.num_nodes * self.lr /
-              np.sqrt(max(0, epoch - self.epochs_resampling) + 1))
-        self.block_edge_weight.data.add_(lr * gradient)
-
-    def _filter_self_loops_in_block(self, with_weight: bool):
-        mask = self.block_edge_index[0] != self.block_edge_index[1]
-        self.current_block = self.current_block[mask]
-        self.block_edge_index = self.block_edge_index[:, mask]
-        if with_weight:
-            self.block_edge_weight = self.block_edge_weight[mask]
-
-    def _append_statistics(self, mapping: Dict[str, Any]):
-        for key, value in mapping.items():
-            self.attack_statistics[key].append(value)
-
 
 class GRBCDAttack(PRBCDAttack):
     r"""Greedy Randomized Block Coordinate Descent (GRBCD) adversarial attack
@@ -497,7 +504,6 @@ class GRBCDAttack(PRBCDAttack):
     :class:`PRBCDAttack`. It also uses an efficient gradient based approach.
     However, it greedily flips edges based on the gradient towards the
     adjacency matrix.
-
     """
     def prepare(self, num_budgets: int, epochs: int) -> List[int]:
         """Prepare attack."""
@@ -551,10 +557,10 @@ class GRBCDAttack(PRBCDAttack):
                                            num_nodes=self.num_nodes,
                                            reduce='sum')
 
-        is_one_mask = torch.isclose(edge_weight, torch.tensor(1.))
+        mask = torch.isclose(edge_weight, torch.tensor(1.))
 
-        self._edge_index = edge_index[:, is_one_mask]
-        self._edge_weight = edge_weight[is_one_mask]
+        self._edge_index = edge_index[:, mask]
+        self._edge_weight = edge_weight[mask]
 
         # Sample initial search space (Algorithm 2, line 3-4)
         self.sample_random_block(step_size)

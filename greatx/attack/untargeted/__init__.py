@@ -5,7 +5,7 @@ from .metattack import Metattack
 from .pgd_attack import PGDAttack
 from .random_attack import RandomAttack
 from .untargeted_attacker import UntargetedAttacker
-from .rbcd_attack import PRBCDAttack
+from .rbcd_attack import PRBCDAttack, GRBCDAttack
 
 classes = __all__ = [
     'UntargetedAttacker',
@@ -16,4 +16,5 @@ classes = __all__ = [
     'Metattack',
     'PGDAttack',
     'PRBCDAttack',
+    'GRBCDAttack',
 ]

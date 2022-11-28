@@ -169,15 +169,7 @@ class PGDAttack(TargetedAttacker, Surrogate):
                        structure_attack=structure_attack,
                        feature_attack=feature_attack)
 
-        if target_label is None:
-            if self.target_label is None:
-                raise RuntimeError("please specify argument `target_label` "
-                                   "as the node label does not exist.")
-            self.victim_label = self.target_label.view(-1)
-        else:
-            self.victim_label = torch.as_tensor(target_label,
-                                                device=self.device,
-                                                dtype=torch.long).view(-1)
+        self.victim_label = self.target_label.view(-1)
         self.victim_node = torch.as_tensor(self.target, device=self.device,
                                            dtype=torch.long).view(-1)
 

@@ -80,19 +80,25 @@ class SGAttack(TargetedAttacker, Surrogate):
     _allow_singleton = True
 
     @torch.no_grad()
-    def setup_surrogate(self, surrogate: torch.nn.Module, tau: float = 5.0,
-                        freeze: bool = True, K: int = 2):
+    def setup_surrogate(
+        self,
+        surrogate: torch.nn.Module,
+        *,
+        tau: float = 5.0,
+        freeze: bool = True,
+    ):
 
         Surrogate.setup_surrogate(self, surrogate=surrogate, tau=tau,
                                   freeze=freeze)
 
         self.logits = self.surrogate(self.feat, self.edge_index,
-                                     self.edge_weight)
+                                     self.edge_weight).cpu()
 
-        self.K = K
         return self
 
     def set_normalize(self, state):
+        # TODO: this is incorrect for models
+        # with `normalize=False` by default
         for layer in self.surrogate.modules():
             if hasattr(layer, 'normalize'):
                 layer.normalize = state
@@ -187,9 +193,9 @@ class SGAttack(TargetedAttacker, Surrogate):
         )
         return subgraph
 
-    def attack(self, target, *, target_label=None, num_budgets=None,
-               direct_attack=True, structure_attack=True, feature_attack=False,
-               disable=False):
+    def attack(self, target, *, K: int = 2, target_label=None,
+               num_budgets=None, direct_attack=True, structure_attack=True,
+               feature_attack=False, disable=False):
 
         super().attack(target, target_label, num_budgets=num_budgets,
                        direct_attack=direct_attack,
@@ -197,16 +203,9 @@ class SGAttack(TargetedAttacker, Surrogate):
                        feature_attack=feature_attack)
 
         self.set_normalize(False)
+        self.K = K
 
-        if target_label is None:
-            if self.target_label is None:
-                raise RuntimeError("please specify argument `target_label` "
-                                   "as the node label does not exist.")
-            target_label = self.target_label.view(-1)
-        else:
-            target_label = torch.as_tensor(target_label, device=self.device,
-                                           dtype=torch.long).view(-1)
-
+        target_label = self.target_label.view(-1)
         best_wrong_label = self.strongest_wrong_class(target,
                                                       target_label).view(-1)
 

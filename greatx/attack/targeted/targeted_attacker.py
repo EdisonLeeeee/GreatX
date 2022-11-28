@@ -1,5 +1,7 @@
 from numbers import Number
 
+import torch
+
 from greatx.attack.flip_attacker import FlipAttacker
 
 
@@ -113,12 +115,19 @@ class TargetedAttacker(FlipAttacker):
             num_budgets = self._check_budget(
                 num_budgets, max_perturbations=max_perturbations)
 
+        # int number
         self.target = target
 
-        if target_label is None and self.label is not None:
-            self.target_label = self.label[target]
+        # 0-D Tensor
+        if target_label is None:
+            if self.label is not None:
+                self.target_label = self.label[target]
+            else:
+                raise RuntimeError("Please specify argument `target_label` "
+                                   "as the node label does not exist.")
         else:
-            self.target_label = target_label
+            self.target_label = torch.as_tensor(target_label, dtype=torch.long,
+                                                device=self.device)
 
         self.num_budgets = num_budgets
         self.direct_attack = direct_attack

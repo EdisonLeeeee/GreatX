@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Any, Callable, Dict, Optional, Tuple, Union
+from typing import Any, Callable, Dict, Iterable, Optional, Tuple, Union
 
 import numpy as np
 import torch
@@ -92,6 +92,8 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         # NOTE: `edge_weight` denotes the edge weight of the original graph
         # it is None by default, so here we need to name it as `edge_weights`
         self.edge_weights = torch.ones(self.num_edges, device=self.device)
+
+        # For early stopping (not explicitly covered by pseudo code)
         self.best_metric = float('-Inf')
 
         # For collecting attack statistics
@@ -120,7 +122,6 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
                        feature_attack=feature_attack)
 
         self.block_size = block_size
-        self.epochs = epochs
 
         assert loss in ['mce', 'prob_margin', 'tanh_margin']
         if loss == 'mce':
@@ -144,12 +145,9 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         feat, victim_nodes, victim_labels = (self.feat, self.victim_nodes,
                                              self.victim_labels)
 
-        # Sample initial search space (Algorithm 1, line 3-4)
-        self.sample_random_block(num_budgets)
-
         # Loop over the epochs (Algorithm 1, line 5)
-        for step in tqdm(range(num_budgets), desc='Peturbing graph...',
-                         disable=disable):
+        for step in tqdm(self.prepare(num_budgets, epochs),
+                         desc='Peturbing graph...', disable=disable):
 
             loss, gradient = self.compute_gradients(feat, victim_labels,
                                                     victim_nodes)
@@ -164,6 +162,15 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         return self
 
     @torch.no_grad()
+    def prepare(self, num_budgets: int, epochs: int) -> Iterable[int]:
+        """Prepare attack and return the iterable sequence steps."""
+
+        # Sample initial search space (Algorithm 1, line 3-4)
+        self.sample_random_block(num_budgets)
+
+        return range(epochs)
+
+    @torch.no_grad()
     def update(self, epoch: int, gradient: Tensor,
                num_budgets: int) -> Dict[str, float]:
         """Update edge weights given gradient."""
@@ -172,7 +179,7 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
 
         # For monitoring
         pmass_update = torch.clamp(self.block_edge_weight, 0, 1)
-        # Projection to stay within relaxed `L_0` budget
+        # Projection to stay within relaxed `L_0` num_budgets
         # (Algorithm 1, line 8)
         self.block_edge_weight = self.project(num_budgets,
                                               self.block_edge_weight,
@@ -249,7 +256,7 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
 
         assert flipped_edges.size(1) <= self.num_budgets, (
             f'# perturbed edges {flipped_edges.size(1)} '
-            f'exceeds budget {self.num_budgets}')
+            f'exceeds num_budgets {self.num_budgets}')
 
         row, col = flipped_edges.tolist()
         for it, (u, v, w) in enumerate(zip(row, col, edge_weight.tolist())):
@@ -312,7 +319,7 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         return modified_edge_index, modified_edge_weight
 
     @torch.no_grad()
-    def sample_random_block(self, budget: int = 0):
+    def sample_random_block(self, num_budgets: int = 0):
         for _ in range(self.coeffs['max_trials_sampling']):
             num_possible_edges = self._num_possible_edges(
                 self.num_nodes, self.is_undirected_graph)
@@ -333,13 +340,13 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
             self.block_edge_weight = torch.full(self.current_block.shape,
                                                 self.coeffs['eps'],
                                                 device=self.device)
-            if self.current_block.size(0) >= budget:
+            if self.current_block.size(0) >= num_budgets:
                 return
 
         raise RuntimeError('Sampling random block was not successful. '
-                           'Please decrease `budget`.')
+                           'Please decrease `num_budgets`.')
 
-    def resample_random_block(self, budget: int):
+    def resample_random_block(self, num_budgets: int):
         # Keep at most half of the block (i.e. resample low weights)
         sorted_idx = torch.argsort(self.block_edge_weight)
         keep_above = (self.block_edge_weight <=
@@ -381,10 +388,11 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
             if not self.is_undirected_graph:
                 self._filter_self_loops_in_block(with_weight=True)
 
-            if self.current_block.size(0) > budget:
+            if self.current_block.size(0) > num_budgets:
                 return
+
         raise RuntimeError('Sampling random block was not successful.'
-                           'Please decrease `budget`.')
+                           'Please decrease `num_budgets`.')
 
     @torch.no_grad()
     def sample_final_edges(
@@ -408,7 +416,7 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
                 sampled_edges = torch.bernoulli(block_edge_weight).float()
 
             if sampled_edges.sum() > num_budgets:
-                # Allowed budget is exceeded
+                # Allowed num_budgets is exceeded
                 continue
 
             self.block_edge_weight = sampled_edges
@@ -440,13 +448,13 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         self.block_edge_weight.data.add_(lr * gradient)
 
     @staticmethod
-    def project(budget: int, values: Tensor, eps: float = 1e-7) -> Tensor:
+    def project(num_budgets: int, values: Tensor, eps: float = 1e-7) -> Tensor:
         r"""Project :obj:`values`:
-        :math:`budget \ge \sum \Pi_{[0, 1]}(\text{values})`."""
-        if torch.clamp(values, 0, 1).sum() > budget:
+        :math:`num_budgets \ge \sum \Pi_{[0, 1]}(\text{values})`."""
+        if torch.clamp(values, 0, 1).sum() > num_budgets:
             left = (values - 1).min()
             right = values.max()
-            miu = PRBCDAttack.bisection(values, left, right, budget)
+            miu = PRBCDAttack.bisection(values, left, right, num_budgets)
             values = values - miu
         return torch.clamp(values, min=eps, max=1 - eps)
 

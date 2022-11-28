@@ -1,104 +1,107 @@
-from typing import Optional
-
 import torch
 import torch.nn.functional as F
 from torch import Tensor
 
 
-def margin_loss(score: Tensor, labels: Tensor,
-                mask: Optional[Tensor] = None) -> Tensor:
+def margin_loss(score: Tensor, target: Tensor) -> Tensor:
     r"""Margin loss between true score and highest non-target score:
 
     .. math::
         m = - s_{y} + max_{y' \ne y} s_{y'}
 
     where :math:`m` is the margin :math:`s` the score and :math:`y` the
-    labels.
+    target.
 
-    Args:
-        score (Tensor): Some score (e.g. logits) of shape
-            :obj:`[n_elem, dim]`.
-        labels (LongTensor): The labels of shape :obj:`[n_elem]`.
-        mask (Tensor, optional): To select subset of `score` and
-            `labels` of shape :obj:`[n_select]`. Defaults to None.
+    Parameters
+    ----------
+    score : Tensor
+        some score (e.g. prediction) of shape :obj:`[n_elem, dim]`.
+    target : LongTensor
+        the target of shape :obj:`[n_elem]`.
 
-    :rtype: (Tensor)
+    Returns
+    -------
+    Tensor
+        the calculated margins
     """
-    if mask is not None:
-        score = score[mask]
-        labels = labels[mask]
 
     linear_idx = torch.arange(score.size(0), device=score.device)
-    true_score = score[linear_idx, labels]
+    true_score = score[linear_idx, target]
 
     score = score.clone()
-    score[linear_idx, labels] = float('-Inf')
+    score[linear_idx, target] = float('-Inf')
     best_non_target_score = score.amax(dim=-1)
 
     margin = best_non_target_score - true_score
     return margin
 
 
-def tanh_margin_loss(prediction: Tensor, labels: Tensor,
-                     mask: Optional[Tensor] = None) -> Tensor:
-    """Calculate tanh margin loss, a node-classification loss that focuses
+def tanh_margin_loss(prediction: Tensor, target: Tensor) -> Tensor:
+    r"""Calculate tanh margin loss, a node-classification loss that focuses
     on nodes next to decision boundary.
 
-    Args:
-        prediction (Tensor): Prediction of shape :obj:`[n_elem, dim]`.
-        labels (LongTensor): The labels of shape :obj:`[n_elem]`.
-        mask (Tensor, optional): To select subset of `score` and
-            `labels` of shape :obj:`[n_select]`. Defaults to None.
+    Parameters
+    ----------
+    prediction : Tensor
+        prediction of shape :obj:`[n_elem, dim]`.
+    target : LongTensor
+        the target of shape :obj:`[n_elem]`.
 
-    :rtype: (Tensor)
+    Returns
+    -------
+    Tensor
+        the calculated loss
     """
-    log_logits = F.log_softmax(prediction, dim=-1)
-    margin = margin_loss(log_logits, labels, mask)
+    prediction = F.log_softmax(prediction, dim=-1)
+    margin = margin_loss(prediction, target)
     loss = torch.tanh(margin).mean()
     return loss
 
 
-def probability_margin_loss(prediction: Tensor, labels: Tensor,
-                            mask: Optional[Tensor] = None) -> Tensor:
-    """Calculate probability margin loss, a node-classification loss that
+def probability_margin_loss(prediction: Tensor, target: Tensor) -> Tensor:
+    r"""Calculate probability margin loss, a node-classification loss that
     focuses  on nodes next to decision boundary. See `Are Defenses for
     Graph Neural Networks Robust?
     <https://www.cs.cit.tum.de/daml/are-gnn-defenses-robust>`_ for details.
 
-    Args:
-        prediction (Tensor): Prediction of shape :obj:`[n_elem, dim]`.
-        labels (LongTensor): The labels of shape :obj:`[n_elem]`.
-        mask (Tensor, optional): To select subset of `score` and
-            `labels` of shape :obj:`[n_select]`. Defaults to None.
+    Parameters
+    ----------
+    prediction : Tensor
+        prediction of shape :obj:`[n_elem, dim]`.
+    target : LongTensor
+        the target of shape :obj:`[n_elem]`.
 
-    :rtype: (Tensor)
+    Returns
+    -------
+    Tensor
+        the calculated loss
     """
-    logits = F.softmax(prediction, dim=-1)
-    margin = margin_loss(logits, labels, mask)
+    prediction = F.softmax(prediction, dim=-1)
+    margin = margin_loss(prediction, target)
     return margin.mean()
 
 
-def masked_cross_entropy(log_logits: Tensor, labels: Tensor,
-                         mask: Optional[Tensor] = None) -> Tensor:
-    """Calculate masked cross entropy loss, a node-classification loss that
+def masked_cross_entropy(prediction: Tensor, target: Tensor) -> Tensor:
+    r"""Calculate masked cross entropy loss, a node-classification loss that
     focuses on nodes next to decision boundary.
 
-    Args:
-        log_logits (Tensor): Log logits of shape :obj:`[n_elem, dim]`.
-        labels (LongTensor): The labels of shape :obj:`[n_elem]`.
-        mask (Tensor, optional): To select subset of `score` and
-            `labels` of shape :obj:`[n_select]`. Defaults to None.
+    Parameters
+    ----------
+    prediction : Tensor
+        prediction of shape :obj:`[n_elem, dim]`.
+    target : LongTensor
+        the target of shape :obj:`[n_elem]`.
 
-    :rtype: (Tensor)
+    Returns
+    -------
+    Tensor
+        the calculated loss
     """
-    if mask is not None:
-        log_logits = log_logits[mask]
-        labels = labels[mask]
 
-    is_correct = log_logits.argmax(-1) == labels
+    is_correct = prediction.argmax(-1) == target
     if is_correct.any():
-        log_logits = log_logits[is_correct]
-        labels = labels[is_correct]
+        prediction = prediction[is_correct]
+        target = target[is_correct]
 
-    loss = F.cross_entropy(log_logits, labels)
+    loss = F.cross_entropy(prediction, target)
     return loss

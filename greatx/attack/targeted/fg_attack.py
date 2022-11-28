@@ -103,14 +103,7 @@ class FGAttack(TargetedAttacker, Surrogate):
         if feature_attack:
             self._check_feature_matrix_binary()
 
-        if target_label is None:
-            if self.target_label is None:
-                raise RuntimeError("please specify argument `target_label` "
-                                   "as the node label does not exist.")
-            target_label = self.target_label.view(-1)
-        else:
-            target_label = torch.as_tensor(target_label, device=self.device,
-                                           dtype=torch.long).view(-1)
+        target_label = self.target_label.view(-1)
 
         modified_adj = self.modified_adj
         modified_feat = self.modified_feat

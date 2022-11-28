@@ -32,11 +32,16 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         'eps': 1e-7
     }
 
-    def setup_surrogate(self, surrogate: torch.nn.Module, victim_nodes: Tensor,
-                        victim_labels: Optional[Tensor] = None, *,
-                        eps: float = 1.0):
+    def setup_surrogate(
+        self,
+        surrogate: torch.nn.Module,
+        victim_nodes: Tensor,
+        victim_labels: Optional[Tensor] = None,
+        *,
+        tau: float = 1.0,
+    ) -> "PRBCDAttack":
 
-        Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps,
+        Surrogate.setup_surrogate(self, surrogate=surrogate, tau=tau,
                                   freeze=True)
 
         if victim_nodes.dtype == torch.bool:
@@ -48,7 +53,7 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         self.victim_labels = victim_labels.to(self.device)
         return self
 
-    def reset(self):
+    def reset(self) -> "PRBCDAttack":
         super().reset()
         self.current_block = None
         self.block_edge_index = None
@@ -116,6 +121,7 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         # Loop over the epochs (Algorithm 1, line 5)
         for step in tqdm(range(self.num_budgets), desc='Peturbing graph...',
                          disable=disable):
+
             loss, gradient = self.compute_gradients(self.feat, self.label,
                                                     self.victim_nodes,
                                                     **kwargs)

@@ -9,8 +9,11 @@ from torch.autograd import grad
 from tqdm.auto import tqdm
 
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
-from greatx.attack.untargeted.pgd_attack import (cross_entropy_loss,
-                                                 margin_loss, symmetric)
+from greatx.attack.untargeted.pgd_attack import (
+    cross_entropy_loss,
+    margin_loss,
+    symmetric,
+)
 from greatx.nn.models.surrogate import Surrogate
 
 
@@ -80,10 +83,10 @@ class PGDAttack(TargetedAttacker, Surrogate):
         self,
         surrogate: torch.nn.Module,
         *,
-        eps: float = 1.0,
+        tau: float = 1.0,
         freeze: bool = True,
     ) -> "PGDAttack":
-        Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps,
+        Surrogate.setup_surrogate(self, surrogate=surrogate, tau=tau,
                                   freeze=freeze)
         self.adj = self.get_dense_adj()
         return self
@@ -179,7 +182,7 @@ class PGDAttack(TargetedAttacker, Surrogate):
                                            dtype=torch.long).view(-1)
 
         if ce_loss:
-            self.loss_fn = partial(cross_entropy_loss, eps=self.eps)
+            self.loss_fn = partial(cross_entropy_loss, tau=self.tau)
         else:
             self.loss_fn = margin_loss
         perturbations = self.perturbations

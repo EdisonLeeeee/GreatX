@@ -80,10 +80,10 @@ class SGAttack(TargetedAttacker, Surrogate):
     _allow_singleton = True
 
     @torch.no_grad()
-    def setup_surrogate(self, surrogate: torch.nn.Module, eps: float = 5.0,
+    def setup_surrogate(self, surrogate: torch.nn.Module, tau: float = 5.0,
                         freeze: bool = True, K: int = 2):
 
-        Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps,
+        Surrogate.setup_surrogate(self, surrogate=surrogate, tau=tau,
                                   freeze=freeze)
 
         self.logits = self.surrogate(self.feat, self.edge_index,
@@ -260,7 +260,7 @@ class SGAttack(TargetedAttacker, Surrogate):
         edge_weight = norm[row] * edge_weight * norm[col]
 
         logit = self.surrogate(self.feat, subgraph.edge_index, edge_weight)
-        logit = logit[target].view(1, -1) / self.eps
+        logit = logit[target].view(1, -1) / self.tau
         logit = F.log_softmax(logit, dim=1)
         loss = F.nll_loss(logit, target_label) - \
             F.nll_loss(logit, best_wrong_label)

@@ -201,7 +201,7 @@ class FGAttack(TargetedAttacker, Surrogate):
                           target_label):
 
         logit = self.surrogate(modified_feat, modified_adj)[target].view(
-            1, -1) / self.eps
+            1, -1) / self.tau
         loss = F.cross_entropy(logit, target_label)
 
         if self.structure_attack and self.feature_attack:

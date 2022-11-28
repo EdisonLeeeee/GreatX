@@ -85,9 +85,9 @@ class IGAttack(UntargetedAttacker, Surrogate):
 
     def setup_surrogate(self, surrogate: torch.nn.Module, victim_nodes: Tensor,
                         victim_labels: Optional[Tensor] = None, *,
-                        eps: float = 1.0):
+                        tau: float = 1.0):
 
-        Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps,
+        Surrogate.setup_surrogate(self, surrogate=surrogate, tau=tau,
                                   freeze=True)
 
         if victim_nodes.dtype == torch.bool:
@@ -250,13 +250,13 @@ class IGAttack(UntargetedAttacker, Surrogate):
     def compute_structure_gradients(self, adj_step, feat, victim_nodes,
                                     victim_labels):
 
-        logit = self.surrogate(feat, adj_step)[victim_nodes] / self.eps
+        logit = self.surrogate(feat, adj_step)[victim_nodes] / self.tau
         loss = F.cross_entropy(logit, victim_labels)
         return grad(loss, adj_step, create_graph=False)[0]
 
     def compute_feature_gradients(self, adj, feat_step, victim_nodes,
                                   victim_labels):
 
-        logit = self.surrogate(feat_step, adj)[victim_nodes] / self.eps
+        logit = self.surrogate(feat_step, adj)[victim_nodes] / self.tau
         loss = F.cross_entropy(logit, victim_labels)
         return grad(loss, feat_step, create_graph=False)[0]

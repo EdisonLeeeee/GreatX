@@ -125,9 +125,9 @@ class FGBackdoor(BackdoorAttacker, Surrogate):
 
     """
     def setup_surrogate(self, surrogate: nn.Module, *,
-                        eps: float = 1.0) -> "FGBackdoor":
+                        tau: float = 1.0) -> "FGBackdoor":
 
-        Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps,
+        Surrogate.setup_surrogate(self, surrogate=surrogate, tau=tau,
                                   freeze=True)
         W = []
         for para in self.surrogate.parameters():
@@ -171,7 +171,7 @@ class FGBackdoor(BackdoorAttacker, Surrogate):
                           augmented_edge_weight).relu()
             h = spmm(h1_aug @ self.w2, trigger_edge_index, trigger_edge_weight)
             h += spmm(h1 @ self.w2, edge_index, edge_weight_with_trigger)
-            h = h[:N] / self.eps
+            h = h[:N] / self.tau
             loss = F.cross_entropy(h, target_labels)
             gradients = torch.autograd.grad(-loss, trigger)[0] * (1. - trigger)
             trigger.data[gradients.argmax()].fill_(1.0)

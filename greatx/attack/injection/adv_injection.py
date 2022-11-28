@@ -140,7 +140,7 @@ class AdvInjection(InjectionAttacker, Surrogate):
              injected_edge_index.flip(0)], dim=1)
         edge_weight = torch.cat(
             [edge_weight, injected_edge_weight.repeat(2)], dim=0)
-        logit = self.surrogate(x, edge_index, edge_weight)[targets] / self.eps
+        logit = self.surrogate(x, edge_index, edge_weight)[targets] / self.tau
         loss = F.cross_entropy(logit, target_labels)
 
         return grad(loss, [injected_edge_weight, injected_feats],

@@ -79,7 +79,7 @@ class PGDAttack(UntargetedAttacker, Surrogate):
         victim_nodes: Tensor,
         ground_truth: bool = True,
         *,
-        eps: float = 1.0,
+        tau: float = 1.0,
         freeze: bool = True,
     ) -> "PGDAttack":
         """Setup the surrogate model for adversarial attack.
@@ -94,7 +94,7 @@ class PGDAttack(UntargetedAttacker, Surrogate):
             whether to use ground-truth label for victim nodes,
             if False, the node labels are estimated by the surrogate model,
             by default True
-        eps : float, optional
+        tau : float, optional
             the temperature of softmax activation, by default 1.0
         freeze : bool, optional
             whether to free the surrogate model to avoid the
@@ -106,7 +106,7 @@ class PGDAttack(UntargetedAttacker, Surrogate):
             the attacker itself
         """
 
-        Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps,
+        Surrogate.setup_surrogate(self, surrogate=surrogate, tau=tau,
                                   freeze=freeze)
 
         if victim_nodes.dtype == torch.bool:
@@ -184,7 +184,7 @@ class PGDAttack(UntargetedAttacker, Surrogate):
                        feature_attack=feature_attack)
 
         if ce_loss:
-            self.loss_fn = partial(cross_entropy_loss, eps=self.eps)
+            self.loss_fn = partial(cross_entropy_loss, tau=self.tau)
         else:
             self.loss_fn = margin_loss
         perturbations = self.perturbations
@@ -268,5 +268,5 @@ def margin_loss(logit: Tensor, y_true: Tensor) -> Tensor:
 
 
 def cross_entropy_loss(logit: Tensor, y_true: Tensor,
-                       eps: float = 1.0) -> Tensor:
-    return F.cross_entropy(logit / eps, y_true)
+                       tau: float = 1.0) -> Tensor:
+    return F.cross_entropy(logit / tau, y_true)

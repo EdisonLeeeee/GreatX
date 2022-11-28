@@ -1,13 +1,10 @@
 from collections import defaultdict
-from typing import Any, Callable, Dict, Iterable, Optional, Tuple, Union
+from typing import Any, Callable, Dict, Optional, Tuple, Union
 
 import numpy as np
 import torch
-import torch.nn.functional as F
 from torch import Tensor
-from torch.autograd import grad
 from torch_geometric.utils import coalesce, to_undirected
-from tqdm import tqdm
 from tqdm.auto import tqdm
 
 from greatx.attack.untargeted.untargeted_attacker import UntargetedAttacker
@@ -18,7 +15,6 @@ from greatx.functional import (
     tanh_margin_loss,
 )
 from greatx.nn.models.surrogate import Surrogate
-from greatx.utils import singleton_mask
 
 # (predictions, labels, ids/mask) -> Tensor with one element
 LOSS_TYPE = Callable[[Tensor, Tensor, Optional[Tensor]], Tensor]
@@ -59,14 +55,21 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         self.block_edge_weight = None
         return self
 
-    def attack(self, num_budgets: Union[int, float] = 0.05,
-               block_size: int = 250_000, epochs: int = 125,
-               epochs_resampling: int = 100,
-               loss: Optional[Union[str, LOSS_TYPE]] = 'prob_margin',
-               metric: Optional[Union[str,
-                                      LOSS_TYPE]] = None, lr: float = 1_000, *,
-               structure_attack: bool = True, feature_attack: bool = False,
-               disable: bool = False, **kwargs) -> "PRBCDAttack":
+    def attack(
+        self,
+        num_budgets: Union[int, float] = 0.05,
+        *,
+        block_size: int = 250_000,
+        epochs: int = 125,
+        epochs_resampling: int = 100,
+        loss: Optional[Union[str, LOSS_TYPE]] = 'prob_margin',
+        metric: Optional[Union[str, LOSS_TYPE]] = None,
+        lr: float = 2_000,
+        structure_attack: bool = True,
+        feature_attack: bool = False,
+        disable: bool = False,
+        **kwargs,
+    ) -> "PRBCDAttack":
 
         super().attack(num_budgets=num_budgets,
                        structure_attack=structure_attack,
@@ -104,18 +107,18 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         # For collecting attack statistics
         self.attack_statistics = defaultdict(list)
 
-        # Prepare attack and define `self.iterable` to iterate over
-        budget = self.budget
+        budget = self.num_budgets
 
         self.best_metric = float('-Inf')
         # Sample initial search space (Algorithm 1, line 3-4)
-        self._sample_random_block(budget)
+        self.sample_random_block(budget)
 
         # Loop over the epochs (Algorithm 1, line 5)
-        for step in tqdm(range(self.budgets), desc='Peturbing graph...',
+        for step in tqdm(range(self.num_budgets), desc='Peturbing graph...',
                          disable=disable):
-            loss, gradient = self._forward_and_gradient(
-                self.feat, self.label, self.victim_nodes, **kwargs)
+            loss, gradient = self.compute_gradients(self.feat, self.label,
+                                                    self.victim_nodes,
+                                                    **kwargs)
 
             scalars = self._update(step, gradient, self.feat, self.label,
                                    budget, self.victim_nodes, **kwargs)
@@ -128,39 +131,29 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         return self
 
     @torch.no_grad()
-    def _prepare(self, budget: int) -> Iterable[int]:
-        """Prepare attack."""
-        # For early stopping (not explicitly covered by pseudo code)
-        self.best_metric = float('-Inf')
-
-        # Sample initial search space (Algorithm 1, line 3-4)
-        self._sample_random_block(budget)
-
-        steps = range(self.epochs)
-        return steps
-
-    @torch.no_grad()
     def _update(self, epoch: int, gradient: Tensor, x: Tensor, labels: Tensor,
                 budget: int, idx_attack: Optional[Tensor] = None,
                 **kwargs) -> Dict[str, float]:
         """Update edge weights given gradient."""
         # Gradient update step (Algorithm 1, line 7)
-        self._update_edge_weights(budget, epoch, gradient)
+        self.update_edge_weights(budget, epoch, gradient)
         # For monitoring
         pmass_update = torch.clamp(self.block_edge_weight, 0, 1)
         # Projection to stay within relaxed `L_0` budget
         # (Algorithm 1, line 8)
-        self.block_edge_weight = self._project(budget, self.block_edge_weight,
-                                               self.coeffs['eps'])
+        self.block_edge_weight = self.project(budget, self.block_edge_weight,
+                                              self.coeffs['eps'])
 
         # For monitoring
         scalars = dict(
             prob_mass_after_update=pmass_update.sum().item(),
             prob_mass_after_update_max=pmass_update.max().item(),
-            prob_mass_after_projection=self.block_edge_weight.sum().item(),
-            prob_mass_after_projection_nonzero_weights=(
+            prob_mass_afterprojection=self.block_edge_weight.sum().item(),
+            prob_mass_afterprojection_nonzero_weights=(
                 self.block_edge_weight > self.coeffs['eps']).sum().item(),
-            prob_mass_after_projection_max=self.block_edge_weight.max().item())
+            prob_mass_afterprojection_max=self.block_edge_weight.max().item(),
+        )
+
         if not self.coeffs['with_early_stopping']:
             return scalars
 
@@ -169,10 +162,10 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         topk_block_edge_weight = torch.zeros_like(self.block_edge_weight)
         topk_block_edge_weight[torch.topk(self.block_edge_weight,
                                           budget).indices] = 1
-        edge_index, edge_weight = self._get_modified_adj(
+        edge_index, edge_weight = self.get_modified_graph(
             self.edge_index, self.edge_weights, self.block_edge_index,
             topk_block_edge_weight)
-        prediction = self._forward(x, edge_index, edge_weight, **kwargs)
+        prediction = self.surrogate(x, edge_index, edge_weight, **kwargs)
         metric = self.metric(prediction, labels, idx_attack)
 
         # Save best epoch for early stopping
@@ -185,7 +178,7 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
 
         # Resampling of search space (Algorithm 1, line 9-14)
         if epoch < self.epochs_resampling - 1:
-            self._resample_random_block(budget)
+            self.resample_random_block(budget)
         elif epoch == self.epochs_resampling - 1:
             # Retrieve best epoch if early stopping is active
             # (not explicitly covered by pseudo code)
@@ -210,35 +203,34 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
             self.block_edge_weight = self.best_pert_edge_weight.to(self.device)
 
         # Sample final discrete graph (Algorithm 1, line 16)
-        edge_index, flipped_edges = self._sample_final_edges(
+        flipped_edges, edge_weight = self.sample_final_edges(
             x, labels, budget, idx_attack=idx_attack, **kwargs)
 
-        assert flipped_edges.size(1) <= self.budget, (
+        assert flipped_edges.size(1) <= self.num_budgets, (
             f'# perturbed edges {flipped_edges.size(1)} '
-            f'exceeds budget {self.budget}')
+            f'exceeds budget {self.num_budgets}')
 
-        row, col = flipped_edges
-        # TODO: zip*
-        for it, (u, v) in enumerate(zip(row.tolist(), col.tolist())):
-            if self.adj[u, v] > 0:
+        row, col = flipped_edges.tolist()
+        for it, (u, v, w) in enumerate(zip(row, col, edge_weight.tolist())):
+            if w > 0:
                 self.remove_edge(u, v, it)
             else:
                 self.add_edge(u, v, it)
 
-    def _forward_and_gradient(self, x: Tensor, labels: Tensor,
-                              victim_nodes: Optional[Tensor] = None,
-                              **kwargs) -> Tuple[Tensor, Tensor]:
+    def compute_gradients(self, x: Tensor, labels: Tensor,
+                          victim_nodes: Optional[Tensor] = None,
+                          **kwargs) -> Tuple[Tensor, Tensor]:
         """Forward and update edge weights."""
         self.block_edge_weight.requires_grad_()
 
         # Retrieve sparse perturbed adjacency matrix `A \oplus p_{t-1}`
         # (Algorithm 1, line 6 / Algorithm 2, line 7)
-        edge_index, edge_weight = self._get_modified_adj(
+        edge_index, edge_weight = self.get_modified_graph(
             self.edge_index, self.edge_weights, self.block_edge_index,
             self.block_edge_weight)
 
         # Get prediction (Algorithm 1, line 6 / Algorithm 2, line 7)
-        prediction = self.model(x, edge_index, edge_weight, **kwargs)
+        prediction = self.surrogate(x, edge_index, edge_weight, **kwargs)
         # Calculate loss combining all each node
         # (Algorithm 1, line 7 / Algorithm 2, line 8)
         loss = self.loss(prediction, labels, victim_nodes)
@@ -248,7 +240,7 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
 
         return loss, gradient
 
-    def _get_modified_adj(
+    def get_modified_graph(
         self,
         edge_index: Tensor,
         edge_weight: Tensor,
@@ -270,8 +262,8 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
 
         # Allow (soft) removal of edges
         is_edge_in_clean_adj = modified_edge_weight > 1
-        modified_edge_weight[is_edge_in_clean_adj] = (
-            2 - modified_edge_weight[is_edge_in_clean_adj])
+        modified_edge_weight[is_edge_in_clean_adj] = 2 - modified_edge_weight[
+            is_edge_in_clean_adj]
 
         return modified_edge_index, modified_edge_weight
 
@@ -283,7 +275,7 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
             self.block_edge_weight = self.block_edge_weight[is_not_sl]
 
     @torch.no_grad()
-    def _sample_random_block(self, budget: int = 0):
+    def sample_random_block(self, budget: int = 0):
         for _ in range(self.coeffs['max_trials_sampling']):
             num_possible_edges = self._num_possible_edges(
                 self.num_nodes, self.is_undirected_graph)
@@ -291,12 +283,14 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
                                                (self.block_size, ),
                                                device=self.device)
             self.current_block = torch.unique(self.current_block, sorted=True)
+
             if self.is_undirected_graph:
                 self.block_edge_index = self._linear_to_triu_idx(
                     self.num_nodes, self.current_block)
             else:
                 self.block_edge_index = self._linear_to_full_idx(
                     self.num_nodes, self.current_block)
+
                 self._filter_self_loops_in_block(with_weight=False)
 
             self.block_edge_weight = torch.full(self.current_block.shape,
@@ -304,10 +298,11 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
                                                 device=self.device)
             if self.current_block.size(0) >= budget:
                 return
+
         raise RuntimeError('Sampling random block was not successful. '
                            'Please decrease `budget`.')
 
-    def _resample_random_block(self, budget: int):
+    def resample_random_block(self, budget: int):
         # Keep at most half of the block (i.e. resample low weights)
         sorted_idx = torch.argsort(self.block_edge_weight)
         keep_above = (self.block_edge_weight <=
@@ -342,6 +337,7 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
             self.block_edge_weight = torch.full(self.current_block.shape,
                                                 self.coeffs['eps'],
                                                 device=self.device)
+
             self.block_edge_weight[
                 unique_idx[:sorted_idx.size(0)]] = block_edge_weight_prev
 
@@ -353,9 +349,10 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         raise RuntimeError('Sampling random block was not successful.'
                            'Please decrease `budget`.')
 
-    def _sample_final_edges(self, x: Tensor, labels: Tensor, budget: int,
-                            idx_attack: Optional[Tensor] = None,
-                            **kwargs) -> Tuple[Tensor, Tensor]:
+    @torch.no_grad()
+    def sample_final_edges(self, x: Tensor, labels: Tensor, budget: int,
+                           idx_attack: Optional[Tensor] = None,
+                           **kwargs) -> Tuple[Tensor, Tensor]:
         best_metric = float('-Inf')
         block_edge_weight = self.block_edge_weight
         block_edge_weight[block_edge_weight <= self.coeffs['eps']] = 0
@@ -372,12 +369,13 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
             if sampled_edges.sum() > budget:
                 # Allowed budget is exceeded
                 continue
+
             self.block_edge_weight = sampled_edges
 
-            edge_index, edge_weight = self._get_modified_adj(
+            edge_index, edge_weight = self.get_modified_graph(
                 self.edge_index, self.edge_weights, self.block_edge_index,
                 self.block_edge_weight)
-            prediction = self._forward(x, edge_index, edge_weight, **kwargs)
+            prediction = self.surrogate(x, edge_index, edge_weight, **kwargs)
             metric = self.metric(prediction, labels, idx_attack)
 
             # Save best sample
@@ -385,20 +383,11 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
                 best_metric = metric
                 best_edge_weight = self.block_edge_weight.clone().cpu()
 
-        # Recover best sample
-        self.block_edge_weight = best_edge_weight.to(self.device)
         flipped_edges = self.block_edge_index[:,
                                               torch.where(best_edge_weight)[0]]
+        return flipped_edges, best_edge_weight
 
-        edge_index, edge_weight = self._get_modified_adj(
-            self.edge_index, self.edge_weights, self.block_edge_index,
-            self.block_edge_weight)
-        edge_mask = edge_weight == 1
-        edge_index = edge_index[:, edge_mask]
-
-        return edge_index, flipped_edges
-
-    def _update_edge_weights(self, budget: int, epoch: int, gradient: Tensor):
+    def update_edge_weights(self, budget: int, epoch: int, gradient: Tensor):
         # The learning rate is refined heuristically, s.t. (1) it is
         # independent of the number of perturbations (assuming an undirected
         # adjacency matrix) and (2) to decay learning rate during fine-tuning
@@ -408,19 +397,19 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         self.block_edge_weight.data.add_(lr * gradient)
 
     @staticmethod
-    def _project(budget: int, values: Tensor, eps: float = 1e-7) -> Tensor:
+    def project(budget: int, values: Tensor, eps: float = 1e-7) -> Tensor:
         r"""Project :obj:`values`:
         :math:`budget \ge \sum \Pi_{[0, 1]}(\text{values})`."""
         if torch.clamp(values, 0, 1).sum() > budget:
             left = (values - 1).min()
             right = values.max()
-            miu = PRBCDAttack._bisection(values, left, right, budget)
+            miu = PRBCDAttack.bisection(values, left, right, budget)
             values = values - miu
         return torch.clamp(values, min=eps, max=1 - eps)
 
     @staticmethod
-    def _bisection(edge_weights: Tensor, a: float, b: float, n_pert: int,
-                   eps=1e-5, max_iter=1e3) -> Tensor:
+    def bisection(edge_weights: Tensor, a: float, b: float, n_pert: int,
+                  eps=1e-5, max_iter=1e3) -> Tensor:
         """Bisection search for projection."""
         def shift(offset: float):
             return (torch.clamp(edge_weights - offset, 0, 1).sum() - n_pert)
@@ -450,8 +439,8 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
 
     @staticmethod
     def _linear_to_triu_idx(n: int, lin_idx: Tensor) -> Tensor:
-        """Linear index to upper triangular matrix without diagonal. This is
-        similar to
+        """Linear index to upper triangular matrix without diagonal.
+        This is similar to
         https://stackoverflow.com/questions/242711/algorithm-for-index-numbers-of-triangular-matrix-coefficients/28116498#28116498
         with number nodes decremented and col index incremented by one."""
         nn = n * (n - 1)
@@ -468,33 +457,6 @@ class PRBCDAttack(UntargetedAttacker, Surrogate):
         col_idx = lin_idx % n
         return torch.stack((row_idx, col_idx))
 
-    def structure_score(self, modified_adj, adj_grad):
-        score = adj_grad * (1 - 2 * modified_adj)
-        score -= score.min()
-        score = torch.triu(score, diagonal=1)
-        if not self._allow_singleton:
-            # Set entries to 0 that could lead to singleton nodes.
-            score *= singleton_mask(modified_adj)
-        return score.view(-1)
-
-    def feature_score(self, modified_feat, feat_grad):
-        score = feat_grad * (1 - 2 * modified_feat)
-        score -= score.min()
-        return score.view(-1)
-
-    def compute_gradients(self, modified_adj, modified_feat, victim_nodes,
-                          victim_labels):
-
-        logit = self.surrogate(modified_feat,
-                               modified_adj)[victim_nodes] / self.eps
-        loss = F.cross_entropy(logit, victim_labels)
-
-        if self.structure_attack and self.feature_attack:
-            return grad(loss, [modified_adj, modified_feat],
-                        create_graph=False)
-
-        if self.structure_attack:
-            return grad(loss, modified_adj, create_graph=False)[0], None
-
-        if self.feature_attack:
-            return None, grad(loss, modified_feat, create_graph=False)[0]
+    def _append_statistics(self, mapping: Dict[str, Any]):
+        for key, value in mapping.items():
+            self.attack_statistics[key].append(value)

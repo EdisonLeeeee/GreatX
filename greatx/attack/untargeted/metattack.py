@@ -73,14 +73,14 @@ class Metattack(UntargetedAttacker, Surrogate):
                         labeled_nodes: Tensor, unlabeled_nodes: Tensor,
                         lr: float = 0.1, epochs: int = 100,
                         momentum: float = 0.9, lambda_: float = 0., *,
-                        eps: float = 1.0):
+                        tau: float = 1.0):
 
         if lambda_ not in (0., 0.5, 1.):
             raise ValueError(
                 "Invalid argument `lambda_`, allowed values "
                 "[0: (meta-self), 1: (meta-train), 0.5: (meta-both)].")
 
-        Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps,
+        Surrogate.setup_surrogate(self, surrogate=surrogate, tau=tau,
                                   freeze=False, required=GCN)
 
         if labeled_nodes.dtype == torch.bool:
@@ -262,7 +262,7 @@ class Metattack(UntargetedAttacker, Surrogate):
 
     def compute_gradients(self, modified_adj, modified_feat):
 
-        logit = self(modified_adj, modified_feat) / self.eps
+        logit = self(modified_adj, modified_feat) / self.tau
 
         if self.lambda_ == 1:
             loss = F.cross_entropy(logit[self.labeled_nodes], self.y_train)

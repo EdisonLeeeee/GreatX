@@ -25,7 +25,7 @@ class Surrogate(Module):
         self.device = torch.device(device)
 
     def setup_surrogate(
-            self, surrogate: Module, *, eps: float = 1.0, freeze: bool = True,
+            self, surrogate: Module, *, tau: float = 1.0, freeze: bool = True,
             required: Union[Module, Tuple[Module]] = None) -> "Surrogate":
         """Method used to initialize the (trained) surrogate model.
 
@@ -33,7 +33,7 @@ class Surrogate(Module):
         ----------
         surrogate : Module
             the input surrogate module
-        eps : float, optional
+        tau : float, optional
             temperature used for softmax activation, by default 1.0
         freeze : bool, optional
             whether to freeze the model's parameters to save time,
@@ -75,7 +75,7 @@ class Surrogate(Module):
                 layer.cached = False
 
         self.surrogate = surrogate.to(self.device)
-        self.eps = eps
+        self.tau = tau
 
         if freeze:
             self.freeze_surrogate()

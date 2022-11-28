@@ -260,8 +260,12 @@ class FlipAttacker(Attacker):
         return BunchDict(added=added, removed=removed, all=_all)
 
     @lru_cache(maxsize=1)
-    def data(self, edge_ratio: float = 1.0, feat_ratio: float = 1.0,
-             symmetric: bool = True) -> Data:
+    def data(
+        self,
+        edge_ratio: float = 1.0,
+        feat_ratio: float = 1.0,
+        symmetric: bool = True,
+    ) -> Data:
         """Get the attacked graph denoted by
         PyG-like data instance. Note that this method
         uses LRU cache for efficiency, the computation is
@@ -353,36 +357,6 @@ class FlipAttacker(Attacker):
 
         self._allow_singleton = state
 
-    def set_allow_structure_attack(self, state: bool):
-        """Set whether the attacker allow attacks on
-        the topology of the graph.
-
-        Parameters
-        ----------
-        state : bool
-            the flag to set
-
-        Example
-        -------
-        >>> attacker.set_allow_structure_attack(True)
-        """
-        self._allow_structure_attack = state
-
-    def set_allow_feature_attack(self, state: bool):
-        """Set whether the attacker allow attacks on
-        the features of nodes in the graph.
-
-        Parameters
-        ----------
-        state : bool
-            the flag to set
-
-        Example
-        -------
-        >>> attacker.set_allow_feature_attack(True)
-        """
-        self._allow_feature_attack = state
-
     def is_singleton_edge(self, u: int, v: int) -> bool:
         """Check if the edge is an singleton edge that, if removed,
         would result in a singleton node in the graph.
@@ -425,8 +399,8 @@ class FlipAttacker(Attacker):
 
         Returns
         -------
-        bool: `True` if the u!=v and edge (u,v), (v,u) is not selected,
-        otherwise `False`.
+        bool: :obj:`True` if the u!=v and edge (u,v), (v,u) is not selected,
+        otherwise :obj:`False`.
         """
         _removed_edges = self._removed_edges
         _added_edges = self._added_edges

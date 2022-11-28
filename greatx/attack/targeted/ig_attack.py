@@ -314,12 +314,12 @@ class IGAttack(TargetedAttacker, Surrogate):
     def compute_structure_gradients(self, feat, adj_step, target,
                                     target_label):
 
-        logit = self.surrogate(feat, adj_step)[target].view(1, -1) / self.eps
+        logit = self.surrogate(feat, adj_step)[target].view(1, -1) / self.tau
         loss = F.cross_entropy(logit, target_label)
         return grad(loss, adj_step, create_graph=False)[0]
 
     def compute_feature_gradients(self, feat_step, adj, target, target_label):
 
-        logit = self.surrogate(feat_step, adj)[target].view(1, -1) / self.eps
+        logit = self.surrogate(feat_step, adj)[target].view(1, -1) / self.tau
         loss = F.cross_entropy(logit, target_label)
         return grad(loss, feat_step, create_graph=False)[0]

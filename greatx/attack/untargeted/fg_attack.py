@@ -79,9 +79,9 @@ class FGAttack(UntargetedAttacker, Surrogate):
 
     def setup_surrogate(self, surrogate: torch.nn.Module, victim_nodes: Tensor,
                         victim_labels: Optional[Tensor] = None, *,
-                        eps: float = 1.0):
+                        tau: float = 1.0):
 
-        Surrogate.setup_surrogate(self, surrogate=surrogate, eps=eps,
+        Surrogate.setup_surrogate(self, surrogate=surrogate, tau=tau,
                                   freeze=True)
 
         if victim_nodes.dtype == torch.bool:
@@ -176,7 +176,7 @@ class FGAttack(UntargetedAttacker, Surrogate):
                           victim_labels):
 
         logit = self.surrogate(modified_feat,
-                               modified_adj)[victim_nodes] / self.eps
+                               modified_adj)[victim_nodes] / self.tau
         loss = F.cross_entropy(logit, victim_labels)
 
         if self.structure_attack and self.feature_attack:

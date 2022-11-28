@@ -76,15 +76,11 @@ class UntargetedAttacker(FlipAttacker):
 
         if feature_attack and not self._allow_feature_attack:
             raise RuntimeError(
-                f"{self.name} does NOT support attacking features. "
-                "If the model can conduct feature attack, "
-                "please call `attacker.set_allow_feature_attack(True)`.")
+                f"{self.name} does NOT support attacking features.")
 
         if structure_attack and not self._allow_structure_attack:
             raise RuntimeError(
-                f"{self.name} does NOT support attacking structures."
-                "If the model can conduct structure attack, "
-                "please call `attacker.set_allow_structure_attack(True)`.")
+                f"{self.name} does NOT support attacking structures.")
 
         num_budgets = self._check_budget(num_budgets,
                                          max_perturbations=self.num_edges // 2)

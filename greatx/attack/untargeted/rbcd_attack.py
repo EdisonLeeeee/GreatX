@@ -62,6 +62,11 @@ class RBCDAttack:
         # Get prediction (Algorithm 1, line 6 / Algorithm 2, line 7)
         prediction = self.surrogate(feat, edge_index,
                                     edge_weight)[victim_nodes]
+
+        # temperature scaling, work for cross-entropy loss
+        if self.tau != 1:
+            prediction /= self.tau
+
         # Calculate loss combining all each node
         # (Algorithm 1, line 7 / Algorithm 2, line 8)
         loss = self.loss(prediction, victim_labels)

@@ -1,8 +1,9 @@
 from collections import defaultdict
-from typing import Callable, Dict, Iterable, Optional, Union
+from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 
 import torch
 from torch import Tensor
+from torch_geometric.utils import coalesce, to_undirected
 from tqdm.auto import tqdm
 
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
@@ -123,11 +124,7 @@ class PRBCDAttack(TargetedAttacker, RBCDAttack, Surrogate):
             device=self.device,
         ).view(-1)
 
-        self.victim_labels = torch.as_tensor(
-            self.target_label,
-            dtype=torch.long,
-            device=self.device,
-        ).view(-1)
+        self.victim_labels = self.target_label.view(-1)
 
         feat, victim_nodes, victim_labels = (self.feat, self.victim_nodes,
                                              self.victim_labels)
@@ -247,3 +244,84 @@ class PRBCDAttack(TargetedAttacker, RBCDAttack, Surrogate):
             self.victim_nodes,
             self.victim_labels,
         )
+
+
+class GRBCDAttack(PRBCDAttack):
+    r"""Greedy Randomized Block Coordinate Descent (GRBCD) adversarial attack
+    from the `Robustness of Graph Neural Networks at Scale
+    <https://www.cs.cit.tum.de/daml/robustness-of-gnns-at-scale>`_ paper.
+
+    GRBCD shares most of the properties and requirements with
+    :class:`PRBCDAttack`. It also uses an efficient gradient based approach.
+    However, it greedily flips edges based on the gradient towards the
+    adjacency matrix.
+    """
+    def prepare(self, num_budgets: int, epochs: int) -> List[int]:
+        """Prepare attack."""
+
+        # Determine the number of edges to be flipped in each attach step/epoch
+        step_size = num_budgets // epochs
+        if step_size > 0:
+            steps = epochs * [step_size]
+            for i in range(num_budgets % epochs):
+                steps[i] += 1
+        else:
+            steps = [1] * num_budgets
+
+        # Sample initial search space (Algorithm 2, line 3-4)
+        self.sample_random_block(step_size)
+
+        return steps
+
+    def reset(self) -> "GRBCDAttack":
+        super().reset()
+        self.flipped_edges = self._edge_index.new_empty(2, 0)
+        return self
+
+    @torch.no_grad()
+    def update(
+        self,
+        step_size: int,
+        gradient: Tensor,
+        num_budgets: int,
+    ) -> Dict[str, Any]:
+        """Update edge weights given gradient."""
+        _, topk_edge_index = torch.topk(gradient, step_size)
+
+        flip_edge_index = self.block_edge_index[:, topk_edge_index].to(
+            self.device)
+        flip_edge_weight = torch.ones(flip_edge_index.size(1),
+                                      device=self.device)
+
+        self.flipped_edges = torch.cat((self.flipped_edges, flip_edge_index),
+                                       axis=-1)
+
+        if self.is_undirected:
+            flip_edge_index, flip_edge_weight = to_undirected(
+                flip_edge_index, flip_edge_weight, num_nodes=self.num_nodes,
+                reduce='mean')
+
+        edge_index = torch.cat((self._edge_index, flip_edge_index), dim=-1)
+        edge_weight = torch.cat((self._edge_weight, flip_edge_weight))
+
+        edge_index, edge_weight = coalesce(edge_index, edge_weight,
+                                           num_nodes=self.num_nodes,
+                                           reduce='sum')
+
+        mask = torch.isclose(edge_weight, torch.tensor(1.))
+
+        self._edge_index = edge_index[:, mask]
+        self._edge_weight = edge_weight[mask]
+
+        # Sample initial search space (Algorithm 2, line 3-4)
+        self.sample_random_block(step_size)
+
+        # Return debug information
+        scalars = {
+            'number_positive_entries_in_gradient': (gradient > 0).sum().item()
+        }
+        return scalars
+
+    def get_flipped_edges(self) -> Tensor:
+        """Clean up and prepare return flipped edges."""
+        return self.flipped_edges

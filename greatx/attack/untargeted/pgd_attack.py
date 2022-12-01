@@ -13,7 +13,105 @@ from greatx.attack.untargeted.untargeted_attacker import UntargetedAttacker
 from greatx.nn.models.surrogate import Surrogate
 
 
-class PGDAttack(UntargetedAttacker, Surrogate):
+class PGD:
+    """Base class for :class:`PGDAttack`."""
+    # PGDAttack cannot ensure that there is not singleton node after attacks.
+    _allow_singleton: bool = True
+
+    def attack(
+        self,
+        num_budgets: int,
+        victim_nodes: Tensor,
+        victim_labels: Tensor,
+        base_lr: float = 0.1,
+        grad_clip: Optional[float] = None,
+        epochs: int = 200,
+        ce_loss: bool = False,
+        sample_epochs: int = 20,
+        disable: bool = False,
+    ) -> "PGD":
+
+        if ce_loss:
+            self.loss_fn = partial(cross_entropy_loss, tau=self.tau)
+        else:
+            self.loss_fn = margin_loss
+
+        perturbations = self.perturbations
+
+        for epoch in tqdm(range(epochs), desc='PGD training...',
+                          disable=disable):
+            lr = base_lr * num_budgets / math.sqrt(epoch + 1)
+            gradients = self.compute_gradients(perturbations, victim_nodes,
+                                               victim_labels)
+
+            gradients = self.clip_grad(gradients, grad_clip)
+
+            with torch.no_grad():
+                perturbations.data.add_(lr * gradients)
+                if perturbations.clamp(0, 1).sum() <= self.num_budgets:
+                    perturbations.clamp_(0, 1)
+                else:
+                    top = perturbations.max().item()
+                    bot = (perturbations.min() - 1).clamp_min(0).item()
+                    mu = (top + bot) / 2
+                    while (top - bot) / 2 > 1e-5:
+                        used_budget = (perturbations - mu).clamp(0, 1).sum()
+                        if used_budget == self.num_budgets:
+                            break
+                        elif used_budget > self.num_budgets:
+                            bot = mu
+                        else:
+                            top = mu
+                        mu = (top + bot) / 2
+                    perturbations.sub_(mu).clamp_(0, 1)
+
+        best_loss = -np.inf
+        best_pert = None
+
+        perturbations.detach_()
+        for it in tqdm(range(sample_epochs), desc='Bernoulli sampling...',
+                       disable=disable):
+            sampled = perturbations.bernoulli()
+            if sampled.count_nonzero() <= self.num_budgets:
+                loss = self.compute_loss(symmetric(sampled), victim_nodes,
+                                         victim_labels)
+                if best_loss < loss:
+                    best_loss = loss
+                    best_pert = sampled
+
+        row, col = torch.where(best_pert > 0.)
+        for it, (u, v) in enumerate(zip(row.tolist(), col.tolist())):
+            if self.adj[u, v] > 0:
+                self.remove_edge(u, v, it)
+            else:
+                self.add_edge(u, v, it)
+
+        return self
+
+    def compute_loss(
+        self,
+        perturbations: Tensor,
+        victim_nodes: Tensor,
+        victim_labels: Tensor,
+    ) -> Tensor:
+        adj = self.adj + perturbations * (1 - 2 * self.adj)
+        logit = self.surrogate(self.feat, adj)[victim_nodes]
+        loss = self.loss_fn(logit, victim_labels)
+        return loss
+
+    def compute_gradients(
+        self,
+        perturbations: Tensor,
+        victim_nodes: Tensor,
+        victim_labels: Tensor,
+    ) -> Tensor:
+        pert_sym = symmetric(perturbations)
+        grad_outputs = grad(
+            self.compute_loss(pert_sym, victim_nodes, victim_labels), pert_sym)
+        return grad(pert_sym, perturbations, grad_outputs=grad_outputs[0])[0]
+
+
+class PGDAttack(UntargetedAttacker, PGD, Surrogate):
     r"""Implementation of `PGD` attack from the:
     `"Topology Attack and Defense for Graph Neural Networks:
     An Optimization Perspective"
@@ -183,72 +281,18 @@ class PGDAttack(UntargetedAttacker, Surrogate):
                        structure_attack=structure_attack,
                        feature_attack=feature_attack)
 
-        if ce_loss:
-            self.loss_fn = partial(cross_entropy_loss, tau=self.tau)
-        else:
-            self.loss_fn = margin_loss
-        perturbations = self.perturbations
-        for epoch in tqdm(range(epochs), desc='PGD training...',
-                          disable=disable):
-            lr = base_lr * self.num_budgets / math.sqrt(epoch + 1)
-            gradients = self.compute_gradients(perturbations)
-
-            gradients = self.clip_grad(gradients, grad_clip)
-
-            with torch.no_grad():
-                perturbations += lr * gradients
-                if perturbations.clamp(0, 1).sum() <= self.num_budgets:
-                    perturbations.clamp_(0, 1)
-                else:
-                    top = perturbations.max().item()
-                    bot = (perturbations.min() - 1).clamp_min(0).item()
-                    mu = (top + bot) / 2
-                    while (top - bot) / 2 > 1e-5:
-                        used_budget = (perturbations - mu).clamp(0, 1).sum()
-                        if used_budget == self.num_budgets:
-                            break
-                        elif used_budget > self.num_budgets:
-                            bot = mu
-                        else:
-                            top = mu
-                        mu = (top + bot) / 2
-                    perturbations.sub_(mu).clamp_(0, 1)
-
-        best_loss = -np.inf
-        best_pert = None
-
-        perturbations.detach_()
-        for it in tqdm(range(sample_epochs), desc='Bernoulli sampling...',
-                       disable=disable):
-            sampled = perturbations.bernoulli()
-            if sampled.count_nonzero() <= self.num_budgets:
-                loss = self.compute_loss(symmetric(sampled))
-                if best_loss < loss:
-                    best_loss = loss
-                    best_pert = sampled
-
-        row, col = torch.where(best_pert > 0.)
-        for it, (u, v) in enumerate(zip(row.tolist(), col.tolist())):
-            if self.adj[u, v] > 0:
-                self.remove_edge(u, v, it)
-            else:
-                self.add_edge(u, v, it)
-
-        return self
-
-    def compute_loss(self, perturbations: Tensor) -> Tensor:
-        adj = self.adj + perturbations * (1 - 2 * self.adj)
-        logit = self.surrogate(self.feat, adj)[self.victim_nodes]
-        loss = self.loss_fn(logit, self.victim_labels)
-        return loss
-
-    def compute_gradients(self, perturbations: Tensor) -> Tensor:
-        pert_sym = symmetric(perturbations)
-        return grad(pert_sym, perturbations,
-                    grad_outputs=self.grad_fn(pert_sym))[0]
-
-    def grad_fn(self, pert_sym: Tensor) -> Tensor:
-        return grad(self.compute_loss(pert_sym), pert_sym)[0]
+        return PGD.attack(
+            self,
+            self.num_budgets,
+            victim_nodes=self.victim_nodes,
+            victim_labels=self.victim_labels,
+            base_lr=base_lr,
+            grad_clip=grad_clip,
+            epochs=epochs,
+            ce_loss=ce_loss,
+            sample_epochs=sample_epochs,
+            disable=disable,
+        )
 
 
 def symmetric(x: Tensor) -> Tensor:

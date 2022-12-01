@@ -306,11 +306,7 @@ class Nettack(TargetedAttacker, Surrogate):
                 "`ll_constraint` is failed when `allow_singleton=True`, "
                 "please set `attacker.set_allow_singleton(False)`.")
 
-        if target_label is None:
-            if self.target_label is None:
-                raise RuntimeError("please specify argument `target_label` "
-                                   "as the node label does not exist.")
-            target_label = self.target_label.item()
+        target_label = self.target_label.item()
 
         candidate_edges = self.get_candidate_edges(n_influencers).astype(
             "int32")

@@ -1,23 +1,13 @@
-import math
-from functools import partial
 from typing import Optional, Union
 
-import numpy as np
 import torch
-from torch import Tensor
-from torch.autograd import grad
-from tqdm.auto import tqdm
 
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
-from greatx.attack.untargeted.pgd_attack import (
-    cross_entropy_loss,
-    margin_loss,
-    symmetric,
-)
+from greatx.attack.untargeted.pgd_attack import PGD
 from greatx.nn.models.surrogate import Surrogate
 
 
-class PGDAttack(TargetedAttacker, Surrogate):
+class PGDAttack(TargetedAttacker, PGD, Surrogate):
     r"""Implementation of `PGD` attack from the:
     `"Topology Attack and Defense for Graph Neural Networks:
     An Optimization Perspective"
@@ -164,86 +154,24 @@ class PGDAttack(TargetedAttacker, Surrogate):
         if not direct_attack:
             raise RuntimeError(
                 "PGDAttack is not applicable to indirect attack.")
+
         super().attack(target, target_label, num_budgets=num_budgets,
                        direct_attack=direct_attack,
                        structure_attack=structure_attack,
                        feature_attack=feature_attack)
 
-        if target_label is None:
-            if self.target_label is None:
-                raise RuntimeError("please specify argument `target_label` "
-                                   "as the node label does not exist.")
-            self.victim_label = self.target_label.view(-1)
-        else:
-            self.victim_label = torch.as_tensor(target_label,
-                                                device=self.device,
-                                                dtype=torch.long).view(-1)
-        self.victim_node = torch.as_tensor(self.target, device=self.device,
-                                           dtype=torch.long).view(-1)
-
-        if ce_loss:
-            self.loss_fn = partial(cross_entropy_loss, tau=self.tau)
-        else:
-            self.loss_fn = margin_loss
-        perturbations = self.perturbations
-        for epoch in tqdm(range(epochs), desc='PGD training...',
-                          disable=disable):
-            lr = base_lr * self.num_budgets / math.sqrt(epoch + 1)
-            gradients = self.compute_gradients(perturbations)
-
-            gradients = self.clip_grad(gradients, grad_clip)
-
-            with torch.no_grad():
-                perturbations += lr * gradients
-                if perturbations.clamp(0, 1).sum() <= self.num_budgets:
-                    perturbations.clamp_(0, 1)
-                else:
-                    top = perturbations.max().item()
-                    bot = (perturbations.min() - 1).clamp_min(0).item()
-                    mu = (top + bot) / 2
-                    while (top - bot) / 2 > 1e-5:
-                        used_budget = (perturbations - mu).clamp(0, 1).sum()
-                        if used_budget == self.num_budgets:
-                            break
-                        elif used_budget > self.num_budgets:
-                            bot = mu
-                        else:
-                            top = mu
-                        mu = (top + bot) / 2
-                    perturbations.sub_(mu).clamp_(0, 1)
-
-        best_loss = -np.inf
-        best_pert = None
-
-        perturbations.detach_()
-        for it in tqdm(range(sample_epochs), desc='Bernoulli sampling...',
-                       disable=disable):
-            sampled = perturbations.bernoulli()
-            if sampled.count_nonzero() <= self.num_budgets:
-                loss = self.compute_loss(symmetric(sampled))
-                if best_loss < loss:
-                    best_loss = loss
-                    best_pert = sampled
-
-        row, col = torch.where(best_pert > 0.)
-        for it, (u, v) in enumerate(zip(row.tolist(), col.tolist())):
-            if self.adj[u, v] > 0:
-                self.remove_edge(u, v, it)
-            else:
-                self.add_edge(u, v, it)
-
-        return self
-
-    def compute_loss(self, perturbations: Tensor) -> Tensor:
-        adj = self.adj + perturbations * (1 - 2 * self.adj)
-        logit = self.surrogate(self.feat, adj)[self.victim_node]
-        loss = self.loss_fn(logit, self.victim_label)
-        return loss
-
-    def compute_gradients(self, perturbations: Tensor) -> Tensor:
-        pert_sym = symmetric(perturbations)
-        return grad(pert_sym, perturbations,
-                    grad_outputs=self.grad_fn(pert_sym))[0]
-
-    def grad_fn(self, pert_sym: Tensor) -> Tensor:
-        return grad(self.compute_loss(pert_sym), pert_sym)[0]
+        victim_label = self.target_label.view(-1)
+        victim_node = torch.as_tensor(self.target, device=self.device,
+                                      dtype=torch.long).view(-1)
+        return PGD.attack(
+            self,
+            self.num_budgets,
+            victim_nodes=victim_node,
+            victim_labels=victim_label,
+            base_lr=base_lr,
+            grad_clip=grad_clip,
+            epochs=epochs,
+            ce_loss=ce_loss,
+            sample_epochs=sample_epochs,
+            disable=disable,
+        )

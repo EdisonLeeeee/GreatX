@@ -264,6 +264,7 @@ class FlipAttacker(Attacker):
         self,
         edge_ratio: float = 1.0,
         feat_ratio: float = 1.0,
+        coalesce: bool = True,
         symmetric: bool = True,
     ) -> Data:
         """Get the attacked graph denoted by
@@ -284,6 +285,8 @@ class FlipAttacker(Attacker):
             how many perturbed features are used to
             construct the perturbed graph.
             by default 1.0
+        coalesce : bool, optional
+            whether to coalesce the output edges.
         symmetric : bool, optional
             whether the output graph is symmetric, by default True
 
@@ -320,7 +323,8 @@ class FlipAttacker(Attacker):
 
         added = edge_flips['added']
         if added is not None:
-            edge_index = add_edges(edge_index, added, symmetric=symmetric)
+            edge_index = add_edges(edge_index, added, symmetric=symmetric,
+                                   coalesce=coalesce)
 
         data.edge_index = edge_index
 

@@ -4,16 +4,10 @@ from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 import torch
 from torch import Tensor
 from torch_geometric.utils import coalesce, to_undirected
-from tqdm.auto import tqdm
 
 from greatx.attack.targeted.targeted_attacker import TargetedAttacker
 from greatx.attack.untargeted.rbcd_attack import RBCDAttack
 from greatx.attack.untargeted.utils import project
-from greatx.functional import (
-    masked_cross_entropy,
-    probability_margin_loss,
-    tanh_margin_loss,
-)
 from greatx.nn.models.surrogate import Surrogate
 
 # (predictions, labels, ids/mask) -> Tensor with one element
@@ -95,29 +89,6 @@ class PRBCDAttack(TargetedAttacker, RBCDAttack, Surrogate):
                        direct_attack=direct_attack,
                        structure_attack=structure_attack,
                        feature_attack=feature_attack)
-
-        self.block_size = block_size
-
-        assert loss in ['mce', 'prob_margin', 'tanh_margin']
-        if loss == 'mce':
-            self.loss = masked_cross_entropy
-        elif loss == 'prob_margin':
-            self.loss = probability_margin_loss
-        else:
-            self.loss = tanh_margin_loss
-
-        if metric is None:
-            self.metric = self.loss
-        else:
-            self.metric = metric
-
-        self.epochs_resampling = epochs_resampling
-        self.lr = lr
-
-        self.coeffs.update(**kwargs)
-
-        num_budgets = self.num_budgets
-        feat = self.feat
         self.victim_nodes = torch.as_tensor(
             target,
             dtype=torch.long,
@@ -126,34 +97,11 @@ class PRBCDAttack(TargetedAttacker, RBCDAttack, Surrogate):
 
         self.victim_labels = self.target_label.view(-1)
 
-        feat, victim_nodes, victim_labels = (self.feat, self.victim_nodes,
-                                             self.victim_labels)
-
-        # Loop over the epochs (Algorithm 1, line 5)
-        for step in tqdm(self.prepare(num_budgets, epochs),
-                         desc='Peturbing graph...', disable=disable):
-
-            loss, gradient = self.compute_gradients(feat, victim_labels,
-                                                    victim_nodes)
-
-            scalars = self.update(step, gradient, num_budgets)
-
-            scalars['loss'] = loss.item()
-            self._append_statistics(scalars)
-
-        flipped_edges = self.get_flipped_edges()
-
-        assert flipped_edges.size(1) <= self.num_budgets, (
-            f'# perturbed edges {flipped_edges.size(1)} '
-            f'exceeds num_budgets {self.num_budgets}')
-
-        for it, (u, v) in enumerate(zip(*flipped_edges.tolist())):
-            if self.adjacency_matrix[u, v] > 0:
-                self.remove_edge(u, v, it)
-            else:
-                self.add_edge(u, v, it)
-
-        return self
+        return RBCDAttack.attack(self, self.num_budgets, block_size=block_size,
+                                 epochs=epochs,
+                                 epochs_resampling=epochs_resampling,
+                                 loss=loss, metric=metric, lr=lr,
+                                 disable=disable, **kwargs)
 
     def prepare(self, num_budgets: int, epochs: int) -> Iterable[int]:
         """Prepare attack and return the iterable sequence steps."""
@@ -256,6 +204,34 @@ class GRBCDAttack(PRBCDAttack):
     However, it greedily flips edges based on the gradient towards the
     adjacency matrix.
     """
+    def attack(
+        self,
+        target,
+        *,
+        target_label=None,
+        num_budgets=None,
+        direct_attack=True,
+        block_size: int = 250_000,
+        epochs: int = 125,
+        epochs_resampling: int = 100,
+        loss: Optional[str] = 'mce',
+        metric: Optional[Union[str, METRIC]] = None,
+        lr: float = 1_000,
+        structure_attack: bool = True,
+        feature_attack: bool = False,
+        disable: bool = False,
+        **kwargs,
+    ) -> "GRBCDAttack":
+
+        return super().attack(target=target, target_label=target_label,
+                              direct_attack=direct_attack,
+                              num_budgets=num_budgets, block_size=block_size,
+                              epochs=epochs,
+                              epochs_resampling=epochs_resampling,
+                              metric=metric, loss=loss, lr=lr, disable=disable,
+                              structure_attack=structure_attack,
+                              feature_attack=feature_attack, **kwargs)
+
     def prepare(self, num_budgets: int, epochs: int) -> List[int]:
         """Prepare attack."""
 

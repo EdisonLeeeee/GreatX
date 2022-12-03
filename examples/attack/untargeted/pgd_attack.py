@@ -37,8 +37,12 @@ print(f"Before attack\n {logs}")
 #                      Attacking                                     #
 # ================================================================== #
 attacker = PGDAttack(data, device=device)
-attacker.setup_surrogate(trainer_before.model, victim_nodes=splits.test_nodes,
-                         ground_truth=True)
+attacker.setup_surrogate(
+    trainer_before.model,
+    victim_nodes=splits.test_nodes,
+    # set True to use ground-truth labels
+    ground_truth=False,
+)
 attacker.reset()
 attacker.attack(0.05)
 

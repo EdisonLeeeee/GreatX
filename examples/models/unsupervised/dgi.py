@@ -1,6 +1,7 @@
 import os.path as osp
 
 import torch
+import torch_geometric.transforms as T
 from torch_geometric.data import Data
 from torch_geometric.datasets import Planetoid
 
@@ -10,7 +11,7 @@ from greatx.training.callbacks import EarlyStopping, ModelCheckpoint
 
 dataset = 'Cora'
 root = osp.join(osp.dirname(osp.realpath(__file__)), '../../..', 'data')
-dataset = Planetoid(root=root, name=dataset)
+dataset = Planetoid(root=root, name=dataset, transform=T.NormalizeFeatures())
 
 data = dataset[0]
 

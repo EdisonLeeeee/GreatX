@@ -74,9 +74,15 @@ class DGI(nn.Module):
 
     """
     @wrapper
-    def __init__(self, in_channels: int, hids: List[int] = [512],
-                 acts: List[str] = ['prelu'], dropout: float = 0.,
-                 bias: bool = True, bn: bool = False):
+    def __init__(
+        self,
+        in_channels: int,
+        hids: List[int] = [512],
+        acts: List[str] = ['prelu'],
+        dropout: float = 0.,
+        bias: bool = True,
+        bn: bool = False,
+    ):
 
         super().__init__()
 

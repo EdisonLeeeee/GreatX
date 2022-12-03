@@ -5,7 +5,7 @@ import torch_geometric.transforms as T
 from torch_geometric.data import Data
 from torch_geometric.datasets import Planetoid
 
-from greatx.nn.models import DGI, LogisticRegression
+from greatx.nn.models import GGD, LogisticRegression
 from greatx.training import Trainer, UnspuervisedTrainer
 from greatx.training.callbacks import EarlyStopping, ModelCheckpoint
 
@@ -23,7 +23,8 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # ================================================================== #
 #                 Self-supervised Learning                           #
 # ================================================================== #
-model = DGI(num_features, 512)
+# 512 for cora, 1024 for citeseer and pubmed
+model = GGD(num_features, 512)
 trainer = UnspuervisedTrainer(model, device=device, lr=0.001, weight_decay=0.)
 es = EarlyStopping(monitor='loss', patience=20)
 trainer.fit(data, epochs=500, callbacks=[es])
@@ -32,7 +33,7 @@ trainer.fit(data, epochs=500, callbacks=[es])
 #                   Get node embedding                               #
 # ================================================================== #
 with torch.no_grad():
-    embedding = model.encode(data.x, data.edge_index)
+    embedding = model.encode(data.x, data.edge_index, k=5)
 
 # ================================================================== #
 #                    Linear evaluation                               #

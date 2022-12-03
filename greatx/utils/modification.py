@@ -3,12 +3,16 @@ import copy
 import torch
 from torch import Tensor
 from torch_geometric.data import Data
-from torch_geometric.utils import (from_scipy_sparse_matrix, sort_edge_index,
-                                   to_scipy_sparse_matrix)
+from torch_geometric.utils import coalesce as coalesce_edges
+from torch_geometric.utils import (
+    from_scipy_sparse_matrix,
+    sort_edge_index,
+    to_scipy_sparse_matrix,
+)
 
 
 def add_edges(edge_index: Tensor, edges_to_add: Tensor, symmetric: bool = True,
-              sort_edges: bool = True) -> Tensor:
+              coalesce: bool = True, sort_edges: bool = True) -> Tensor:
     """Add edges to the graph denoted as :obj:`edge_index`.
 
     Parameters
@@ -20,6 +24,8 @@ def add_edges(edge_index: Tensor, edges_to_add: Tensor, symmetric: bool = True,
     symmetric : bool
         whether the output graph is symmetric, if True,
         it will also append the reversed edges into the graph.
+    coalesce : bool
+        whether to coalesce the output edges.
     sort_edges : bool
         whether to sort the output edges.
 
@@ -36,6 +42,8 @@ def add_edges(edge_index: Tensor, edges_to_add: Tensor, symmetric: bool = True,
 
     edges_to_add = edges_to_add.to(edge_index)
     edge_index = torch.cat([edge_index, edges_to_add], dim=1)
+    if coalesce:
+        edge_index = coalesce_edges(edge_index)
     if sort_edges:
         edge_index = sort_edge_index(edge_index)
     return edge_index

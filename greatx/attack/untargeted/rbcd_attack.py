@@ -46,7 +46,6 @@ class RBCDAttack:
 
     def attack(
         self,
-        num_budgets: int,
         block_size: int = 250_000,
         epochs: int = 125,
         epochs_resampling: int = 100,
@@ -77,18 +76,13 @@ class RBCDAttack:
 
         self.coeffs.update(**kwargs)
 
-        num_budgets = self.num_budgets
-        feat, victim_nodes, victim_labels = (self.feat, self.victim_nodes,
-                                             self.victim_labels)
-
         # Loop over the epochs (Algorithm 1, line 5)
-        for step in tqdm(self.prepare(num_budgets, epochs),
+        for step in tqdm(self.prepare(self.num_budgets, epochs),
                          desc='Peturbing graph...', disable=disable):
 
-            loss, gradient = self.compute_gradients(feat, victim_labels,
-                                                    victim_nodes)
+            loss, gradient = self.compute_gradients()
 
-            scalars = self.update(step, gradient, num_budgets)
+            scalars = self.update(step, gradient)
 
             scalars['loss'] = loss.item()
             self._append_statistics(scalars)
@@ -107,12 +101,7 @@ class RBCDAttack:
 
         return self
 
-    def compute_gradients(
-        self,
-        feat: Tensor,
-        victim_labels: Tensor,
-        victim_nodes: Tensor,
-    ) -> Tuple[Tensor, Tensor]:
+    def compute_gradients(self) -> Tuple[Tensor, Tensor]:
         """Forward and update edge weights."""
         self.block_edge_weight.requires_grad_()
 
@@ -123,8 +112,8 @@ class RBCDAttack:
             self.block_edge_weight)
 
         # Get prediction (Algorithm 1, line 6 / Algorithm 2, line 7)
-        prediction = self.surrogate(feat, edge_index,
-                                    edge_weight)[victim_nodes]
+        prediction = self.surrogate(self.feat, edge_index,
+                                    edge_weight)[self.victim_nodes]
 
         # temperature scaling, work for cross-entropy loss
         if self.tau != 1:
@@ -132,7 +121,7 @@ class RBCDAttack:
 
         # Calculate loss combining all each node
         # (Algorithm 1, line 7 / Algorithm 2, line 8)
-        loss = self.loss(prediction, victim_labels)
+        loss = self.loss(prediction, self.victim_labels)
         # Retrieve gradient towards the current block
         # (Algorithm 1, line 7 / Algorithm 2, line 8)
         gradient = torch.autograd.grad(loss, self.block_edge_weight)[0]
@@ -242,16 +231,14 @@ class RBCDAttack:
                            "Please decrease `num_budgets`.")
 
     @torch.no_grad()
-    def sample_final_edges(
-        self,
-        feat: Tensor,
-        num_budgets: int,
-        victim_nodes: Tensor,
-        victim_labels: Tensor,
-    ) -> Tuple[Tensor, Tensor]:
+    def sample_final_edges(self) -> Tuple[Tensor, Tensor]:
         best_metric = float('-Inf')
         block_edge_weight = self.block_edge_weight
         block_edge_weight[block_edge_weight <= self.coeffs['eps']] = 0
+        num_budgets = self.num_budgets
+        feat = self.feat
+        victim_nodes = self.victim_nodes
+        victim_labels = self.victim_labels
 
         for i in range(self.coeffs['max_final_samples']):
             if i == 0:
@@ -283,13 +270,12 @@ class RBCDAttack:
         flipped_edges = self.block_edge_index[:, best_edge_weight != 0]
         return flipped_edges
 
-    def update_edge_weights(self, num_budgets: int, epoch: int,
-                            gradient: Tensor):
+    def update_edge_weights(self, epoch: int, gradient: Tensor):
         # The learning rate is refined heuristically, s.t. (1) it is
         # independent of the number of perturbations (assuming an undirected
         # adjacency matrix) and (2) to decay learning rate during fine-tuning
         # (i.e. fixed search space).
-        lr = (num_budgets / self.num_nodes * self.lr /
+        lr = (self.num_budgets / self.num_nodes * self.lr /
               np.sqrt(max(0, epoch - self.epochs_resampling) + 1))
         self.block_edge_weight.data.add_(lr * gradient)
 
@@ -337,7 +323,7 @@ class PRBCDAttack(UntargetedAttacker, RBCDAttack, Surrogate):
         self,
         surrogate: torch.nn.Module,
         victim_nodes: Tensor,
-        ground_truth: bool = True,
+        ground_truth: bool = False,
         *,
         tau: float = 1.0,
         freeze: bool = True,
@@ -353,7 +339,7 @@ class PRBCDAttack(UntargetedAttacker, RBCDAttack, Surrogate):
         ground_truth : bool, optional
             whether to use ground-truth label for victim nodes,
             if False, the node labels are estimated by the surrogate model,
-            by default True
+            by default False
         tau : float, optional
             the temperature of softmax activation, by default 1.0
         freeze : bool, optional
@@ -422,8 +408,7 @@ class PRBCDAttack(UntargetedAttacker, RBCDAttack, Surrogate):
                        structure_attack=structure_attack,
                        feature_attack=feature_attack)
 
-        return RBCDAttack.attack(self, self.num_budgets, block_size=block_size,
-                                 epochs=epochs,
+        return RBCDAttack.attack(self, block_size=block_size, epochs=epochs,
                                  epochs_resampling=epochs_resampling,
                                  loss=loss, metric=metric, lr=lr,
                                  disable=disable, **kwargs)
@@ -437,17 +422,17 @@ class PRBCDAttack(UntargetedAttacker, RBCDAttack, Surrogate):
         return range(epochs)
 
     @torch.no_grad()
-    def update(self, epoch: int, gradient: Tensor,
-               num_budgets: int) -> Dict[str, float]:
+    def update(self, epoch: int, gradient: Tensor) -> Dict[str, float]:
         """Update edge weights given gradient."""
         # Gradient update step (Algorithm 1, line 7)
-        self.update_edge_weights(num_budgets, epoch, gradient)
+        self.update_edge_weights(epoch, gradient)
 
         # For monitoring
         pmass_update = torch.clamp(self.block_edge_weight, 0, 1)
         # Projection to stay within relaxed `L_0` num_budgets
         # (Algorithm 1, line 8)
-        self.block_edge_weight = project(num_budgets, self.block_edge_weight,
+        self.block_edge_weight = project(self.num_budgets,
+                                         self.block_edge_weight,
                                          self.coeffs['eps'])
 
         # For monitoring
@@ -468,7 +453,7 @@ class PRBCDAttack(UntargetedAttacker, RBCDAttack, Surrogate):
 
         topk_block_edge_weight = torch.zeros_like(self.block_edge_weight)
         topk_block_edge_weight[torch.topk(self.block_edge_weight,
-                                          num_budgets).indices] = 1
+                                          self.num_budgets).indices] = 1
 
         edge_index, edge_weight = self.get_modified_graph(
             self._edge_index, self._edge_weight, self.block_edge_index,
@@ -488,7 +473,7 @@ class PRBCDAttack(UntargetedAttacker, RBCDAttack, Surrogate):
 
         # Resampling of search space (Algorithm 1, line 9-14)
         if epoch < self.epochs_resampling - 1:
-            self.resample_random_block(num_budgets)
+            self.resample_random_block(self.num_budgets)
         elif epoch == self.epochs_resampling - 1:
             # Retrieve best epoch if early stopping is active
             # (not explicitly covered by pseudo code)
@@ -511,12 +496,7 @@ class PRBCDAttack(UntargetedAttacker, RBCDAttack, Surrogate):
             self.block_edge_weight = self.best_pert_edge_weight.to(self.device)
 
         # Sample final discrete graph (Algorithm 1, line 16)
-        return self.sample_final_edges(
-            self.feat,
-            self.num_budgets,
-            self.victim_nodes,
-            self.victim_labels,
-        )
+        return self.sample_final_edges()
 
 
 class GRBCDAttack(PRBCDAttack):
@@ -538,7 +518,7 @@ class GRBCDAttack(PRBCDAttack):
         epochs_resampling: int = 100,
         loss: Optional[str] = 'mce',
         metric: Optional[Union[str, METRIC]] = None,
-        lr: float = 1_000,
+        lr: float = 2_000,
         structure_attack: bool = True,
         feature_attack: bool = False,
         disable: bool = False,
@@ -579,7 +559,6 @@ class GRBCDAttack(PRBCDAttack):
         self,
         step_size: int,
         gradient: Tensor,
-        num_budgets: int,
     ) -> Dict[str, Any]:
         """Update edge weights given gradient."""
         _, topk_edge_index = torch.topk(gradient, step_size)

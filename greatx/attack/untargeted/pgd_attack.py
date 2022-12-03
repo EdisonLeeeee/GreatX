@@ -1,5 +1,4 @@
 import math
-from functools import partial
 from typing import Optional, Union
 
 import numpy as np
@@ -32,7 +31,7 @@ class PGD:
     ) -> "PGD":
 
         if ce_loss:
-            self.loss_fn = partial(cross_entropy_loss, tau=self.tau)
+            self.loss_fn = cross_entropy_loss
         else:
             self.loss_fn = margin_loss
 
@@ -96,6 +95,8 @@ class PGD:
     ) -> Tensor:
         adj = self.adj + perturbations * (1 - 2 * self.adj)
         logit = self.surrogate(self.feat, adj)[victim_nodes]
+        if self.tau != 1:
+            logit /= self.tau
         loss = self.loss_fn(logit, victim_labels)
         return loss
 
@@ -175,7 +176,7 @@ class PGDAttack(UntargetedAttacker, PGD, Surrogate):
         self,
         surrogate: torch.nn.Module,
         victim_nodes: Tensor,
-        ground_truth: bool = True,
+        ground_truth: bool = False,
         *,
         tau: float = 1.0,
         freeze: bool = True,
@@ -191,7 +192,7 @@ class PGDAttack(UntargetedAttacker, PGD, Surrogate):
         ground_truth : bool, optional
             whether to use ground-truth label for victim nodes,
             if False, the node labels are estimated by the surrogate model,
-            by default True
+            by default False
         tau : float, optional
             the temperature of softmax activation, by default 1.0
         freeze : bool, optional
@@ -311,6 +312,5 @@ def margin_loss(logit: Tensor, y_true: Tensor) -> Tensor:
     return -(scores_true - scores_pred_excl_true).tanh().mean()
 
 
-def cross_entropy_loss(logit: Tensor, y_true: Tensor,
-                       tau: float = 1.0) -> Tensor:
-    return F.cross_entropy(logit / tau, y_true)
+def cross_entropy_loss(logit: Tensor, y_true: Tensor) -> Tensor:
+    return F.cross_entropy(logit, y_true)

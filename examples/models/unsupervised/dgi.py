@@ -31,6 +31,7 @@ trainer.fit(data, epochs=500, callbacks=[es])
 # ================================================================== #
 #                   Get node embedding                               #
 # ================================================================== #
+model.eval()
 with torch.no_grad():
     embedding = model.encode(data.x, data.edge_index)
 

@@ -8,6 +8,7 @@ from torch_geometric.nn import Linear
 
 from greatx.functional import spmm
 from greatx.nn.layers import GCNConv, Sequential, activations
+from greatx.nn.layers.gcn_conv import make_gcn_norm
 from greatx.utils import wrapper
 
 try:
@@ -109,9 +110,13 @@ class GGD(nn.Module):
         edge_weight: Optional[Tensor] = None,
         k: int = 0,
     ) -> Tensor:
-        if self.training:
-            z = self.encoder(x, edge_index, edge_weight)
-        else:
+        z = self.encoder(x, edge_index, edge_weight)
+
+        if not self.training:
+            edge_index, edge_weight = make_gcn_norm(edge_index, edge_weight,
+                                                    num_nodes=x.size(0),
+                                                    dtype=x.dtype,
+                                                    add_self_loops=True)
             h = z
             for _ in range(k):
                 h = spmm(h, edge_index, edge_weight)

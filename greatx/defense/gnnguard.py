@@ -2,7 +2,7 @@ import warnings
 
 import torch
 import torch.nn.functional as F
-from torch_scatter import scatter_add
+from torch_geometric.utils import scatter
 
 EPS = 1e-10
 
@@ -41,12 +41,12 @@ class GNNGUARD(torch.nn.Module):
         att_score = att_score[mask]
 
         row, col = edge_index
-        row_sum = scatter_add(att_score, col, dim_size=x.size(0))
+        row_sum = scatter(att_score, col, dim_size=x.size(0))
         att_score_norm = att_score / (row_sum[row] + EPS)
 
         if self.add_self_loops:
-            degree = scatter_add(torch.ones_like(att_score_norm), col,
-                                 dim_size=x.size(0))
+            degree = scatter(torch.ones_like(att_score_norm), col,
+                             dim_size=x.size(0))
             self_weight = 1.0 / (degree + 1)
             att_score_norm = torch.cat([att_score_norm, self_weight])
             loop_index = torch.arange(0, x.size(0), dtype=torch.long,

@@ -208,6 +208,7 @@ class SGAttack(TargetedAttacker, Surrogate):
         target_label = self.target_label.view(-1)
         best_wrong_label = self.strongest_wrong_class(target,
                                                       target_label).view(-1)
+        best_wrong_label = best_wrong_label.to(self.device)
 
         subgraph = self.get_subgraph(target, target_label, best_wrong_label)
 

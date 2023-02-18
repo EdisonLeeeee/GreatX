@@ -1,4 +1,9 @@
 import datetime
+import os.path as osp
+import sys
+
+import pyg_sphinx_theme
+
 import greatx
 
 author = 'Jintang Li'
@@ -8,6 +13,8 @@ copyright = '{}, {}'.format(datetime.datetime.now().year, author)
 version = greatx.__version__
 release = greatx.__version__
 
+sys.path.append(osp.join(osp.dirname(pyg_sphinx_theme.__file__), 'extension'))
+
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
@@ -15,6 +22,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
+    'pyg',
 ]
 
 html_theme = 'pyg_sphinx_theme'
@@ -23,6 +31,7 @@ html_favicon = '../../imgs/favicon.png'
 
 add_module_names = False
 autodoc_member_order = 'bysource'
+suppress_warnings = ['autodoc.import_object']
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/', None),
@@ -38,3 +47,4 @@ def setup(app):
         source[0] = app.builder.templates.render_string(source[0], rst_context)
 
     app.connect('source-read', rst_jinja_render)
+    app.add_js_file('js/version_alert.js')

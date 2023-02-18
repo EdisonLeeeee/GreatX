@@ -6,14 +6,14 @@ import pyg_sphinx_theme
 
 import greatx
 
+sys.path.append(osp.join(osp.dirname(pyg_sphinx_theme.__file__), 'extension'))
+
 author = 'Jintang Li'
 project = 'GreatX'
 copyright = '{}, {}'.format(datetime.datetime.now().year, author)
 
 version = greatx.__version__
 release = greatx.__version__
-
-sys.path.append(osp.join(osp.dirname(pyg_sphinx_theme.__file__), 'extension'))
 
 extensions = [
     'sphinx.ext.autodoc',

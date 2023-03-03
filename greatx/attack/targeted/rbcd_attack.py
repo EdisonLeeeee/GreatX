@@ -54,7 +54,7 @@ class PRBCDAttack(TargetedAttacker, RBCDAttack, Surrogate):
         self.victim_labels = None
 
         # NOTE: Since `edge_index` and `edge_weight` denote the original graph
-        # here we need to name them as `edge_index`and `_edge_weight`
+        # here we need to name them as `_edge_index`and `_edge_weight`
         self._edge_index = self.edge_index
         self._edge_weight = torch.ones(self.num_edges, device=self.device)
 

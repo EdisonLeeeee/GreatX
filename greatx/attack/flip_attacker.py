@@ -129,14 +129,14 @@ class FlipAttacker(Attacker):
         return torch.tensor(
             np.asarray(edges, dtype="int64").T, device=self.device)
 
-    def edge_flips(self, ratio: float = 1.0) -> BunchDict:
+    def edge_flips(self, frac: float = 1.0) -> BunchDict:
         """Get all the edges to be flipped, including edges
         to be added and removed.
 
         Parameters
         ----------
-        ratio : float, optional
-            the ratio of edge perturbations, i.e.,
+        frac : float, optional
+            the fraction of edge perturbations, i.e.,
             how many perturbed features are used to
             construct the perturbed graph.
             by default 1.0
@@ -148,16 +148,16 @@ class FlipAttacker(Attacker):
 
         >>> # Get the edge flips, with
         >>> # specifying feat_ratio
-        >>> attacker.edge_flips(ratio=0.5)
+        >>> attacker.edge_flips(frac=0.5)
         """
-        assert 0 <= ratio <= 1
+        assert 0 <= frac <= 1
         added = self.added_edges()
         if added is not None:
-            added = added[:, :round(added.size(1) * ratio)]
+            added = added[:, :round(added.size(1) * frac)]
 
         removed = self.removed_edges()
         if removed is not None:
-            removed = removed[:, :round(removed.size(1) * ratio)]
+            removed = removed[:, :round(removed.size(1) * frac)]
 
         _all = cat(added, removed, dim=1)
         return BunchDict(added=added, removed=removed, all=_all)
@@ -225,14 +225,14 @@ class FlipAttacker(Attacker):
         return torch.tensor(
             np.asarray(feats, dtype="int64").T, device=self.device)
 
-    def feat_flips(self, ratio: float = 1.0) -> BunchDict:
+    def feat_flips(self, frac: float = 1.0) -> BunchDict:
         """Get all the features to be flipped, including features
         to be added and removed.
 
         Parameters
         ----------
-        ratio : float, optional
-            the ratio of feature perturbations, i.e.,
+        frac : float, optional
+            the fraction of feature perturbations, i.e.,
             how many perturbed features are used to
             construct the perturbed graph.
             by default 1.0
@@ -244,17 +244,17 @@ class FlipAttacker(Attacker):
 
         >>> # Get the feature flips, with
         >>> # specifying feat_ratio
-        >>> attacker.feat_flips(ratio=0.5)
+        >>> attacker.feat_flips(frac=0.5)
         """
-        assert 0 <= ratio <= 1
+        assert 0 <= frac <= 1
 
         added = self.added_feats()
         if added is not None:
-            added = added[:, :round(added.size(1) * ratio)]
+            added = added[:, :round(added.size(1) * frac)]
 
         removed = self.removed_feats()
         if removed is not None:
-            removed = removed[:, :round(removed.size(1) * ratio)]
+            removed = removed[:, :round(removed.size(1) * frac)]
 
         _all = cat(added, removed, dim=1)
         return BunchDict(added=added, removed=removed, all=_all)
@@ -276,12 +276,12 @@ class FlipAttacker(Attacker):
         Parameters
         ----------
         edge_ratio : float, optional
-            the ratio of edge perturbations, i.e.,
+            the fraction of edge perturbations, i.e.,
             how many perturbed edges are used to
             construct the perturbed graph.
             by default 1.0
         feat_ratio : float, optional
-            the ratio of feature perturbations, i.e.,
+            the fraction of feature perturbations, i.e.,
             how many perturbed features are used to
             construct the perturbed graph.
             by default 1.0
@@ -315,7 +315,7 @@ class FlipAttacker(Attacker):
         edge_weight = data.edge_weight
         assert edge_weight is None, 'weighted graph is not supported now.'
 
-        edge_flips = self.edge_flips(ratio=edge_ratio)
+        edge_flips = self.edge_flips(frac=edge_ratio)
         removed = edge_flips['removed']
 
         if removed is not None:
@@ -333,7 +333,7 @@ class FlipAttacker(Attacker):
 
         if self.feature_attack:
             feat = self.feat.detach().clone()
-            feat_flips = self.feat_flips(ratio=feat_ratio)
+            feat_flips = self.feat_flips(frac=feat_ratio)
             removed = feat_flips['removed']
             if removed is not None:
                 feat[removed[0], removed[1]] = 0.

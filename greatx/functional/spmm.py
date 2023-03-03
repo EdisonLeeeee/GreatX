@@ -3,8 +3,12 @@ from typing import Union
 import torch
 from torch import Tensor
 from torch_geometric.typing import OptTensor
-from torch_geometric.utils import degree, sort_edge_index, to_dense_batch
-from torch_scatter import scatter
+from torch_geometric.utils import (
+    degree,
+    scatter,
+    sort_edge_index,
+    to_dense_batch,
+)
 from torch_sparse import SparseTensor, matmul
 
 

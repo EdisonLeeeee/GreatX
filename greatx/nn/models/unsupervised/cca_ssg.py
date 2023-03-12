@@ -2,7 +2,6 @@ from typing import List, Optional
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from torch import Tensor
 from torch_geometric.nn import GCNConv
 
@@ -138,11 +137,6 @@ class CCA_SSG(torch.nn.Module):
         z2 = (h2 - h2.mean(0)) / h2.std(0)
 
         return z1, z2
-
-    def sim(self, z1: Tensor, z2: Tensor) -> Tensor:
-        z1 = F.normalize(z1)
-        z2 = F.normalize(z2)
-        return torch.mm(z1, z2.t())
 
     def loss(self, z1: Tensor, z2: Tensor) -> Tensor:
         c = z1.t() @ z2

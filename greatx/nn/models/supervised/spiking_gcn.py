@@ -1,6 +1,8 @@
 from typing import List
 
 import torch.nn as nn
+import torch.nn.functional as F
+from torch import Tensor
 
 from greatx.nn.layers import Sequential, SpikingGCNonv
 from greatx.utils import wrapper
@@ -111,3 +113,9 @@ class SpikingGCN(nn.Module):
     def forward(self, x, edge_index, edge_weight=None):
         """"""
         return self.conv(x, edge_index, edge_weight)
+
+    def custom_loss(self, pred: Tensor, y: Tensor) -> Tensor:
+        """Uses a custom loss instead of simple cross-entropy loss"""
+        y_one_hot = F.one_hot(y, pred.size(-1)).float()
+        loss = F.mse_loss(pred, y_one_hot)
+        return loss

@@ -1,9 +1,8 @@
 from . import callbacks
-from .trainer import Trainer
-from .unsup_trainer import UnspuervisedTrainer
 from .get_trainer import get_trainer
 from .sat_trainer import SATTrainer
-from .spikinggcn_trainer import SpikingGCNTrainer
+from .trainer import Trainer
+from .unsup_trainer import UnspuervisedTrainer
 
 classes = __all__ = [
     "Trainer",
@@ -11,5 +10,4 @@ classes = __all__ = [
     "get_trainer",
     "callbacks",
     "SATTrainer",
-    "SpikingGCNTrainer",
 ]

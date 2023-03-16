@@ -7,13 +7,16 @@ import torch.nn.functional as F
 from torch import Tensor
 from torch_geometric.data import Data
 
-from greatx.training.callbacks import (
-    Callback,
-    CallbackList,
-    Optimizer,
-    Scheduler,
-)
+from greatx.training.callbacks import (Callback, CallbackList, Optimizer,
+                                       Scheduler)
 from greatx.utils import BunchDict, Progbar, repeat
+
+# A method which calculates additional losses
+LOSS = 'loss'
+
+# A method which calculates custom supervised loss,
+# if not specified, use cross-entropy loss by default
+CUSTOM_LOSS = 'custom_loss'
 
 
 class Trainer:
@@ -221,12 +224,17 @@ class Trainer:
             y = y[mask]
 
         if self.supervised:
-            loss = F.cross_entropy(out, y)
+            if hasattr(model, CUSTOM_LOSS):
+                # use custom loss function
+                loss = getattr(model, CUSTOM_LOSS)(out, y)
+            else:
+                # use default loss function: cross-entropy
+                loss = F.cross_entropy(out, y)
         else:
             loss = 0.
 
-        if hasattr(model, 'loss'):
-            loss += model.loss(*outs)  # add additional loss
+        if hasattr(model, LOSS):
+            loss += getattr(model, LOSS)(*outs)  # add additional loss
 
         loss.backward()
         self.callbacks.on_train_batch_end(0)

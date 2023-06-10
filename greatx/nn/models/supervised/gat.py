@@ -67,7 +67,7 @@ class GAT(nn.Module):
                 GATConv(in_channels * head, hid, heads=num_head, bias=bias,
                         dropout=dropout))
             if bn:
-                conv.append(nn.BatchNorm1d(hid))
+                conv.append(nn.BatchNorm1d(hid * num_head))
             conv.append(activations.get(act))
             conv.append(nn.Dropout(dropout))
             in_channels = hid

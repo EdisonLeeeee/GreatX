@@ -239,8 +239,11 @@ class Trainer:
         loss.backward()
         self.callbacks.on_train_batch_end(0)
 
-        return dict(loss=loss.item(),
-                    acc=out.argmax(-1).eq(y).float().mean().item())
+        if self.supervised:
+            return dict(loss=loss.item(),
+                        acc=out.argmax(-1).eq(y).float().mean().item())
+        else:
+            return dict(loss=loss.item())
 
     def evaluate(self, data: Data, mask: Optional[Tensor] = None,
                  verbose: Optional[int] = 1) -> BunchDict:

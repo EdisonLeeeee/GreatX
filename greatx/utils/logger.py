@@ -4,6 +4,7 @@ import os
 import sys
 from typing import Optional
 
+# For colored outputs when printing
 from termcolor import colored
 
 __all__ = ["setup_logger", "get_logger"]
@@ -12,26 +13,28 @@ __all__ = ["setup_logger", "get_logger"]
 # cache the opened file object, so that different calls to `setup_logger`
 # with the same file name can safely write to the same file.
 @functools.lru_cache(maxsize=None)
-def setup_logger(
-    output: Optional[str] = None, distributed_rank: int = 0, *, mode: str = 'w',
-    color: bool = True, name: str = "GreaxX", abbrev_name: Optional[str] = None
-):
-    """Initialize the GreaxX logger and set its verbosity level to "DEBUG".
+def setup_logger(output: Optional[str] = None, name: str = "GreatX", *,
+                 distributed_rank: int = 0, mode: str = 'w',
+                 color: bool = True,
+                 abbrev_name: Optional[str] = None) -> logging.Logger:
+    """Initialize the GreatX logger and set its verbosity level to "DEBUG".
 
     Parameters
     ----------
     output : Optional[str], optional
-        a file name or a directory to save log. If None, will not save log file.
-        If ends with ".txt" or ".log", assumed to be a file name.
-        Otherwise, logs will be saved to `output/log.txt`.
+        a file name or a directory to save log. If None,
+        will not save log file. If ends with ".txt" or ".log",
+        assumed to be a file name.
+        Otherwise, logs will be saved to `{output}/log.txt`.
+    name : str, optional
+        the root module name of this logger, by default "GreatX"
     distributed_rank : int, optional
         used for distributed training, by default 0
     mode : str, optional
         mode for the output file (if output is given), by default 'w'.
     color : bool, optional
-        whether to use color when printing, by default True
-    name : str, optional
-        the root module name of this logger, by default "GreaxX"
+        whether to use color when printing, the `termcolor` package
+        is required, by default True
     abbrev_name : Optional[str], optional
         an abbreviation of the module, to avoid long names in logs.
         Set to "" to not log the root module in logs.
@@ -57,12 +60,15 @@ def setup_logger(
 
     >>> # specify output files
     >>> logger = setup_logger(output='log.txt', name='my exp')
-    # additive, by default mode='w' 
-    >>> logger = setup_logger(output='log.txt', name='my exp', mode='a')    
+    # additive, by default mode='w'
+    >>> logger = setup_logger(output='log.txt', name='my exp', mode='a')
 
     # once you logger is set, you can call it by
     >>> logger = get_logger(name='my exp')
     """
+    if color and colored is None:
+        raise RuntimeError("Please install 'termcolor' to use colored outputs"
+                           " when printing.")
 
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
@@ -72,8 +78,8 @@ def setup_logger(
         abbrev_name = name
 
     plain_formatter = logging.Formatter(
-        "[%(asctime)s] %(name)s %(levelname)s: %(message)s", datefmt="%m/%d %H:%M:%S"
-    )
+        "[%(asctime)s] %(name)s %(levelname)s: %(message)s",
+        datefmt="%m/%d %H:%M:%S")
     # stdout logging: master only
     if distributed_rank == 0:
         ch = logging.StreamHandler(stream=sys.stdout)
@@ -112,13 +118,13 @@ def setup_logger(
     return logger
 
 
-def get_logger(name: str = "GreaxX"):
+def get_logger(name: str = "GreatX") -> logging.Logger:
     """Get a logger for a given name.
 
     Parameters
     ----------
     name : str, optional
-        name of the logger, by default "GreaxX"
+        name of the logger, by default "GreatX"
 
     Returns
     -------
@@ -135,12 +141,12 @@ class _ColorfulFormatter(logging.Formatter):
             self._abbrev_name = self._abbrev_name + "."
         super(_ColorfulFormatter, self).__init__(*args, **kwargs)
 
-    def formatMessage(self, record):
+    def formatMessage(self, record) -> str:
         record.name = record.name.replace(self._root_name, self._abbrev_name)
         log = super(_ColorfulFormatter, self).formatMessage(record)
         if record.levelno == logging.WARNING:
             prefix = colored("WARNING", "red", attrs=["blink"])
-        elif record.levelno == logging.ERROR or record.levelno == logging.CRITICAL:
+        elif record.levelno == logging.ERROR or record.levelno == logging.CRITICAL:  # noqa
             prefix = colored("ERROR", "red", attrs=["blink", "underline"])
         else:
             return log

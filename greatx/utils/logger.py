@@ -4,8 +4,11 @@ import os
 import sys
 from typing import Optional
 
-# For colored outputs when printing
-from termcolor import colored
+try:
+    # For colored outputs when printing
+    from termcolor import colored
+except ImportError:
+    colored = None
 
 __all__ = ["setup_logger", "get_logger"]
 

@@ -45,7 +45,7 @@
 + Distribution Shift
 + Adversarial Attacks
 
-For more details, please kindly refer to our paper [**Recent Advances in Reliable Deep Graph Learning: Adversarial Attack, Inherent Noise, and Distribution Shift**](https://arxiv.org/abs/2202.07114)
+For more details, please kindly refer to our paper [**Recent Advances in Reliable Deep Graph Learning: Inherent Noise, Distribution Shift, and Adversarial Attack**](https://arxiv.org/abs/2202.07114)
 
 
 # 💨 News

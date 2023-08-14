@@ -4,9 +4,9 @@ https://data.pyg.org/whl/torch-1.9.0%2Bcpu/torch_sparse-0.6.10-cp38-cp38-linux_x
 https://data.pyg.org/whl/torch-1.9.0%2Bcpu/torch_cluster-1.5.9-cp38-cp38-linux_x86_64.whl
 git+https://github.com/pyg-team/pyg_sphinx_theme.git
 torch_geometric>=2.0.4
-numpy==1.18.5
+numpy==1.22.4
 scikit_learn==1.0.2
-scipy==1.7.3
+scipy==1.10.1
 numba==0.48.0
 torch==1.9.0
 texttable==1.6.2

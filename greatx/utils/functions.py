@@ -216,9 +216,7 @@ def wrapper(func: Callable) -> Callable:
                         f"The decorated function '{func.__name__}' missing required argument '{p.name}'.")
             else:
                 paras[p.name] = p.default
-
-        for k, v in kwargs.items():
-            paras[k] = v
+        paras.update(kwargs)
 
         includes = paras.get("includes", [])
         excludes = paras.get("excludes", [])

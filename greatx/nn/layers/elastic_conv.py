@@ -143,7 +143,8 @@ class ElasticConv(nn.Module):
 
             if self.cached:
                 self._cached = (inc_mat, edge_index, edge_weight)
-                self.init_z = x.new_zeros((inc_mat.sizes()[0], x.size()[-1]))
+                
+            self.init_z = x.new_zeros((inc_mat.sizes()[0], x.size()[-1]))
         else:
             inc_mat, edge_index, edge_weight = self._cached
 

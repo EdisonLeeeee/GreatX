@@ -92,7 +92,7 @@ class ElasticGNN(nn.Module):
 
     def cache_clear(self):
         """Clear cached inputs or intermediate results."""
-        self.prop._cached_inc = None
+        self.prop.cache_clear()
         return self
 
     def forward(self, x, edge_index, edge_weight=None):
